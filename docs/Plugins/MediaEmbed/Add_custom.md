@@ -71,7 +71,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:560px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.youtube.com/embed/-cEzsCAzTak" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
+<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:560px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="http://www.youtube.com/embed/-cEzsCAzTak" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
 ```
 
 ### How to configure the `iframe` renderer
@@ -102,7 +102,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:560px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="http://www.youtube.com/embed/-cEzsCAzTak" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
+<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:560px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="http://www.youtube.com/embed/-cEzsCAzTak" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
 ```
 
 ### How to configure the `flash` renderer
@@ -173,7 +173,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<span data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:83.372365%"><iframe allowfullscreen="" scrolling="no" src="http://www.slideshare.net/slideshow/embed_code/21112125" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
+<span data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:83.372365%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="http://www.slideshare.net/slideshow/embed_code/21112125" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
 ```
 
 ### Specify a different URL for scraping
@@ -221,7 +221,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:600px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/iframe/SereneIllfatedCapybara" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
+<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:600px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/iframe/SereneIllfatedCapybara" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
 ```
 
 ### Add custom HTTP headers when scraping

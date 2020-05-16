@@ -1344,7 +1344,7 @@ class ParserTest extends Test
 		return [
 //			[
 //				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921"></iframe></span></span>',
+//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921"></iframe></span></span>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1354,7 +1354,7 @@ class ParserTest extends Test
 //			],
 //			[
 //				'http://proleter.bandcamp.com/track/muhammad-ali',
-//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921/t=7"></iframe></span></span>',
+//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921/t=7"></iframe></span></span>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1364,7 +1364,7 @@ class ParserTest extends Test
 //			],
 //			[
 //				'http://therunons.bandcamp.com/track/still-feel',
-//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/track=2146686782"></iframe></span></span>',
+//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/track=2146686782"></iframe></span></span>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1374,7 +1374,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
-				'(<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/embed/\\w+/42847060"></iframe></span></span>)',
+				'(<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/embed/\\w+/42847060"></iframe></span></span>)',
 				[],
 				function ($configurator)
 				{
@@ -1385,7 +1385,7 @@ class ParserTest extends Test
 			],
 //			[
 //				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-//				'<span data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+//				'<span data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1395,7 +1395,7 @@ class ParserTest extends Test
 //			],
 //			[
 //				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
-//				'<span data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.gametrailers.com/embed/2954127?embed=1&amp;suppressBumper=1"></iframe></span></span>',
+//				'<span data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.gametrailers.com/embed/2954127?embed=1&amp;suppressBumper=1"></iframe></span></span>',
 //				[],
 //				function ($configurator)
 //				{
@@ -1405,7 +1405,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.gettyimages.com/detail/3232182',
-				'(<span data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:67\\.1717171717172%"><iframe allowfullscreen="" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\w]{22}&amp;tld=com&amp;sig=[-\w]{43}=&amp;caption=false&amp;ver=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>)',
+				'(<span data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:67\\.1717171717172%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\w]{22}&amp;tld=com&amp;sig=[-\w]{43}=&amp;caption=false&amp;ver=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>)',
 				[],
 				function ($configurator)
 				{
@@ -1416,7 +1416,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://gfycat.com/LoathsomeHarmfulJenny',
-				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -1426,7 +1426,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://gfycat.com/ifr/LoathsomeHarmfulJenny',
-				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -1436,7 +1436,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM',
-				'<span data-s9e-mediaembed="giphy" style="display:inline-block;width:100%;max-width:300px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//giphy.com/embed/FsjDdnIRcroIM"></iframe></span></span>',
+				'<span data-s9e-mediaembed="giphy" style="display:inline-block;width:100%;max-width:300px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.3333333333333%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//giphy.com/embed/FsjDdnIRcroIM"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -1446,7 +1446,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://giphy.com/videos/quinnxcii-coffee-VG8PNQDwsfOzU4mQAL',
-				'<span data-s9e-mediaembed="giphy" style="display:inline-block;width:100%;max-width:480px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//giphy.com/embed/VG8PNQDwsfOzU4mQAL/video"></iframe></span></span>',
+				'<span data-s9e-mediaembed="giphy" style="display:inline-block;width:100%;max-width:480px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//giphy.com/embed/VG8PNQDwsfOzU4mQAL/video"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -1456,7 +1456,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://archive.org/details/BillGate99',
-				'<span data-s9e-mediaembed="internetarchive" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:75%"><iframe allowfullscreen="" scrolling="no" src="https://archive.org/embed/BillGate99" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="internetarchive" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:75%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://archive.org/embed/BillGate99" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -1466,7 +1466,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://archive.org/details/DFTS2014-05-30',
-				'<iframe data-s9e-mediaembed="internetarchive" allowfullscreen="" scrolling="no" src="https://archive.org/embed/DFTS2014-05-30&amp;playlist=1&amp;twitterv=01&amp;list_height=150" style="border:0;height:170px;max-width:640px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="internetarchive" allowfullscreen="" loading="lazy" scrolling="no" src="https://archive.org/embed/DFTS2014-05-30&amp;playlist=1&amp;twitterv=01&amp;list_height=150" style="border:0;height:170px;max-width:640px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1476,7 +1476,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
-				'<span data-s9e-mediaembed="msnbc" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://www.msnbc.com/msnbc/embedded-video/mmvo300512323725" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="msnbc" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://www.msnbc.com/msnbc/embedded-video/mmvo300512323725" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -1486,7 +1486,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" loading="lazy" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1500,7 +1500,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.spreaker.com/show/2-up-front_1',
-				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" scrolling="no" src="https://widget.spreaker.com/player?episode_id=&amp;show_id=1374587" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=&amp;show_id=1374587" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1510,7 +1510,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
-				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1520,7 +1520,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
-				'<span data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.ustream.tv/embed/16234409?html5ui"></iframe></span></span>',
+				'<span data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.ustream.tv/embed/16234409?html5ui"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4043,7 +4043,7 @@ class ParserTest extends Test
 		return [
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=15&amp;t=&amp;asins=B00GQT1LNO"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=15&amp;t=&amp;asins=B00GQT1LNO"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4052,7 +4052,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=15&amp;t=foo-20&amp;asins=B00GQT1LNO"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=15&amp;t=foo-20&amp;asins=B00GQT1LNO"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4062,7 +4062,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.ca/gp/product/B00GQT1LNO/ http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=15&amp;t=foo-20&amp;asins=B00GQT1LNO"></iframe></span></span> <span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=3&amp;t=bar-20&amp;asins=B00ET2LTE6"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=15&amp;t=foo-20&amp;asins=B00GQT1LNO"></iframe></span></span> <span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=3&amp;t=bar-20&amp;asins=B00ET2LTE6"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4073,7 +4073,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.co.jp/gp/product/B003AKZ6I8/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-fe.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=9&amp;t=&amp;asins=B003AKZ6I8"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-fe.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=9&amp;t=&amp;asins=B003AKZ6I8"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4082,7 +4082,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.amazon.co.uk/Vans-Unisex-Adults-Classic-Trainers/dp/B000NSMITU/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=2&amp;t=&amp;asins=B000NSMITU"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=2&amp;t=&amp;asins=B000NSMITU"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4091,7 +4091,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.com/dp/B002MUC0ZY',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=1&amp;t=&amp;asins=B002MUC0ZY"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-na.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=1&amp;t=&amp;asins=B002MUC0ZY"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4100,7 +4100,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.de/Netgear-WN3100RP-100PES-Repeater-integrierte-Steckdose/dp/B00ET2LTE6/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=3&amp;t=&amp;asins=B00ET2LTE6"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=3&amp;t=&amp;asins=B00ET2LTE6"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4109,7 +4109,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=31&amp;t=&amp;asins=B01I3LNWQG"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=31&amp;t=&amp;asins=B01I3LNWQG"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4118,7 +4118,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.in/Vans-Unisex-Authentic-Midnight-Sneakers/dp/B01I3LNWQG/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=31&amp;t=in-20&amp;asins=B01I3LNWQG"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=31&amp;t=in-20&amp;asins=B01I3LNWQG"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4128,7 +4128,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.es/Vans-OLD-SKOOL-BLACK-WHITE/dp/B000R3QPEA/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=30&amp;t=es-20&amp;asins=B000R3QPEA"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=30&amp;t=es-20&amp;asins=B000R3QPEA"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4138,7 +4138,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.fr/Vans-Authentic-Baskets-mixte-adulte/dp/B005NIKPAY/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=8&amp;t=&amp;asins=B005NIKPAY"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=8&amp;t=&amp;asins=B005NIKPAY"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4147,7 +4147,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.amazon.it/gp/product/B00JGOMIP6/',
-				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=29&amp;t=&amp;asins=B00JGOMIP6"></iframe></span></span>',
+				'<span data-s9e-mediaembed="amazon" style="display:inline-block;width:100%;max-width:120px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://www.amazon.com/favicon.ico) center no-repeat;border:0;height:100%;left:0;position:absolute;width:100%" src="//ws-eu.assoc-amazon.com/widgets/cm?l=as1&amp;f=ifr&amp;o=29&amp;t=&amp;asins=B00JGOMIP6"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4156,7 +4156,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/album/hz-global/double-a-side-vol3',
-				'<iframe data-s9e-mediaembed="audiomack" allowfullscreen="" scrolling="no" src="https://www.audiomack.com/embed/album/hz-global/double-a-side-vol3" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="audiomack" allowfullscreen="" loading="lazy" scrolling="no" src="https://www.audiomack.com/embed/album/hz-global/double-a-side-vol3" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4165,7 +4165,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/song/random-2/buy-the-world-final-1',
-				'<iframe data-s9e-mediaembed="audiomack" allowfullscreen="" scrolling="no" src="https://www.audiomack.com/embed/song/random-2/buy-the-world-final-1" style="border:0;height:252px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="audiomack" allowfullscreen="" loading="lazy" scrolling="no" src="https://www.audiomack.com/embed/song/random-2/buy-the-world-final-1" style="border:0;height:252px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4183,7 +4183,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.cbsnews.com/video/is-carbonated-water-a-healthy-option/',
-				'<span data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="https://www.cbsnews.com/embed/videos/is-carbonated-water-a-healthy-option/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://www.cbsnews.com/embed/videos/is-carbonated-water-a-healthy-option/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4192,7 +4192,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/video/x222z1',
-				'<span data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.dailymotion.com/embed/video/x222z1"></iframe></span></span>',
+				'<span data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.dailymotion.com/embed/video/x222z1"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4201,7 +4201,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dailymotion.com/video/x5e9eog?start=90',
-				'<span data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.dailymotion.com/embed/video/x5e9eog?start=90"></iframe></span></span>',
+				'<span data-s9e-mediaembed="dailymotion" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.dailymotion.com/embed/video/x5e9eog?start=90"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4210,7 +4210,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/2014/7/2/dn_at_almedalen_week_at_swedens',
-				'<span data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/story/2014/7/2/dn_at_almedalen_week_at_swedens"></iframe></span></span>',
+				'<span data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/story/2014/7/2/dn_at_almedalen_week_at_swedens"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4219,7 +4219,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/blog/2015/3/13/part_2_bruce_schneier_on_the',
-				'<span data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/blog/2015/3/13/part_2_bruce_schneier_on_the"></iframe></span></span>',
+				'<span data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/blog/2015/3/13/part_2_bruce_schneier_on_the"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4228,7 +4228,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/shows/2006/2/20',
-				'<span data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/show/2006/2/20"></iframe></span></span>',
+				'<span data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/show/2006/2/20"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4237,7 +4237,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.democracynow.org/2015/5/21/headlines',
-				'<span data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/headlines/2015/5/21"></iframe></span></span>',
+				'<span data-s9e-mediaembed="democracynow" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.democracynow.org/embed/headlines/2015/5/21"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4246,7 +4246,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html',
-				'<span data-s9e-mediaembed="dumpert" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.dumpert.nl/embed/6622577/4652b140/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="dumpert" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.dumpert.nl/embed/6622577/4652b140/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4255,7 +4255,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/video/video.php?v=10100658170103643',
-				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/facebook.min.html#v10100658170103643" style="border:0;height:360px;max-width:640px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/facebook.min.html#v10100658170103643" style="border:0;height:360px;max-width:640px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4264,7 +4264,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/facebook.min.html#p10151471074398553" style="border:0;height:360px;max-width:640px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/facebook.min.html#p10151471074398553" style="border:0;height:360px;max-width:640px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4273,7 +4273,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david',
-				'<span data-s9e-mediaembed="funnyordie" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.funnyordie.com/embed/bf313bd8b4" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="funnyordie" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.funnyordie.com/embed/bf313bd8b4" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4282,7 +4282,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/',
-				'<span data-s9e-mediaembed="gamespot" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.gamespot.com/videos/embed/6415176/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="gamespot" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.gamespot.com/videos/embed/6415176/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4291,7 +4291,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gist.github.com/s9e/6806305',
-				'<iframe data-s9e-mediaembed="gist" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="" src="https://s9e.github.io/iframe/2/gist.min.html#s9e/6806305" style="border:0;height:180px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="gist" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="" src="https://s9e.github.io/iframe/2/gist.min.html#s9e/6806305" style="border:0;height:180px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4300,7 +4300,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://plus.google.com/110286587261352351537/posts/XMABm8rLvRW',
-				'<iframe data-s9e-mediaembed="googleplus" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:240px;max-width:450px;width:100%" src="https://s9e.github.io/iframe/2/googleplus.min.html#110286587261352351537/posts/XMABm8rLvRW"></iframe>',
+				'<iframe data-s9e-mediaembed="googleplus" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:240px;max-width:450px;width:100%" src="https://s9e.github.io/iframe/2/googleplus.min.html#110286587261352351537/posts/XMABm8rLvRW"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4309,7 +4309,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://plus.google.com/+TonyHawk/posts/C5TMsDZJWBd',
-				'<iframe data-s9e-mediaembed="googleplus" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:240px;max-width:450px;width:100%" src="https://s9e.github.io/iframe/2/googleplus.min.html#+TonyHawk/posts/C5TMsDZJWBd"></iframe>',
+				'<iframe data-s9e-mediaembed="googleplus" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:240px;max-width:450px;width:100%" src="https://s9e.github.io/iframe/2/googleplus.min.html#+TonyHawk/posts/C5TMsDZJWBd"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4318,7 +4318,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://docs.google.com/spreadsheet/ccc?key=0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc#gid=70',
-				'<iframe data-s9e-mediaembed="googlesheets" allowfullscreen="" scrolling="no" style="border:0;height:500px;resize:vertical;width:100%" src="https://docs.google.com/spreadsheets/d/0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc/preview#gid=70"></iframe>',
+				'<iframe data-s9e-mediaembed="googlesheets" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:500px;resize:vertical;width:100%" src="https://docs.google.com/spreadsheets/d/0An1aCHqyU7FqdGtBUDc1S1NNSWhqY3NidndIa1JuQWc/preview#gid=70"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4327,7 +4327,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml',
-				'<iframe data-s9e-mediaembed="googlesheets" allowfullscreen="" scrolling="no" style="border:0;height:500px;resize:vertical;width:100%" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml?widget=true&amp;headers=false#gid="></iframe>',
+				'<iframe data-s9e-mediaembed="googlesheets" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:500px;resize:vertical;width:100%" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vQ7iYECa_ziPWygKBf9Og-PkQl5-gdnFRU-jP-z1FyjLfLXMAdRJN1J5Lx31NjnCq5lkRcL-T0Idh4_/pubhtml?widget=true&amp;headers=false#gid="></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4336,7 +4336,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbbciMU7t5dCB8auk-nyK-p-25TJjgUrzBuMCAiq_2ZDqoMSFAlZCctIC7y3TXS71ys_MRdoAU4Jqr/pubchart?oid=1729348495',
-				'<span data-s9e-mediaembed="googlesheets" style="display:inline-block;width:100%;max-width:600px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:62%"><iframe allowfullscreen="" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSbbciMU7t5dCB8auk-nyK-p-25TJjgUrzBuMCAiq_2ZDqoMSFAlZCctIC7y3TXS71ys_MRdoAU4Jqr/pubchart?oid=1729348495&amp;format=interactive" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="googlesheets" style="display:inline-block;width:100%;max-width:600px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:62%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSbbciMU7t5dCB8auk-nyK-p-25TJjgUrzBuMCAiq_2ZDqoMSFAlZCctIC7y3TXS71ys_MRdoAU4Jqr/pubchart?oid=1729348495&amp;format=interactive" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4345,7 +4345,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer',
-				'<span data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.196581%"><iframe allowfullscreen="" scrolling="no" src="//widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="ign" style="display:inline-block;width:100%;max-width:468px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.196581%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//widgets.ign.com/video/embed/content.html?url=http://uk.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4354,7 +4354,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://i.imgur.com/u7Yo0Vy.gifv',
-				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){var d=e.data.split(\' \');style.height=d[0]+\'px\';style.width=d[1]+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:400px;max-width:100%;width:542px" src="https://s9e.github.io/iframe/2/imgur.min.html#u7Yo0Vy"></iframe>',
+				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){var d=e.data.split(\' \');style.height=d[0]+\'px\';style.width=d[1]+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:400px;max-width:100%;width:542px" src="https://s9e.github.io/iframe/2/imgur.min.html#u7Yo0Vy"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4363,7 +4363,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://imgur.com/a/0I30l',
-				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){var d=e.data.split(\' \');style.height=d[0]+\'px\';style.width=d[1]+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:400px;max-width:100%;width:542px" src="https://s9e.github.io/iframe/2/imgur.min.html#a/0I30l"></iframe>',
+				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){var d=e.data.split(\' \');style.height=d[0]+\'px\';style.width=d[1]+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:400px;max-width:100%;width:542px" src="https://s9e.github.io/iframe/2/imgur.min.html#a/0I30l"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4372,7 +4372,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.indiegogo.com/projects/513633',
-				'<span data-s9e-mediaembed="indiegogo" style="display:inline-block;width:100%;max-width:222px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200.45045%"><iframe allowfullscreen="" scrolling="no" src="//www.indiegogo.com/project/513633/embedded" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="indiegogo" style="display:inline-block;width:100%;max-width:222px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:200.45045%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.indiegogo.com/project/513633/embedded" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4381,7 +4381,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1?ref=',
-				'<span data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:220px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:190.909091%"><iframe allowfullscreen="" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:220px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:190.909091%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4390,7 +4390,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html',
-				'<span data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="kickstarter" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4399,7 +4399,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95',
-				'<iframe data-s9e-mediaembed="medium" allowfullscreen="" scrolling="no" src="https://api.medium.com/embed?type=story&amp;path=%2F%2Fe7e2cf9b8a95" style="border:1px solid;border-color:#eee #ddd #bbb;border-radius:5px;box-shadow:rgba(0,0,0,.15) 0 1px 3px;height:313px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="medium" allowfullscreen="" loading="lazy" scrolling="no" src="https://api.medium.com/embed?type=story&amp;path=%2F%2Fe7e2cf9b8a95" style="border:1px solid;border-color:#eee #ddd #bbb;border-radius:5px;box-shadow:rgba(0,0,0,.15) 0 1px 3px;height:313px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4408,7 +4408,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/',
-				'<span data-s9e-mediaembed="metacafe" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//www.metacafe.com/embed/10785282/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="metacafe" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.metacafe.com/embed/10785282/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4417,7 +4417,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/video/korpikoski-scores-on-odd-man-rush/t-283069656/c-46322103',
-				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/t-283069656/c-46322103?autostart=false"></iframe></span></span>',
+				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/t-283069656/c-46322103?autostart=false"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4426,7 +4426,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/video/c-46299003',
-				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/c-46299003?autostart=false"></iframe></span></span>',
+				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/c-46299003?autostart=false"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4435,7 +4435,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.nhl.com/video/t-281748732?partnerId=as_nhl_20161104_67553116&adbid=794558584411426816&adbpl=tw&adbpr=50004938',
-				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/t-281748732?autostart=false"></iframe></span></span>',
+				'<span data-s9e-mediaembed="nhl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.nhl.com/video/embed/t-281748732?autostart=false"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4444,7 +4444,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.orfium.com/album/24371/everybody-loves-kanye-totom/',
-				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" scrolling="no" src="https://www.orfium.com/embedded/album/24371" style="border:0;height:550px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" loading="lazy" scrolling="no" src="https://www.orfium.com/embedded/album/24371" style="border:0;height:550px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4453,7 +4453,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/',
-				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" scrolling="no" src="https://www.orfium.com/embedded/live-set/614763" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" loading="lazy" scrolling="no" src="https://www.orfium.com/embedded/live-set/614763" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4462,7 +4462,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/',
-				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" scrolling="no" src="https://www.orfium.com/embedded/playlist/511651" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" loading="lazy" scrolling="no" src="https://www.orfium.com/embedded/playlist/511651" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4471,7 +4471,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/',
-				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" scrolling="no" src="https://www.orfium.com/embedded/track/625367" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="orfium" allowfullscreen="" loading="lazy" scrolling="no" src="https://www.orfium.com/embedded/track/625367" style="border:0;height:275px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4480,7 +4480,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
-				'<span data-s9e-mediaembed="rutube" style="display:inline-block;width:100%;max-width:720px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="//rutube.ru/play/embed/4118278" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="rutube" style="display:inline-block;width:100%;max-width:720px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//rutube.ru/play/embed/4118278" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4489,7 +4489,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.slideshare.net/Slideshare/how-23431564',
-				'<span data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:83.372365%"><iframe allowfullscreen="" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/23431564" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:83.372365%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/23431564" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4498,7 +4498,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/album/5OSzFvFAYuRh93WDNCTLEz',
-				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:125%;padding-bottom:calc(100% + 80px)"><iframe allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/album/5OSzFvFAYuRh93WDNCTLEz" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:125%;padding-bottom:calc(100% + 80px)"><iframe allow="encrypted-media" allowfullscreen="" loading="lazy" scrolling="no" src="https://open.spotify.com/embed/album/5OSzFvFAYuRh93WDNCTLEz" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4507,7 +4507,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/track/3lDpjvbifbmrmzWGE8F9zd',
-				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:125%;padding-bottom:calc(100% + 80px)"><iframe allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/track/3lDpjvbifbmrmzWGE8F9zd" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:125%;padding-bottom:calc(100% + 80px)"><iframe allow="encrypted-media" allowfullscreen="" loading="lazy" scrolling="no" src="https://open.spotify.com/embed/track/3lDpjvbifbmrmzWGE8F9zd" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4516,7 +4516,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://open.spotify.com/episode/37Tik1kHq7J2WcYcoLiypt',
-				'<iframe data-s9e-mediaembed="spotify" allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/episode/37Tik1kHq7J2WcYcoLiypt" style="border:0;height:152px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="spotify" allow="encrypted-media" allowfullscreen="" loading="lazy" scrolling="no" src="https://open.spotify.com/embed/episode/37Tik1kHq7J2WcYcoLiypt" style="border:0;height:152px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4525,7 +4525,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://open.spotify.com/show/6BKcIaN8Mcjg6v4iYLnCNY',
-				'<iframe data-s9e-mediaembed="spotify" allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/show/6BKcIaN8Mcjg6v4iYLnCNY" style="border:0;height:152px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="spotify" allow="encrypted-media" allowfullscreen="" loading="lazy" scrolling="no" src="https://open.spotify.com/embed/show/6BKcIaN8Mcjg6v4iYLnCNY" style="border:0;height:152px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4534,7 +4534,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
-				'<span data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html"></iframe></span></span>',
+				'<span data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4543,7 +4543,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk',
-				'<span data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk.html"></iframe></span></span>',
+				'<span data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.ted.com/talks/richard_ledgett_the_nsa_responds_to_edward_snowden_s_ted_talk.html"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4552,7 +4552,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/twitch',
-				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;channel=twitch"></iframe></span></span>',
+				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;channel=twitch"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4561,7 +4561,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/twitch/v/29415830',
-				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=v29415830"></iframe></span></span>',
+				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=v29415830"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4570,7 +4570,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.twitch.tv/twitch/v/29415830?t=17m17s',
-				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=v29415830&amp;time=17m17s"></iframe></span></span>',
+				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.twitch.tv/?autoplay=false&amp;video=v29415830&amp;time=17m17s"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4579,7 +4579,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop',
-				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//clips.twitch.tv/embed?autoplay=false&amp;clip=twitch/HorribleWoodpeckerHassanChop"></iframe></span></span>',
+				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//clips.twitch.tv/embed?autoplay=false&amp;clip=twitch/HorribleWoodpeckerHassanChop"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4588,7 +4588,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://clips.twitch.tv/AcceptableCooperativeYogurtTwitchRPG',
-				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//clips.twitch.tv/embed?autoplay=false&amp;clip=AcceptableCooperativeYogurtTwitchRPG"></iframe></span></span>',
+				'<span data-s9e-mediaembed="twitch" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//clips.twitch.tv/embed?autoplay=false&amp;clip=AcceptableCooperativeYogurtTwitchRPG"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4597,7 +4597,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744" style="background:url(https://abs.twimg.com/favicons/favicon.ico) no-repeat 50% 50%;border:0;height:250px;max-width:500px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744" style="background:url(https://abs.twimg.com/favicons/favicon.ico) no-repeat 50% 50%;border:0;height:250px;max-width:500px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4606,7 +4606,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.ustream.tv/recorded/40771396',
-				'<span data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.ustream.tv/embed/recorded/40771396?html5ui"></iframe></span></span>',
+				'<span data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.ustream.tv/embed/recorded/40771396?html5ui"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4615,7 +4615,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://vimeo.com/67207222',
-				'<span data-s9e-mediaembed="vimeo" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.vimeo.com/video/67207222"></iframe></span></span>',
+				'<span data-s9e-mediaembed="vimeo" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//player.vimeo.com/video/67207222"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4624,7 +4624,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://vine.co/v/bYwPIluIipH',
-				'<span data-s9e-mediaembed="vine" style="display:inline-block;width:100%;max-width:480px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="https://vine.co/v/bYwPIluIipH/embed/simple?audio=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="vine" style="display:inline-block;width:100%;max-width:480px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://vine.co/v/bYwPIluIipH/embed/simple?audio=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4642,7 +4642,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://vocaroo.com/3OlvdB6eiiK',
-				'<span data-s9e-mediaembed="vocaroo" style="display:inline-block;width:100%;max-width:300px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:20%"><iframe allowfullscreen="" scrolling="no" src="https://vocaroo.com/embed/3OlvdB6eiiK" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="vocaroo" style="display:inline-block;width:100%;max-width:300px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:20%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://vocaroo.com/embed/3OlvdB6eiiK" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4651,7 +4651,7 @@ class ParserTest extends Test
 			],
 			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4660,7 +4660,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]-cEzsCAzTak[/YOUTUBE]',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4670,7 +4670,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/YOUTUBE]',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4680,7 +4680,7 @@ class ParserTest extends Test
 			],
 			[
 				'[YOUTUBE=http://www.youtube.com/watch?v=-cEzsCAzTak]Hi!',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>Hi!',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>Hi!',
 				[],
 				function ($configurator)
 				{
@@ -4690,7 +4690,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak',
-				'Check this: <span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
+				'Check this: <span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4699,7 +4699,7 @@ class ParserTest extends Test
 			],
 			[
 				'Check this: http://www.youtube.com/watch?v=-cEzsCAzTak and that: http://example.com',
-				'Check this: <span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span> and that: <a href="http://example.com">http://example.com</a>',
+				'Check this: <span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span> and that: <a href="http://example.com">http://example.com</a>',
 				[],
 				function ($configurator)
 				{
@@ -4709,7 +4709,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?feature=player_detailpage&v=9bZkp7q19f0#t=113',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/9bZkp7q19f0?start=113"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/9bZkp7q19f0/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/9bZkp7q19f0?start=113"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4718,7 +4718,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/pC35x6iIPmo/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/pC35x6iIPmo?list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/pC35x6iIPmo/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/pC35x6iIPmo?list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4727,7 +4727,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA#t=123',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/pC35x6iIPmo/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/pC35x6iIPmo?list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA&amp;start=123"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/pC35x6iIPmo/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/pC35x6iIPmo?list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA&amp;start=123"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4736,7 +4736,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=1h23m45s',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wZZ7oFKsKzY/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wZZ7oFKsKzY?start=5025"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/wZZ7oFKsKzY/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wZZ7oFKsKzY?start=5025"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4745,7 +4745,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wZZ7oFKsKzY/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wZZ7oFKsKzY?start=1425"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/wZZ7oFKsKzY/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wZZ7oFKsKzY?start=1425"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4754,7 +4754,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h38m43s',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=34723"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=34723"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4763,7 +4763,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h38m',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=34680"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=34680"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4772,7 +4772,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h43s',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=32443"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=32443"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4781,7 +4781,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=9h',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=32400"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=32400"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4790,7 +4790,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://youtu.be/wI__53kBBKM?t=38m',
-				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=2280"></iframe></span></span>',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/wI__53kBBKM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/wI__53kBBKM?start=2280"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -4815,7 +4815,7 @@ class ParserTest extends Test
 		return [
 			[
 				'<r><BBCNEWS ad_site="/news/business" playlist="/news/business-29149086A" poster="/media/images/77590000/jpg/_77590973_mapopgetty.jpg">http://www.bbc.com/news/business-29149086</BBCNEWS></r>',
-				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/business-29149086/embed"></iframe></span></span>',
+				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/business-29149086/embed"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('bbcnews');
@@ -4823,7 +4823,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><BRIGHTCOVE bckey="AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v" bcpid="2869183374001" bctid="5045373183001">http://link.brightcove.com/services/player/bcpid4501318026001?bctid=5045373183001</BRIGHTCOVE></r>',
-				'<span data-s9e-mediaembed="brightcove" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://link.brightcove.com/services/player/bcpid2869183374001?bckey=AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v&amp;bctid=5045373183001&amp;secureConnections=true&amp;secureHTMLConnections=true&amp;autoStart=false&amp;height=360&amp;width=640"></iframe></span></span>',
+				'<span data-s9e-mediaembed="brightcove" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://link.brightcove.com/services/player/bcpid2869183374001?bckey=AQ~~,AAAB9mw57HE~,xU4DCdZtHhuIakVdyH5VnUosMOtC9a9v&amp;bctid=5045373183001&amp;secureConnections=true&amp;secureHTMLConnections=true&amp;autoStart=false&amp;height=360&amp;width=640"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('brightcove');
@@ -4839,7 +4839,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><HUDL athlete="2067184" highlight="163744377">http://www.hudl.com/athlete/2067184/highlights/163744377</HUDL></r>',
-				'<span data-s9e-mediaembed="hudl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.hudl.com/embed/athlete/2067184/highlights/163744377"></iframe></span></span>',
+				'<span data-s9e-mediaembed="hudl" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.hudl.com/embed/athlete/2067184/highlights/163744377"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('hudl');
@@ -4847,7 +4847,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
-				'<span data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c"></iframe></span></span>',
+				'<span data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('gametrailers');
@@ -4855,7 +4855,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><IMGUR id="jhEHi">https://imgur.com/jhEHi</IMGUR> <IMGUR id="jhEHi" type="album">https://imgur.com/gallery/jhEHi</IMGUR></r>',
-				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){var d=e.data.split(\' \');style.height=d[0]+\'px\';style.width=d[1]+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:400px;max-width:100%;width:542px" src="https://s9e.github.io/iframe/2/imgur.min.html#jhEHi"></iframe> <iframe data-s9e-mediaembed="imgur" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){var d=e.data.split(\' \');style.height=d[0]+\'px\';style.width=d[1]+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:400px;max-width:100%;width:542px" src="https://s9e.github.io/iframe/2/imgur.min.html#a/jhEHi"></iframe>',
+				'<iframe data-s9e-mediaembed="imgur" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){var d=e.data.split(\' \');style.height=d[0]+\'px\';style.width=d[1]+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:400px;max-width:100%;width:542px" src="https://s9e.github.io/iframe/2/imgur.min.html#jhEHi"></iframe> <iframe data-s9e-mediaembed="imgur" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){var d=e.data.split(\' \');style.height=d[0]+\'px\';style.width=d[1]+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:400px;max-width:100%;width:542px" src="https://s9e.github.io/iframe/2/imgur.min.html#a/jhEHi"></iframe>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('imgur');
@@ -4863,7 +4863,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><MSNBC id="n_farrow_moon_140709_257794">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
-				'<span data-s9e-mediaembed="msnbc" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:68.75%;padding-bottom:calc(56.25% + 80px)"><iframe allowfullscreen="" scrolling="no" src="//player.theplatform.com/p/7wvmTC/MSNBCEmbeddedOffSite?guid=n_farrow_moon_140709_257794" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="msnbc" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:68.75%;padding-bottom:calc(56.25% + 80px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//player.theplatform.com/p/7wvmTC/MSNBCEmbeddedOffSite?guid=n_farrow_moon_140709_257794" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('msnbc');
@@ -4871,7 +4871,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><REDDIT path="/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
-				'<iframe data-s9e-mediaembed="reddit" allowfullscreen="" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/reddit.min.html#/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" style="border:0;height:165px;max-width:800px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="reddit" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/reddit.min.html#/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl" style="border:0;height:165px;max-width:800px;width:100%"></iframe>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('reddit');
@@ -4879,7 +4879,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><SOUNDCLOUD id="https://soundcloud.com/andrewbird/three-white-horses">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" loading="lazy" scrolling="no" src="https://w.soundcloud.com/player/?url=https://soundcloud.com/andrewbird/three-white-horses" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('soundcloud');
@@ -4887,7 +4887,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><SPOTIFY path="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
-				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:125%;padding-bottom:calc(100% + 80px)"><iframe allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:125%;padding-bottom:calc(100% + 80px)"><iframe allow="encrypted-media" allowfullscreen="" loading="lazy" scrolling="no" src="https://open.spotify.com/embed/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('spotify');
@@ -4895,7 +4895,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><SPOTIFY path="track/6acKqVtKngFXApjvXsU6mQ">https://play.spotify.com/track/6acKqVtKngFXApjvXsU6mQ</SPOTIFY></r>',
-				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:125%;padding-bottom:calc(100% + 80px)"><iframe allow="encrypted-media" allowfullscreen="" scrolling="no" src="https://open.spotify.com/embed/track/6acKqVtKngFXApjvXsU6mQ" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="spotify" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:125%;padding-bottom:calc(100% + 80px)"><iframe allow="encrypted-media" allowfullscreen="" loading="lazy" scrolling="no" src="https://open.spotify.com/embed/track/6acKqVtKngFXApjvXsU6mQ" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('spotify');

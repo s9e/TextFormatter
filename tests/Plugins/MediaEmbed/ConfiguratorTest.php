@@ -183,7 +183,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:800px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></span>',
+			'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:800px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></span>',
 			$tag->template
 		);
 	}
@@ -250,7 +250,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<span data-s9e-mediaembed="foo"><xsl:choose><xsl:when test="@foo"><xsl:attribute name="style">display:inline-block;width:100%;max-width:560px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:when><xsl:otherwise><xsl:attribute name="style">display:inline-block;width:100%;max-width:800px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" scrolling="no" src="bar" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:otherwise></xsl:choose></span>',
+			'<span data-s9e-mediaembed="foo"><xsl:choose><xsl:when test="@foo"><xsl:attribute name="style">display:inline-block;width:100%;max-width:560px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:when><xsl:otherwise><xsl:attribute name="style">display:inline-block;width:100%;max-width:800px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="bar" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:otherwise></xsl:choose></span>',
 			$tag->template
 		);
 	}
@@ -283,7 +283,7 @@ class ConfiguratorTest extends Test
 		);
 
 		$this->assertEquals(
-			'<span data-s9e-mediaembed="foo"><xsl:choose><xsl:when test="@foo"><xsl:attribute name="style">display:inline-block;width:100%;max-width:100px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:when><xsl:when test="@bar"><xsl:attribute name="style">display:inline-block;width:100%;max-width:200px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="bar" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:when><xsl:otherwise><xsl:attribute name="style">display:inline-block;width:100%;max-width:300px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" scrolling="no" src="baz" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:otherwise></xsl:choose></span>',
+			'<span data-s9e-mediaembed="foo"><xsl:choose><xsl:when test="@foo"><xsl:attribute name="style">display:inline-block;width:100%;max-width:100px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="foo" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:when><xsl:when test="@bar"><xsl:attribute name="style">display:inline-block;width:100%;max-width:200px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="bar" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:when><xsl:otherwise><xsl:attribute name="style">display:inline-block;width:100%;max-width:300px</xsl:attribute><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="baz" style="border:0;height:100%;left:0;position:absolute;width:100%"/></span></xsl:otherwise></xsl:choose></span>',
 			$tag->template
 		);
 	}

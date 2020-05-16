@@ -16,6 +16,7 @@ class Iframe extends TemplateGenerator
 	*/
 	protected $defaultIframeAttributes = [
 		'allowfullscreen' => '',
+		'loading'         => 'lazy',
 		'scrolling'       => 'no',
 		'style'           => ['border' => '0']
 	];
