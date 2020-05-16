@@ -16,62 +16,24 @@ use DOMElement;
 * @link https://mathiasbynens.github.io/rel-noopener/
 * @link https://wiki.whatwg.org/wiki/Links_to_Unrelated_Browsing_Contexts
 */
-class SetRelNoreferrerOnTargetedLinks extends AbstractNormalization
+class SetRelNoreferrerOnTargetedLinks extends AddAttributeValueToElements
 {
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//a', '//area'];
-
-	/**
-	* Add a rel="noreferrer" attribute to given element
-	*
-	* @param  DOMElement $element
-	* @return void
-	*/
-	protected function addRelAttribute(DOMElement $element)
+	public function __construct(string $query = '//a[@target] | //area[@target]', string $attrName = 'rel', string $value = 'noreferrer')
 	{
-		$rel = $element->getAttribute('rel');
-		if (preg_match('(\\S$)', $rel))
-		{
-			$rel .= ' ';
-		}
-		$rel .= 'noreferrer';
-
-		$element->setAttribute('rel', $rel);
-	}
-
-	/**
-	* Test whether given link element will let the target access window.opener
-	*
-	* @param  DOMElement $element
-	* @return bool
-	*/
-	protected function linkTargetCanAccessOpener(DOMElement $element)
-	{
-		// Can't access window.opener if the link doesn't have a target
-		if (!$element->hasAttribute('target'))
-		{
-			return false;
-		}
-
-		// Can't access window.opener if the link already has rel="noopener" or rel="noreferrer"
-		if (preg_match('(\\bno(?:open|referr)er\\b)', $element->getAttribute('rel')))
-		{
-			return false;
-		}
-
-		return true;
+		parent::__construct($query, $attrName, $value);
 	}
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(DOMElement $element): void
 	{
-		if ($this->linkTargetCanAccessOpener($element))
+		if (!preg_match('(\\bno(?:open|referr)er\\b)', $element->getAttribute('rel')))
 		{
-			$this->addRelAttribute($element);
+			parent::normalizeElement($element);
 		}
 	}
 }
