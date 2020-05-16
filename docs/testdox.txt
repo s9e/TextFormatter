@@ -1724,6 +1724,13 @@ Abstract Normalization (s9e\TextFormatter\Tests\Configurator\AbstractNormalizati
  [x] isXsl() differentiates between XSL elements and others
  [x] lowercase() works
 
+Add Attribute Value To Elements (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\AddAttributeValueToElements)
+ [x] Works with data set #0
+ [x] Works with data set #1
+ [x] Works with data set #2
+ [x] Works with data set #3
+ [x] Works with data set #4
+
 Convert Curly Expressions In Text (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\ConvertCurlyExpressionsInText)
  [x] Works with data set #0
  [x] Works with data set #1
@@ -2041,6 +2048,13 @@ Rename Live Preview Event (s9e\TextFormatter\Tests\Configurator\TemplateNormaliz
  [x] Works with data set #1
  [x] Works with data set #2
  [x] Works with data set #3
+
+Set Attribute On Elements (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\SetAttributeOnElements)
+ [x] Works with data set #0
+ [x] Works with data set #1
+ [x] Works with data set #2
+ [x] Works with data set #3
+ [x] Works with data set #4
 
 Set Rel Noreferrer On Targeted Links (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks)
  [x] Works with data set #0

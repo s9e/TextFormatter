@@ -26,6 +26,7 @@ nav:
     - Template normalization:
       - Change the default settings: Templating/Template_normalization/Change_default.md
       - Extend the template syntax through normalization: Templating/Template_normalization/Extend.md
+      - Examples: Templating/Template_normalization/Examples.md
   - Rules:
     - Tag rules: Rules/Tag_rules.md
     - Automatic rules generation: Rules/Automatic_rules_generation.md

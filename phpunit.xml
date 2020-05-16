@@ -131,6 +131,7 @@
 			<file>tests/Configurator/RulesGenerators/TrimFirstLineInCodeBlocksTest.php</file>
 			<file>tests/Configurator/RulesGeneratorTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/AbstractNormalizationTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/AddAttributeValueToElementsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/ConvertCurlyExpressionsInTextTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/CustomTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/DeoptimizeIfTest.php</file>
@@ -162,6 +163,7 @@
 			<file>tests/Configurator/TemplateNormalizations/RemoveInterElementWhitespaceTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/RemoveLivePreviewAttributesTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/RenameLivePreviewEventTest.php</file>
+			<file>tests/Configurator/TemplateNormalizations/SetAttributeOnElementsTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/SetRelNoreferrerOnTargetedLinksTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/SortAttributesByNameTest.php</file>
 			<file>tests/Configurator/TemplateNormalizations/TransposeCommentsTest.php</file>
