@@ -1,3 +1,26 @@
+2.6.0 (2020-05-17)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/1f92145ebeba84dc3736c608d2e56cdf1c3e31fa...ef7a64e6b1da50a93316c18fc992fb24f92eb7ae)
+
+### Added
+
+ - `62942bbc2` Added AddAttributeValueToElements and SetAttributeOnElements template normalizers
+ - `d4d0b66ec` MediaEmbed: added GIPHY
+ - `ef7a64e6b` MediaEmbed: added loading="lazy" attribute to iframes
+ - `f136125c1` MediaEmbed: added support for GIPHY videos
+
+### Changed
+
+ - `a79accfd0` Emoji: updated Twemoji URL
+ - `ea42a6e90` Emoji: updated to Unicode 13.0
+ - `3f51c0852` MediaEmbed: updated Facebook
+ - `782bbadbb` Renderers: ensure that floating point numbers are displayed in the C locale
+ - `a1d089576` SetRelNoreferrerOnTargetedLinks: refactored to extend AddAttributeValueToElements
+ - `e08158d2f` TaskLists: ignore task IDs during live preview
+ - `1b5d46223` XSLT: ensure that the decimal separator is a dot regardless of locale
+
+
 2.5.0 (2020-04-29)
 ==================
 
