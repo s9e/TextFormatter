@@ -5155,6 +5155,9 @@ Links (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Links)
  [x] Parsing tests with data set #56
  [x] Parsing tests with data set #57
  [x] Parsing tests with data set #58
+ [x] Parsing tests with data set #59
+ [x] Parsing tests with data set #60
+ [x] Parsing tests with data set #61
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -5214,6 +5217,9 @@ Links (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Links)
  [x] Parsing tests (JavaScript) with data set #56
  [x] Parsing tests (JavaScript) with data set #57
  [x] Parsing tests (JavaScript) with data set #58
+ [x] Parsing tests (JavaScript) with data set #59
+ [x] Parsing tests (JavaScript) with data set #60
+ [x] Parsing tests (JavaScript) with data set #61
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2

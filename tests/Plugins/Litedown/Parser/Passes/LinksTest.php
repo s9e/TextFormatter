@@ -162,6 +162,18 @@ class LinksTest extends AbstractTest
 				'[..]( http://example.org )',
 				'<r><p><URL url="http://example.org"><s>[</s>..<e>]( http://example.org )</e></URL></p></r>'
 			],
+			[
+				'[taxonomy](https://en.wikipedia.org/wiki/Taxonomy_(general\\))',
+				'<r><p><URL url="https://en.wikipedia.org/wiki/Taxonomy_%28general%29"><s>[</s>taxonomy<e>](https://en.wikipedia.org/wiki/Taxonomy_(general\\))</e></URL></p></r>'
+			],
+			[
+				'[taxonomy](https://en.wikipedia.org/wiki/Taxonomy_(general\\)))',
+				'<r><p><URL url="https://en.wikipedia.org/wiki/Taxonomy_%28general%29%29"><s>[</s>taxonomy<e>](https://en.wikipedia.org/wiki/Taxonomy_(general\\)))</e></URL></p></r>'
+			],
+			[
+				'[taxonomy](https://en.wikipedia.org/wiki/Taxonomy_\\(general\\))',
+				'<r><p><URL url="https://en.wikipedia.org/wiki/Taxonomy_%28general%29"><s>[</s>taxonomy<e>](https://en.wikipedia.org/wiki/Taxonomy_\\(general\\))</e></URL></p></r>'
+			],
 			// Automatic links
 			[
 				'.. <https://example.org> ..',
