@@ -1,6 +1,5 @@
-sudo: false
 language: php
-matrix:
+jobs:
   fast_finish: true
   include:
     - php: 7.4
