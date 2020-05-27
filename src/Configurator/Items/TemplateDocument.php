@@ -7,10 +7,10 @@
 */
 namespace s9e\TextFormatter\Configurator\Items;
 
-use DOMDocument;
+use s9e\SweetDOM\Document;
 use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 
-class TemplateDocument extends DOMDocument
+class TemplateDocument extends Document
 {
 	/**
 	* @var Template Template instance that created this document
@@ -24,6 +24,8 @@ class TemplateDocument extends DOMDocument
 	*/
 	public function __construct(Template $template)
 	{
+		parent::__construct();
+
 		$this->template = $template;
 	}
 
