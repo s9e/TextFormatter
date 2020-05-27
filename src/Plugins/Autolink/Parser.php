@@ -32,12 +32,6 @@ class Parser extends ParserBase
 	*/
 	protected function linkifyUrl($tagPos, $url)
 	{
-		// Ensure that the anchor (scheme/www) is still there
-		if (!preg_match('/^[^:]+:|^www\\./i', $url))
-		{
-			return;
-		}
-
 		// Create a zero-width end tag right after the URL
 		$endPos = $tagPos + strlen($url);
 		$endTag = $this->parser->addEndTag($this->config['tagName'], $endPos, 0);

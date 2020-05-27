@@ -12,12 +12,6 @@ matches.forEach(function(m)
 */
 function linkifyUrl(tagPos, url)
 {
-	// Ensure that the anchor (scheme/www) is still there
-	if (!/^www\.|^[^:]+:/i.test(url))
-	{
-		return;
-	}
-
 	// Create a zero-width end tag right after the URL
 	var endPos = tagPos + url.length,
 		endTag = addEndTag(config.tagName, endPos, 0);
