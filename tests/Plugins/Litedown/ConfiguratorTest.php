@@ -43,6 +43,76 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox addHeadersId() create a slug attribute for H1 to H6
+	*/
+	public function testAddHeadersIdSlug()
+	{
+		$this->configurator->Litedown->addHeadersId();
+
+		$tags = $this->configurator->tags;
+		$this->assertTrue($tags['H1']->attributes->exists('slug'));
+		$this->assertTrue($tags['H2']->attributes->exists('slug'));
+		$this->assertTrue($tags['H3']->attributes->exists('slug'));
+		$this->assertTrue($tags['H4']->attributes->exists('slug'));
+		$this->assertTrue($tags['H5']->attributes->exists('slug'));
+		$this->assertTrue($tags['H6']->attributes->exists('slug'));
+	}
+
+	/**
+	* @testdox addHeadersId() adds a conditional "id" attribute to H1 to H6 templates
+	*/
+	public function testAddHeadersIdTemplate()
+	{
+		$this->configurator->Litedown->addHeadersId();
+
+		$xsl = '<xsl:if test="@slug"><xsl:attribute name="id"><xsl:value-of select="@slug"/></xsl:attribute></xsl:if>';
+
+		$tags = $this->configurator->tags;
+		$this->assertStringContainsString($xsl, $tags['H1']->template);
+		$this->assertStringContainsString($xsl, $tags['H2']->template);
+		$this->assertStringContainsString($xsl, $tags['H3']->template);
+		$this->assertStringContainsString($xsl, $tags['H4']->template);
+		$this->assertStringContainsString($xsl, $tags['H5']->template);
+		$this->assertStringContainsString($xsl, $tags['H6']->template);
+	}
+
+	/**
+	* @testdox addHeadersId('foo-') adds a "foo-" prefix to the id attribute
+	*/
+	public function testAddHeadersIdTemplatePrefix()
+	{
+		$this->configurator->Litedown->addHeadersId('foo-');
+
+		$xsl = '<xsl:if test="@slug"><xsl:attribute name="id">foo-<xsl:value-of select="@slug"/></xsl:attribute></xsl:if>';
+
+		$tags = $this->configurator->tags;
+		$this->assertStringContainsString($xsl, $tags['H1']->template);
+		$this->assertStringContainsString($xsl, $tags['H2']->template);
+		$this->assertStringContainsString($xsl, $tags['H3']->template);
+		$this->assertStringContainsString($xsl, $tags['H4']->template);
+		$this->assertStringContainsString($xsl, $tags['H5']->template);
+		$this->assertStringContainsString($xsl, $tags['H6']->template);
+	}
+
+	/**
+	* @testdox addHeadersId() can be called multiple times
+	*/
+	public function testAddHeadersIdTwice()
+	{
+		$this->configurator->Litedown->addHeadersId('');
+		$this->assertEquals(
+			'<h1><xsl:if test="@slug"><xsl:attribute name="id"><xsl:value-of select="@slug"/></xsl:attribute></xsl:if><xsl:apply-templates/></h1>',
+			(string) $this->configurator->tags['H1']->template
+		);
+
+		$this->configurator->Litedown->addHeadersId('foo-');
+		$this->assertEquals(
+			'<h1><xsl:if test="@slug"><xsl:attribute name="id">foo-<xsl:value-of select="@slug"/></xsl:attribute></xsl:if><xsl:apply-templates/></h1>',
+			(string) $this->configurator->tags['H1']->template
+		);
+	}
+
+	/**
 	* @testdox asConfig() returns an array
 	*/
 	public function testAsConfig()

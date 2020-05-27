@@ -7,6 +7,7 @@ namespace s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes;
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\ParsedText
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\AbstractPass
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Blocks
+* @covers s9e\TextFormatter\Plugins\Litedown\Parser\Slugger
 */
 class BlocksTest extends AbstractTest
 {
@@ -812,6 +813,23 @@ class BlocksTest extends AbstractTest
 					'<LIST type="decimal"><LI><s>1. </s>list</LI></LIST></r>'
 				]
 			],
+			[
+				[
+					'# header1 goes -> here <-',
+					'',
+					'text'
+				],
+				[
+					'<r><H1 slug="header1-goes-here"><s># </s>header1 goes -&gt; here &lt;-</H1>',
+					'',
+					'<p>text</p></r>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown->addHeadersId();
+				}
+			],
 			// Setext-style headers
 			[
 				[
@@ -1037,6 +1055,23 @@ class BlocksTest extends AbstractTest
 					'<r><SPOILER><i>&gt;! </i><H2>foo<e>',
 					'&gt;! ---</e></H2></SPOILER></r>'
 				]
+			],
+			[
+				[
+					'Important Title',
+					'---------------',
+					'Yes, quite.'
+				],
+				[
+					'<r><H2 slug="important-title">Important Title<e>',
+					'---------------</e></H2>',
+					'<p>Yes, quite.</p></r>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown->addHeadersId();
+				}
 			],
 			// Horizontal rules
 			[
@@ -1481,6 +1516,48 @@ class BlocksTest extends AbstractTest
 					'```'
 				],
 				'<pre><code class="language-html">code</code></pre>'
+			],
+			[
+				[
+					'# H1 goes here',
+					'',
+					'### H3 goes there',
+					'',
+					'Text'
+				],
+				[
+					'<h1 id="h1-goes-here">H1 goes here</h1>',
+					'',
+					'<h3 id="h3-goes-there">H3 goes there</h3>',
+					'',
+					'<p>Text</p>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown->addHeadersId();
+				}
+			],
+			[
+				[
+					'# H1 goes here',
+					'',
+					'### H3 goes there',
+					'',
+					'Text'
+				],
+				[
+					'<h1 id="user-content-h1-goes-here">H1 goes here</h1>',
+					'',
+					'<h3 id="user-content-h3-goes-there">H3 goes there</h3>',
+					'',
+					'<p>Text</p>'
+				],
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown->addHeadersId('user-content-');
+				}
 			],
 		]);
 	}

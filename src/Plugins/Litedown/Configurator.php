@@ -7,7 +7,9 @@
 */
 namespace s9e\TextFormatter\Plugins\Litedown;
 
+use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
+use s9e\TextFormatter\Plugins\Litedown\Parser\Slugger;
 
 class Configurator extends ConfiguratorBase
 {
@@ -123,6 +125,58 @@ class Configurator extends ConfiguratorBase
 			// Add this tag
 			$this->configurator->tags->add($tagName, $tagConfig);
 		}
+	}
+
+	/**
+	* Add an "id" attribute to headers
+	*
+	* @param  string $prefix Prefix used for the "id" value
+	* @return void
+	*/
+	public function addHeadersId(string $prefix = ''): void
+	{
+		for ($i = 1; $i <= 6; ++$i)
+		{
+			$tagName = 'H' . $i;
+			if (isset($this->configurator->tags[$tagName]))
+			{
+				$this->addHeaderId($this->configurator->tags[$tagName], $prefix);
+			}
+		}
+	}
+
+	/**
+	* Add an "id" attribute to given tag
+	*
+	* @param  Tag    $tag
+	* @param  string $prefix Prefix used for the "id" value
+	* @return void
+	*/
+	protected function addHeaderId(Tag $tag, string $prefix): void
+	{
+		if (!isset($tag->attributes['slug']))
+		{
+			unset($tag->attributes['slug']);
+		}
+
+		$tag->attributes->add('slug')->required = false;
+		$tag->filterChain
+			->append(Slugger::class . '::setTagSlug($tag, $innerText)')
+			->setJS(Slugger::getJS());
+
+		$dom = $tag->template->asDOM();
+		foreach ($dom->query('//xsl:if[@test = "@slug"]') as $if)
+		{
+			// Remove any pre-existing xsl:if from previous invocations
+			$if->remove();
+		}
+		foreach ($dom->query('//h1 | //h2 | //h3 | //h4 | //h5 | //h6') as $header)
+		{
+			$header->prependXslIf('@slug')
+			       ->appendXslAttribute('id', $prefix)
+			       ->appendXslValueOf('@slug');
+		}
+		$dom->saveChanges();
 	}
 
 	/**

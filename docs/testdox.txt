@@ -4613,6 +4613,10 @@ Configurator (s9e\TextFormatter\Tests\Plugins\Litedown\Configurator)
  [x] Turns on automatic paragraph management
  [x] Automatically creates a "URL" tag
  [x] Does not overwrite the "URL" tag if it already exists
+ [x] addHeadersId() create a slug attribute for H1 to H6
+ [x] addHeadersId() adds a conditional "id" attribute to H1 to H6 templates
+ [x] addHeadersId('foo-') adds a "foo-" prefix to the id attribute
+ [x] addHeadersId() can be called multiple times
  [x] asConfig() returns an array
  [x] asConfig() returns decodeHtmlEntities is saved as a boolean
  [x] getJSHints() returns ['LITEDOWN_DECODE_HTML_ENTITIES' => 0] by default
@@ -4738,6 +4742,8 @@ Blocks (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Blocks)
  [x] Parsing tests with data set #111
  [x] Parsing tests with data set #112
  [x] Parsing tests with data set #113
+ [x] Parsing tests with data set #114
+ [x] Parsing tests with data set #115
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -4852,6 +4858,8 @@ Blocks (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Blocks)
  [x] Parsing tests (JavaScript) with data set #111
  [x] Parsing tests (JavaScript) with data set #112
  [x] Parsing tests (JavaScript) with data set #113
+ [x] Parsing tests (JavaScript) with data set #114
+ [x] Parsing tests (JavaScript) with data set #115
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
@@ -4861,6 +4869,8 @@ Blocks (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Blocks)
  [x] Parsing+rendering tests with data set #6
  [x] Parsing+rendering tests with data set #7
  [x] Parsing+rendering tests with data set #8
+ [x] Parsing+rendering tests with data set #9
+ [x] Parsing+rendering tests with data set #10
 
 Emphasis (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Emphasis)
  [x] Parsing tests with data set #0
