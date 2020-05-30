@@ -1,3 +1,23 @@
+2.7.0 (2020-05-30)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/9cb0710514fe8eb7e4c662483b6bb2ad028e046b...2e127910c4bdf8b4250cc455239a7a03fc8878d8)
+
+### Added
+
+ - `ea4658c5b` Added template manipulation via SweetDOM
+ - `dc61d807c` Litedown: added support for self-generated "id" attributes in headers
+
+### Removed
+
+ - `f9eb0e264` Autolink: removed dead code
+ - `2e127910c` PHP Renderer: removed redundant removal of meta-elements
+
+### Changed
+
+ - `cc0c621c2` Litedown: improved compatibility with original Markdown rules for parentheses in links
+
+
 2.6.0 (2020-05-17)
 ==================
 
