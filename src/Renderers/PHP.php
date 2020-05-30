@@ -199,11 +199,7 @@ abstract class PHP extends Renderer
 		$html = preg_replace_callback(
 			$this->quickRegexp,
 			[$this, 'renderQuickCallback'],
-			preg_replace(
-				'(<[eis]>[^<]*</[eis]>)',
-				'',
-				substr($xml, 1 + strpos($xml, '>'), -4)
-			)
+			substr($xml, 1 + strpos($xml, '>'), -4)
 		);
 
 		return str_replace('<br/>', '<br>', $html);
