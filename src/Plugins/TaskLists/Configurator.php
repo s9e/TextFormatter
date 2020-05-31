@@ -40,21 +40,15 @@ class Configurator extends ConfiguratorBase
 			->addParameterByName('text')
 			->setJS(file_get_contents(__DIR__ . '/filterListItem.js'));
 
-		$tag->template = preg_replace(
-			'(<li[^>]*+>(?!<xsl:if test="TASK">)\\K)',
-			'<xsl:if test="TASK">
-				<xsl:attribute name="data-s9e-livepreview-ignore-attrs">
-					<xsl:text>data-task-id</xsl:text>
-				</xsl:attribute>
-				<xsl:attribute name="data-task-id">
-					<xsl:value-of select="TASK/@id"/>
-				</xsl:attribute>
-				<xsl:attribute name="data-task-state">
-					<xsl:value-of select="TASK/@state"/>
-				</xsl:attribute>
-			</xsl:if>',
-			$tag->template
-		);
+		$dom = $tag->template->asDOM();
+		foreach ($dom->query('//li[not(xsl:if[@test="TASK"])]') as $li)
+		{
+			$if = $li->prependXslIf('TASK');
+			$if->appendXslAttribute('data-s9e-livepreview-ignore-attrs', 'data-task-id');
+			$if->appendXslAttribute('data-task-id')->appendXslValueOf('TASK/@id');
+			$if->appendXslAttribute('data-task-state')->appendXslValueOf('TASK/@state');
+		}
+		$dom->saveChanges();
 	}
 
 	protected function createTaskTag(): void

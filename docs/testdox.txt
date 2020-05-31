@@ -6269,6 +6269,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\Preg\Parser)
 Configurator (s9e\TextFormatter\Tests\Plugins\TaskLists\Configurator)
  [x] Automatically creates an "TASK" tag with an "id" attribute and a "state" attribute
  [x] Returns no config
+ [x] Does not modify the LI template twice
 
 Parser (s9e\TextFormatter\Tests\Plugins\TaskLists\Parser)
  [x] Parsing tests with data set #0

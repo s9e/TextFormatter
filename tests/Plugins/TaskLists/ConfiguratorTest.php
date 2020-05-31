@@ -34,4 +34,29 @@ class ConfiguratorTest extends Test
 	{
 		$this->assertNull($this->configurator->TaskLists->asConfig());
 	}
+
+	/**
+	* @testdox Does not modify the LI template twice
+	*/
+	public function testCanBeCalledTwice()
+	{
+		$this->configurator->plugins->load('TaskLists');
+		$this->configurator->plugins->load('TaskLists');
+
+		$this->assertXmlStringEqualsXmlString(
+			'<li>
+				<xsl:if test="TASK">
+					<xsl:attribute name="data-s9e-livepreview-ignore-attrs">data-task-id</xsl:attribute>
+					<xsl:attribute name="data-task-id">
+						<xsl:value-of select="TASK/@id"/>
+					</xsl:attribute>
+					<xsl:attribute name="data-task-state">
+						<xsl:value-of select="TASK/@state"/>
+					</xsl:attribute>
+				</xsl:if>
+				<xsl:apply-templates/>
+			</li>',
+			(string) $this->configurator->tags['LI']->template
+		);
+	}
 }
