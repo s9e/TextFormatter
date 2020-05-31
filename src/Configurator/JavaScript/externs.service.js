@@ -43,6 +43,7 @@ var undefined;
  * @constructor
  * @param {*=} opt_description
  * @return {symbol}
+ * @nosideeffects
  */
 function Symbol(opt_description) {}
 /**
@@ -383,7 +384,7 @@ function Document() {}
 Document.prototype.createDocumentFragment = function() {};
 /**
  * @param {string} tagName
- * @param {string=} opt_typeExtension
+ * @param {({is: string}|string)=} opt_typeExtension
  * @return {!Element}
  * @nosideeffects
  */
@@ -433,7 +434,9 @@ Node.prototype.appendChild = function(newChild) {};
 Node.prototype.childNodes;
 /**
  * @param {boolean} deep
- * @return {!Node}
+ * @return {THIS}
+ * @this {THIS}
+ * @template THIS
  * @nosideeffects
  */
 Node.prototype.cloneNode = function(deep) {};
