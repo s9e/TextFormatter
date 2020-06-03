@@ -1271,6 +1271,20 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://vk.com/video121599878_165723901',
+				'<r><VK hash="e06b0878046e1d32" oid="121599878" vid="165723901">https://vk.com/video121599878_165723901</VK></r>',
+				[],
+				function ($configurator)
+				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped('No VK test on Travis');
+					}
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('vk');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
 				'<r><WSHH id="63133">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
 				[],
