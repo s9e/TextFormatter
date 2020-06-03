@@ -465,6 +465,10 @@
 		<td style="font-size:75%"><code>washingtonpost</code></td>
 		<td style="font-size:50%">https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b<br/>https://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html</td>
 	</tr>
+	<tr title="Wistia">
+		<td style="font-size:75%"><code>wistia</code></td>
+		<td style="font-size:50%">https://thoughtworks.wistia.com/medias/b6al55s35k</td>
+	</tr>
 	<tr title="WorldStarHipHop">
 		<td style="font-size:75%"><code>wshh</code></td>
 		<td style="font-size:50%">https://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0<br/>https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61<br/>https://www.worldstarhiphop.com/featured/71630</td>

@@ -1,0 +1,9 @@
+<site name="Wistia" homepage="https://wistia.com/">
+	<example>https://thoughtworks.wistia.com/medias/b6al55s35k</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>wistia.com</host>
+	<extract>!wistia.com/medias/(?'id'\w+)!</extract>
+	<iframe src="https://fast.wistia.net/embed/iframe/{@id}"/>
+</site>

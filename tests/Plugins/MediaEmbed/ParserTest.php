@@ -3697,6 +3697,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://thoughtworks.wistia.com/medias/b6al55s35k',
+				'<r><WISTIA id="b6al55s35k">https://thoughtworks.wistia.com/medias/b6al55s35k</WISTIA></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wistia');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/featured/71630',
 				'<r><WSHH id="71630">http://www.worldstarhiphop.com/featured/71630</WSHH></r>',
 				[],
