@@ -43,59 +43,15 @@ abstract class RegexpConvertor
 				$dotAll
 			);
 
-			switch ($tok['type'])
+			$callback = get_called_class() . '::serialize' . ucfirst($tok['type']);
+			if (!is_callable($callback))
 			{
-				case 'option':
-					if ($tok['options'] !== 'J')
-					{
-						throw new RuntimeException('Regexp options are not supported');
-					}
-					break;
-
-				case 'capturingSubpatternStart':
-					$regexp .= '(';
-					break;
-
-				case 'nonCapturingSubpatternStart':
-					if (!empty($tok['options']))
-					{
-						throw new RuntimeException('Subpattern options are not supported');
-					}
-
-					$regexp .= '(?:';
-					break;
-
-				case 'capturingSubpatternEnd':
-				case 'nonCapturingSubpatternEnd':
-					$regexp .= ')' . substr($tok['quantifiers'], 0, 1);
-					break;
-
-				case 'characterClass':
-					$regexp .= '[';
-					$regexp .= self::convertUnicodeCharacters($tok['content'], true, false);
-					$regexp .= ']' . substr($tok['quantifiers'], 0, 1);
-					break;
-
-				case 'lookaheadAssertionStart':
-					$regexp .= '(?=';
-					break;
-
-				case 'negativeLookaheadAssertionStart':
-					$regexp .= '(?!';
-					break;
-
-				case 'lookaheadAssertionEnd':
-				case 'negativeLookaheadAssertionEnd':
-					$regexp .= ')';
-					break;
-
-				default:
-					throw new RuntimeException("Unsupported token type '" . $tok['type'] . "'");
+				throw new RuntimeException("Unsupported token type '" . $tok['type'] . "'");
 			}
+			$regexp .= $callback($tok);
 
 			$pos = $tok['pos'] + $tok['len'];
 		}
-
 		$regexp .= self::convertUnicodeCharacters(substr($regexpInfo['regexp'], $pos), false, $dotAll);
 
 		if ($regexpInfo['delimiter'] !== '/')
@@ -169,6 +125,66 @@ abstract class RegexpConvertor
 			},
 			$regexp
 		);
+	}
+
+	protected static function serializeOption(array $tok): string
+	{
+		if ($tok['options'] !== 'J')
+		{
+			throw new RuntimeException('Regexp options are not supported');
+		}
+
+		return '';
+	}
+
+	protected static function serializeCapturingSubpatternStart(array $tok): string
+	{
+		return '(';
+	}
+
+	protected static function serializeNonCapturingSubpatternStart(array $tok): string
+	{
+		if (!empty($tok['options']))
+		{
+			throw new RuntimeException('Subpattern options are not supported');
+		}
+
+		return '(?:';
+	}
+
+	protected static function serializeCapturingSubpatternEnd(array $tok): string
+	{
+		return ')' . substr($tok['quantifiers'], 0, 1);
+	}
+
+	protected static function serializeNonCapturingSubpatternEnd(array $tok): string
+	{
+		return static::serializeCapturingSubpatternEnd($tok);
+	}
+
+	protected static function serializeCharacterClass(array $tok): string
+	{
+		return '[' . self::convertUnicodeCharacters($tok['content'], true, false) . ']' . substr($tok['quantifiers'], 0, 1);
+	}
+
+	protected static function serializeLookaheadAssertionStart(array $tok): string
+	{
+		return '(?=';
+	}
+
+	protected static function serializeNegativeLookaheadAssertionStart(array $tok): string
+	{
+		return '(?!';
+	}
+
+	protected static function serializeLookaheadAssertionEnd(array $tok): string
+	{
+		return ')';
+	}
+
+	protected static function serializeNegativeLookaheadAssertionEnd(array $tok): string
+	{
+		return ')';
 	}
 
 	/**
