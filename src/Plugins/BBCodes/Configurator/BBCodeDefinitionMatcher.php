@@ -56,7 +56,7 @@ class BBCodeDefinitionMatcher extends AbstractRecursiveMatcher
 				'groups'   => ['TagAttributeValue'],
 				'regexp'   => "'([^{']*+(?:(?&Token)(?-1))?)'"
 			],
-			'TagAttributeUnquoted'     => [
+			'TagAttributeUnquoted' => [
 				'callback' => [$this, 'parseContent'],
 				'groups'   => ['TagAttributeValue'],
 				'regexp'   => '(?!["\'])([^\\s\\]{]*+(?:(?&Token)(?-1))?)'
