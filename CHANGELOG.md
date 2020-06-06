@@ -1,3 +1,22 @@
+2.7.1 (2020-06-06)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/ebeadcdb7c1ed11633de56ca05fd8300b7e31487...ca83829e5a519bffc8a0c3d1219c3cdf3a5c35bf)
+
+### Added
+
+ - `c34a75ea4` MediaEmbed: added Wistia
+
+### Changed
+
+ - `7f2a0a843` BBCodes: updated default CODE BBCode
+ - `388e4fbfc` JavaScript: updated externs
+ - `4d2792bc4` MediaEmbed: reinstated unofficial support for hashless VK URLs
+ - `ca83829e5` RegexpConvertor: reorganized code
+ - `b141e1098` RegexpConvertor: updated Unicode properties
+ - `c5c2d2cbf` TaskList: replaced template manipulation with SweetDOM
+
+
 2.7.0 (2020-05-30)
 ==================
 
