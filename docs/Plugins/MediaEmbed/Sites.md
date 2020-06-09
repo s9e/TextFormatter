@@ -23,7 +23,7 @@
 	</tr>
 	<tr title="Audiomack">
 		<td style="font-size:75%"><code>audiomack</code></td>
-		<td style="font-size:50%">https://www.audiomack.com/song/your-music-fix/jammin-kungs-remix-1<br/>https://www.audiomack.com/album/chance-the-rapper/acid-rap</td>
+		<td style="font-size:50%">https://www.audiomack.com/your-music-fix/song/jammin-kungs-remix-1<br/>https://www.audiomack.com/chance-the-rapper/album/acid-rap</td>
 	</tr>
 	<tr title="Bandcamp">
 		<td style="font-size:75%"><code>bandcamp</code></td>

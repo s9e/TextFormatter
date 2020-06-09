@@ -1,17 +1,34 @@
 <site name="Audiomack" homepage="https://www.audiomack.com/">
-	<example>https://www.audiomack.com/song/your-music-fix/jammin-kungs-remix-1</example>
-	<example>https://www.audiomack.com/album/chance-the-rapper/acid-rap</example>
+	<example>https://www.audiomack.com/your-music-fix/song/jammin-kungs-remix-1</example>
+	<example>https://www.audiomack.com/chance-the-rapper/album/acid-rap</example>
 
 	<tags><tag>music</tag></tags>
 
 	<host>audiomack.com</host>
-	<extract>!audiomack\.com/(?'mode'album|song)/(?'id'[-\w]+/[-\w]+)!</extract>
+	<extract>!audiomack\.com/(?'mode'album|song)/(?'artist'[-\w]+)/(?'title'[-\w]+)!</extract>
+	<extract>!audiomack\.com/(?'artist'[-\w]+)/(?'mode'album|song)/(?'title'[-\w]+)!</extract>
 	<choose>
 		<when test="@mode='album'">
-			<iframe width="100%" height="400" max-width="900" src="https://www.audiomack.com/embed/album/{@id}"/>
+			<iframe width="100%" height="400" max-width="900">
+				<src><![CDATA[
+					<xsl:text>https://www.audiomack.com/embed/album/</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="@artist"/>/<xsl:value-of select="@title"/></xsl:otherwise>
+					</xsl:choose>
+				]]></src>
+			</iframe>
 		</when>
 		<otherwise>
-			<iframe width="100%" height="252" max-width="900" src="https://www.audiomack.com/embed/song/{@id}"/>
+			<iframe width="100%" height="252" max-width="900">
+				<src><![CDATA[
+					<xsl:text>https://www.audiomack.com/embed/song/</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+						<xsl:otherwise><xsl:value-of select="@artist"/>/<xsl:value-of select="@title"/></xsl:otherwise>
+					</xsl:choose>
+				]]></src>
+			</iframe>
 		</otherwise>
 	</choose>
 </site>

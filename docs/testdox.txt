@@ -5505,6 +5505,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Legacy rendering tests with data set #8
  [x] Legacy rendering tests with data set #9
  [x] Legacy rendering tests with data set #10
+ [x] Legacy rendering tests with data set #11
+ [x] Legacy rendering tests with data set #12
  [x] Parsing tests with data set #0
  [x] Parsing tests with data set #1
  [x] Parsing tests with data set #2

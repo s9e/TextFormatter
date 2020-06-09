@@ -1703,7 +1703,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/song/random-2/buy-the-world-final-1',
-				'<r><AUDIOMACK id="random-2/buy-the-world-final-1" mode="song">http://www.audiomack.com/song/random-2/buy-the-world-final-1</AUDIOMACK></r>',
+				'<r><AUDIOMACK artist="random-2" mode="song" title="buy-the-world-final-1">http://www.audiomack.com/song/random-2/buy-the-world-final-1</AUDIOMACK></r>',
 				[],
 				function ($configurator)
 				{
@@ -1712,7 +1712,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.audiomack.com/album/hz-global/double-a-side-vol3',
-				'<r><AUDIOMACK id="hz-global/double-a-side-vol3" mode="album">http://www.audiomack.com/album/hz-global/double-a-side-vol3</AUDIOMACK></r>',
+				'<r><AUDIOMACK artist="hz-global" mode="album" title="double-a-side-vol3">http://www.audiomack.com/album/hz-global/double-a-side-vol3</AUDIOMACK></r>',
 				[],
 				function ($configurator)
 				{
@@ -4836,6 +4836,22 @@ class ParserTest extends Test
 	public function getLegacyRenderingTests()
 	{
 		return [
+			[
+				'<r><AUDIOMACK id="random-2/buy-the-world-final-1" mode="song">http://www.audiomack.com/song/random-2/buy-the-world-final-1</AUDIOMACK></r>',
+				'<iframe data-s9e-mediaembed="audiomack" allowfullscreen="" loading="lazy" scrolling="no" src="https://www.audiomack.com/embed/song/random-2/buy-the-world-final-1" style="border:0;height:252px;max-width:900px;width:100%"></iframe>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('audiomack');
+				}
+			],
+			[
+				'<r><AUDIOMACK id="hz-global/double-a-side-vol3" mode="album">http://www.audiomack.com/album/hz-global/double-a-side-vol3</AUDIOMACK></r>',
+				'<iframe data-s9e-mediaembed="audiomack" allowfullscreen="" loading="lazy" scrolling="no" src="https://www.audiomack.com/embed/album/hz-global/double-a-side-vol3" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('audiomack');
+				}
+			],
 			[
 				'<r><BBCNEWS ad_site="/news/business" playlist="/news/business-29149086A" poster="/media/images/77590000/jpg/_77590973_mapopgetty.jpg">http://www.bbc.com/news/business-29149086</BBCNEWS></r>',
 				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/business-29149086/embed"></iframe></span></span>',
