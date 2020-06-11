@@ -1,5 +1,5 @@
 <site name="Twitch" homepage="https://www.twitch.tv/">
-	<source>https://github.com/justintv/Twitch-API/blob/master/embed-video.md</source>
+	<source>https://dev.twitch.tv/docs/embed/video-and-clips</source>
 	<example>https://www.twitch.tv/twitch</example>
 	<example>https://www.twitch.tv/twitch/v/29415830?t=17m17s</example>
 	<example>https://www.twitch.tv/videos/29415830?t=17m17s</example>
@@ -13,35 +13,5 @@
 	<extract>#www\.twitch\.tv/(?!videos/)(?'channel'\w+)#</extract>
 	<extract>#t=(?'t'(?:(?:\d+h)?\d+m)?\d+s)#</extract>
 	<extract>#clips\.twitch\.tv/(?:(?'channel'\w+)/)?(?'clip_id'\w+)#</extract>
-	<iframe>
-		<src><![CDATA[
-			<xsl:choose>
-				<xsl:when test="@clip_id">
-					<xsl:text>//clips.twitch.tv/embed?autoplay=false&amp;clip=</xsl:text>
-					<xsl:if test="@channel">
-						<xsl:value-of select="@channel"/>
-						<xsl:text>/</xsl:text>
-					</xsl:if>
-					<xsl:value-of select="@clip_id"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>//player.twitch.tv/?autoplay=false&amp;</xsl:text>
-					<xsl:choose>
-						<xsl:when test="@video_id">
-							<xsl:text>video=v</xsl:text>
-							<xsl:value-of select="@video_id"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:text>channel=</xsl:text>
-							<xsl:value-of select="@channel"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:if test="@t">
-						<xsl:text>&amp;time=</xsl:text>
-						<xsl:value-of select="@t"/>
-					</xsl:if>
-				</xsl:otherwise>
-			</xsl:choose>
-		]]></src>
-	</iframe>
+	<iframe src="https://s9e.github.io/iframe/2/twitch.min.html#channel={@channel};clip_id={@clip_id};t={@t};video_id={@video_id}" onload="contentWindow.postMessage('','https://s9e.github.io')"/>
 </site>
