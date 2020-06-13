@@ -3432,6 +3432,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.twitch.tv/albiononline/clip/CleanWiseToothPrimeMe',
+				'<r><TWITCH channel="albiononline" clip_id="CleanWiseToothPrimeMe">https://www.twitch.tv/albiononline/clip/CleanWiseToothPrimeMe</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
 				'https://blog.twitch.tv/coming-soon-get-it-on-twitch-9c829cae6ac1',
 				'<t>https://blog.twitch.tv/coming-soon-get-it-on-twitch-9c829cae6ac1</t>',
 				[],

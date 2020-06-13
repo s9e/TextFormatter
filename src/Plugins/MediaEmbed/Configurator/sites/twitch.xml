@@ -10,7 +10,7 @@
 
 	<host>twitch.tv</host>
 	<extract>#twitch\.tv/(?:videos|\w+/v)/(?'video_id'\d+)?#</extract>
-	<extract>#www\.twitch\.tv/(?!videos/)(?'channel'\w+)#</extract>
+	<extract>#www\.twitch\.tv/(?!videos/)(?'channel'\w+)(?:/clip/(?'clip_id'\w+))?#</extract>
 	<extract>#t=(?'t'(?:(?:\d+h)?\d+m)?\d+s)#</extract>
 	<extract>#clips\.twitch\.tv/(?:(?'channel'\w+)/)?(?'clip_id'\w+)#</extract>
 	<iframe src="https://s9e.github.io/iframe/2/twitch.min.html#channel={@channel};clip_id={@clip_id};t={@t};video_id={@video_id}" onload="contentWindow.postMessage('','https://s9e.github.io')"/>
