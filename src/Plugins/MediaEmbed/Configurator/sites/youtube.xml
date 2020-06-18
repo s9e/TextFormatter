@@ -5,6 +5,9 @@
 	<example>https://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40</example>
 	<example>https://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</example>
 
+	<oembed endpoint="https://www.youtube.com/oembed"
+	          scheme="https://www.youtube.com/watch?v={@id}"/>
+
 	<tags><tag>livestreaming</tag><tag>videos</tag></tags>
 
 	<attributes>

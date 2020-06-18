@@ -3,6 +3,9 @@
 	<example>https://dai.ly/x5e9eog</example>
 	<example>https://www.dailymotion.com/video/x5e9eog</example>
 
+	<oembed endpoint="https://www.dailymotion.com/services/oembed"
+	          scheme="https://www.dailymotion.com/video/{@id}"/>
+
 	<tags><tag>videos</tag></tags>
 
 	<host>dai.ly</host>
@@ -17,5 +20,4 @@
 			<xsl:if test="@t">?start=<xsl:value-of select="@t"/></xsl:if>
 		]]></src>
 	</iframe>
-	<oembed url="http://www.dailymotion.com/services/oembed"/>
 </site>
