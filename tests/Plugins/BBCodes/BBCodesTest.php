@@ -162,15 +162,15 @@ class BBCodesTest extends Test
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-mD6kd3feYcZQbhSO+vNhrFMS3kmJgpmirwjmIuSQVxIlyJzLbjVrr3pbF5J5tOcb" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.10/loader.min.js"></script></pre>',
+				'<pre><code>echo "Hello world";</code><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-ba7Ur3T69w24Ebn8VUD9BZT96SBrG8C9Q3lpq0jjEhTNoTWsE9JfO6j2wwCBdbTZ" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.11/loader.min.js"></script></pre>',
 			],
 			[
 				'[code=html]<b>Hello world</b>[/code]',
-				'<pre><code class="language-html">&lt;b&gt;Hello world&lt;/b&gt;</code><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-mD6kd3feYcZQbhSO+vNhrFMS3kmJgpmirwjmIuSQVxIlyJzLbjVrr3pbF5J5tOcb" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.10/loader.min.js"></script></pre>',
+				'<pre><code class="language-html">&lt;b&gt;Hello world&lt;/b&gt;</code><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-ba7Ur3T69w24Ebn8VUD9BZT96SBrG8C9Q3lpq0jjEhTNoTWsE9JfO6j2wwCBdbTZ" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.11/loader.min.js"></script></pre>',
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code><script async="" crossorigin="anonymous" data-hljs-style="none" data-hljs-url="/path/to/highlight.js/" integrity="sha384-mD6kd3feYcZQbhSO+vNhrFMS3kmJgpmirwjmIuSQVxIlyJzLbjVrr3pbF5J5tOcb" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.10/loader.min.js"></script></pre>',
+				'<pre><code>echo "Hello world";</code><script async="" crossorigin="anonymous" data-hljs-style="none" data-hljs-url="/path/to/highlight.js/" integrity="sha384-ba7Ur3T69w24Ebn8VUD9BZT96SBrG8C9Q3lpq0jjEhTNoTWsE9JfO6j2wwCBdbTZ" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.11/loader.min.js"></script></pre>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('CODE', 'default', [
@@ -181,7 +181,7 @@ class BBCodesTest extends Test
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code><script async="" crossorigin="anonymous" integrity="sha384-mD6kd3feYcZQbhSO+vNhrFMS3kmJgpmirwjmIuSQVxIlyJzLbjVrr3pbF5J5tOcb" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.10/loader.min.js"></script></pre>',
+				'<pre><code>echo "Hello world";</code><script async="" crossorigin="anonymous" integrity="sha384-ba7Ur3T69w24Ebn8VUD9BZT96SBrG8C9Q3lpq0jjEhTNoTWsE9JfO6j2wwCBdbTZ" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.11/loader.min.js"></script></pre>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('CODE', 'default', [
