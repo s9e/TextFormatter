@@ -1,3 +1,17 @@
+2.7.2 (2020-06-22)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/16a1c759307da654bedd7b649bef6930384e9561...4fd902b91d2bedbcab1b435338a584a58e8a34ac)
+
+### Changed
+
+ - `4fd902b91` BBCodes: updated default CODE BBCode
+ - `b2823a510` BBCodes: updated default CODE BBCode
+ - `b13470f70` MediaEmbed: updated Audiomack
+ - `a5cce0a8e` MediaEmbed: updated Twitch
+ - `615378133` MediaEmbed: updated Twitch
+
+
 2.7.1 (2020-06-06)
 ==================
 
