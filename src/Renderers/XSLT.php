@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Renderers;
 
-use XSLTProcessor;
 use s9e\TextFormatter\Renderer;
+use XSLTProcessor;
 
 class XSLT extends Renderer
 {

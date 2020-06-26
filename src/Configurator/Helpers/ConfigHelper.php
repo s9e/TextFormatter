@@ -8,10 +8,10 @@
 namespace s9e\TextFormatter\Configurator\Helpers;
 
 use RuntimeException;
-use Traversable;
 use s9e\TextFormatter\Configurator\ConfigProvider;
 use s9e\TextFormatter\Configurator\FilterableConfigValue;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
+use Traversable;
 
 abstract class ConfigHelper
 {

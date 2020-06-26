@@ -264,7 +264,7 @@ class Configurator extends ConfiguratorBase
 	{
 		if (!preg_match('#^[a-z][a-z0-9]*$#Di', $elName))
 		{
-			throw new InvalidArgumentException ("Invalid element name '" . $elName . "'");
+			throw new InvalidArgumentException("Invalid element name '" . $elName . "'");
 		}
 
 		return strtolower($elName);
@@ -282,7 +282,7 @@ class Configurator extends ConfiguratorBase
 	{
 		if (!preg_match('#^[a-z][-\\w]*$#Di', $attrName))
 		{
-			throw new InvalidArgumentException ("Invalid attribute name '" . $attrName . "'");
+			throw new InvalidArgumentException("Invalid attribute name '" . $attrName . "'");
 		}
 
 		return strtolower($attrName);

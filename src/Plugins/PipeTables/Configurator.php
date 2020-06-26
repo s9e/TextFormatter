@@ -51,7 +51,7 @@ class Configurator extends ConfiguratorBase
 	{
 		$alignFilter = new ChoiceFilter(['left', 'center', 'right', 'justify'], true);
 
-		return	[
+		return [
 			'attributes' => [
 				'align' => [
 					'filterChain' => ['strtolower', $alignFilter],

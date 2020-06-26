@@ -22,7 +22,7 @@ function loadPage($url)
 }
 
 $page  = loadPage('https://html.spec.whatwg.org/multipage/indices.html');
-$xpath = new DOMXPath ($page);
+$xpath = new DOMXPath($page);
 $query = '//h3[@id="attributes-3"]/following-sibling::table[1]/tbody/tr[contains(., "URL")]/th';
 
 // Prefill the list of filters with the "icon" attribute from the now-deprecated menuitem element

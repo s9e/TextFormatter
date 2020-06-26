@@ -11,7 +11,6 @@ use ReflectionClass;
 use RuntimeException;
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Configurator\Collections\TemplateParameterCollection;
-use s9e\TextFormatter\Configurator\RendererGenerator;
 use s9e\TextFormatter\Configurator\Traits\Configurable;
 
 /**

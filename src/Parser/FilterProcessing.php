@@ -8,8 +8,6 @@
 namespace s9e\TextFormatter\Parser;
 
 use s9e\TextFormatter\Parser;
-use s9e\TextFormatter\Parser\Logger;
-use s9e\TextFormatter\Parser\Tag;
 
 class FilterProcessing
 {

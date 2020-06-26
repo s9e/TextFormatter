@@ -9,9 +9,9 @@ namespace s9e\TextFormatter\Configurator\Traits;
 
 use InvalidArgumentException;
 use RuntimeException;
-use Traversable;
 use s9e\TextFormatter\Configurator\Collections\Collection;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
+use Traversable;
 
 /**
 * Provides magic __get, __set, __isset and __unset implementations
