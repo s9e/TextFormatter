@@ -107,10 +107,12 @@ class CallbackGenerator
 	*/
 	protected function generateFunction(array $config, array $params)
 	{
+		$js = (string) $config['js'];
+
 		// returnFalse() and returnTrue() can be used as-is
-		if ($config['js'] == 'returnFalse' || $config['js'] == 'returnTrue')
+		if ($js === 'returnFalse' || $js === 'returnTrue')
 		{
-			return new Code((string) $config['js']);
+			return new Code($js);
 		}
 
 		// Add an empty list of params if none is set
@@ -118,7 +120,7 @@ class CallbackGenerator
 
 		$src  = $this->getHeader($params);
 		$src .= 'function(' . implode(',', array_keys($params)) . '){';
-		$src .= 'return ' . $this->parenthesizeCallback($config['js']);
+		$src .= 'return ' . $this->parenthesizeCallback($js);
 		$src .= '(' . $this->buildCallbackArguments($config['params'], $params) . ');}';
 
 		return new Code($src);
