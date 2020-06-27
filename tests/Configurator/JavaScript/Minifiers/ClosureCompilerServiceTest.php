@@ -9,7 +9,6 @@ use s9e\TextFormatter\Tests\Test;
 
 /**
 * @requires extension json
-* @covers s9e\TextFormatter\Configurator\JavaScript\OnlineMinifier
 * @covers s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService
 */
 class ClosureCompilerServiceTest extends Test
@@ -20,6 +19,11 @@ class ClosureCompilerServiceTest extends Test
 	*/
 	public function testBasic()
 	{
+		if (isset($_SERVER['TRAVIS']))
+		{
+			$this->markTestSkipped();
+		}
+
 		$original =
 			"function hello(name) {
 				alert('Hello, ' + name);
@@ -29,18 +33,7 @@ class ClosureCompilerServiceTest extends Test
 		$expected = 'alert("Hello, New user");';
 
 		$minifier = new ClosureCompilerService;
-		try
-		{
-			$this->assertSame($expected, $minifier->minify($original));
-		}
-		catch (RuntimeException $e)
-		{
-			if (strpos($e->getMessage(), 'Too many compiles performed recently') === false)
-			{
-				throw $e;
-			}
-			$this->markTestSkipped($e->getMessage());
-		}
+		$this->assertSame($expected, $minifier->minify($original));
 	}
 
 	/**
