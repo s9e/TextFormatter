@@ -1,0 +1,9 @@
+<site name="CodePen" homepage="https://codepen.io/">
+	<example>https://codepen.io/ainalem/pen/wvKOEMV</example>
+
+	<tags><tag>programming</tag></tags>
+
+	<host>codepen.io</host>
+	<extract>!codepen\.io/(?'user'[-\w]+)/(?:details|embed|full|live|pen)/(?'id'\w+)!</extract>
+	<iframe height="400" width="100%" src="https://codepen.io/{@user}/embed/{@id}?height=400&amp;default-tab=html,result"/>
+</site>

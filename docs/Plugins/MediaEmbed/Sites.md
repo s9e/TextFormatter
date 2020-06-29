@@ -65,6 +65,10 @@
 		<td style="font-size:75%"><code>cnnmoney</code></td>
 		<td style="font-size:50%">https://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</td>
 	</tr>
+	<tr title="CodePen">
+		<td style="font-size:75%"><code>codepen</code></td>
+		<td style="font-size:50%">https://codepen.io/ainalem/pen/wvKOEMV</td>
+	</tr>
 	<tr title="Comedy Central">
 		<td style="font-size:75%"><code>comedycentral</code></td>
 		<td style="font-size:50%">https://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>https://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats<br/>https://tosh.cc.com/video-clips/aet4lh/rc-car-crash</td>

@@ -3,6 +3,8 @@
 	<example>https://gist.github.com/6806305</example>
 	<example>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</example>
 
+	<tags><tag>programming</tag></tags>
+
 	<host>github.com</host>
 	<extract>!gist\.github\.com/(?'id'(?:\w+/)?[\da-f]+(?:/[\da-f]+)?)!</extract>
 	<iframe width="100%" height="180" scrolling="" src="https://s9e.github.io/iframe/2/gist.min.html#{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>

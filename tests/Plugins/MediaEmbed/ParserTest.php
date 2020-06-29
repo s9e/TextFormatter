@@ -1858,6 +1858,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://codepen.io/ainalem/pen/wvKOEMV',
+				'<r><CODEPEN id="wvKOEMV" user="ainalem">https://codepen.io/ainalem/pen/wvKOEMV</CODEPEN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('codepen');
+				}
+			],
+			[
 				'http://coub.com/view/6veusoty',
 				'<r><COUB id="6veusoty">http://coub.com/view/6veusoty</COUB></r>',
 				[],
