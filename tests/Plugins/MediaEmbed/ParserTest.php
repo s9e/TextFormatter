@@ -4440,7 +4440,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95',
-				'<iframe data-s9e-mediaembed="medium" allowfullscreen="" loading="lazy" scrolling="no" src="https://api.medium.com/embed?type=story&amp;path=%2F%2Fe7e2cf9b8a95" style="border:1px solid;border-color:#eee #ddd #bbb;border-radius:5px;box-shadow:rgba(0,0,0,.15) 0 1px 3px;height:313px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="medium" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/medium.min.html#e7e2cf9b8a95" style="border:0;height:316px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{

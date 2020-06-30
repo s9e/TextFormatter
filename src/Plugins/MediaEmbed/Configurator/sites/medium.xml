@@ -4,12 +4,5 @@
 
 	<host>medium.com</host>
 	<extract>!medium\.com/(?:s/)?[^/]*/(?:[-\w]+-)?(?'id'[\da-f]+)!</extract>
-	<iframe width="100%" height="313" max-width="900" src="https://api.medium.com/embed?type=story&amp;path=%2F%2F{@id}">
-		<style
-			border="1px solid"
-			border-color="#eee #ddd #bbb"
-			border-radius="5px"
-			box-shadow="rgba(0,0,0,.15) 0 1px 3px"
-		/>
-	</iframe>
+	<iframe width="100%" height="316" max-width="900" src="https://s9e.github.io/iframe/2/medium.min.html#{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>
