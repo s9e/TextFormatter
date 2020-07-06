@@ -8,7 +8,7 @@
 	<scrape>
 		<match>@msnbc\.com/[-\w]+/watch/@</match>
 		<match>@on\.msnbc\.com/.@</match>
-		<extract>@embedded-video/(?'id'\w+)@</extract>
+		<extract>@embedded-video/(?!undefined)(?'id'\w+)@</extract>
 	</scrape>
 	<choose>
 		<when test="contains(@id, '_')">
