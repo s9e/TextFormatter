@@ -1,0 +1,25 @@
+<site name="TradingView" homepage="https://www.tradingview.com/">
+	<example>https://www.tradingview.com/symbols/NASDAQ-AAPL/</example>
+	<example>https://www.tradingview.com/chart/US30/Yro4JNSD-us30/</example>
+
+	<tags><tag>finance</tag></tags>
+
+	<host>tradingview.com</host>
+	<extract>!tradingview\.com/(?:chart/[^/]+|i)/(?'chart'\w+)!</extract>
+	<extract>!tradingview\.com/symbols/(?'symbol'[-:\w]+)!</extract>
+	<iframe width="100%" height="400">
+		<src><![CDATA[
+			<xsl:text>https://s.tradingview.com/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@symbol">
+					<xsl:text>widgetembed/?interval=D&amp;symbol=</xsl:text>
+					<xsl:value-of select="translate(@symbol,'-',':')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>embed/</xsl:text>
+					<xsl:value-of select="@chart"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+	</iframe>
+</site>

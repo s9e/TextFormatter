@@ -401,6 +401,10 @@
 		<td style="font-size:75%"><code>tmz</code></td>
 		<td style="font-size:50%">https://www.tmz.com/videos/0_2pr9x3rb/</td>
 	</tr>
+	<tr title="TradingView">
+		<td style="font-size:75%"><code>tradingview</code></td>
+		<td style="font-size:50%">https://www.tradingview.com/symbols/NASDAQ-AAPL/<br/>https://www.tradingview.com/chart/US30/Yro4JNSD-us30/</td>
+	</tr>
 	<tr title="Trailer Addict">
 		<td style="font-size:75%"><code>traileraddict</code></td>
 		<td style="font-size:50%">https://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>

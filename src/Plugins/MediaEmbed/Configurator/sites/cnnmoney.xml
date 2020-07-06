@@ -1,7 +1,7 @@
 <site name="CNNMoney" homepage="https://money.cnn.com/video/">
 	<example>https://money.cnn.com/video/technology/2014/05/20/t-twitch-vp-on-future.cnnmoney/</example>
 
-	<tags><tag>news</tag></tags>
+	<tags><tag>finance</tag><tag>news</tag></tags>
 
 	<host>money.cnn.com</host>
 	<extract>!money\.cnn\.com/video/(?'id'.*\.cnnmoney)!</extract>

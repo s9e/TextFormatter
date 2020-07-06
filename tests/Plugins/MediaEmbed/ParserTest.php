@@ -3386,6 +3386,33 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tmz');
 				}
 			],
+			[
+				'https://www.tradingview.com/symbols/NASDAQ-AAPL/',
+				'<r><TRADINGVIEW symbol="NASDAQ-AAPL">https://www.tradingview.com/symbols/NASDAQ-AAPL/</TRADINGVIEW></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tradingview');
+				}
+			],
+			[
+				'https://www.tradingview.com/chart/US30/Yro4JNSD-us30/',
+				'<r><TRADINGVIEW chart="Yro4JNSD">https://www.tradingview.com/chart/US30/Yro4JNSD-us30/</TRADINGVIEW></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tradingview');
+				}
+			],
+			[
+				'https://www.tradingview.com/i/Yro4JNSD',
+				'<r><TRADINGVIEW chart="Yro4JNSD">https://www.tradingview.com/i/Yro4JNSD</TRADINGVIEW></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tradingview');
+				}
+			],
 //			[
 //				'http://www.traileraddict.com/tags/musical',
 //				'<t>http://www.traileraddict.com/tags/musical</t>',
@@ -4589,6 +4616,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('ted');
+				}
+			],
+			[
+				'https://www.tradingview.com/symbols/NASDAQ-AAPL/',
+				'<iframe data-s9e-mediaembed="tradingview" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:400px;width:100%" src="https://s.tradingview.com/widgetembed/?interval=D&amp;symbol=NASDAQ:AAPL"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tradingview');
+				}
+			],
+			[
+				'https://www.tradingview.com/chart/US30/Yro4JNSD-us30/',
+				'<iframe data-s9e-mediaembed="tradingview" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:400px;width:100%" src="https://s.tradingview.com/embed/Yro4JNSD"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tradingview');
 				}
 			],
 			[
