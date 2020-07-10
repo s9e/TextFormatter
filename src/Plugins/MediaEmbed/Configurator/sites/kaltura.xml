@@ -1,0 +1,39 @@
+<site name="Kaltura" homepage="https://corp.kaltura.com/">
+	<example>https://www.kaltura.com/tiny/b5tib</example>
+	<example>https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a</example>
+
+	<tags><tag>video</tag></tags>
+
+	<attributes>
+		<entry_id   required="true"/>
+		<partner_id required="true"/>
+		<uiconf_id  required="true"/>
+	</attributes>
+
+	<host>kaltura.com</host>
+	<extract>@/p(?:artner_id)?/(?'partner_id'\d+)/@</extract>
+	<extract>@/sp/(?'sp'\d+)/@</extract>
+	<extract>@/uiconf_id/(?'uiconf_id'\d+)/@</extract>
+	<extract>@\bentry_id[=/](?'entry_id'\w+)@</extract>
+	<scrape>
+		<match>@kaltura\.com/(?:media/t|tiny)/.@</match>
+		<extract>@kaltura\.com/+p/(?'partner_id'\d+)/sp/(?'sp'\d+)/\w*/uiconf_id/(?'uiconf_id'\d+)/.*?\bentry_id=(?'entry_id'\w+)@</extract>
+	</scrape>
+	<iframe padding-height="36">
+		<src><![CDATA[
+			<xsl:text>https://cdnapisec.kaltura.com/p/</xsl:text>
+			<xsl:value-of select="@partner_id"/>
+			<xsl:text>/sp/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@sp"><xsl:value-of select="@sp"/></xsl:when>
+				<xsl:otherwise><xsl:value-of select="@partner_id"/>00</xsl:otherwise>
+			</xsl:choose>
+			<xsl:text>/embedIframeJs/uiconf_id/</xsl:text>
+			<xsl:value-of select="@uiconf_id"/>
+			<xsl:text>/partner_id/</xsl:text>
+			<xsl:value-of select="@partner_id"/>
+			<xsl:text>?iframeembed=true&amp;entry_id=</xsl:text>
+			<xsl:value-of select="@entry_id"/>
+		]]></src>
+	</iframe>
+</site>

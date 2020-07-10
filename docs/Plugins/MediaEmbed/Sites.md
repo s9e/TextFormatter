@@ -205,6 +205,10 @@
 		<td style="font-size:75%"><code>jwplatform</code></td>
 		<td style="font-size:50%">https://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html<br/>https://content.jwplatform.com/previews/YfTSAegE-L0l35Tsd</td>
 	</tr>
+	<tr title="Kaltura">
+		<td style="font-size:75%"><code>kaltura</code></td>
+		<td style="font-size:50%">https://www.kaltura.com/tiny/b5tib<br/>https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a</td>
+	</tr>
 	<tr title="Kontinental Hockey League (КХЛ)">
 		<td style="font-size:75%"><code>khl</code></td>
 		<td style="font-size:50%">https://video.khl.ru/events/233677<br/>https://video.khl.ru/quotes/251237</td>

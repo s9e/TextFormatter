@@ -5481,6 +5481,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #58
  [x] Scraping tests with data set #59
  [x] Scraping tests with data set #60
+ [x] Scraping tests with data set #61
+ [x] Scraping tests with data set #62
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
@@ -5789,6 +5791,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #279
  [x] Parsing tests with data set #280
  [x] Parsing tests with data set #281
+ [x] Parsing tests with data set #282
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -6071,6 +6074,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #279
  [x] Parsing tests (JavaScript) with data set #280
  [x] Parsing tests (JavaScript) with data set #281
+ [x] Parsing tests (JavaScript) with data set #282
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
@@ -6156,6 +6160,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing+rendering tests with data set #82
  [x] Parsing+rendering tests with data set #83
  [x] Parsing+rendering tests with data set #84
+ [x] Parsing+rendering tests with data set #85
 
 Configurator (s9e\TextFormatter\Tests\Plugins\PipeTables\Configurator)
  [x] Creates TABLE, TBODY, TD, TH, THEAD and TR tags
@@ -7173,6 +7178,7 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins with data set #290
  [x] Tests from plugins with data set #291
  [x] Tests from plugins with data set #292
+ [x] Tests from plugins with data set #293
  [x] Tests from plugins (Quick renderer) with data set #0
  [x] Tests from plugins (Quick renderer) with data set #1
  [x] Tests from plugins (Quick renderer) with data set #2
@@ -7466,6 +7472,7 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins (Quick renderer) with data set #290
  [x] Tests from plugins (Quick renderer) with data set #291
  [x] Tests from plugins (Quick renderer) with data set #292
+ [x] Tests from plugins (Quick renderer) with data set #293
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
 
