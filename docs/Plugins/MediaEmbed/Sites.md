@@ -49,6 +49,10 @@
 		<td style="font-size:75%"><code>brightcove</code></td>
 		<td style="font-size:50%">https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001<br/>https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</td>
 	</tr>
+	<tr title="Castos">
+		<td style="font-size:75%"><code>castos</code></td>
+		<td style="font-size:50%">https://on-the-cuff.castos.com/podcasts/10156/episodes/frequently-asked-questions-on-mens-style</td>
+	</tr>
 	<tr title="CBS News Video">
 		<td style="font-size:75%"><code>cbsnews</code></td>
 		<td style="font-size:50%">https://www.cbsnews.com/video/is-carbonated-water-a-healthy-option/</td>

@@ -1,0 +1,13 @@
+<site name="Castos" homepage="https://castos.com/">
+	<example>https://on-the-cuff.castos.com/podcasts/10156/episodes/frequently-asked-questions-on-mens-style</example>
+
+	<tags><tag>podcasts</tag></tags>
+
+	<host>castos.com</host>
+	<extract>@(?'host'[-\w]+)\.castos\.com/player/(?'id'\d+)@</extract>
+	<scrape>
+		<match>@castos\.com/(?:podcasts/[^/]*+/)?episodes/.@</match>
+		<extract>@(?'host'[-\w]+)\.castos\.com/player/(?'id'\d+)@</extract>
+	</scrape>
+	<iframe width="100%" height="150" max-width="900" src="https://player.castos.com/player/{@id}"/>
+</site>

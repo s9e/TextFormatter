@@ -557,6 +557,26 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('bleacherreport');
 //				}
 //			],
+			[
+				'https://on-the-cuff.castos.com/podcasts/10156/episodes/frequently-asked-questions-on-mens-style',
+				'<r><CASTOS host="on-the-cuff" id="215060">https://on-the-cuff.castos.com/podcasts/10156/episodes/frequently-asked-questions-on-mens-style</CASTOS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('castos');
+				}
+			],
+			[
+				'https://on-the-cuff.castos.com/episodes/frequently-asked-questions-on-mens-style',
+				'<r><CASTOS host="on-the-cuff" id="215060">https://on-the-cuff.castos.com/episodes/frequently-asked-questions-on-mens-style</CASTOS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('castos');
+				}
+			],
 //			[
 //				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
 //				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
@@ -1791,6 +1811,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('brightcove');
+				}
+			],
+			[
+				'https://on-the-cuff.castos.com/player/215060',
+				'<r><CASTOS host="on-the-cuff" id="215060">https://on-the-cuff.castos.com/player/215060</CASTOS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('castos');
 				}
 			],
 			[
