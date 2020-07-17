@@ -1252,7 +1252,7 @@ class ParserTest extends Test
 //			],
 			[
 				'https://staff.tumblr.com/post/180624227620/',
-				'<r><TUMBLR did="0812d9593fe9183968a4da76d8c4528d52324f67" id="180624227620" key="r_BTLFg8QzTPUMVSbe3vbg" name="staff">https://staff.tumblr.com/post/180624227620/</TUMBLR></r>',
+				'<r><TUMBLR did="781ba97d76586f567b41960375dac9606da2cc7e" id="180624227620" key="r_BTLFg8QzTPUMVSbe3vbg" name="staff">https://staff.tumblr.com/post/180624227620/</TUMBLR></r>',
 				[],
 				function ($configurator)
 				{
