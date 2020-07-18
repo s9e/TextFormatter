@@ -3,6 +3,9 @@
 	<example>https://vimeo.com/67207222</example>
 	<example>https://vimeo.com/channels/staffpicks/67207222</example>
 
+	<oembed endpoint="https://vimeo.com/api/oembed.json"
+	          scheme="https://vimeo.com/{@id}"/>
+
 	<tags><tag>videos</tag></tags>
 
 	<attributes>
