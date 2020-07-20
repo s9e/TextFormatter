@@ -1,3 +1,23 @@
+2.7.3 (2020-07-20)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/aea006fbd90bf23374c538e7c1792eda13e44c89...1fa8bcd3b13425bea643ec5a9fa742746e4c6c96)
+
+### Added
+
+ - `b65d3a585` MediaEmbed: added Castos
+ - `d96e5b47b` MediaEmbed: added CodePen
+ - `c7265bc7a` MediaEmbed: added Kaltura
+ - `33da8e189` MediaEmbed: added TradingView
+ - `1fa8bcd3b` MediaEmbed: added Vimeo oEmbed info
+
+### Changed
+
+ - `c81c92802` CallbackGenerator: explicitly cast callback to string
+ - `715710926` MediaEmbed: updated MSNBC
+ - `e9b901e96` MediaEmbed: updated Medium
+
+
 2.7.2 (2020-06-22)
 ==================
 
