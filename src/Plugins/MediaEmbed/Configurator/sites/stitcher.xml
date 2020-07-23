@@ -4,8 +4,9 @@
 	<tags><tag>podcasts</tag></tags>
 
 	<host>stitcher.com</host>
+	<extract>!/splayer/f/(?'fid'\d+)/(?'eid'\d+)!</extract>
 	<scrape>
-		<match>!/podcast/!</match>
+		<match>!/(?:podcast/|s\?)!</match>
 		<extract>!data-eid="(?'eid'\d+)!</extract>
 		<extract>!data-fid="(?'fid'\d+)!</extract>
 	</scrape>

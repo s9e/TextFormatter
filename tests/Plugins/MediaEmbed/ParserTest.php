@@ -1230,16 +1230,26 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('spreaker');
 				}
 			],
-//			[
-//				'http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629',
-//				'<r><STITCHER eid="37808629" fid="12645">http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</STITCHER></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('stitcher');
-//				}
-//			],
+			[
+				'http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629',
+				'<r><STITCHER eid="37808629" fid="12645">http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</STITCHER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('stitcher');
+				}
+			],
+			[
+				'https://www.stitcher.com/s?eid=76322777',
+				'<r><STITCHER eid="76322777" fid="15981">https://www.stitcher.com/s?eid=76322777</STITCHER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('stitcher');
+				}
+			],
 			[
 				'http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode',
 				'<r><TEAMCOCO id="73784">http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</TEAMCOCO></r>',
@@ -3304,7 +3314,16 @@ class ParserTest extends Test
 				{
 					$configurator->MediaEmbed->add('steamstore');
 				}
+			],			[
+				'https://app.stitcher.com/splayer/f/12645/37808629',
+				'<r><STITCHER eid="37808629" fid="12645">https://app.stitcher.com/splayer/f/12645/37808629</STITCHER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('stitcher');
+				}
 			],
+
 			[
 				'http://strawpoll.me/738091',
 				'<r><STRAWPOLL id="738091">http://strawpoll.me/738091</STRAWPOLL></r>',
