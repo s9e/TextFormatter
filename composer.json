@@ -15,7 +15,7 @@
 	},
 	"require-dev": {
 		"matthiasmullie/minify": "*",
-		"phpunit/phpunit":       "*",
+		"phpunit/phpunit":       ">=7.5",
 		"sami/sami":             "4.*"
 	},
 	"suggest": {
