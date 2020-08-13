@@ -42,7 +42,7 @@ class ClosureCompilerServiceTest extends Test
 	public function testCompilationLevelDefault()
 	{
 		$minifier = new ClosureCompilerService;
-		$minifier->httpClient = new ClosureCompilerServiceTestClient;
+		$minifier->httpClient = new ClosureCompilerServiceDummyClient;
 		$minifier->minify('');
 
 		$this->assertStringContainsString(
@@ -57,7 +57,7 @@ class ClosureCompilerServiceTest extends Test
 	public function testExcludesDefaultExternsByDefault()
 	{
 		$minifier = new ClosureCompilerService;
-		$minifier->httpClient = new ClosureCompilerServiceTestClient;
+		$minifier->httpClient = new ClosureCompilerServiceDummyClient;
 		$minifier->minify('');
 
 		$this->assertStringContainsString(
@@ -74,7 +74,7 @@ class ClosureCompilerServiceTest extends Test
 		$externs = file_get_contents(__DIR__ . '/../../../../src/Configurator/JavaScript/externs.service.js');
 
 		$minifier = new ClosureCompilerService;
-		$minifier->httpClient = new ClosureCompilerServiceTestClient;
+		$minifier->httpClient = new ClosureCompilerServiceDummyClient;
 		$minifier->minify('');
 
 		$this->assertStringContainsString(
@@ -145,7 +145,7 @@ class ClosureCompilerServiceTest extends Test
 		$this->expectExceptionMessage('Could not contact the Closure Compiler service');
 
 		$minifier = new ClosureCompilerService;
-		$minifier->httpClient = new ClosureCompilerServiceTestClient;
+		$minifier->httpClient = new ClosureCompilerServiceDummyClient;
 		$minifier->httpClient->willReturn = false;
 		$minifier->minify('');
 	}
@@ -159,7 +159,7 @@ class ClosureCompilerServiceTest extends Test
 		$this->expectExceptionMessage('Closure Compiler service returned invalid JSON: Syntax error');
 
 		$minifier = new ClosureCompilerService;
-		$minifier->httpClient = new ClosureCompilerServiceTestClient;
+		$minifier->httpClient = new ClosureCompilerServiceDummyClient;
 		$minifier->httpClient->willReturn = 'not JSON';
 		$minifier->minify('');
 	}
@@ -174,7 +174,7 @@ class ClosureCompilerServiceTest extends Test
 
 		$minifier = new ClosureCompilerService;
 		$minifier->compilationLevel = 'UNKNOWN';
-		$minifier->httpClient = new ClosureCompilerServiceTestClient;
+		$minifier->httpClient = new ClosureCompilerServiceDummyClient;
 		$minifier->httpClient->willReturn = '{"serverErrors":[{"code":4,"error":"Unknown compression level: UNKNOWN."}]}';
 
 		$minifier->minify('alert()');
@@ -189,14 +189,14 @@ class ClosureCompilerServiceTest extends Test
 		$this->expectExceptionMessage('Parse error. Semi-colon expected');
 
 		$minifier = new ClosureCompilerService;
-		$minifier->httpClient = new ClosureCompilerServiceTestClient;
+		$minifier->httpClient = new ClosureCompilerServiceDummyClient;
 		$minifier->httpClient->willReturn = '{"compiledCode":"","errors":[{"type":"JSC_PARSE_ERROR","file":"Input_0","lineno":1,"charno":5,"error":"Parse error. Semi-colon expected","line":"This should fail"}]}';
 
 		$minifier->minify('This should fail');
 	}
 }
 
-class ClosureCompilerServiceTestClient extends Client
+class ClosureCompilerServiceDummyClient extends Client
 {
 	public $body;
 	public $options;
