@@ -17,7 +17,7 @@ foreach (glob($dirpath . '/*.xml') as $siteFile)
 	$site   = simplexml_load_file($siteFile);
 	$siteId = basename($siteFile, '.xml');
 
-	$html[] = '	<tr title="' . $site['name'] . '">';
+	$html[] = '	<tr title="' . $site['name'] . '" id="' . $siteId . '">';
 	$html[] = '		<td style="font-size:75%"><code>' . $siteId . '</code></td>';
 	$html[] = '		<td style="font-size:50%">' . implode('<br/>', (array) $site->example) . '</td>';
 	$html[] = '	</tr>';

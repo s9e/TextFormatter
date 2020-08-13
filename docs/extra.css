@@ -7,3 +7,8 @@
 {
 	max-width: unset;
 }
+/* MediaEmbed's supported sites */
+tr:target
+{
+	outline: red solid 2px;
+}
