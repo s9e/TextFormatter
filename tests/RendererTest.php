@@ -29,7 +29,7 @@ class RendererTest extends Test
 	public function testInvalidXMLRich()
 	{
 		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('Cannot load XML: Premature end of data in tag r');
+		$this->expectExceptionMessage('Cannot load XML');
 
 		$this->configurator->rendering->getRenderer()->render('<r>');
 	}
@@ -40,7 +40,7 @@ class RendererTest extends Test
 	public function testInvalidXMLPlain()
 	{
 		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('Cannot load XML: Premature end of data in tag t');
+		$this->expectExceptionMessage('Cannot load XML');
 
 		$this->configurator->rendering->getRenderer()->render('<t>');
 	}

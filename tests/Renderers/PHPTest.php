@@ -104,7 +104,7 @@ class PHPTest extends Test
 	public function testInvalidXMLQuick()
 	{
 		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('Cannot load XML: Premature end of data in tag r');
+		$this->expectExceptionMessage('Cannot load XML');
 
 		$this->configurator->rendering->getRenderer()->render('<r>');
 	}

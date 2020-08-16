@@ -607,16 +607,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('dumpert');
 				}
 			],
-			[
-				'http://8tracks.com/lovinq/headphones-in-world-out',
-				'<r><EIGHTTRACKS id="4982023">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('eighttracks');
-				}
-			],
+//			[
+//				'http://8tracks.com/lovinq/headphones-in-world-out',
+//				'<r><EIGHTTRACKS id="4982023">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('eighttracks');
+//				}
+//			],
 			[
 				'https://flic.kr/p/5wBgXo',
 				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',

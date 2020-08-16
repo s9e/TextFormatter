@@ -297,9 +297,9 @@ class TemplateLoaderTest extends Test
 	public function testLoadInvalidXSL()
 	{
 		$this->expectException('RuntimeException');
-		$this->expectExceptionMessage('Invalid XSL: Premature end of data');
+		$this->expectExceptionMessage('Invalid XSL');
 
-		$xsl = '<xsl:value-of select="@foo">';
+		$xsl = '<xsl:value-of select="@foo"';
 		TemplateLoader::load($xsl);
 	}
 
