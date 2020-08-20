@@ -1,6 +1,9 @@
 <site name="Mixcloud" homepage="https://www.mixcloud.com/">
 	<example>https://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</example>
 
+	<oembed endpoint="https://www.mixcloud.com/oembed/"
+	          scheme="https://www.mixcloud.com/{@id}"/>
+
 	<tags><tag>music</tag></tags>
 
 	<host>mixcloud.com</host>
