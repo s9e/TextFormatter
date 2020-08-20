@@ -1,3 +1,22 @@
+2.7.4 (2020-08-20)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/af4a87455710a5c83d54d71938fbb0e359e852c3...e62774c4e372896dd777d4fce36497a293fa14ef)
+
+### Added
+
+ - `e62774c4e` MediaEmbed: added Clyp
+ - `79c359ed8` MediaEmbed: added Mixcloud oEmbed data
+
+### Changed
+
+ - `039a08e49` BBCodes: updated default CODE BBCode
+ - `5aa06ccda` MediaEmbed: updated BBC News
+ - `6ac0b25b2` MediaEmbed: updated Kaltura
+ - `74ee840cd` MediaEmbed: updated Spotify
+ - `9f6654eb9` MediaEmbed: updated Stitcher
+
+
 2.7.3 (2020-07-20)
 ==================
 
