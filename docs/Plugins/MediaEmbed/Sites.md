@@ -57,6 +57,10 @@
 		<td style="font-size:75%"><code>cbsnews</code></td>
 		<td style="font-size:50%">https://www.cbsnews.com/video/is-carbonated-water-a-healthy-option/</td>
 	</tr>
+	<tr title="Clyp" id="clyp">
+		<td style="font-size:75%"><code>clyp</code></td>
+		<td style="font-size:50%">https://clyp.it/0hdvyehn</td>
+	</tr>
 	<tr title="CNBC" id="cnbc">
 		<td style="font-size:75%"><code>cnbc</code></td>
 		<td style="font-size:50%">https://video.cnbc.com/gallery/?video=3000269279<br/>https://www.cnbc.com/video/2019/06/05/carplay-android-auto-alexa-big-tech-gets-into-our-cars.html</td>

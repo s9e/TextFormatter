@@ -1834,6 +1834,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://clyp.it/0hdvyehn',
+				'<r><CLYP id="0hdvyehn">https://clyp.it/0hdvyehn</CLYP></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('clyp');
+				}
+			],
+			[
+				'https://clyp.it/user/2sww5vaw',
+				'<t>https://clyp.it/user/2sww5vaw</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('clyp');
+				}
+			],
+			[
 				'http://video.cnbc.com/gallery/?video=3000269279',
 				'<r><CNBC id="3000269279">http://video.cnbc.com/gallery/?video=3000269279</CNBC></r>',
 				[],

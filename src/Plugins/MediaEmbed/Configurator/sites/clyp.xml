@@ -1,0 +1,9 @@
+<site name="Clyp" homepage="https://clyp.it/">
+	<example>https://clyp.it/0hdvyehn</example>
+
+	<tags><tag>music</tag></tags>
+
+	<host>clyp.it</host>
+	<extract>@clyp\.it/(?!user/)(?'id'\w+)@</extract>
+	<iframe width="100%" height="265" max-width="900" src="https://clyp.it/{@id}/widget"/>
+</site>
