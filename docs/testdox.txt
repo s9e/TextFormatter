@@ -5483,9 +5483,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #60
  [x] Scraping tests with data set #61
  [x] Scraping tests with data set #62
- [x] Scraping tests with data set #63
- [x] Scraping tests with data set #64
- [x] Scraping tests with data set #65
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
@@ -5498,7 +5495,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping+rendering tests with data set #9
  [x] Scraping+rendering tests with data set #10
  [x] Scraping+rendering tests with data set #11
- [x] Scraping+rendering tests with data set #12
  [x] Legacy rendering tests with data set #0
  [x] Legacy rendering tests with data set #1
  [x] Legacy rendering tests with data set #2
@@ -5512,6 +5508,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Legacy rendering tests with data set #10
  [x] Legacy rendering tests with data set #11
  [x] Legacy rendering tests with data set #12
+ [x] Legacy rendering tests with data set #13
  [x] Parsing tests with data set #0
  [x] Parsing tests with data set #1
  [x] Parsing tests with data set #2
@@ -5797,6 +5794,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #282
  [x] Parsing tests with data set #283
  [x] Parsing tests with data set #284
+ [x] Parsing tests with data set #285
+ [x] Parsing tests with data set #286
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -6082,6 +6081,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #282
  [x] Parsing tests (JavaScript) with data set #283
  [x] Parsing tests (JavaScript) with data set #284
+ [x] Parsing tests (JavaScript) with data set #285
+ [x] Parsing tests (JavaScript) with data set #286
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
@@ -6168,6 +6169,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing+rendering tests with data set #83
  [x] Parsing+rendering tests with data set #84
  [x] Parsing+rendering tests with data set #85
+ [x] Parsing+rendering tests with data set #86
 
 Configurator (s9e\TextFormatter\Tests\Plugins\PipeTables\Configurator)
  [x] Creates TABLE, TBODY, TD, TH, THEAD and TR tags
@@ -7186,6 +7188,7 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins with data set #291
  [x] Tests from plugins with data set #292
  [x] Tests from plugins with data set #293
+ [x] Tests from plugins with data set #294
  [x] Tests from plugins (Quick renderer) with data set #0
  [x] Tests from plugins (Quick renderer) with data set #1
  [x] Tests from plugins (Quick renderer) with data set #2
@@ -7480,6 +7483,7 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins (Quick renderer) with data set #291
  [x] Tests from plugins (Quick renderer) with data set #292
  [x] Tests from plugins (Quick renderer) with data set #293
+ [x] Tests from plugins (Quick renderer) with data set #294
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
 

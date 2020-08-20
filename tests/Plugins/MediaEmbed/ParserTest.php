@@ -523,30 +523,6 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('bandcamp');
 //				}
 //			],
-			[
-				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
-				'(<r><BBCNEWS id="\\w+/42847060">http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</BBCNEWS></r>)',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bbcnews');
-				},
-				null,
-				'assertMatchesRegularExpression'
-			],
-			[
-				'https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines',
-				'(<r><BBCNEWS id="\\w+/48141248">https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</BBCNEWS></r>)',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bbcnews');
-				},
-				null,
-				'assertMatchesRegularExpression'
-			],
 //			[
 //				'http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football',
 //				'<r><BLEACHERREPORT id="dtYjVhdDr5492cyQTjVPDcM--Mg2rJj5">http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football</BLEACHERREPORT></r>',
@@ -940,16 +916,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('internetarchive');
 				}
 			],
-			[
-				'https://www.kaltura.com/tiny/b5tib',
-				'<r><KALTURA entry_id="0_ekjebl7h" partner_id="1581781" sp="158178100" uiconf_id="20490561">https://www.kaltura.com/tiny/b5tib</KALTURA></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('kaltura');
-				}
-			],
+//			[
+//				'https://www.kaltura.com/tiny/b5tib',
+//				'<r><KALTURA entry_id="0_ekjebl7h" partner_id="1581781" sp="158178100" uiconf_id="20490561">https://www.kaltura.com/tiny/b5tib</KALTURA></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('kaltura');
+//				}
+//			],
 			[
 				'https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a',
 				'<r><KALTURA entry_id="1_hu0rc15a" partner_id="1888231" sp="188823100" uiconf_id="28242311">https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a</KALTURA></r>',
@@ -1436,17 +1412,6 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('bandcamp');
 //				}
 //			],
-			[
-				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
-				'(<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/embed/\\w+/42847060"></iframe></span></span>)',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('bbcnews');
-				},
-				'assertMatchesRegularExpression'
-			],
 //			[
 //				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
 //				'<span data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
@@ -1781,6 +1746,24 @@ class ParserTest extends Test
 			[
 				'https://www.bbc.com/news/uk-england-london-48651131',
 				'<t>https://www.bbc.com/news/uk-england-london-48651131</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
+			[
+				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
+				'<r><BBCNEWS id="42847060">http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull</BBCNEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
+			[
+				'https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines',
+				'<r><BBCNEWS id="48141248">https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</BBCNEWS></r>',
 				[],
 				function ($configurator)
 				{
@@ -4318,6 +4301,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
+				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/video-42847060/embed"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
+			[
 				'http://www.cbsnews.com/video/watch/?id=50156501n',
 				'<span data-s9e-mediaembed="cbsnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:62.5%;padding-bottom:calc(56.25% + 40px)"><object data="//i.i.cbsi.com/cnwk.1d/av/video/cbsnews/atlantis2/cbsnews_player_embed.swf" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"><param name="flashvars" value="si=254&amp;contentValue=50156501"></object></span></span>',
 				[],
@@ -5003,7 +4995,15 @@ class ParserTest extends Test
 			],
 			[
 				'<r><BBCNEWS ad_site="/news/business" playlist="/news/business-29149086A" poster="/media/images/77590000/jpg/_77590973_mapopgetty.jpg">http://www.bbc.com/news/business-29149086</BBCNEWS></r>',
-				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/business-29149086/embed"></iframe></span></span>',
+				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/video-business-29149086A/embed"></iframe></span></span>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
+			[
+				'<r><BBCNEWS id="p0784g1m/48141248">https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</BBCNEWS></r>',
+				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/video-48141248/embed"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('bbcnews');
