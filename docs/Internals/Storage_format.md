@@ -1,11 +1,14 @@
 Storage format
 ==============
 
-s9e\TextFormatter parses the original text and produces an XML representation of the text and its markup. That XML document is what should be stored in the database. The original text can be retrieved from the XML using the `Unparser` class, or be rendered as (X)HTML using a renderer.
+s9e\TextFormatter parses the original text and produces an XML representation of the text and its markup. That XML document is what should be stored in the database. The original text can be extracted from the XML using the `Unparser` class, or be transformed into HTML using a renderer.
 
-The XML representation of a text should *not* be altered unless you *really* know what you're doing. If you want to alter a text, it's better to do it **before parsing** or **after rendering**.
+The XML representation of a text should *not* be manually altered unless you *really* know what you're doing. If you want to manually alter a text, it's better to do it **before parsing** or **after rendering**. Tools found in the `s9e\TextFormatter\Utils` class and namespace are safe to use at any time.
+
 
 ### Plain text
+
+Input that contains no valid markup is considered plain text. The root node of the XML representation will be `t` and the rest of the document will only contain `br` and `p` tags. As of version 2.x of the library, the XML representation is guaranteed to start with `<t>`.
 
 In the following example, we use the Forum bundle to parse a plain text and see what the XML representation looks like. Nothing special here.
 
@@ -21,9 +24,12 @@ echo $xml;
 <t>Plain &amp; boring text.</t>
 ```
 
+
 ### Rich text
 
-In the following example, we use the Forum bundle to parse two links: the first one using the BBCode syntax, and the second using the Autolink plugin. You can see that both links are represented the same way. The only difference are the `<s>` and `<e>` elements in which the markup elements (in this case, BBCodes) are saved.
+Anything that isn't plain text is considered rich text. The root node of the XML representation will be `r` and the rest of the document may contain any other tags, including tags that were not defined during configuration. As of version 2.x of the library, the XML representation is guaranteed to start with `<r` but the root node may also contain XML namespace declarations required for the rest of the document.
+
+In the following example, we use the Forum bundle to parse two links: the first one using the BBCode syntax, and the second using the Autolink plugin. You can see that both links are represented the same way. The only difference are the `s` and `e` elements in which the markup elements (in this case, BBCodes) are saved.
 
 ```php
 use s9e\TextFormatter\Bundles\Forum as TextFormatter;

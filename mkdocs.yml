@@ -118,4 +118,5 @@ nav:
     - General changes: Internals/Changes.md
     - Limits: Internals/Limits.md
     - PHP renderer: Internals/PHP_renderer.md
+    - Storage format: Internals/Storage_format.md
     - Tag priorities: Internals/Tag_priorities.md
