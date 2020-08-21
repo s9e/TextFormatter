@@ -2730,6 +2730,33 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://elemental.medium.com/your-surge-capacity-is-depleted-it-s-why-you-feel-awful-de285d542f4c',
+				'<r><MEDIUM id="de285d542f4c">https://elemental.medium.com/your-surge-capacity-is-depleted-it-s-why-you-feel-awful-de285d542f4c</MEDIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('medium');
+				}
+			],
+			[
+				'https://medium.com/p/de285d542f4c',
+				'<r><MEDIUM id="de285d542f4c">https://medium.com/p/de285d542f4c</MEDIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('medium');
+				}
+			],
+			[
+				'https://medium.com/feedium/100-popular-on-medium-stories-here-s-what-i-found-3702329e5093',
+				'<r><MEDIUM id="3702329e5093">https://medium.com/feedium/100-popular-on-medium-stories-here-s-what-i-found-3702329e5093</MEDIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('medium');
+				}
+			],
+			[
 				'https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853',
 				'<r><MEGAPHONE id="LKN8165322853">https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853</MEGAPHONE></r>',
 				[],
