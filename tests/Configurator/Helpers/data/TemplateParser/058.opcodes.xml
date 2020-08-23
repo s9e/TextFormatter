@@ -1,0 +1,19 @@
+<template>
+  <element id="1" name="td">
+    <switch>
+      <case test="@colspan">
+        <attribute name="colspan">
+          <output escape="attribute" type="xpath">@colspan</output>
+        </attribute>
+      </case>
+    </switch>
+    <switch>
+      <case test="@rowspan">
+        <attribute name="rowspan">
+          <output escape="attribute" type="xpath">@rowspan</output>
+        </attribute>
+      </case>
+    </switch>
+    <closeTag id="1"/>
+  </element>
+</template>

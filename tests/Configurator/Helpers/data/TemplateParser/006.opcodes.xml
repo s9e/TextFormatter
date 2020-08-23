@@ -1,0 +1,7 @@
+<opcodes>
+  <output_static>&lt;b title="</output_static>
+  <output_xpath expr="@bar"/>
+  <output_static>"&gt;</output_static>
+  <apply_templates/>
+  <output_static>&lt;/b&gt;</output_static>
+</opcodes>

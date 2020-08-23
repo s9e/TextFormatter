@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<template>
+  <switch>
+    <case test="@foo='a'or@bar='b'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case test="@foo='c'">
+      <output escape="text" type="literal">.</output>
+    </case>
+    <case test="@foo='d'">
+      <output escape="text" type="literal">.</output>
+    </case>
+  </switch>
+</template>

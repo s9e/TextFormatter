@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<template>
+  <element name="hr" id="1" void="yes">
+    <attribute name="title">
+      <output escape="attribute" type="literal">foo</output>
+    </attribute>
+    <closeTag id="1"/>
+  </element>
+</template>

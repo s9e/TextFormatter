@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<template>
+  <element id="1" name="div">
+    <switch>
+      <case test="@foo">
+        <switch>
+          <case test="@foo">
+            <closeTag id="1" set=""/>
+            <output escape="text" type="literal">.</output>
+          </case>
+        </switch>
+      </case>
+      <case>
+        <closeTag id="1" set=""/>
+        <output escape="text" type="literal">.</output>
+      </case>
+    </switch>
+    <closeTag check="" id="1"/>
+  </element>
+</template>

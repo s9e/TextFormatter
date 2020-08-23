@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<template>
+  <element id="1" name="div">
+    <closeTag id="1"/>
+    <switch>
+      <case test="@foo">
+        <output escape="text" type="literal">.</output>
+      </case>
+    </switch>
+  </element>
+</template>

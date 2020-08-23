@@ -1,0 +1,3 @@
+<template>
+  <output escape="text" type="literal">Hello World</output>
+</template>

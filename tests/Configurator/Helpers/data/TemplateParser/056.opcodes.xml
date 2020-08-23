@@ -1,0 +1,4 @@
+<template>
+  <output escape="text" type="literal">&amp;&amp;</output>
+  <output disable-output-escaping="yes" escape="raw" type="literal">&amp;</output>
+</template>

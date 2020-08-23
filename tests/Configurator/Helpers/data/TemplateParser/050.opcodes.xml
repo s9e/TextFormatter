@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<template>
+  <element id="1" name="script">
+    <closeTag id="1"/>
+    <output escape="raw" type="literal">0&lt;1 &amp;&amp; 1&lt;0 &amp;&amp; alert(1)</output>
+  </element>
+</template>

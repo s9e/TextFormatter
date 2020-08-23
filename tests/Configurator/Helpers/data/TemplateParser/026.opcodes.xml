@@ -1,0 +1,14 @@
+<template>
+  <switch>
+    <case test="@x">
+      <element id="1" name="hr" void="yes">
+        <closeTag id="1"/>
+      </element>
+    </case>
+    <case>
+      <element id="2" name="br" void="yes">
+        <closeTag id="2"/>
+      </element>
+    </case>
+  </switch>
+</template>
