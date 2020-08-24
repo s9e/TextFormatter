@@ -1,6 +1,8 @@
 `escape` values:
 
  - `attribute`
+ - `comment` ?
+ - `raw`
  - `text`
  - `url` ?
 
