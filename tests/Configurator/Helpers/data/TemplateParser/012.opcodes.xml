@@ -1,25 +1,18 @@
-<template>
-  <element name="blockquote" id="1">
-    <switch>
-      <case test="not(@author)">
-        <attribute name="class">
-          <output escape="attribute" type="literal">uncited</output>
-        </attribute>
-      </case>
-    </switch>
-    <closeTag id="1"/>
-    <element name="div" id="2">
-      <closeTag id="2"/>
-      <switch>
-        <case test="@author">
-          <element name="cite" id="3">
-            <closeTag id="3"/>
-            <output escape="text" type="xpath">@author</output>
-            <output escape="text" type="literal"> wrote:</output>
-          </element>
-        </case>
-      </switch>
-      <applyTemplates/>
-    </element>
-  </element>
-</template>
+<opcodes>
+  <output_literal>&lt;blockquote</output_literal>
+  <conditions>
+    <condition_xpath expr="not(@author)">
+      <output_literal> class="uncited"</output_literal>
+    </condition_xpath>
+  </conditions>
+  <output_literal>&gt;&lt;div&gt;</output_literal>
+  <conditions>
+    <condition_xpath expr="@author">
+      <output_literal>&lt;cite&gt;</output_literal>
+      <output_xpath expr="@author"/>
+      <output_literal> wrote:&lt;/cite&gt;</output_literal>
+    </condition_xpath>
+  </conditions>
+  <apply_templates/>
+  <output_literal>&lt;/div&gt;&lt;/blockquote&gt;</output_literal>
+</opcodes>

@@ -1,7 +1,7 @@
 <opcodes>
-  <output_static>&lt;b title="{foo}</output_static>
+  <output_literal>&lt;b title="{foo}</output_literal>
   <output_xpath expr="@bar"/>
-  <output_static>&amp;lt;baz&amp;gt;"&gt;</output_static>
+  <output_literal>&amp;lt;baz&amp;gt;"&gt;</output_literal>
   <apply_templates/>
-  <output_static>&lt;/b&gt;</output_static>
+  <output_literal>&lt;/b&gt;</output_literal>
 </opcodes>

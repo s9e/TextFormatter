@@ -1,13 +1,13 @@
-<template>
-  <element name="b" id="1">
-    <switch>
-      <case test="@foo">
-        <attribute name="title">
-          <output escape="attribute" type="xpath">@bar</output>
-        </attribute>
-      </case>
-    </switch>
-    <closeTag id="1"/>
-    <applyTemplates/>
-  </element>
-</template>
+<opcodes>
+  <output_literal>&lt;b</output_literal>
+  <conditions>
+    <condition_xpath expr="@foo">
+      <output_literal> title="</output_literal>
+      <output_xpath expr="@bar"/>
+      <output_literal>"</output_literal>
+	</condition_xpath>
+  </conditions>
+  <output_literal>&gt;</output_literal>
+  <apply_templates/>
+  <output_literal>&lt;/b&gt;</output_literal>
+</opcodes>

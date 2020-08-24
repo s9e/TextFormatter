@@ -1,6 +1,5 @@
-<template>
-  <element name="b" id="1">
-    <closeTag id="1"/>
-    <applyTemplates select="I"/>
-  </element>
-</template>
+<opcodes>
+  <output_literal>&lt;b&gt;</output_literal>
+  <apply_templates select="I"/>
+  <output_literal>&lt;/b&gt;</output_literal>
+</opcodes>

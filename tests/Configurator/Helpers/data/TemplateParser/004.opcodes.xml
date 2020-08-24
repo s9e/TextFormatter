@@ -1,10 +1,10 @@
 <opcodes>
-  <store_xpath id="0">local-name()</store_xpath>
-  <output_static>&lt;</output_static>
-  <output_store id="0"/>
-  <output_static>&gt;</output_static>
+  <buffer_xpath id="0" expr="local-name()"/>
+  <output_literal>&lt;</output_literal>
+  <output_buffer id="0"/>
+  <output_literal>&gt;</output_literal>
   <apply_templates/>
-  <output_static>&lt;/</output_static>
-  <output_store id="0"/>
-  <output_static>&gt;</output_static>
+  <output_literal>&lt;/</output_literal>
+  <output_buffer id="0"/>
+  <output_literal>&gt;</output_literal>
 </opcodes>
