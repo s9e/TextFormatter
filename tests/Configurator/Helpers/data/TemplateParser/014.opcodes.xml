@@ -1,13 +1,13 @@
-<template>
-  <switch>
-    <case test="@a">
-      <output escape="text" type="literal">A</output>
-    </case>
-    <case test="@b">
-      <output escape="text" type="literal">B</output>
-    </case>
-    <case>
-      <output escape="text" type="literal">C</output>
-    </case>
-  </switch>
-</template>
+<opcodes>
+  <conditions>
+    <condition_xpath expr="@a">
+      <output_literal>A</output_literal>
+    </condition_xpath>
+    <condition_xpath expr="@b">
+      <output_literal>B</output_literal>
+    </condition_xpath>
+    <condition_default>
+      <output_literal>C</output_literal>
+    </condition_xpath>
+  </conditions>
+</opcodes>
