@@ -1,18 +1,18 @@
 <opcodes>
   <output_literal>&lt;blockquote</output_literal>
-  <conditions>
+  <conditional>
     <condition_xpath expr="not(@author)">
       <output_literal> class="uncited"</output_literal>
     </condition_xpath>
-  </conditions>
+  </conditional>
   <output_literal>&gt;&lt;div&gt;</output_literal>
-  <conditions>
+  <conditional>
     <condition_xpath expr="@author">
       <output_literal>&lt;cite&gt;</output_literal>
       <output_xpath expr="@author"/>
       <output_literal> wrote:&lt;/cite&gt;</output_literal>
     </condition_xpath>
-  </conditions>
+  </conditional>
   <apply_templates/>
   <output_literal>&lt;/div&gt;&lt;/blockquote&gt;</output_literal>
 </opcodes>

@@ -1,5 +1,5 @@
 <opcodes>
-  <conditions>
+  <conditional>
     <condition_xpath expr="@a">
       <output_literal>A</output_literal>
     </condition_xpath>
@@ -9,5 +9,5 @@
     <condition_default>
       <output_literal>C</output_literal>
     </condition_xpath>
-  </conditions>
+  </conditional>
 </opcodes>

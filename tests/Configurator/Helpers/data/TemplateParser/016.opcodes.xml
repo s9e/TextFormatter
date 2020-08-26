@@ -2,13 +2,13 @@
   <output_literal>&lt;a href="</output_literal>
   <output_xpath expr="@href"/>
   <output_literal>"</output_literal>
-  <conditions>
+  <conditional>
     <condition_xpath expr="@title">
       <output_literal> title="</output_literal>
       <output_xpath expr="@title"/>
       <output_literal>"</output_literal>
     </condition_xpath>
-  </conditions>
+  </conditional>
   <output_literal>"&gt;</output_literal>
   <apply_templates/>
   <output_literal>&lt;/a&gt;</output_literal>
