@@ -2665,7 +2665,7 @@ Filter Processing (s9e\TextFormatter\Tests\Parser\FilterProcessing)
  [x] filterTag() stops executing the tag's filterChain if a filter invalidates the tag
  [x] filterTag() calls the logger's setTag() and unsetTag() methods
  [x] filterTag() passes the Parser instance to tag filters via the 'parser' parameter
- [ ] filterTag() can pass the list of open tags to tag filters via the 'openTags' parameter
+ [x] filterTag() can pass the list of open tags to tag filters via the 'openTags' parameter
  [x] filterTag() can pass the text being parsed via the 'text' parameter
  [x] filterTag() passes computed values innerText, outerText and tagText
  [x] filterAttributes() removes the tag's attributes if none were configured
@@ -2675,7 +2675,7 @@ Filter Processing (s9e\TextFormatter\Tests\Parser\FilterProcessing)
  [x] filterAttributes() removes invalid attributes
  [x] filterAttributes() replaces invalid attributes with their defaultValue if applicable
  [x] filterAttributes() adds missing attributes with their defaultValue if applicable
- [ ] filterAttributes() calls the logger's setAttribute() and unsetAttribute() methods for each attribute with a filterChain
+ [x] filterAttributes() calls the logger's setAttribute() and unsetAttribute() methods for each attribute with a filterChain
 
 Logger (s9e\TextFormatter\Tests\Parser\Logger)
  [x] debug() generates a "debug" entry in the logs
@@ -5357,8 +5357,8 @@ Template Builder (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Templa
  [x] build() does not add the data-s9e-mediaembed attribute on XSL elements
 
 Choose (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Choose)
- [ ] getTemplate() with one when / one otherwise
- [ ] getTemplate() with two when / one otherwise
+ [x] getTemplate() with one when / one otherwise
+ [x] getTemplate() with two when / one otherwise
 
 Flash (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash)
  [x] getTemplate() tests with data set #0
@@ -7690,7 +7690,7 @@ Utils (s9e\TextFormatter\Tests\Utils)
 Bundle (s9e\TextFormatter\Tests\Bundle)
  [x] The default implementation for getJS() returns an empty string
  [x] parse() creates a parser, parses the input and returns the output
- [ ] parse() reuses the same parser on consecutive calls
+ [x] parse() reuses the same parser on consecutive calls
  [x] parse() executes static::$beforeParse before calling the parser's parse() method
  [x] parse() executes static::$afterParse after calling the parser's parse() method
  [x] render() creates a renderer, renders the input and returns the result

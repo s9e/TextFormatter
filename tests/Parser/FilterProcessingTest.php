@@ -331,14 +331,10 @@ class FilterProcessingTest extends Test
 		$mock = $this->getMockBuilder('stdClass')
 		             ->setMethods(['foo'])
 		             ->getMock();
-		$mock->expects($this->at(0))
+		$mock->expects($this->exactly(2))
 		     ->method('foo')
-		     ->with([])
-		     ->will($this->returnValue(true));
-		$mock->expects($this->at(1))
-		     ->method('foo')
-		     ->with([new Tag(Tag::START_TAG, 'X', 0, 0)])
-		     ->will($this->returnValue(true));
+		     ->withConsecutive([[]], [[new Tag(Tag::START_TAG, 'X', 0, 0)]])
+		     ->willReturn(true);
 
 		$this->configurator->rulesGenerator->clear();
 		$this->configurator->rulesGenerator->add('AllowAll');
@@ -602,12 +598,9 @@ class FilterProcessingTest extends Test
 		$logger = $this->getMockBuilder('s9e\\TextFormatter\\Parser\\Logger')
 		               ->setMethods(['setAttribute', 'unsetAttribute'])
 		               ->getMock();
-		$logger->expects($this->at(0))
+		$logger->expects($this->exactly(2))
 		       ->method('setAttribute')
-		       ->with('bar');
-		$logger->expects($this->at(2))
-		       ->method('setAttribute')
-		       ->with('foo');
+		       ->withConsecutive(['bar'], ['foo']);
 		$logger->expects($this->exactly(2))
 		       ->method('unsetAttribute');
 

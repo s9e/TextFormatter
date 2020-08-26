@@ -20,12 +20,9 @@ class ChooseTest extends Test
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\TemplateBuilder')
 		             ->setMethods(['getTemplate'])
 		             ->getMock();
-		$mock->expects($this->at(0))
+		$mock->expects($this->exactly(2))
 		     ->method('getTemplate')
-		     ->will($this->returnValue('foo'));
-		$mock->expects($this->at(1))
-		     ->method('getTemplate')
-		     ->will($this->returnValue('bar'));
+		     ->willReturnOnConsecutiveCalls('foo', 'bar');
 
 		$attributes = [
 			'when' => [
@@ -53,15 +50,9 @@ class ChooseTest extends Test
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\TemplateBuilder')
 		             ->setMethods(['getTemplate'])
 		             ->getMock();
-		$mock->expects($this->at(0))
+		$mock->expects($this->exactly(3))
 		     ->method('getTemplate')
-		     ->will($this->returnValue('foo'));
-		$mock->expects($this->at(1))
-		     ->method('getTemplate')
-		     ->will($this->returnValue('bar'));
-		$mock->expects($this->at(2))
-		     ->method('getTemplate')
-		     ->will($this->returnValue('baz'));
+		     ->willReturnOnConsecutiveCalls('foo', 'bar', 'baz');
 
 		$attributes = [
 			'when' => [

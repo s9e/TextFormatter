@@ -55,14 +55,10 @@ class BundleTest extends Test
 		$xml2  = '<r>Sup Earth <E>:)</e></r>';
 
 		$mock = $this->getMockBuilder('stdClass')->setMethods(['parse'])->getMock();
-		$mock->expects($this->at(0))
+		$mock->expects($this->exactly(2))
 		     ->method('parse')
-		     ->with($text1)
-		     ->will($this->returnValue($xml1));
-		$mock->expects($this->at(1))
-		     ->method('parse')
-		     ->with($text2)
-		     ->will($this->returnValue($xml2));
+		     ->withConsecutive([$text1], [$text2])
+		     ->willReturnOnConsecutiveCalls($xml1, $xml2);
 
 		DummyBundle::$_parser = $mock;
 
