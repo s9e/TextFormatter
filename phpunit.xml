@@ -1,17 +1,10 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         bootstrap="tests/bootstrap.php"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnError="false"
-         stopOnFailure="false"
-         verbose="true"
->
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" bootstrap="tests/bootstrap.php" colors="true" convertErrorsToExceptions="true" convertNoticesToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" stopOnError="false" stopOnFailure="false" verbose="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+	<coverage>
+		<include>
+			<directory suffix=".php">src</directory>
+		</include>
+	</coverage>
 	<groups>
 		<exclude>
 			<group>needs-network</group>
@@ -19,7 +12,6 @@
 			<group>slow</group>
 		</exclude>
 	</groups>
-
 	<testsuites>
 		<testsuite name="TextFormatter">
 			<!-- Test the base classes and traits first -->
@@ -29,7 +21,6 @@
 			<file>tests/Configurator/Traits/CollectionProxyTest.php</file>
 			<file>tests/Configurator/Traits/ConfigurableTest.php</file>
 			<file>tests/Configurator/Traits/TemplateSafenessTest.php</file>
-
 			<file>tests/ConfiguratorTest.php</file>
 			<file>tests/Configurator/Collections/AttributeCollectionTest.php</file>
 			<file>tests/Configurator/Collections/AttributeFilterChainTest.php</file>
@@ -201,8 +192,7 @@
 			<file>tests/Configurator/Bundles/FatdownTest.php</file>
 			<file>tests/Configurator/Bundles/ForumTest.php</file>
 			<file>tests/Configurator/Bundles/MediaPackTest.php</file>
-
-			<!-- Trying to sort by order of dependency  -->
+			<!-- Trying to sort by order of dependency	-->
 			<file>tests/Parser/TagTest.php</file>
 			<file>tests/Parser/FilterProcessingTest.php</file>
 			<file>tests/Parser/LoggerTest.php</file>
@@ -228,7 +218,6 @@
 			<file>tests/Parser/AttributeFilters/UrlFilterTest.php</file>
 			<file>tests/ParserTest.php</file>
 			<file>tests/Parser/FunctionalTest.php</file>
-
 			<file>tests/Plugins/ConfiguratorBaseTest.php</file>
 			<file>tests/Plugins/ParserBaseTest.php</file>
 			<file>tests/Plugins/Autoemail/ConfiguratorTest.php</file>
@@ -295,7 +284,6 @@
 			<file>tests/Plugins/TaskLists/ConfiguratorTest.php</file>
 			<file>tests/Plugins/TaskLists/ParserTest.php</file>
 			<file>tests/Plugins/TaskLists/HelperTest.php</file>
-
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/BooleanFunctionsTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/BooleanOperatorsTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/ComparisonsTest.php</file>
@@ -314,12 +302,10 @@
 			<file>tests/Configurator/RendererGenerators/PHPTest.php</file>
 			<file>tests/Configurator/RendererGenerators/UnformattedTest.php</file>
 			<file>tests/Configurator/RendererGenerators/XSLTTest.php</file>
-
 			<file>tests/RendererTest.php</file>
 			<file>tests/Renderers/XSLTTest.php</file>
 			<file>tests/Renderers/PHPTest.php</file>
 			<file>tests/Renderers/UnformattedTest.php</file>
-
 			<file>tests/UnparserTest.php</file>
 			<file>tests/Utils/Http/Clients/CachedTest.php</file>
 			<file>tests/Utils/Http/Clients/CurlTest.php</file>
@@ -327,17 +313,10 @@
 			<file>tests/Utils/HttpTest.php</file>
 			<file>tests/Utils/XPathTest.php</file>
 			<file>tests/UtilsTest.php</file>
-
 			<file>tests/BundleTest.php</file>
 			<file>tests/Bundles/FatdownTest.php</file>
 			<file>tests/Bundles/ForumTest.php</file>
 			<file>tests/Bundles/MediaPackTest.php</file>
 		</testsuite>
 	</testsuites>
-
-	<filter>
-		<whitelist>
-			<directory suffix=".php">src</directory>
-		</whitelist>
-	</filter>
 </phpunit>
