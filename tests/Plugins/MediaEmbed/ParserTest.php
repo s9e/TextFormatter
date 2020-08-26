@@ -630,8 +630,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://gty.im/3232182',
-				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">http://gty.im/3232182</GETTY></r>)',
+				'https://gty.im/3232182',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">https://gty.im/3232182</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -642,8 +642,8 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				'http://www.gettyimages.com/detail/3232182',
-				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">http://www.gettyimages.com/detail/3232182</GETTY></r>)',
+				'https://www.gettyimages.com/detail/3232182',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">https://www.gettyimages.com/detail/3232182</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -654,8 +654,8 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				'http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182',
-				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">http://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</GETTY></r>)',
+				'https://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182',
+				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">https://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -666,8 +666,8 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				"http://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667",
-				'(<r><GETTY et="[-\\w]{22}" height="594" id="494028667" sig="[-\\w]{43}=" width="396">http://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667</GETTY></r>)',
+				"https://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667",
+				'(<r><GETTY et="[-\\w]{22}" height="594" id="494028667" sig="[-\\w]{43}=" width="396">https://www.gettyimages.co.jp/detail/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E5%86%99%E7%9C%9F/494028667</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -678,8 +678,8 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				"http://www.gettyimages.co.jp/detail/ニュース写真/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-ニュース写真/494028667",
-				'(<r><GETTY et="[-\\w]{22}" height="594" id="494028667" sig="[-\\w]{43}=" width="396">http://www.gettyimages.co.jp/detail/ニュース写真/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-ニュース写真/494028667</GETTY></r>)',
+				"https://www.gettyimages.co.jp/detail/ニュース写真/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-ニュース写真/494028667",
+				'(<r><GETTY et="[-\\w]{22}" height="594" id="494028667" sig="[-\\w]{43}=" width="396">https://www.gettyimages.co.jp/detail/ニュース写真/cher-lloyd-promotes-the-new-cd-sorry-im-late-at-nbc-experience-ニュース写真/494028667</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -690,8 +690,8 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				'http://www.gettyimages.com.au/event/celebrities-at-french-open-2016-day-seven-642247671#athlete-mariejose-perec-and-boxer-jeanmarc-mormeck-attend-the-france-picture-id534861206',
-				'(<r><GETTY et="[-\\w]{22}" height="594" id="534861206" sig="[-\\w]{43}=" width="396">http://www.gettyimages.com.au/event/celebrities-at-french-open-2016-day-seven-642247671#athlete-mariejose-perec-and-boxer-jeanmarc-mormeck-attend-the-france-picture-id534861206</GETTY></r>)',
+				'https://www.gettyimages.com.au/detail/news-photo/sports-journalist-laurent-luyat-plays-with-a-tennis-ball-at-news-photo/534861358',
+				'(<r><GETTY et="[-\\w]{22}" height="396" id="534861358" sig="[-\\w]{43}=" width="594">https://www.gettyimages.com.au/detail/news-photo/sports-journalist-laurent-luyat-plays-with-a-tennis-ball-at-news-photo/534861358</GETTY></r>)',
 				[],
 				function ($configurator)
 				{
@@ -1433,7 +1433,7 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'http://www.gettyimages.com/detail/3232182',
+				'https://www.gettyimages.com/detail/3232182',
 				'(<span data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:67\\.1717171717172%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\w]{22}&amp;tld=com&amp;sig=[-\w]{43}=&amp;caption=false&amp;ver=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>)',
 				[],
 				function ($configurator)
