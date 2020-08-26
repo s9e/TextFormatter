@@ -702,8 +702,8 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				'http://gfycat.com/LoathsomeHarmfulJenny',
-				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">http://gfycat.com/LoathsomeHarmfulJenny</GFYCAT></r>',
+				'https://gfycat.com/LoathsomeHarmfulJenny',
+				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">https://gfycat.com/LoathsomeHarmfulJenny</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -712,8 +712,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://gfycat.com/loathsomeharmfuljenny',
-				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">http://gfycat.com/loathsomeharmfuljenny</GFYCAT></r>',
+				'https://gfycat.com/loathsomeharmfuljenny',
+				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">https://gfycat.com/loathsomeharmfuljenny</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -732,8 +732,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://gfycat.com/Test',
-				'<r><GFYCAT height="360" id="Test" width="640">http://gfycat.com/Test</GFYCAT></r>',
+				'https://gfycat.com/Test',
+				'<r><GFYCAT height="360" id="Test" width="640">https://gfycat.com/Test</GFYCAT></r>',
 				[],
 				function ($configurator)
 				{
@@ -926,16 +926,16 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('kaltura');
 //				}
 //			],
-			[
-				'https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a',
-				'<r><KALTURA entry_id="1_hu0rc15a" partner_id="1888231" sp="188823100" uiconf_id="28242311">https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a</KALTURA></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('kaltura');
-				}
-			],
+//			[
+//				'https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a',
+//				'<r><KALTURA entry_id="1_hu0rc15a" partner_id="1888231" sp="188823100" uiconf_id="28242311">https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a</KALTURA></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('kaltura');
+//				}
+//			],
 			[
 				'http://video.khl.ru/events/233677',
 				'(<r><KHL id="free_\\w+_hd/2_5297335363/\\w+/\\d+">http://video.khl.ru/events/233677</KHL></r>)',
@@ -1444,7 +1444,7 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				'http://gfycat.com/LoathsomeHarmfulJenny',
+				'https://gfycat.com/LoathsomeHarmfulJenny',
 				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
@@ -1454,7 +1454,7 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://gfycat.com/ifr/LoathsomeHarmfulJenny',
+				'https://gfycat.com/ifr/LoathsomeHarmfulJenny',
 				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
