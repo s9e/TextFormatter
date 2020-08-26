@@ -635,6 +635,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped();
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('getty');
 				},
@@ -647,6 +651,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped();
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('getty');
 				},
@@ -659,6 +667,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped();
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('getty');
 				},
@@ -671,6 +683,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped();
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('getty');
 				},
@@ -683,6 +699,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped();
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('getty');
 				},
@@ -695,6 +715,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped();
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('getty');
 				},
@@ -1438,6 +1462,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped();
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('getty');
 				},
