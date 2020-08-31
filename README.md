@@ -37,5 +37,8 @@ You can try the JavaScript version in this [BBCodes + other stuff demo](https://
 
 ## Development tools
 
+The following tools are used during development.
+
  - [phpunit/phpunit](https://phpunit.de/) 9.3.8 runs a full suite of tests before every commit.
- - [code-lts/doctum](https://github.com/code-lts/doctum) 5.1.0 generates the [https://s9e.github.io/TextFormatter/api/](API docs).
+ - [code-lts/doctum](https://github.com/code-lts/doctum) 5.1.0 generates the [API docs](https://s9e.github.io/TextFormatter/api/).
+ - Travis, Scrutinizer, and Coveralls are used for automated testing and review.
