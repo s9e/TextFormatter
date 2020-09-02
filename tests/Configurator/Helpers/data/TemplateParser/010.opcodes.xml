@@ -1,13 +1,13 @@
 <opcodes>
-  <output_literal>&lt;b</output_literal>
+  <output_literal content="&lt;b"/>
   <conditional>
     <condition_xpath expr="@foo">
-      <output_literal> title="</output_literal>
+      <output_literal content=" title=&quot;"/>
       <output_xpath expr="@bar"/>
-      <output_literal>"</output_literal>
+      <output_literal content="&quot;"/>
 	</condition_xpath>
   </conditional>
-  <output_literal>&gt;</output_literal>
+  <output_literal content="&gt;"/>
   <apply_templates/>
-  <output_literal>&lt;/b&gt;</output_literal>
+  <output_literal content="&lt;/b&gt;"/>
 </opcodes>

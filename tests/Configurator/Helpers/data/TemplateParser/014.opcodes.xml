@@ -1,13 +1,13 @@
 <opcodes>
   <conditional>
     <condition_xpath expr="@a">
-      <output_literal>A</output_literal>
+      <output_literal content="A"/>
     </condition_xpath>
     <condition_xpath expr="@b">
-      <output_literal>B</output_literal>
+      <output_literal content="B"/>
     </condition_xpath>
     <condition_default>
-      <output_literal>C</output_literal>
+      <output_literal content="C"/>
     </condition_xpath>
   </conditional>
 </opcodes>
