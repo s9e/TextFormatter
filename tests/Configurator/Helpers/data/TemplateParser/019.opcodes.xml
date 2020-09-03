@@ -1,3 +1,8 @@
+<opcodes>
+  <output_xpath expr="'Hello '"/>
+  <output_literal content="World"/>
+</opcodes>
+
 <template>
   <output escape="text" type="xpath">'Hello '</output>
   <output escape="text" type="literal">World</output>
