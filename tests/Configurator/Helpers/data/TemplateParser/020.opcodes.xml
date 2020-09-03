@@ -1,3 +1,3 @@
-<template>
-  <output escape="text" type="xpath">''</output>
-</template>
+<opcodes>
+  <output_xpath expr="''"/>
+</opcodes>
