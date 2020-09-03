@@ -1,3 +1,17 @@
+<opcodes>
+  <conditional>
+    <condition_xpath expr="@a">
+      <output_literal content="A"/>
+    </condition_xpath>
+    <condition_xpath expr="ba">
+      <output_literal content=""/>
+    </condition_xpath>
+    <condition_default>
+      <output_literal content="C"/>
+    </condition_default>
+  </conditional>
+</opcodes>
+
 <template>
   <element  id="1" name="b">
     <attribute name="title">
