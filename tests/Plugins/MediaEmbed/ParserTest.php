@@ -1473,7 +1473,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gfycat.com/LoathsomeHarmfulJenny',
-				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny?hd=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -1483,7 +1483,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://gfycat.com/ifr/LoathsomeHarmfulJenny',
-				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny?hd=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
