@@ -1,16 +1,12 @@
-<template>
-  <element name="div" id="1">
-    <switch>
-      <case test="@a">
-        <attribute name="title">
-          <output escape="attribute" type="literal">foo</output>
-        </attribute>
-      </case>
-      <case>
-        <closeTag id="1" set=""/>
-        <output escape="text" type="literal">foo</output>
-      </case>
-    </switch>
-    <closeTag id="1" check=""/>
-  </element>
-</template>
+<opcodes>
+  <output_literal content="&lt;div"/>
+  <conditional>
+    <condition_xpath expr="@a">
+      <output_literal content=" title=&quot;foo&quot;&gt;"/>
+    </condition_xpath>
+    <condition_default>
+      <output_literal content="&gt;foo"/>
+    </condition_default>
+  </conditional>
+  <output_literal content="&lt;/div&gt;"/>
+</opcodes>
