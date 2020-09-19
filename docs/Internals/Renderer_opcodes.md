@@ -10,10 +10,16 @@
 	<dt>apply_templates</dt>
 	<dd>Recursiverly process all child nodes, or nodes selected by optional XPath expression <code>select<code>.</dd>
 
-	<dt>buffer_literal</dt>
+	<dt>buffer_append_literal</dt>
+	<dd>Append given string literal <code>content</code> to buffer <code>id</code>.</dd>
+
+	<dt>buffer_append_xpath</dt>
+	<dd>Append the result of XPath expression <code>expr</code> to buffer <code>id</code>.</dd>
+
+	<dt>buffer_set_literal</dt>
 	<dd>Store given string literal <code>content</code> into buffer <code>id</code>.</dd>
 
-	<dt>buffer_xpath</dt>
+	<dt>buffer_set_xpath</dt>
 	<dd>Store the result of XPath expression <code>expr</code> into buffer <code>id</code>.</dd>
 
 	<dt>conditional</dt>
