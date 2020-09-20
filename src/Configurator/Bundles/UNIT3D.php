@@ -177,8 +177,11 @@ class UNIT3D extends Bundle
 
 		$configurator->rootRules->enableAutoLineBreaks();
 
-		$configurator->Autoemail;
 		$configurator->Autolink;
 		$configurator->MediaEmbed->add('youtube');
+
+		// Replace YouTube's URL
+		$tag = $configurator->tags['YOUTUBE'];
+		$tag->template = str_replace('youtube.com', 'youtube-nocookie.com', $tag->template);
 	}
 }
