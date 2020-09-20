@@ -1,14 +1,12 @@
-<template>
-  <switch>
-    <case test="@x">
-      <element id="1" name="hr" void="yes">
-        <closeTag id="1"/>
-      </element>
-    </case>
-    <case>
-      <element id="2" name="br" void="yes">
-        <closeTag id="2"/>
-      </element>
-    </case>
-  </switch>
-</template>
+<opcodes>
+  <output_literal content="&lt;div"/>
+  <conditional>
+    <condition_xpath expr="@a">
+      <output_literal content=" title=&quot;foo&quot;&gt;"/>
+    </condition_xpath>
+    <condition_default>
+      <output_literal content="&gt;foo"/>
+    </condition_default>
+  </conditional>
+  <output_literal content="&lt;/div&gt;"/>
+</opcodes>
