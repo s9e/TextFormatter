@@ -170,6 +170,11 @@ class UNIT3D extends Bundle
 	*/
 	public function configure(Configurator $configurator)
 	{
+		foreach ($this->definitions as [$usage, $template])
+		{
+			$configurator->BBCodes->addCustom($usage, $template);
+		}
+
 		$configurator->rootRules->enableAutoLineBreaks();
 
 		$configurator->Autoemail;
