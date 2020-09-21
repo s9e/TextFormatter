@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 
-$emojiVersion = '13.0';
+$emojiVersion = '13.1';
 $ucdVersion   = '13.0.0';
 
 $emoji   = [];
