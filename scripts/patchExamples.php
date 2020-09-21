@@ -55,6 +55,6 @@ function patchFile($filepath)
 	}
 }
 
-patchFile(__DIR__ . '/../docs/Internals/StorageFormat.md');
+patchFile(__DIR__ . '/../docs/Internals/Storage_format.md');
 
 die("Done.\n");
