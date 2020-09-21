@@ -1,3 +1,18 @@
+2.7.5 (2020-09-21)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/9a8e77826604e24deacbd280c2543b68b4ff2a84...c49e5a4308b741a8a99207a58ce635e0f11dde8d)
+
+### Changed
+
+ - `c49e5a430` BBCodes: updated default CODE BBCode
+ - `480398516` BBCodes: updated default CODE BBCode
+ - `c88642cdc` Emoji: updated to Unicode 13.1
+ - `5a6c80ea0` MediaEmbed: updated Getty Images
+ - `14923f953` MediaEmbed: updated Gfycat
+ - `693b57ae9` MediaEmbed: updated Medium
+
+
 2.7.4 (2020-08-20)
 ==================
 
