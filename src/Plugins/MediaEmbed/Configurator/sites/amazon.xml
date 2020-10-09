@@ -12,6 +12,10 @@
 	<example>https://www.amazon.it/Super-Maxi-Pot-de-Nutella/dp/B0090GJ8VM/</example>
 	<example>https://www.amazon.com/dp/B0018CDWLS/</example>
 
+	<attributes>
+		<id required="true"/>
+	</attributes>
+
 	<parameters>
 		<AMAZON_ASSOCIATE_TAG    title="Amazon Associate tag (.com)"  />
 		<AMAZON_ASSOCIATE_TAG_CA title="Amazon Associate tag (.ca)"   />

@@ -1718,6 +1718,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.amazon.co.uk/gp/help/customer/display.html?nodeId=201834890',
+				'<t>https://www.amazon.co.uk/gp/help/customer/display.html?nodeId=201834890</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('amazon');
+				}
+			],
+			[
 				'https://anchor.fm/blockhash-exploring-the-blockchain/episodes/Daniel-Gouldman---CEO-of-Ternio-e8vruo/a-a11ehhg',
 				'<r><ANCHOR id="e8vruo">https://anchor.fm/blockhash-exploring-the-blockchain/episodes/Daniel-Gouldman---CEO-of-Ternio-e8vruo/a-a11ehhg</ANCHOR></r>',
 				[],
