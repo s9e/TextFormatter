@@ -7,4 +7,4 @@ then
 fi
 
 cd vendor
-npm i google-closure-compiler-linux
+npm i google-closure-compiler-linux@20200927
