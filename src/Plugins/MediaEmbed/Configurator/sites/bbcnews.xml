@@ -7,9 +7,9 @@
 
 	<host>bbc.co.uk</host>
 	<host>bbc.com</host>
-	<extract>@bbc\.co(?:m|\.uk)/news/\w+/(?:\w+-)+(?'id'\d+)@</extract>
-	<extract>@bbc\.co(?:m|\.uk)/news/\w+/embed/(?'id'\w+/\d+)@</extract>
-	<extract>@bbc\.co(?:m|\.uk)/news/\w+/\w+/(?'id'\d+)@</extract>
+	<extract>@bbc\.co(?:m|\.uk)/news/(?:av|video_and_audio)/(?:\w+-)+(?'id'\d+)@</extract>
+	<extract>@bbc\.co(?:m|\.uk)/news/(?:av|video_and_audio)/embed/(?'id'\w+/\d+)@</extract>
+	<extract>@bbc\.co(?:m|\.uk)/news/(?:av|video_and_audio)/\w+/(?'id'\d+)@</extract>
 	<iframe>
 		<src><![CDATA[
 			<xsl:text>//www.bbc.com/news/av/video-</xsl:text>

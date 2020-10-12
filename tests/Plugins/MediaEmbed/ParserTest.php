@@ -1808,6 +1808,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.bbc.co.uk/news/live/world-54505193',
+				'<t>https://www.bbc.co.uk/news/live/world-54505193</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bbcnews');
+				}
+			],
+			[
 				'https://www.bitchute.com/video/y9AejeZ2vD0/',
 				'<r><BITCHUTE id="y9AejeZ2vD0">https://www.bitchute.com/video/y9AejeZ2vD0/</BITCHUTE></r>',
 				[],
