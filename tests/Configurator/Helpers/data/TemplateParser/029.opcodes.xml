@@ -1,25 +1,24 @@
-<?xml version="1.0"?>
-<template>
-  <switch>
-    <case test="$STYLE_ID=2">
-      <switch>
-        <case test="@author">
-          <output escape="text" type="literal">xxx</output>
-        </case>
-        <case>
-          <output escape="text" type="literal">yyy</output>
-        </case>
-      </switch>
-    </case>
-    <case>
-      <switch>
-        <case test="@author">
-          <output escape="text" type="literal">aaa</output>
-        </case>
-        <case>
-          <output escape="text" type="literal">bbb</output>
-        </case>
-      </switch>
-    </case>
-  </switch>
-</template>
+<opcodes>
+  <conditional>
+    <condition_xpath expr="$STYLE_ID=2">
+      <conditional>
+        <condition_xpath expr="@author">
+          <output_literal content="xxx"/>
+        </condition_xpath>
+        <condition_default>
+          <output_literal content="yyy"/>
+        </condition_default>
+      </conditional>
+    </condition_xpath>
+    <condition_default>
+      <conditional>
+        <condition_xpath expr="@author">
+          <output_literal content="aaa"/>
+        </condition_xpath>
+        <condition_default>
+          <output_literal content="bbb"/>
+        </condition_default>
+      </conditional>
+    </condition_default>
+  </conditional>
+</opcodes>

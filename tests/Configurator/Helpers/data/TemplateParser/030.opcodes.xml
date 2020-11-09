@@ -1,10 +1,3 @@
-<?xml version="1.0"?>
-<template>
-  <element name="div" id="1">
-    <closeTag id="1"/>
-    <comment>
-      <output escape="text" type="literal"> ... </output>
-    </comment>
-    <output escape="text" type="literal">foo</output>
-  </element>
-</template>
+<opcodes>
+  <output_literal content="&lt;div&gt;&lt;-- ... --&gt;foo&lt;/div&gt;"/>
+</opcodes>
