@@ -1,11 +1,11 @@
 <opcodes>
   <store_xpath id="0">local-name()</store_xpath>
-  <output_literal content="&lt;"/>
+  <output_literal value="&lt;"/>
   <output_store id="0"/>
-  <output_literal content="&gt;"/>
+  <output_literal value="&gt;"/>
   <copy_of_attributes/>
   <apply_templates/>
-  <output_literal content="&lt;/"/>
+  <output_literal value="&lt;/"/>
   <output_store id="0"/>
-  <output_literal content="&gt;"/>
+  <output_literal value="&gt;"/>
 </opcodes>

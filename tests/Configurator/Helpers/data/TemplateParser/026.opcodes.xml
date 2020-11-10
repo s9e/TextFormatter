@@ -1,12 +1,12 @@
 <opcodes>
-  <output_literal content="&lt;div"/>
+  <output_literal value="&lt;div"/>
   <conditional>
-    <condition_xpath expr="@a">
-      <output_literal content=" title=&quot;foo&quot;&gt;"/>
-    </condition_xpath>
+    <condition_when test="@a">
+      <output_literal value=" title=&quot;foo&quot;&gt;"/>
+    </condition_when>
     <condition_default>
-      <output_literal content="&gt;foo"/>
+      <output_literal value="&gt;foo"/>
     </condition_default>
   </conditional>
-  <output_literal content="&lt;/div&gt;"/>
+  <output_literal value="&lt;/div&gt;"/>
 </opcodes>

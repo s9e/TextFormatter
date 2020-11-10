@@ -1,16 +1,16 @@
 <opcodes>
-  <conditional>
-    <condition_xpath expr=".=':)'">
-      <output_literal content="."/>
-    </condition_xpath>
-    <condition_xpath expr=".=':('">
-      <output_literal content="."/>
-    </condition_xpath>
-    <condition_xpath expr=".=':p'">
-      <output_literal content="."/>
-    </condition_xpath>
-    <condition_xpath expr=".=';)'">
-      <output_literal content="."/>
-    </condition_xpath>
+  <conditional_match expr=".">
+    <condition_match value=":)">
+      <output_literal value="."/>
+    </condition_match>
+    <condition_match value=":(">
+      <output_literal value="."/>
+    </condition_match>
+    <condition_match value=":p">
+      <output_literal value="."/>
+    </condition_match>
+    <condition_match value=";)">
+      <output_literal value="."/>
+    </condition_match>
   </conditional>
 </opcodes>

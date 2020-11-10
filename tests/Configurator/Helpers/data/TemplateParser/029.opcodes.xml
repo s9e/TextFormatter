@@ -1,22 +1,22 @@
 <opcodes>
   <conditional>
-    <condition_xpath expr="$STYLE_ID=2">
+    <condition_when test="$STYLE_ID=2">
       <conditional>
-        <condition_xpath expr="@author">
-          <output_literal content="xxx"/>
-        </condition_xpath>
+        <condition_when test="@author">
+          <output_literal value="xxx"/>
+        </condition_when>
         <condition_default>
-          <output_literal content="yyy"/>
+          <output_literal value="yyy"/>
         </condition_default>
       </conditional>
-    </condition_xpath>
+    </condition_when>
     <condition_default>
       <conditional>
-        <condition_xpath expr="@author">
-          <output_literal content="aaa"/>
-        </condition_xpath>
+        <condition_when test="@author">
+          <output_literal value="aaa"/>
+        </condition_when>
         <condition_default>
-          <output_literal content="bbb"/>
+          <output_literal value="bbb"/>
         </condition_default>
       </conditional>
     </condition_default>

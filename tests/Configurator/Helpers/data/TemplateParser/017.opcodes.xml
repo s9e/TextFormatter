@@ -1,13 +1,13 @@
 <opcodes>
   <conditional>
-    <condition_xpath expr="@a">
-      <output_literal content="A"/>
-    </condition_xpath>
-    <condition_xpath expr="ba">
-      <output_literal content=""/>
-    </condition_xpath>
+    <condition_when test="@a">
+      <output_literal value="A"/>
+    </condition_when>
+    <condition_when test="ba">
+      <output_literal value=""/>
+    </condition_when>
     <condition_default>
-      <output_literal content="C"/>
+      <output_literal value="C"/>
     </condition_default>
   </conditional>
 </opcodes>

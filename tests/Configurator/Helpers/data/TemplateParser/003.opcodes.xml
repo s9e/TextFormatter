@@ -1,5 +1,5 @@
 <opcodes>
-  <output_literal content="&lt;b&gt;"/>
+  <output_literal value="&lt;b&gt;"/>
   <apply_templates/>
-  <output_literal content="&lt;/b&gt;"/>
+  <output_literal value="&lt;/b&gt;"/>
 </opcodes>

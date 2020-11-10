@@ -1,4 +1,4 @@
 <opcodes>
   <output_xpath expr="'Hello '"/>
-  <output_literal content="World"/>
+  <output_literal value="World"/>
 </opcodes>

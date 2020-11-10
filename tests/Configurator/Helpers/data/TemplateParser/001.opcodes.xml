@@ -1,3 +1,3 @@
 <opcodes>
-  <output_literal content="&lt;br&gt;"/>
+  <output_literal value="&lt;br&gt;"/>
 </opcodes>
