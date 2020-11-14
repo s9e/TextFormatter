@@ -1231,8 +1231,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629',
-				'<r><STITCHER eid="37808629" fid="12645">http://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</STITCHER></r>',
+				'https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587',
+				'<r><STITCHER eid="79283587" fid="416389">https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587</STITCHER></r>',
 				[],
 				function ($configurator)
 				{
@@ -1240,16 +1240,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('stitcher');
 				}
 			],
-			[
-				'https://www.stitcher.com/s?eid=76322777',
-				'<r><STITCHER eid="76322777" fid="15981">https://www.stitcher.com/s?eid=76322777</STITCHER></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('stitcher');
-				}
-			],
+//			[
+//				'https://www.stitcher.com/s?eid=79283587',
+//				'<r><STITCHER eid="79283587" fid="416389">https://www.stitcher.com/s?eid=79283587</STITCHER></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('stitcher');
+//				}
+//			],
 			[
 				'http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode',
 				'<r><TEAMCOCO id="73784">http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</TEAMCOCO></r>',

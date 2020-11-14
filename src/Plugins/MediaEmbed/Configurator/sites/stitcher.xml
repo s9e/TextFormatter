@@ -1,14 +1,13 @@
 <site name="Stitcher" homepage="https://www.stitcher.com/">
-	<example>https://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</example>
+	<example>https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587</example>
 
 	<tags><tag>podcasts</tag></tags>
 
 	<host>stitcher.com</host>
-	<extract>!/splayer/f/(?'fid'\d+)/(?'eid'\d+)!</extract>
+	<extract>!/(?:embed|splayer/f)/(?'fid'\d+)/(?'eid'\d+)!</extract>
 	<scrape>
-		<match>!/(?:podcast/|s\?)!</match>
-		<extract>!data-eid="(?'eid'\d+)!</extract>
-		<extract>!data-fid="(?'fid'\d+)!</extract>
+		<match>!/(?:podcast/|show/|s\?)!</match>
+		<extract>!/embed/(?'fid'\d+)/(?'eid'\d+)!</extract>
 	</scrape>
-	<iframe width="100%" height="150" max-width="900" src="//app.stitcher.com/splayer/f/{@fid}/{@eid}"/>
+	<iframe width="100%" height="150" max-width="900" src="https://www.stitcher.com/embed/{@fid}/{@eid}"/>
 </site>

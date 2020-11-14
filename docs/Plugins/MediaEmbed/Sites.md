@@ -367,7 +367,7 @@
 	</tr>
 	<tr title="Stitcher" id="stitcher">
 		<td style="font-size:75%"><code>stitcher</code></td>
-		<td style="font-size:50%">https://www.stitcher.com/podcast/twit/tech-news-today/e/twitter-shares-fall-18-percent-after-earnings-leak-on-twitter-37808629</td>
+		<td style="font-size:50%">https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587</td>
 	</tr>
 	<tr title="Straw Poll" id="strawpoll">
 		<td style="font-size:75%"><code>strawpoll</code></td>
