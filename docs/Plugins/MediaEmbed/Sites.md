@@ -95,7 +95,7 @@
 	</tr>
 	<tr title="dumpert" id="dumpert">
 		<td style="font-size:75%"><code>dumpert</code></td>
-		<td style="font-size:50%">https://www.dumpert.nl/mediabase/6622577/4652b140/r_mi_gaillard_doet_halloween_prank.html</td>
+		<td style="font-size:50%">https://www.dumpert.nl/item/6622577_4652b140</td>
 	</tr>
 	<tr title="8tracks" id="eighttracks">
 		<td style="font-size:75%"><code>eighttracks</code></td>
