@@ -1,15 +1,20 @@
 <site name="Spotify" homepage="https://www.spotify.com/">
 	<source>https://developer.spotify.com/technologies/widgets/spotify-play-button/</source>
-	<source>http://news.spotify.com/2008/01/14/linking-to-spotify/</source>
 	<example>https://open.spotify.com/user/ryan.lloyd.french/playlist/4jHNeLTj7CnL5JwZzmnqOL</example>
 	<example>https://open.spotify.com/track/3CPjqkaMwrbht1lJpELoY0?si=K7cm7-dWTR6U7BjDn1oP7g</example>
 	<example>https://open.spotify.com/episode/37Tik1kHq7J2WcYcoLiypt</example>
 
 	<tags><tag>music</tag><tag>podcasts</tag></tags>
 
+	<host>link.tospotify.com</host>
 	<host>open.spotify.com</host>
 	<host>play.spotify.com</host>
-	<extract>!(?:open|play)\.spotify\.com/(?'id'(?:user/[-.\w]+/)?(?:album|artist|episode|playlist|show|track)(?:[:/][-.\w]+)+)!</extract>
+	<extract>!(?:open|play)\.spotify\.com/(?:user/[-.\w]+/)?(?'id'(?:album|artist|episode|playlist|show|track)(?:[:/][-.\w]+)+)!</extract>
+	<scrape>
+		<header>User-agent: PHP (not Mozilla)</header>
+		<match>!link\.tospotify\.com/.!</match>
+		<extract>!(?:open|play)\.spotify\.com/(?:user/[-.\w]+/)?(?'id'(?:album|artist|episode|playlist|show|track)(?:[:/][-.\w]+)+)!</extract>
+	</scrape>
 	<choose>
 		<when test="starts-with(@id, 'episode/') or starts-with(@id, 'show/')">
 			<iframe width="100%" height="152" max-width="900" src="https://open.spotify.com/embed/{@id}" allow="encrypted-media"/>

@@ -1211,6 +1211,16 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
+				'https://link.tospotify.com/kpRZPpEGnbb',
+				'<r><SPOTIFY id="playlist/12UZc2MhOI29wE7eBgmKwi">https://link.tospotify.com/kpRZPpEGnbb</SPOTIFY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
 				'https://www.spreaker.com/show/2-up-front_1',
 				'<r><SPREAKER show_id="1374587">https://www.spreaker.com/show/2-up-front_1</SPREAKER></r>',
 				[],
@@ -3337,7 +3347,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA',
-				'<r><SPOTIFY id="user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
+				'<r><SPOTIFY id="playlist/33fewoc4vDuICqL2mX95PA">https://play.spotify.com/user/commodore-64/playlist/33fewoc4vDuICqL2mX95PA</SPOTIFY></r>',
 				[],
 				function ($configurator)
 				{
