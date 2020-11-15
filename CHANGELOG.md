@@ -1,3 +1,19 @@
+2.7.6 (2020-11-15)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/6dd4aa5164e7cda62c52fc7f1f99bbfb59529af1...338e489862167e1986008c6057202f53cf0658b3)
+
+### Changed
+
+ - `2b9267496` BBCodes: updated default CODE BBCode
+ - `a583e346c` MediaEmbed: updated 247Sports
+ - `0b138efc4` MediaEmbed: updated Amazon
+ - `923310847` MediaEmbed: updated BBC News
+ - `338e48986` MediaEmbed: updated Spotify
+ - `30b0a11c8` MediaEmbed: updated Stitcher
+ - `47c929c02` MediaEmbed: updated dumpert
+
+
 2.7.5 (2020-09-21)
 ==================
 
