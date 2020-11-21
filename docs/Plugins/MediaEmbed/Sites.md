@@ -325,6 +325,10 @@
 		<td style="font-size:75%"><code>reddit</code></td>
 		<td style="font-size:50%">https://www.reddit.com/r/pics/comments/9wp1qg/my_mom_recently_started_watercolor_painting_and/<br/>https://www.reddit.com/r/pics/comments/9wp1qg/my_mom_recently_started_watercolor_painting_and/e9m6pn9/</td>
 	</tr>
+	<tr title="Rumble" id="rumble">
+		<td style="font-size:75%"><code>rumble</code></td>
+		<td style="font-size:50%">https://rumble.com/vaxo02-i-cant-climb-.html</td>
+	</tr>
 	<tr title="Rutube" id="rutube">
 		<td style="font-size:75%"><code>rutube</code></td>
 		<td style="font-size:50%">https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/<br/>https://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</td>

@@ -1127,6 +1127,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://rumble.com/vaxo02-i-cant-climb-.html',
+				'<r><RUMBLE id="v8bhte">https://rumble.com/vaxo02-i-cant-climb-.html</RUMBLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('rumble');
+				}
+			],
+			[
 				'https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/',
 				'<r><RUTUBE id="4782775">https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</RUTUBE></r>',
 				[],
@@ -3262,6 +3272,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('reddit');
+				}
+			],
+			[
+				'https://rumble.com/embed/v8bhte/',
+				'<r><RUMBLE id="v8bhte">https://rumble.com/embed/v8bhte/</RUMBLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('rumble');
 				}
 			],
 			[
