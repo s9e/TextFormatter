@@ -4890,7 +4890,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744" style="background:url(https://abs.twimg.com/favicons/favicon.ico) no-repeat 50% 50%;border:0;height:250px;max-width:500px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744" style="border:0;height:250px;max-width:550px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
