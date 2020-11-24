@@ -109,6 +109,10 @@
 		<td style="font-size:75%"><code>facebook</code></td>
 		<td style="font-size:50%">https://www.facebook.com/FacebookforDevelopers/posts/696408974555431<br/>https://www.facebook.com/watch/?v=224353158889229</td>
 	</tr>
+	<tr title="Falstad Circuit Simulator" id="falstad">
+		<td style="font-size:75%"><code>falstad</code></td>
+		<td style="font-size:50%">https://www.falstad.com/circuit/circuitjs.html?cct=$+1+0.000005+10.20027730826997+50+5+43+v+176+272+256+144+0+0+40+5+0+0+0.5+w+176+272+336+272+0+r+336+272+256+144+0+1000</td>
+	</tr>
 	<tr title="Flickr" id="flickr">
 		<td style="font-size:75%"><code>flickr</code></td>
 		<td style="font-size:50%">https://www.flickr.com/photos/8757881@N04/2971804544/lightbox/<br/>https://flic.kr/8757881@N04/2971804544<br/>https://flic.kr/p/5wBgXo</td>

@@ -1,0 +1,16 @@
+<site name="Falstad Circuit Simulator" homepage="https://www.falstad.com/circuit/circuitjs.html">
+	<example>https://www.falstad.com/circuit/circuitjs.html?cct=$+1+0.000005+10.20027730826997+50+5+43+v+176+272+256+144+0+0+40+5+0+0+0.5+w+176+272+336+272+0+r+336+272+256+144+0+1000</example>
+
+	<host>falstad.com</host>
+	<extract>!falstad\.com/circuit/circuitjs\.html\?c(?:ct=(?'cct'[^&amp;]+)|tz=(?'ctz'[-+=\w]+))!</extract>
+	<iframe width="100%" height="500">
+		<src><![CDATA[
+			<xsl:text>https://www.falstad.com/circuit/circuitjs.html?running=false&amp;c</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@cct">ct=<xsl:value-of select="@cct"/></xsl:when>
+				<xsl:otherwise>tz=<xsl:value-of select="@ctz"/></xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+		<style max-height="90vh"/>
+	</iframe>
+</site>
