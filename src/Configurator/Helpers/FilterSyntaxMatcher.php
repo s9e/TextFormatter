@@ -48,7 +48,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 			],
 			'Integer' => [
 				'groups' => ['FilterArg', 'Literal', 'Scalar'],
-				'regexp' => '(-?(?:0[Bb][01]+(?:_[01]+)*|0[Xx][0-9A-Fa-f]+(?:_[0-9A-Fa-f]+)*|[0-9]+(?:_[0-9]+)*))',
+				'regexp' => '(-?(?:0[Bb][01]+(?:_[01]+)*|0[Oo][0-7]+(?:_[0-7]+)*|0[Xx][0-9A-Fa-f]+(?:_[0-9A-Fa-f]+)*|[0-9]+(?:_[0-9]+)*))',
 			],
 			'Null' => [
 				'groups' => ['FilterArg', 'Literal', 'Scalar'],
@@ -224,6 +224,12 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseInteger(string $str): int
 	{
+		// Handle PHP 8.1's explicit octal notation
+		if (strtolower(substr($str, 0, 2)) === '0o')
+		{
+			$str = '0' . substr($str, 2);
+		}
+
 		return intval(str_replace('_', '', $str), 0);
 	}
 

@@ -115,10 +115,11 @@ class FilterSyntaxMatcherTest extends Test
 				]
 			],
 			[
-				'foo(0777, 0b1101, 0Xcafe, -12.e-34, -1.2e34, .12e34)',
+				'foo(0777, 0o777, 0b1101, 0Xcafe, -12.e-34, -1.2e34, .12e34)',
 				[
 					'filter' => 'foo',
 					'params' => [
+						['Value', 0777    ],
 						['Value', 0777    ],
 						['Value', 0b1101  ],
 						['Value', 0Xcafe  ],
