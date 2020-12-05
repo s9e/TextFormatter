@@ -121,10 +121,6 @@
 		<td style="font-size:75%"><code>foxnews</code></td>
 		<td style="font-size:50%">https://video.foxnews.com/v/3592758613001/reddit-helps-fund-homemade-hot-sauce-venture/</td>
 	</tr>
-	<tr title="FOX Sports" id="foxsports">
-		<td style="font-size:75%"><code>foxsports</code></td>
-		<td style="font-size:50%">https://www.foxsports.com/home/video/1132379203958</td>
-	</tr>
 	<tr title="Funny or Die" id="funnyordie">
 		<td style="font-size:75%"><code>funnyordie</code></td>
 		<td style="font-size:50%">https://www.funnyordie.com/videos/bf313bd8b4/murdock-with-keith-david</td>
