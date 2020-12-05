@@ -231,7 +231,7 @@
 	</tr>
 	<tr title="Libsyn" id="libsyn">
 		<td style="font-size:75%"><code>libsyn</code></td>
-		<td style="font-size:50%">http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack</td>
+		<td style="font-size:50%">https://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack</td>
 	</tr>
 	<tr title="Liveleak" id="liveleak">
 		<td style="font-size:75%"><code>liveleak</code></td>
