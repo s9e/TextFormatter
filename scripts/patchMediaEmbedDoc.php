@@ -19,21 +19,42 @@ foreach ($configurator->MediaEmbed->defaultSites as $siteId => $site)
 	$html[] = '		<td style="font-size:75%"><code>' . $siteId . '</code></td>';
 	$html[] = '		<td style="font-size:50%">' . implode('<br/>', (array) $site['example']) . '</td>';
 	$html[] = '	</tr>';
-}
 
+	foreach ($site['parameters'] ?? [] as $name => $info)
+	{
+		$params[$name] = $info['title'];
+	}
+}
 $html[] = '</table>';
+patchFile(__DIR__ . '/../docs/Plugins/MediaEmbed/Sites.md', $html);
 
-$filepath = __DIR__ . '/../docs/Plugins/MediaEmbed/Sites.md';
-$file     = file_get_contents($filepath);
-$pos      = strpos($file, '<table>');
-
-if ($pos === false)
+ksort($params);
+$html = ['<table>'];
+foreach ($params as $name => $title)
 {
-	die("Could not find table\n");
+	$html[] = '	<tr>';
+	$html[] = '		<td>' . $name . '</td>';
+	$html[] = '		<td>' . $title . '</td>';
+	$html[] = '	</tr>';
 }
+$html[] = '</table>';
+patchFile(__DIR__ . '/../docs/Plugins/MediaEmbed/Using_default_sites.md', $html);
 
-$file = substr($file, 0, $pos) . str_replace('&', '&amp;', implode("\n", $html));
+function patchFile(string $filepath, array $html)
+{
+	$old      = file_get_contents($filepath);
+	$pos      = strpos($old, '<table>');
+	if ($pos === false)
+	{
+		die("Could not find table\n");
+	}
 
-file_put_contents($filepath, $file);
+	$new = substr($old, 0, $pos) . str_replace('&', '&amp;', implode("\n", $html));
+	if ($new !== $old)
+	{
+		file_put_contents($filepath, $new);
+		echo "Patched $filepath\n";
+	}
+}
 
 die("Done.\n");
