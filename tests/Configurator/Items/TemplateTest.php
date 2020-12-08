@@ -154,6 +154,8 @@ class TemplateTest extends Test
 		             ->setMethods(['normalizeTemplate'])
 		             ->getMock();
 
+		$mock->expects($this->any())->method('normalizeTemplate')->willReturn('<br/>');
+
 		$template = new Template('<br/>');
 
 		$instance = $template->getInspector();
