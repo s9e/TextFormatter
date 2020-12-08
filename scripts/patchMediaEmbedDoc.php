@@ -10,7 +10,7 @@ $html[] = '		<th>Id</th>';
 $html[] = '		<th>Example URLs</th>';
 $html[] = '	</tr>';
 
-$params = [];
+$params = ['MEDIAEMBED_THEME' => 'Either an empty string (default) or "dark" for dark theme'];
 
 $configurator = new s9e\TextFormatter\Configurator;
 foreach ($configurator->MediaEmbed->defaultSites as $siteId => $site)

@@ -1567,7 +1567,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.spreaker.com/show/2-up-front_1',
-				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=&amp;show_id=1374587" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=&amp;show_id=1374587&amp;theme=" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1577,7 +1577,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
-				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=&amp;theme=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4834,6 +4834,25 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://spreaker.com/episode/12449095',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=&amp;theme=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spreaker');
+				}
+			],
+			[
+				'https://spreaker.com/episode/12449095',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=&amp;theme=dark" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spreaker');
+					$configurator->rendering->parameters['MEDIAEMBED_THEME'] = 'dark';
+				}
+			],
+			[
 				'http://www.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html',
 				'<span data-s9e-mediaembed="ted" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.ted.com/talks/eli_pariser_beware_online_filter_bubbles.html"></iframe></span></span>',
 				[],
@@ -4921,6 +4940,16 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('twitter');
+				}
+			],
+			[
+				'https://twitter.com/BarackObama/statuses/266031293945503744',
+				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744dark" style="border:0;height:250px;max-width:550px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitter');
+					$configurator->rendering->parameters['MEDIAEMBED_THEME'] = 'dark';
 				}
 			],
 			[

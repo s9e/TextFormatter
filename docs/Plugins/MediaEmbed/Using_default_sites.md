@@ -123,4 +123,8 @@ Some default sites support some level of configuration at runtime via template p
 		<td>AMAZON_ASSOCIATE_TAG_UK</td>
 		<td>Amazon Associate tag (.co.uk)</td>
 	</tr>
+	<tr>
+		<td>MEDIAEMBED_THEME</td>
+		<td>Either an empty string (default) or "dark" for dark theme</td>
+	</tr>
 </table>

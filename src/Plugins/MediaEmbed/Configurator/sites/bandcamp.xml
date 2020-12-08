@@ -34,6 +34,7 @@
 					<xsl:value-of select="@track_id"/>
 				</xsl:otherwise>
 			</xsl:choose>
+			<xsl:if test="$MEDIAEMBED_THEME='dark'">/bgcol=333333/linkcol=0f91ff</xsl:if>
 		]]></src>
 	</iframe>
 </site>

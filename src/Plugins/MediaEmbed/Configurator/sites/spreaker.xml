@@ -11,5 +11,5 @@
 		<extract>!episode_id=(?'episode_id'\d+)!</extract>
 		<extract>!show_id=(?'show_id'\d+)!</extract>
 	</scrape>
-	<iframe width="100%" height="{400 - 200 * boolean(@episode_id)}" max-width="900" src="https://widget.spreaker.com/player?episode_id={@episode_id}&amp;show_id={@show_id}"/>
+	<iframe width="100%" height="{400 - 200 * boolean(@episode_id)}" max-width="900" src="https://widget.spreaker.com/player?episode_id={@episode_id}&amp;show_id={@show_id}&amp;theme={$MEDIAEMBED_THEME}"/>
 </site>

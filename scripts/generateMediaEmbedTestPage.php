@@ -6,6 +6,11 @@ include __DIR__ . '/../vendor/autoload.php';
 $configurator = new s9e\TextFormatter\Configurator;
 $configurator->registeredVars['cacheDir'] = __DIR__ . '/../tests/.cache';
 
+if (isset($_SERVER['argv'][2]))
+{
+	$configurator->rendering->parameters['MEDIAEMBED_THEME'] = $_SERVER['argv'][2];
+}
+
 $siteId = $_SERVER['argv'][1];
 $configurator->MediaEmbed->add($siteId);
 
