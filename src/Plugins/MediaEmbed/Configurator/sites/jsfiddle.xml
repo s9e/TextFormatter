@@ -4,6 +4,6 @@
 	<tags><tag>programming</tag></tags>
 
 	<host>jsfiddle.net</host>
-	<extract>!jsfiddle.net/(?'id'\w+)(?:/(?'revision'\d+))?!</extract>
+	<extract>@jsfiddle.net/(?:(?'user'\w+)/)?(?!\d+\b|embedded\b|show\b)(?'id'\w+)\b(?:/(?'revision'\d+)\b)?@</extract>
 	<iframe height="400" width="100%" src="//jsfiddle.net/{@id}/{@revision}/embedded/{$MEDIAEMBED_THEME}/"/>
 </site>
