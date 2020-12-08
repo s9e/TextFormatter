@@ -1,6 +1,18 @@
 #!/usr/bin/php
 <?php
 
+use s9e\TextFormatter\Configurator\RecursiveParser;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\{
+	BooleanFunctions,
+	BooleanOperators,
+	Comparisons,
+	Core,
+	Math,
+	SingleByteStringFunctions,
+	SingleByteStringManipulation
+};
+
 include __DIR__ . '/../vendor/autoload.php';
 
 $bundlesDir = __DIR__ . '/../src/Bundles';
@@ -20,6 +32,19 @@ foreach (glob(__DIR__ . '/../src/Configurator/Bundles/*.php') as $filepath)
 	$rendererGenerator = $configurator->rendering->setEngine('PHP');
 	$rendererGenerator->className = 's9e\\TextFormatter\\Bundles\\' . $bundleName . '\\Renderer';
 	$rendererGenerator->filepath  = $bundleDir . '/Renderer.php';
+
+	// Replace the XPathConvertor to work under the minimum requirements
+	$parser     = new RecursiveParser;
+	$matchers   = [];
+	$matchers[] = new SingleByteStringFunctions($parser);
+	$matchers[] = new BooleanFunctions($parser);
+	$matchers[] = new BooleanOperators($parser);
+	$matchers[] = new Comparisons($parser);
+	$matchers[] = new Core($parser);
+	$matchers[] = new Math($parser);
+	$matchers[] = new SingleByteStringManipulation($parser);
+	$parser->setMatchers($matchers);
+	$rendererGenerator->serializer->convertor = new XPathConvertor($parser);
 
 	$configurator->enableJavaScript();
 	$filepath = __DIR__ . '/../vendor/node_modules/google-closure-compiler-linux/compiler';
