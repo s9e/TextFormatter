@@ -1,0 +1,9 @@
+<site name="JSFiddle" homepage="https://jsfiddle.net/">
+	<example>https://jsfiddle.net/1v03Lqnu/</example>
+
+	<tags><tag>programming</tag></tags>
+
+	<host>jsfiddle.net</host>
+	<extract>!jsfiddle.net/(?'id'\w+)(?:/(?'revision'\d+))?!</extract>
+	<iframe height="400" width="100%" src="//jsfiddle.net/{@id}/{@revision}/embedded/{$MEDIAEMBED_THEME}/"/>
+</site>

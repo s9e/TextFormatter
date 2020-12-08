@@ -2705,6 +2705,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://jsfiddle.net/1v03Lqnu/',
+				'<r><JSFIDDLE id="1v03Lqnu">https://jsfiddle.net/1v03Lqnu/</JSFIDDLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('jsfiddle');
+				}
+			],
+			[
+				'https://jsfiddle.net/1v03Lqnu/11/',
+				'<r><JSFIDDLE id="1v03Lqnu" revision="11">https://jsfiddle.net/1v03Lqnu/11/</JSFIDDLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('jsfiddle');
+				}
+			],
+			[
 				'http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html',
 				'<r><JWPLATFORM id="X6tRZpKj-7Y21S9TB">http://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html</JWPLATFORM></r>',
 				[],

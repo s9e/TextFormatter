@@ -209,6 +209,10 @@
 		<td style="font-size:75%"><code>izlesene</code></td>
 		<td style="font-size:50%">https://www.izlesene.com/video/tam-1-kilo-yap-gram-gram-kapisma/10412573</td>
 	</tr>
+	<tr title="JSFiddle" id="jsfiddle">
+		<td style="font-size:75%"><code>jsfiddle</code></td>
+		<td style="font-size:50%">https://jsfiddle.net/1v03Lqnu/</td>
+	</tr>
 	<tr title="JW Platform" id="jwplatform">
 		<td style="font-size:75%"><code>jwplatform</code></td>
 		<td style="font-size:50%">https://content.jwplatform.com/players/X6tRZpKj-7Y21S9TB.html<br/>https://content.jwplatform.com/previews/YfTSAegE-L0l35Tsd</td>
