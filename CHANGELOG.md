@@ -1,3 +1,28 @@
+2.8.0 (2020-12-09)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/dfb9d4efa61578d89ca250243e2871887e23ba5d...0edf2e91b2ebeb8017a5804bcb2c26664cd2cb31)
+
+### Added
+
+ - `bb8c095e6` FilterSyntaxMatcher: added explicit octal notation
+ - `ea51b491d` MediaEmbed: added Falstad Circuit Simulator
+ - `159784fb2` MediaEmbed: added JSFiddle
+ - `7baf9538c` MediaEmbed: added Rumble
+ - `935957bb4` MediaEmbed: added support for dark themes
+
+### Removed
+
+ - `c7548f5e1` MediaEmbed: removed discontinued FOX Sports site
+
+### Changed
+
+ - `0edf2e91b` MediaEmbed: updated JSFiddle
+ - `6b99842fe` MediaEmbed: updated Libsyn
+ - `16a1e596a` MediaEmbed: updated Twitter
+ - `df91465b8` Updated bundles
+
+
 2.7.6 (2020-11-15)
 ==================
 
