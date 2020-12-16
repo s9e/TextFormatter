@@ -83,7 +83,7 @@ abstract class TemplateHelper
 		$uniqid = uniqid('_');
 		if ($node instanceof DOMAttr)
 		{
-			$node->value .= $uniqid;
+			$node->value = htmlspecialchars($node->value, ENT_NOQUOTES, 'UTF-8') . $uniqid;
 		}
 		elseif ($node instanceof DOMElement)
 		{

@@ -786,6 +786,7 @@ Template Helper (s9e\TextFormatter\Tests\Configurator\Helpers\TemplateHelper)
  [x] highlightNode() tests with data set #7
  [x] highlightNode() tests with data set #8
  [x] highlightNode() tests with data set #9
+ [x] highlightNode() tests with data set #10
  [x] replaceHomogeneousTemplates() tests with data set #0
  [x] replaceHomogeneousTemplates() tests with data set #1
  [x] replaceHomogeneousTemplates() tests with data set #2

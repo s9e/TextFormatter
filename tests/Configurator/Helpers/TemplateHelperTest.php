@@ -194,6 +194,11 @@ class TemplateHelperTest extends Test
 &lt;b&gt;<span style="background-color:#ff0">foo</span>&lt;/b&gt;
 &lt;b&gt;foo&lt;/b&gt;'
 			],
+			[
+				'//@onclick',
+				'<hr onclick="&amp;{@foo}"/>',
+				'&lt;hr <span style="background-color:#ff0">onclick=&quot;&amp;amp;{@foo}&quot;</span>/&gt;'
+			],
 		];
 	}
 
