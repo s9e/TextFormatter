@@ -9,11 +9,9 @@ namespace s9e\TextFormatter\Configurator\Items\AttributeFilters;
 
 use InvalidArgumentException;
 use RuntimeException;
-use s9e\TextFormatter\Configurator\Helpers\ContextSafeness;
-use s9e\TextFormatter\Configurator\Items\AttributeFilter;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 
-class HashmapFilter extends AttributeFilter
+class HashmapFilter extends AbstractMapFilter
 {
 	/**
 	* Constructor
@@ -35,19 +33,6 @@ class HashmapFilter extends AttributeFilter
 		{
 			$this->setMap($map, $strict);
 		}
-	}
-
-	/**
-	* {@inheritdoc}
-	*/
-	public function asConfig()
-	{
-		if (!isset($this->vars['map']))
-		{
-			throw new RuntimeException("Hashmap filter is missing a 'map' value");
-		}
-
-		return parent::asConfig();
 	}
 
 	/**
@@ -81,55 +66,8 @@ class HashmapFilter extends AttributeFilter
 		$this->resetSafeness();
 		if (!empty($this->vars['strict']))
 		{
-			$this->evaluateSafenessInCSS();
-			$this->evaluateSafenessInJS();
+			$this->assessSafeness($map);
 		}
-	}
-
-	/**
-	* Mark whether this filter makes a value safe to be used in CSS
-	*
-	* @return void
-	*/
-	protected function evaluateSafenessInCSS()
-	{
-		// Test each value against the list of disallowed characters
-		$disallowedChars = ContextSafeness::getDisallowedCharactersInCSS();
-		foreach ($this->vars['map'] as $value)
-		{
-			foreach ($disallowedChars as $char)
-			{
-				if (strpos($value, $char) !== false)
-				{
-					return;
-				}
-			}
-		}
-
-		$this->markAsSafeInCSS();
-	}
-
-	/**
-	* Mark whether this filter makes a value safe to be used in JS
-	*
-	* @return void
-	*/
-	protected function evaluateSafenessInJS()
-	{
-		// Test each value against the list of disallowed characters
-		$disallowedChars = ContextSafeness::getDisallowedCharactersInJS();
-		foreach ($this->vars['map'] as $value)
-		{
-			foreach ($disallowedChars as $char)
-			{
-				if (strpos($value, $char) !== false)
-				{
-					return;
-				}
-			}
-		}
-
-		$this->markAsSafeInJS();
 	}
 
 	/**

@@ -6,6 +6,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\MapFilter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Configurator\Items\AttributeFilters\AbstractMapFilter
 * @covers s9e\TextFormatter\Configurator\Items\AttributeFilters\MapFilter
 */
 class MapFilterTest extends Test

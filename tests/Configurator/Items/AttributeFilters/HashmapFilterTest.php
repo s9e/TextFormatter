@@ -6,6 +6,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\HashmapFilter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Configurator\Items\AttributeFilters\AbstractMapFilter
 * @covers s9e\TextFormatter\Configurator\Items\AttributeFilters\HashmapFilter
 */
 class HashmapFilterTest extends Test
