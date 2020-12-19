@@ -1289,6 +1289,8 @@ Regexp Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Regex
  [x] Is safe in JS if the regexp is /^\d+$/D
  [x] Is safe in JS if the regexp is /^[0-9]+$/D
  [x] Is safe in JS if the regexp is /^(?:[0-9]+)$/D
+ [x] Is safe in JS if the regexp is /^\w++$/D
+ [x] Is not safe in JS if the regexp is /^\W++$/D
  [x] Is not safe in JS if the regexp is /^\d+/D
  [x] Is not safe in JS if the regexp is /\d+$/D
  [x] Is not safe in JS if the regexp is /^\d+$/

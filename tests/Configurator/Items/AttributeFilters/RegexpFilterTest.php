@@ -240,6 +240,25 @@ class RegexpFilterTest extends Test
 	}
 
 	/**
+	* @testdox Is safe in JS if the regexp is /^\w++$/D
+	*/
+	public function testJSSafeAlpha()
+	{
+		$filter = new RegexpFilter('/^\\w++$/D');
+
+		$this->assertTrue($filter->isSafeInJS());
+	}
+	/**
+	* @testdox Is not safe in JS if the regexp is /^\W++$/D
+	*/
+	public function testJSUnsafeNonAlpha()
+	{
+		$filter = new RegexpFilter('/^\\W++$/D');
+
+		$this->assertFalse($filter->isSafeInJS());
+	}
+
+	/**
 	* @testdox Is not safe in JS if the regexp is /^\d+/D
 	*/
 	public function testJSUnsafeUnanchoredStart()
