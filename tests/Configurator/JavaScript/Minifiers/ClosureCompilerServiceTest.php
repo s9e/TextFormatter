@@ -10,6 +10,7 @@ use s9e\TextFormatter\Tests\Test;
 /**
 * @requires extension json
 * @covers s9e\TextFormatter\Configurator\JavaScript\Minifiers\ClosureCompilerService
+* @covers s9e\TextFormatter\Configurator\JavaScript\OnlineMinifier
 */
 class ClosureCompilerServiceTest extends Test
 {
