@@ -1836,6 +1836,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.bitchute.com/embed/k1N2uGB-Xls/',
+				'<r><BITCHUTE id="k1N2uGB-Xls">https://www.bitchute.com/embed/k1N2uGB-Xls/</BITCHUTE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bitchute');
+				}
+			],
+			[
 				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
 				'<r><BREAK id="2278131">http://www.break.com/video/video-game-playing-frog-wants-more-2278131</BREAK></r>',
 				[],

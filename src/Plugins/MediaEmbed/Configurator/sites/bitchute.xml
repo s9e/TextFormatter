@@ -1,9 +1,12 @@
 <site name="BitChute" homepage="https://www.bitchute.com/">
 	<example>https://www.bitchute.com/video/y9AejeZ2vD0/</example>
 
+	<oembed endpoint="https://www.bitchute.com/oembed/"
+	          scheme="https://www.bitchute.com/video/{@id}/"/>
+
 	<tags><tag>videos</tag></tags>
 
 	<host>bitchute.com</host>
-	<extract>@bitchute\.com/video/(?'id'\w+)@</extract>
+	<extract>@bitchute\.com/(?:embed|video)/(?'id'[-\w]+)@</extract>
 	<iframe src="https://www.bitchute.com/embed/{@id}/"/>
 </site>
