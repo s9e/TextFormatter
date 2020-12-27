@@ -25,9 +25,8 @@ $page  = loadPage('https://html.spec.whatwg.org/multipage/indices.html');
 $xpath = new DOMXPath($page);
 $query = '//h3[@id="attributes-3"]/following-sibling::table[1]/tbody/tr[contains(., "URL")]/th';
 
-// Prefill the list of filters with the "icon" attribute from the now-deprecated menuitem element
-// and the "longdesc" attribute that doesn't appear in current specs
-$filters = ['icon' => '#url', 'longdesc' => '#url'];
+// Prefill the list of filters with deprecated attributes that may not appear in current specs
+$filters = ['icon' => '#url', 'longdesc' => '#url', 'manifest' => '#url'];
 foreach ($xpath->query($query) as $th)
 {
 	foreach (preg_split('/[;\\s]+/', $th->textContent, -1, PREG_SPLIT_NO_EMPTY) as $attrName)
