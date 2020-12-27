@@ -93,15 +93,15 @@ echo $html;
 				github-gist
 			</xsl:attribute>
 		</xsl:if>
-		<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.1/build/' != 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.1/build/'">
+		<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/' != 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/'">
 			<xsl:attribute name="data-hljs-url">
-				https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.1/build/
+				https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
-		<xsl:attribute name="integrity">sha384-TB2DTH77ndX7xwCHAtxD7BZqyn4r429ZSoGL7vcrb5x0bFSvLGAMoiriMUcIqeTu</xsl:attribute>
+		<xsl:attribute name="integrity">sha384-eud4nQrKZMwcYak7or3J5ZPJx1x4HRe8iTTHJy1SUVrDD+fP30Bo/F8OSdQJpk8d</xsl:attribute>
 		<xsl:attribute name="onload">hljsLoader.highlightBlocks(this.parentNode)</xsl:attribute>
-		<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.16/loader.min.js</xsl:attribute>
+		<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.18/loader.min.js</xsl:attribute>
 	</script>
 </pre>
 ```
@@ -118,7 +118,7 @@ echo $html;
 	</tr>
 	<tr>
 		<td><code>url</code></td>
-		<td>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.1/build/</td>
+		<td>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.5.0/build/</td>
 		<td>highlight.js CDN URL</td>
 	</tr>
 </table>
