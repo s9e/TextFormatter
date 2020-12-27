@@ -1,3 +1,21 @@
+2.8.1 (2020-12-27)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/52e1d46415f93ea1c8fed9846d8240fb5396b238...16d018d6e2c042ec4c9843c84d82c17b11c5d1f1)
+
+### Fixed
+
+ - `6909b2327` TemplateHelper: fixed handling of HTML special characters in highlightNode()
+
+### Changed
+
+ - `0a661c962` AttributeFilters: refactored HashmapFilter and MapFilter
+ - `c8ae84391` BBCodes: updated default CODE BBCode
+ - `816182d45` MediaEmbed: updated BitChute
+ - `16d018d6e` MediaEmbed: updated TikTok
+ - `704b16b4f` RegexpFilter: reworked safeness checks
+
+
 2.8.0 (2020-12-09)
 ==================
 
