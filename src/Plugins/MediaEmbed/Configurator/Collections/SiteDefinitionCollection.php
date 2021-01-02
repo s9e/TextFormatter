@@ -85,7 +85,7 @@ class SiteDefinitionCollection extends NormalizedCollection
 	/**
 	* Normalize a regexp / indexed array of regexps
 	*
-	* @param  array|string
+	* @param  array|string $value
 	* @return array
 	*/
 	protected function normalizeRegexp($value)
@@ -96,7 +96,7 @@ class SiteDefinitionCollection extends NormalizedCollection
 	/**
 	* Normalize the "scrape" value
 	*
-	* @param  array
+	* @param  array $value
 	* @return array
 	*/
 	protected function normalizeScrape($value)

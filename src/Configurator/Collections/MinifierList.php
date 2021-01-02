@@ -41,8 +41,8 @@ class MinifierList extends NormalizedList
 	/**
 	* Create and return a Minifier instance
 	*
-	* @param  string   Minifier's name
-	* @param  array    Constructor's arguments
+	* @param  string   $name Minifier's name
+	* @param  array    $args Constructor's arguments
 	* @return Minifier
 	*/
 	protected function getMinifierInstance($name, array $args = [])
