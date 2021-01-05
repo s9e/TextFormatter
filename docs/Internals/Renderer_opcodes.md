@@ -8,7 +8,7 @@
 
 <dl>
 	<dt>apply_templates</dt>
-	<dd>Recursiverly process all child nodes, or nodes selected by optional XPath expression <code>select<code>.</dd>
+	<dd>Recursively process all child nodes, or nodes selected by optional XPath expression <code>select<code>.</dd>
 
 	<dt>buffer_append_literal</dt>
 	<dd>Append given string literal <code>value</code> to buffer <code>id</code>.</dd>
