@@ -6,7 +6,7 @@
 	<tags><tag>social</tag></tags>
 
 	<host>instagram.com</host>
-	<extract>!instagram\.com/(?:p|tv)/(?'id'[-\w]+)!</extract>
+	<extract>!instagram\.com/(?:p|reel|tv)/(?'id'[-\w]+)!</extract>
 	<iframe width="540" height="540" src="https://s9e.github.io/iframe/2/instagram.min.html#{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
 		<style background="url(https://www.instagram.com/static/images/ico/favicon.svg/fc72dd4bfde8.svg) no-repeat 50% 50% / 50%"/>
 	</iframe>
