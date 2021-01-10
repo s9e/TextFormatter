@@ -46,6 +46,7 @@ benchmark($regexps, $input);
 $regexps = [
 	'(<[eis]>[^<]*+</[eis]>)',
 	'((?<=\\K<)[eis]>[^<]*+</[eis]>)',
+	'(<[eis]>[^>]++>)',
 ];
 benchmark($regexps, $input, '');
 
