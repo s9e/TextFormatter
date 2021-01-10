@@ -28,9 +28,21 @@ PHP 8.0.0 - PCRE 10.36 2020-12-04
         415 µs  (<[eis]>[^<]*+</[eis]>)
         542 µs  ((?<=\K<)[eis]>[^<]*+</[eis]>)
         349 µs  (<[eis]>[^>]++>)
+
+PHP 8.0.1 - PCRE 10.36 2020-12-04 JIT
+
+          2 µs  (<[!?])
+          1 µs  ((?<=<)[!?])
+
+         42 µs  (<(?:[!?]|(?:FLASH|IMG)[ />]))
+         27 µs  ((?<=<)(?:[!?]|(?:FLASH|IMG)[ />]))
+
+         92 µs  (<[eis]>[^<]*+</[eis]>)
+         91 µs  ((?<=\K<)[eis]>[^<]*+</[eis]>)
+         90 µs  (<[eis]>[^>]++>)
 */
 
-echo 'PHP ', PHP_VERSION, ' - PCRE ', PCRE_VERSION, "\n\n";
+echo 'PHP ', PHP_VERSION, ' - PCRE ', PCRE_VERSION, (ini_get('pcre.jit') ? ' JIT' : ''), "\n\n";
 $input = str_repeat('<B><s>[b]</s>Lorem ipsum<e>[/b]</e></B> ', 1000);
 
 $regexps = [
