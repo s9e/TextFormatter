@@ -1,28 +1,35 @@
 #!/usr/bin/php
-<?php
+<?php declare(strict_types=1);
 
 /*
 See s9e\TextFormatter\Renderers\PHP::$quickRenderingTest
+See s9e\TextFormatter\Renderers\PHP::render()
 
-PHP 7.2.29 - PCRE 8.44 2020-02-12
+PHP 7.2.34 - PCRE 8.44 2020-02-12
 
-         15 µs  (<[!?])
-          1 µs  ((?<=<)[!?])
+         45 µs  (<[!?])
+          2 µs  ((?<=<)[!?])
 
-         17 µs  (<(?:[!?]|(?:FLASH|IMG)[ />]))
-          7 µs  ((?<=<)(?:[!?]|(?:FLASH|IMG)[ />]))
+         48 µs  (<(?:[!?]|(?:FLASH|IMG)[ />]))
+         23 µs  ((?<=<)(?:[!?]|(?:FLASH|IMG)[ />]))
 
-PHP 7.4.4 - PCRE 10.34 2019-11-21
+         69 µs  (<[eis]>[^<]*+</[eis]>)
+         79 µs  ((?<=\K<)[eis]>[^<]*+</[eis]>)
 
-         78 µs  (<[!?])
-          7 µs  ((?<=<)[!?])
+PHP 8.0.0 - PCRE 10.36 2020-12-04
 
-        188 µs  (<(?:[!?]|(?:FLASH|IMG)[ />]))
-          7 µs  ((?<=<)(?:[!?]|(?:FLASH|IMG)[ />]))
+        216 µs  (<[!?])
+         26 µs  ((?<=<)[!?])
+
+        502 µs  (<(?:[!?]|(?:FLASH|IMG)[ />]))
+         24 µs  ((?<=<)(?:[!?]|(?:FLASH|IMG)[ />]))
+
+        431 µs  (<[eis]>[^<]*+</[eis]>)
+        377 µs  ((?<=\K<)[eis]>[^<]*+</[eis]>)
 */
 
 echo 'PHP ', PHP_VERSION, ' - PCRE ', PCRE_VERSION, "\n\n";
-$input = str_repeat('<B>..</B>', 1e3);
+$input = str_repeat('<B><s>[b]</s>Lorem ipsum<e>[/b]</e></B> ', 1000);
 
 $regexps = [
 	'(<[!?])',
@@ -36,7 +43,13 @@ $regexps = [
 ];
 benchmark($regexps, $input);
 
-function benchmark(array $regexps, string $input)
+$regexps = [
+	'(<[eis]>[^<]*+</[eis]>)',
+	'((?<=\\K<)[eis]>[^<]*+</[eis]>)',
+];
+benchmark($regexps, $input, '');
+
+function benchmark(array $regexps, string $input, string $replace = null)
 {
 	foreach ($regexps as $regexp)
 	{
@@ -45,7 +58,7 @@ function benchmark(array $regexps, string $input)
 		$s=microtime(true);
 		do
 		{
-			preg_match($regexp, $input);
+			(isset($replace)) ? preg_replace($regexp, $replace, $input) : preg_match($regexp, $input);
 		}
 		while (--$i);
 		$e=microtime(true);
