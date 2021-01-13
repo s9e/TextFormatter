@@ -6707,13 +6707,15 @@ Quick (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick)
  [x] Uses double quotes for attribute values
 
 Serializer (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Serializer)
- [x] serialize() ignores text nodes in source tree
  [x] serialize() tests with data set #0
  [x] serialize() tests with data set #1
  [x] serialize() tests with data set #2
  [x] serialize() tests with data set #3
  [x] serialize() tests with data set #4
  [x] serialize() tests with data set #5
+ [x] serialize() tests with data set #6
+ [x] serialize() tests with data set #7
+ [x] serialize() ignores text nodes in source tree
 
 Switch Statement (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\SwitchStatement)
  [x] generate() tests with data set #0

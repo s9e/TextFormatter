@@ -14,26 +14,6 @@ use s9e\TextFormatter\Tests\Test;
 class SerializerTest extends Test
 {
 	/**
-	* @testdox serialize() ignores text nodes in source tree
-	*/
-	public function testIgnoresTextNodes()
-	{
-		$xml = '<template>
-					<element name="br" id="1" void="yes">
-						<closeTag id="1"/>
-					</element>
-				</template>';
-
-		$expected = "\$this->out.='<'.htmlspecialchars('br',3);\$this->out.='>';";
-
-		$serializer = new Serializer;
-		$ir = new DOMDocument;
-		$ir->loadXML($xml);
-
-		$this->assertSame($expected, $serializer->serialize($ir->documentElement));
-	}
-
-	/**
 	* @testdox serialize() tests
 	* @dataProvider getSerializeTests
 	*/
@@ -61,6 +41,23 @@ class SerializerTest extends Test
 	public function getSerializeTests()
 	{
 		return [
+			[
+				'<template>
+					<element name="b" id="1">
+						<closeTag id="1"/>
+					</element>
+				</template>',
+				"\$this->out.='<'.'b';\$this->out.='>';\$this->out.='</'.'b'.'>';"
+			],
+			[
+				'<template>
+					<element name="b" id="1">
+						<attribute name="title"/>
+						<closeTag id="1"/>
+					</element>
+				</template>',
+				"\$this->out.='<'.'b';\$this->out.=' '.'title'.'=\"';\$this->out.='\"';\$this->out.='>';\$this->out.='</'.'b'.'>';"
+			],
 			[
 				'<template>
 					<switch branch-key="@foo">
@@ -198,5 +195,25 @@ class SerializerTest extends Test
 				"switch(\$node->getAttribute('foo')){case'bar':\$this->out.='bar';break;case'foo':\$this->out.='foo';}"
 			],
 		];
+	}
+
+	/**
+	* @testdox serialize() ignores text nodes in source tree
+	*/
+	public function testIgnoresTextNodes()
+	{
+		$xml = '<template>
+					<element name="br" id="1" void="yes">
+						<closeTag id="1"/>
+					</element>
+				</template>';
+
+		$expected = "\$this->out.='<'.'br';\$this->out.='>';";
+
+		$serializer = new Serializer;
+		$ir = new DOMDocument;
+		$ir->loadXML($xml);
+
+		$this->assertSame($expected, $serializer->serialize($ir->documentElement));
 	}
 }

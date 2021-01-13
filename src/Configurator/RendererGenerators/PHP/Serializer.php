@@ -116,6 +116,22 @@ class Serializer
 	}
 
 	/**
+	* Convert a dynamic xsl:attribute/xsl:element name into PHP
+	*
+	* @param  string $attrValue Attribute value template
+	* @return string
+	*/
+	protected function convertDynamicNodeName(string $attrValue): string
+	{
+		if (strpos($attrValue, '{') === false)
+		{
+			return var_export(htmlspecialchars($attrValue, ENT_QUOTES), true);
+		}
+
+		return 'htmlspecialchars(' . $this->convertAttributeValueTemplate($attrValue) . ',' . ENT_QUOTES . ')';
+	}
+
+	/**
 	* Escape given literal
 	*
 	* @param  string $text    Literal
@@ -213,10 +229,7 @@ class Serializer
 		$attrName = $attribute->getAttribute('name');
 
 		// PHP representation of this attribute's name
-		$phpAttrName = $this->convertAttributeValueTemplate($attrName);
-
-		// NOTE: the attribute name is escaped by default to account for dynamically-generated names
-		$phpAttrName = 'htmlspecialchars(' . $phpAttrName . ',' . ENT_QUOTES . ')';
+		$phpAttrName = $this->convertDynamicNodeName($attrName);
 
 		$php     = "\$this->out.=' '." . $phpAttrName;
 		$content = $this->serializeChildren($attribute);
@@ -328,10 +341,7 @@ class Serializer
 		$isDynamic = (bool) (strpos($elName, '{') !== false);
 
 		// PHP representation of this element's name
-		$phpElName = $this->convertAttributeValueTemplate($elName);
-
-		// NOTE: the element name is escaped by default to account for dynamically-generated names
-		$phpElName = 'htmlspecialchars(' . $phpElName . ',' . ENT_QUOTES . ')';
+		$phpElName = $this->convertDynamicNodeName($elName);
 
 		// If the element name is dynamic, we cache its name for convenience and performance
 		if ($isDynamic)
