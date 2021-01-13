@@ -51,6 +51,14 @@ class SerializerTest extends Test
 			],
 			[
 				'<template>
+					<element name="{@foo}" id="1">
+						<closeTag id="1"/>
+					</element>
+				</template>',
+				"\$e1=htmlspecialchars(\$node->getAttribute('foo'),3);\$this->out.='<'.\$e1;\$this->out.='>';\$this->out.='</'.\$e1.'>';"
+			],
+			[
+				'<template>
 					<element name="b" id="1">
 						<attribute name="title"/>
 						<closeTag id="1"/>
