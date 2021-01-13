@@ -5,6 +5,9 @@
 	<example>https://i.imgur.com/u7Yo0Vy.gifv</example>
 	<example>https://i.imgur.com/UO1UrIx.mp4</example>
 
+	<oembed endpoint="https://api.imgur.com/oembed.json"
+	          scheme="https://imgur.com/{@id}"/>
+
 	<tags><tag>images</tag></tags>
 
 	<host>imgur.com</host>
