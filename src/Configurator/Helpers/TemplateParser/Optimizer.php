@@ -33,15 +33,15 @@ class Optimizer extends IRProcessor
 		do
 		{
 			$old = $xml;
-			$this->optimizeCloseTagElements($ir);
+			$this->optimizeCloseTagElements();
 			$xml = $ir->saveXML();
 		}
 		while (--$remainingLoops > 0 && $xml !== $old);
 
-		$this->removeCloseTagSiblings($ir);
-		$this->removeContentFromVoidElements($ir);
-		$this->mergeConsecutiveLiteralOutputElements($ir);
-		$this->removeEmptyDefaultCases($ir);
+		$this->removeCloseTagSiblings();
+		$this->removeContentFromVoidElements();
+		$this->mergeConsecutiveLiteralOutputElements();
+		$this->removeEmptyDefaultCases();
 	}
 
 	/**
@@ -50,10 +50,9 @@ class Optimizer extends IRProcessor
 	* If there's a <closeTag/> right after a <switch/>, clone the <closeTag/> at the end of
 	* the every <case/> that does not end with a <closeTag/>
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function cloneCloseTagElementsIntoSwitch(DOMDocument $ir)
+	protected function cloneCloseTagElementsIntoSwitch()
 	{
 		$query = '//switch[name(following-sibling::*[1]) = "closeTag"]';
 		foreach ($this->query($query) as $switch)
@@ -75,10 +74,9 @@ class Optimizer extends IRProcessor
 	* If there's a <closeTag/> at the beginning of every <case/>, clone it and insert it
 	* right before the <switch/> unless there's already one
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function cloneCloseTagElementsOutOfSwitch(DOMDocument $ir)
+	protected function cloneCloseTagElementsOutOfSwitch()
 	{
 		$query = '//switch[case/closeTag][not(case[name(*[1]) != "closeTag"])]';
 		foreach ($this->query($query) as $switch)
@@ -91,10 +89,9 @@ class Optimizer extends IRProcessor
 	/**
 	* Merge consecutive literal outputs
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function mergeConsecutiveLiteralOutputElements(DOMDocument $ir)
+	protected function mergeConsecutiveLiteralOutputElements()
 	{
 		foreach ($this->query('//output[@type="literal"]') as $output)
 		{
@@ -122,15 +119,14 @@ class Optimizer extends IRProcessor
 	/**
 	* Optimize closeTags elements
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function optimizeCloseTagElements(DOMDocument $ir)
+	protected function optimizeCloseTagElements()
 	{
-		$this->cloneCloseTagElementsIntoSwitch($ir);
-		$this->cloneCloseTagElementsOutOfSwitch($ir);
-		$this->removeRedundantCloseTagElementsInSwitch($ir);
-		$this->removeRedundantCloseTagElements($ir);
+		$this->cloneCloseTagElementsIntoSwitch();
+		$this->cloneCloseTagElementsOutOfSwitch();
+		$this->removeRedundantCloseTagElementsInSwitch();
+		$this->removeRedundantCloseTagElements();
 	}
 
 	/**
@@ -138,13 +134,12 @@ class Optimizer extends IRProcessor
 	*
 	* If all branches of a switch have a closeTag we can remove any closeTag siblings of the switch
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function removeCloseTagSiblings(DOMDocument $ir)
+	protected function removeCloseTagSiblings()
 	{
 		$query = '//switch[not(case[not(closeTag)])]/following-sibling::closeTag';
-		$this->removeNodes($ir, $query);
+		$this->removeNodes($query);
 	}
 
 	/**
@@ -153,41 +148,38 @@ class Optimizer extends IRProcessor
 	* For each void element, we find whichever <closeTag/> elements close it and remove everything
 	* after
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function removeContentFromVoidElements(DOMDocument $ir)
+	protected function removeContentFromVoidElements()
 	{
 		foreach ($this->query('//element[@void="yes"]') as $element)
 		{
 			$id    = $element->getAttribute('id');
 			$query = './/closeTag[@id="' . $id . '"]/following-sibling::*';
 
-			$this->removeNodes($ir, $query, $element);
+			$this->removeNodes($query, $element);
 		}
 	}
 
 	/**
 	* Remove empty default cases (no test and no descendants)
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function removeEmptyDefaultCases(DOMDocument $ir)
+	protected function removeEmptyDefaultCases()
 	{
 		$query = '//case[not(@test)][not(*)][. = ""]';
-		$this->removeNodes($ir, $query);
+		$this->removeNodes($query);
 	}
 
 	/**
 	* Remove all nodes that match given XPath query
 	*
-	* @param  DOMDocument $ir
-	* @param  string      $query
-	* @param  DOMNode     $contextNode
+	* @param  string  $query
+	* @param  DOMNode $contextNode
 	* @return void
 	*/
-	protected function removeNodes(DOMDocument $ir, $query, DOMNode $contextNode = null)
+	protected function removeNodes($query, DOMNode $contextNode = null)
 	{
 		foreach ($this->query($query, $contextNode) as $node)
 		{
@@ -204,17 +196,16 @@ class Optimizer extends IRProcessor
 	* For each <closeTag/> remove duplicate <closeTag/> nodes that are either siblings or
 	* descendants of a sibling
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function removeRedundantCloseTagElements(DOMDocument $ir)
+	protected function removeRedundantCloseTagElements()
 	{
 		foreach ($this->query('//closeTag') as $closeTag)
 		{
 			$id    = $closeTag->getAttribute('id');
 			$query = 'following-sibling::*/descendant-or-self::closeTag[@id="' . $id . '"]';
 
-			$this->removeNodes($ir, $query, $closeTag);
+			$this->removeNodes($query, $closeTag);
 		}
 	}
 
@@ -224,10 +215,9 @@ class Optimizer extends IRProcessor
 	* If there's a <closeTag/> right after a <switch/>, remove all <closeTag/> nodes at the
 	* end of every <case/>
 	*
-	* @param  DOMDocument $ir
 	* @return void
 	*/
-	protected function removeRedundantCloseTagElementsInSwitch(DOMDocument $ir)
+	protected function removeRedundantCloseTagElementsInSwitch()
 	{
 		$query = '//switch[name(following-sibling::*[1]) = "closeTag"]';
 		foreach ($this->query($query) as $switch)
