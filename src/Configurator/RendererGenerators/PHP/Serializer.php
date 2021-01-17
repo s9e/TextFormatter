@@ -183,21 +183,18 @@ class Serializer
 	/**
 	* Test whether given attribute declaration is a minimizable boolean attribute
 	*
-	* The test is case-sensitive and only covers attribute that are minimized by libxslt
-	*
-	* @param  string $attrName Attribute name
-	* @param  string $php      Attribute content, in PHP
+	* @param  DOMElement $attribute <attribute/> node
+	* @param  string     $php       Attribute content, in PHP
 	* @return boolean
 	*/
-	protected function isBooleanAttribute(string $attrName, string $php): bool
+	protected function isBooleanAttribute(DOMElement $attribute, string $php): bool
 	{
-		$attrNames = ['checked', 'compact', 'declare', 'defer', 'disabled', 'ismap', 'multiple', 'nohref', 'noresize', 'noshade', 'nowrap', 'readonly', 'selected'];
-		if (!in_array($attrName, $attrNames, true))
+		if ($attribute->getAttribute('boolean') !== 'yes')
 		{
 			return false;
 		}
 
-		return ($php === '' || $php === "\$this->out.='" . $attrName . "';");
+		return ($php === '' || $php === "\$this->out.='" . $attribute->getAttribute('name') . "';");
 	}
 
 	/**
@@ -233,7 +230,7 @@ class Serializer
 
 		$php     = "\$this->out.=' '." . $phpAttrName;
 		$content = $this->serializeChildren($attribute);
-		if (!$this->isBooleanAttribute($attrName, $content))
+		if (!$this->isBooleanAttribute($attribute, $content))
 		{
 			$php .= ".'=\"';" . $content . "\$this->out.='\"'";
 		}

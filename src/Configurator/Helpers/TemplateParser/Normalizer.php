@@ -51,6 +51,7 @@ class Normalizer extends IRProcessor
 		$this->markConditionalCloseTagElements($ir);
 		$this->setOutputContext($ir);
 		$this->markBranchTables($ir);
+		$this->markBooleanAttributes($ir);
 	}
 
 	/**
@@ -237,6 +238,26 @@ class Normalizer extends IRProcessor
 				// Mark the current <closeTag/> to indicate that it must set a flag to indicate
 				// that its tag has been closed
 				$closeTag->setAttribute('set', '');
+			}
+		}
+	}
+
+	/**
+	* Mark boolean attributes
+	*
+	* The test is case-sensitive and only covers attribute that are minimized by libxslt
+	*
+	* @param  DOMDocument $ir
+	* @return void
+	*/
+	protected function markBooleanAttributes(DOMDocument $ir): void
+	{
+		$attrNames = ['checked', 'compact', 'declare', 'defer', 'disabled', 'ismap', 'multiple', 'nohref', 'noresize', 'noshade', 'nowrap', 'readonly', 'selected'];
+		foreach ($this->query('//attribute') as $attribute)
+		{
+			if (in_array($attribute->getAttribute('name'), $attrNames, true))
+			{
+				$attribute->setAttribute('boolean', 'yes');
 			}
 		}
 	}
