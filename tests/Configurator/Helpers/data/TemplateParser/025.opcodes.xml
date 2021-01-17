@@ -1,16 +1,16 @@
 <opcodes>
-  <output_literal value="&lt;div"/>
+  <buffer_literal id="0" value="&lt;div"/>
   <buffer_set_literal id="0" value="&gt;"/>
   <conditional>
     <condition_when test="@a">
-      <output_literal value=" title=&quot;foo&quot;"/>
+      <buffer_literal id="0" value=" title=&quot;foo&quot;"/>
     </condition_when>
     <condition_default>
       <output_buffer id="0"/>
       <buffer_set_literal id="0" value=""/>
-      <output_literal value="foo"/>
+      <buffer_literal id="0" value="foo"/>
     </condition_default>
   </conditional>
   <output_buffer id="0"/>
-  <output_literal value="&lt;/div&gt;"/>
+  <buffer_literal id="0" value="&lt;/div&gt;"/>
 </opcodes>

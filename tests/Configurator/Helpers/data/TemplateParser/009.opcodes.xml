@@ -1,7 +1,7 @@
 <opcodes>
-  <output_literal value="&lt;b title=&quot;{foo}"/>
-  <output_xpath expr="@bar"/>
-  <output_literal value="&amp;lt;baz&amp;gt;&quot;&gt;"/>
+  <buffer_literal id="0" value="&lt;b title=&quot;{foo}"/>
+  <buffer_xpath id="0" select="@bar"/>
+  <buffer_literal id="0" value="&amp;lt;baz&amp;gt;&quot;&gt;"/>
   <apply_templates/>
-  <output_literal value="&lt;/b&gt;"/>
+  <buffer_literal id="0" value="&lt;/b&gt;"/>
 </opcodes>

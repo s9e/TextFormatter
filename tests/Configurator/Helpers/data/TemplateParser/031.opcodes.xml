@@ -1,5 +1,5 @@
 <opcodes>
-  <output_literal value="&lt;div&gt;&lt;-- ... --&gt;"/>
+  <buffer_literal id="0" value="&lt;div&gt;&lt;-- ... --&gt;"/>
   <apply_templates/>
-  <output_literal value="&lt;/div&gt;"/>
+  <buffer_literal id="0" value="&lt;/div&gt;"/>
 </opcodes>

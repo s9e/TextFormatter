@@ -1,16 +1,16 @@
 <opcodes>
   <conditional_match expr=".">
     <condition_match value=":)">
-      <output_literal value="."/>
+      <buffer_literal id="0" value="."/>
     </condition_match>
     <condition_match value=":(">
-      <output_literal value="."/>
+      <buffer_literal id="0" value="."/>
     </condition_match>
     <condition_match value=":p">
-      <output_literal value="."/>
+      <buffer_literal id="0" value="."/>
     </condition_match>
     <condition_match value=";)">
-      <output_literal value="."/>
+      <buffer_literal id="0" value="."/>
     </condition_match>
   </conditional>
 </opcodes>

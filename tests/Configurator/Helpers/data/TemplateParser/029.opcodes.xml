@@ -3,20 +3,20 @@
     <condition_when test="$STYLE_ID=2">
       <conditional>
         <condition_when test="@author">
-          <output_literal value="xxx"/>
+          <buffer_literal id="0" value="xxx"/>
         </condition_when>
         <condition_default>
-          <output_literal value="yyy"/>
+          <buffer_literal id="0" value="yyy"/>
         </condition_default>
       </conditional>
     </condition_when>
     <condition_default>
       <conditional>
         <condition_when test="@author">
-          <output_literal value="aaa"/>
+          <buffer_literal id="0" value="aaa"/>
         </condition_when>
         <condition_default>
-          <output_literal value="bbb"/>
+          <buffer_literal id="0" value="bbb"/>
         </condition_default>
       </conditional>
     </condition_default>

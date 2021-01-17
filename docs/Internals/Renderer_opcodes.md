@@ -4,8 +4,12 @@
  - <code>comment<code> ?
  - <code>raw<code> no escaping
  - <code>text<code> escape `&` `<` `>`
- - <code>???<code> remove tags then escape `&` `<` `>` `"`
+ - <code>???<code> remove tags then unescape entities(?)
  - <code>url<code> ?
+
+Escaping methods can be chained via buffer copy.
+
+TODO: add output_method=(text|html) to buffer_transform.
 
 <dl>
 	<dt>buffer_buffer</dt>
@@ -20,17 +24,17 @@
 	<dt>buffer_xpath</dt>
 	<dd>Append the result of XPath expression <code>select</code> to buffer <code>id</code>, escaped using the <code>escape</code> method.</dd>
 
-	<dt>clear_buffer</dt>
-	<dd>Set the value of buffer <code>id</code> to an empty string.</dd>
-
 	<dt>block_choose</dt>
 	<dd></dd>
 
 	<dt>block_match</dt>
-	<dd><code>select</code></dd>
+	<dd>Match each condition of this block against the string value of XPath expression <code>select</code>.</dd>
+
+	<dt>clear_buffer</dt>
+	<dd>Set the value of buffer <code>id</code> to an empty string.</dd>
 
 	<dt>condition_match</dt>
-	<dd><code>value</code></dd>
+	<dd>Match literal string <code>value</code> against this block's value.</dd>
 
 	<dt>condition_otherwise</dt>
 	<dd></dd>

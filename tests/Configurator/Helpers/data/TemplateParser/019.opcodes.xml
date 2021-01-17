@@ -1,4 +1,4 @@
 <opcodes>
-  <output_xpath expr="'Hello '"/>
-  <output_literal value="World"/>
+  <buffer_xpath id="0" select="'Hello '"/>
+  <buffer_literal id="0" value="World"/>
 </opcodes>

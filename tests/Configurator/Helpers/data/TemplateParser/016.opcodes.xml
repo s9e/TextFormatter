@@ -1,15 +1,15 @@
 <opcodes>
-  <output_literal value="&lt;a href=&quot;"/>
-  <output_xpath expr="@href"/>
-  <output_literal value="&quot;"/>
+  <buffer_literal id="0" value="&lt;a href=&quot;"/>
+  <buffer_xpath id="0" select="@href"/>
+  <buffer_literal id="0" value="&quot;"/>
   <conditional>
     <condition_when test="@title">
-      <output_literal value=" title=&quot;"/>
-      <output_xpath expr="@title"/>
-      <output_literal value="&quot;"/>
+      <buffer_literal id="0" value=" title=&quot;"/>
+      <buffer_xpath id="0" select="@title"/>
+      <buffer_literal id="0" value="&quot;"/>
     </condition_when>
   </conditional>
-  <output_literal value="&quot;&gt;"/>
+  <buffer_literal id="0" value="&quot;&gt;"/>
   <apply_templates/>
-  <output_literal value="&lt;/a&gt;"/>
+  <buffer_literal id="0" value="&lt;/a&gt;"/>
 </opcodes>

@@ -1,5 +1,5 @@
 <opcodes>
-  <output_literal value="&lt;b title=&quot;foo&quot;&gt;"/>
+  <buffer_literal id="0" value="&lt;b title=&quot;foo&quot;&gt;"/>
   <apply_templates/>
-  <output_literal value="&lt;/b&gt;"/>
+  <buffer_literal id="0" value="&lt;/b&gt;"/>
 </opcodes>

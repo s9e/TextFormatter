@@ -1,3 +1,3 @@
 <opcodes>
-  <output_literal value="&lt;hr title=&quot;{{foo&amp;bar}}&quot;&gt;"/>
+  <buffer_literal id="0" value="&lt;hr title=&quot;{{foo&amp;bar}}&quot;&gt;"/>
 </opcodes>

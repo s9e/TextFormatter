@@ -1,12 +1,12 @@
 <opcodes>
-  <output_literal value="&lt;div"/>
+  <buffer_literal id="0" value="&lt;div"/>
   <conditional>
     <condition_when test="@a">
-      <output_literal value=" title=&quot;foo&quot;&gt;"/>
+      <buffer_literal id="0" value=" title=&quot;foo&quot;&gt;"/>
     </condition_when>
     <condition_default>
-      <output_literal value="&gt;foo"/>
+      <buffer_literal id="0" value="&gt;foo"/>
     </condition_default>
   </conditional>
-  <output_literal value="&lt;/div&gt;"/>
+  <buffer_literal id="0" value="&lt;/div&gt;"/>
 </opcodes>

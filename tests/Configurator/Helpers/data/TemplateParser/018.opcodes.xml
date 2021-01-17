@@ -1,14 +1,14 @@
 <opcodes>
-  <output_literal value="&lt;b title=&quot;"/>
+  <buffer_literal id="0" value="&lt;b title=&quot;"/>
   <conditional>
     <condition_when test="@foo">
-      <output_literal value="foo"/>
+      <buffer_literal id="0" value="foo"/>
     </condition_when>
     <condition_when test="@bar">
-      <output_literal value="bar"/>
+      <buffer_literal id="0" value="bar"/>
     </condition_when>
   </conditional>
-  <output_literal value="&quot;&gt;"/>
+  <buffer_literal id="0" value="&quot;&gt;"/>
   <apply_templates/>
-  <output_literal value="&lt;/b&gt;"/>
+  <buffer_literal id="0" value="&lt;/b&gt;"/>
 </opcodes>

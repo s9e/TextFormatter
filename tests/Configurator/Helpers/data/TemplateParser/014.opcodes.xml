@@ -1,13 +1,13 @@
 <opcodes>
   <conditional>
     <condition_when test="@a">
-      <output_literal value="A"/>
+      <buffer_literal id="0" value="A"/>
     </condition_when>
     <condition_when test="@b">
-      <output_literal value="B"/>
+      <buffer_literal id="0" value="B"/>
     </condition_when>
     <condition_default>
-      <output_literal value="C"/>
+      <buffer_literal id="0" value="C"/>
     </condition_when>
   </conditional>
 </opcodes>

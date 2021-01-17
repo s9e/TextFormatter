@@ -1,13 +1,13 @@
 <opcodes>
-  <output_literal value="&lt;b"/>
+  <buffer_literal id="0" value="&lt;b"/>
   <conditional>
     <condition_when test="@foo">
-      <output_literal value=" title=&quot;"/>
-      <output_xpath expr="@bar"/>
-      <output_literal value="&quot;"/>
+      <buffer_literal id="0" value=" title=&quot;"/>
+      <buffer_xpath id="0" select="@bar"/>
+      <buffer_literal id="0" value="&quot;"/>
 	</condition_when>
   </conditional>
-  <output_literal value="&gt;"/>
+  <buffer_literal id="0" value="&gt;"/>
   <apply_templates/>
-  <output_literal value="&lt;/b&gt;"/>
+  <buffer_literal id="0" value="&lt;/b&gt;"/>
 </opcodes>
