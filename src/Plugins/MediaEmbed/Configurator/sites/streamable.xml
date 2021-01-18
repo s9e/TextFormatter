@@ -4,6 +4,6 @@
 	<tags><tag>videos</tag></tags>
 
 	<host>streamable.com</host>
-	<extract>!streamable\.com/(?'id'\w+)!</extract>
+	<extract>!streamable\.com/(?:e/)?(?'id'\w+)!</extract>
 	<iframe src="//streamable.com/e/{@id}"/>
 </site>

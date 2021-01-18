@@ -3517,6 +3517,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'http://streamable.com/e/e4d',
+				'<r><STREAMABLE id="e4d">http://streamable.com/e/e4d</STREAMABLE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('streamable');
+				}
+			],
+			[
 				'https://streamja.com/2nr',
 				'<r><STREAMJA id="2nr">https://streamja.com/2nr</STREAMJA></r>',
 				[],
