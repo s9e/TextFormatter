@@ -1345,6 +1345,26 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://thoughtworks.wistia.com/medias/b6al55s35k',
+				'<r><WISTIA id="b6al55s35k">https://thoughtworks.wistia.com/medias/b6al55s35k</WISTIA></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('wistia');
+				}
+			],
+			[
+				'https://wistia.com/series/talking-too-loud?wchannelid=9c5u5vvz1d&wmediaid=od5qgyo2uy',
+				'<r><WISTIA id="od5qgyo2uy" type="audio">https://wistia.com/series/talking-too-loud?wchannelid=9c5u5vvz1d&amp;wmediaid=od5qgyo2uy</WISTIA></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('wistia');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
 				'<r><WSHH id="63133">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
 				[],
@@ -4013,15 +4033,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('washingtonpost');
-				}
-			],
-			[
-				'https://thoughtworks.wistia.com/medias/b6al55s35k',
-				'<r><WISTIA id="b6al55s35k">https://thoughtworks.wistia.com/medias/b6al55s35k</WISTIA></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('wistia');
 				}
 			],
 			[

@@ -1,9 +1,21 @@
 <site name="Wistia" homepage="https://wistia.com/">
 	<example>https://thoughtworks.wistia.com/medias/b6al55s35k</example>
+	<example>https://fast.wistia.com/embed/iframe/od5qgyo2uy</example>
 
-	<tags><tag>videos</tag></tags>
+	<tags><tag>podcasts</tag><tag>videos</tag></tags>
 
 	<host>wistia.com</host>
-	<extract>!wistia.com/medias/(?'id'\w+)!</extract>
-	<iframe src="https://fast.wistia.net/embed/iframe/{@id}"/>
+	<extract>!wistia.com/(?:(?:embed/iframe|medias)/|.*wmediaid=)(?'id'\w+)!</extract>
+	<scrape url="https://fast.wistia.com/oembed.json?url=https%3A%2F%2Ffast.wistia.com%2Fmedias%2F{@id}">
+		<match>!wistia.com/(?:(?:embed/iframe|medias)/|.*wmediaid=)\w!</match>
+		<extract>!"type":"(?'type'audio)!</extract>
+	</scrape>
+	<choose>
+		<when test="@type = 'audio'">
+			<iframe src="https://fast.wistia.net/embed/iframe/{@id}" width="100%" max-width="900" height="218"/>
+		</when>
+		<otherwise>
+			<iframe src="https://fast.wistia.net/embed/iframe/{@id}"/>
+		</otherwise>
+	</choose>
 </site>

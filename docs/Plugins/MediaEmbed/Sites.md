@@ -495,7 +495,7 @@
 	</tr>
 	<tr title="Wistia" id="wistia">
 		<td style="font-size:75%"><code>wistia</code></td>
-		<td style="font-size:50%">https://thoughtworks.wistia.com/medias/b6al55s35k</td>
+		<td style="font-size:50%">https://thoughtworks.wistia.com/medias/b6al55s35k<br/>https://fast.wistia.com/embed/iframe/od5qgyo2uy</td>
 	</tr>
 	<tr title="WorldStarHipHop" id="wshh">
 		<td style="font-size:75%"><code>wshh</code></td>
