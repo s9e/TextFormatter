@@ -1,3 +1,25 @@
+2.8.2 (2021-01-23)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/2ac2ab8c28849311424a78ea21a8368423053ce3...23ee8a5d5fcfcc3001ee8dfc1e64d92f3a0c2801)
+
+### Added
+
+ - `b5d664bb3` MediaEmbed: added Imgur oEmbed info
+ - `c21685645` MediaEmbed: added Instagram Reels
+ - `06d5e490f` PHP renderer generator: added a fast path for handling static node names
+
+### Removed
+
+ - `f357b2e64` TemplateParser: removed unused parameters
+
+### Changed
+
+ - `0dd855c9e` MediaEmbed: updated Streamable
+ - `23ee8a5d5` MediaEmbed: updated Wistia
+ - `f14bd4eca` TemplateParser: mark boolean attributes in the representation
+
+
 2.8.1 (2020-12-27)
 ==================
 
