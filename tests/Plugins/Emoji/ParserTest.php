@@ -119,6 +119,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				"\u{2764} \u{2764}\u{FE0F} \u{2764}\u{FE0E}",
+				"<r><EMOJI seq=\"2764\" tseq=\"2764\">\u{2764}</EMOJI> <EMOJI seq=\"2764\" tseq=\"2764\">\u{2764}\u{FE0F}</EMOJI> \u{2764}\u{FE0E}</r>",
+				[],
+				function ($configurator, $plugin)
+				{
+					$configurator->Emoji->aliases["\u{2764}"]         = "\u{2764}\u{FE0F}";
+					$configurator->Emoji->aliases["\u{2764}\u{FE0E}"] = "";
+				}
+			],
+			[
 				// :copyright: is in gemoji, not emojione
 				// :unicorn: is in emojione, not gemoji
 				':copyright: :unicorn:',

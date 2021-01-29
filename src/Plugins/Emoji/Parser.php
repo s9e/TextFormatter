@@ -65,8 +65,8 @@ class Parser extends ParserBase
 	protected function getHexSequence($str)
 	{
 		$seq = [];
-		$i   = 0;
-		do
+		$i   = -1;
+		while (++$i < strlen($str))
 		{
 			$cp = ord($str[$i]);
 			if ($cp >= 0xF0)
@@ -83,7 +83,6 @@ class Parser extends ParserBase
 			}
 			$seq[] = sprintf('%04x', $cp);
 		}
-		while (++$i < strlen($str));
 
 		return implode('-', $seq);
 	}

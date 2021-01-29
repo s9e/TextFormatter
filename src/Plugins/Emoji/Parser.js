@@ -42,8 +42,8 @@ function addTag(tagPos, tagLen, hex)
 function getHexSequence(str)
 {
 	var seq = [],
-		i   = 0;
-	do
+		i   = -1;
+	while (++i < str.length)
 	{
 		var cp = str.charCodeAt(i);
 		if (cp >= 0xD800 && cp <= 0xDBFF)
@@ -52,7 +52,6 @@ function getHexSequence(str)
 		}
 		seq.push(('000' + cp.toString(16)).replace(/^0+(.{4,})$/, '$1'));
 	}
-	while (++i < str.length);
 
 	return seq.join('-');
 }
