@@ -1054,28 +1054,28 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('msnbc');
 				}
 			],
-			[
-				'http://video.nationalgeographic.com/tv/changing-earth',
-				'<r><NATGEOVIDEO id="ngc-4MlzV_K8XoTPdXPLx2NOWq2IH410IzpO">http://video.nationalgeographic.com/tv/changing-earth</NATGEOVIDEO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('natgeochannel');
-					$configurator->MediaEmbed->add('natgeovideo');
-				}
-			],
-			[
-				'http://video.nationalgeographic.com/video/weirdest-superb-lyrebird',
-				'<r><NATGEOVIDEO id="df825c71-a912-476b-be6a-a3fbffed1ae4">http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</NATGEOVIDEO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('natgeochannel');
-					$configurator->MediaEmbed->add('natgeovideo');
-				}
-			],
+//			[
+//				'http://video.nationalgeographic.com/tv/changing-earth',
+//				'<r><NATGEOVIDEO id="ngc-4MlzV_K8XoTPdXPLx2NOWq2IH410IzpO">http://video.nationalgeographic.com/tv/changing-earth</NATGEOVIDEO></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('natgeochannel');
+//					$configurator->MediaEmbed->add('natgeovideo');
+//				}
+//			],
+//			[
+//				'http://video.nationalgeographic.com/video/weirdest-superb-lyrebird',
+//				'<r><NATGEOVIDEO id="df825c71-a912-476b-be6a-a3fbffed1ae4">http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</NATGEOVIDEO></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('natgeochannel');
+//					$configurator->MediaEmbed->add('natgeovideo');
+//				}
+//			],
 			[
 				'http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance',
 				'<r><NBCSPORTS id="fTQA2MMyx9YO">http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</NBCSPORTS></r>',
@@ -1271,8 +1271,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://vm.tiktok.com/Vm1ErH/',
-				'<r><TIKTOK id="6788531076290579718">https://vm.tiktok.com/Vm1ErH/</TIKTOK></r>',
+				'https://vm.tiktok.com/ZMJoUC76X/',
+				'<r><TIKTOK id="6923212296911080710">https://vm.tiktok.com/ZMJoUC76X/</TIKTOK></r>',
 				[],
 				function ($configurator)
 				{
