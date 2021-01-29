@@ -4157,6 +4157,7 @@ Configurator (s9e\TextFormatter\Tests\Plugins\Emoji\Configurator)
  [x] The config array contains no entry for custom aliases if there are none
  [x] A variable named Emoji.aliases is registered and contains aliases
  [x] The config array contains a regexp for custom aliases if applicable
+ [x] The custom aliases regexp handles aliases as bytes
  [x] The config array contains a quickMatch for custom aliases if applicable
  [x] The config array does not contain a quickMatch for aliases if impossible
  [x] Uses Twemoji by default

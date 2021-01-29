@@ -96,6 +96,21 @@ class ConfiguratorTest extends Test
 	}
 
 	/**
+	* @testdox The custom aliases regexp handles aliases as bytes
+	*/
+	public function testConfigAliasesRegexpBytes()
+	{
+		$plugin = $this->configurator->Emoji;
+		$plugin->aliases['ok']  = "\xF0\x9F\x98\x80";
+		$plugin->aliases['oké'] = "\xF0\x9F\x98\x80";
+
+		$config = $plugin->asConfig();
+
+		$this->assertArrayHasKey('customRegexp', $config);
+		$this->assertEquals('/ok(?:é)?/', $config['customRegexp']);
+	}
+
+	/**
 	* @testdox The config array contains a quickMatch for custom aliases if applicable
 	*/
 	public function testConfigAliasesQuickMatch()
