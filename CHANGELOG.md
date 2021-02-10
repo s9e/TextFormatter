@@ -1,3 +1,19 @@
+2.8.3 (2021-02-10)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/a6edb261947230eff8457d9d87ce2cf80de72872...cf913ebbe2c997596aeb63f8586dcfff440ae957)
+
+### Fixed
+
+ - `4d0b7595f` Emoji: fixed a PHP error that can occur with empty aliases
+ - `327f06a6a` Emoji: fixed an issue with some Unicode aliases
+
+### Changed
+
+ - `cf913ebbe` BBCodes: updated default CODE BBCode
+ - `38f158f2f` MediaEmbed: updated Anchor
+
+
 2.8.2 (2021-01-23)
 ==================
 
