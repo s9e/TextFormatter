@@ -962,18 +962,18 @@ class ParserTest extends Test
 				null,
 				'assertMatchesRegularExpression'
 			],
-			[
-				'http://video.khl.ru/quotes/251237',
-				'(<r><KHL id="free_\\w+_hd/q251237/\\w+/\\d+">http://video.khl.ru/quotes/251237</KHL></r>)',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('khl');
-				},
-				null,
-				'assertMatchesRegularExpression'
-			],
+//			[
+//				'http://video.khl.ru/quotes/251237',
+//				'(<r><KHL id="free_\\w+_hd/q251237/\\w+/\\d+">http://video.khl.ru/quotes/251237</KHL></r>)',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('khl');
+//				},
+//				null,
+//				'assertMatchesRegularExpression'
+//			],
 			[
 				'http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack',
 				'<r><LIBSYN id="8994194">http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack</LIBSYN></r>',
