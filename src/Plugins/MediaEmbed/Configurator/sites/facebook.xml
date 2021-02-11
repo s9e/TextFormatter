@@ -1,13 +1,22 @@
 <site name="Facebook" homepage="https://www.facebook.com/">
 	<example>https://www.facebook.com/FacebookforDevelopers/posts/696408974555431</example>
 	<example>https://www.facebook.com/watch/?v=224353158889229</example>
+	<example>https://fb.watch/3zYsXdnxjf/</example>
 
 	<tags><tag>social</tag></tags>
 
 	<host>facebook.com</host>
+	<host>fb.watch</host>
 	<extract>@/(?!(?:apps|developers|graph)\.)[-\w.]*facebook\.com/(?:[/\w]+/permalink|(?!marketplace/|pages/|groups/).*?)(?:/|fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
 	<extract>@facebook\.com/(?'user'[.\w]+)/(?=(?:post|video)s?/)(?'type'[pv])@</extract>
 	<extract>@facebook\.com/video/(?=post|video)(?'type'[pv])@</extract>
 	<extract>@facebook\.com/watch/\?(?'type'[pv])=@</extract>
+	<scrape>
+		<header>User-agent: PHP (not Mozilla)</header>
+		<match>@fb\.watch/.@</match>
+		<extract>@facebook\.com/watch/\?(?'type'v)=(?'id'\d+)@</extract>
+		<extract>@facebook\.com/(?'user'[.\w]+)/(?'type'v)ideos/(?'id'\d+)@</extract>
+	</scrape>
+
 	<iframe src="https://s9e.github.io/iframe/2/facebook.min.html#{@type}{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>

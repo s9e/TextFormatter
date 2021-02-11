@@ -594,6 +594,16 @@ class ParserTest extends Test
 //				}
 //			],
 			[
+				'https://fb.watch/3zYsXdnxjf/',
+				'<r><FACEBOOK id="426049188812854" type="v" user="stvnews">https://fb.watch/3zYsXdnxjf/</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://flic.kr/p/5wBgXo',
 				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',
 				[],

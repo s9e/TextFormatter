@@ -107,7 +107,7 @@
 	</tr>
 	<tr title="Facebook" id="facebook">
 		<td style="font-size:75%"><code>facebook</code></td>
-		<td style="font-size:50%">https://www.facebook.com/FacebookforDevelopers/posts/696408974555431<br/>https://www.facebook.com/watch/?v=224353158889229</td>
+		<td style="font-size:50%">https://www.facebook.com/FacebookforDevelopers/posts/696408974555431<br/>https://www.facebook.com/watch/?v=224353158889229<br/>https://fb.watch/3zYsXdnxjf/</td>
 	</tr>
 	<tr title="Falstad Circuit Simulator" id="falstad">
 		<td style="font-size:75%"><code>falstad</code></td>
