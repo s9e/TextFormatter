@@ -44,4 +44,13 @@
 		]]></src>
 		<style background="url(https://i.ytimg.com/vi/{@id}/hqdefault.jpg) 50% 50% / cover"/>
 	</iframe>
+	<amp src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js">
+		<template><![CDATA[
+			<amp-youtube width="640" height="360"
+				data-param-list="{@list}"
+				data-param-start="{@t}"
+				data-param-videoid="{@id}"
+			></amp-youtube>
+		]]></template>
+	</amp>
 </site>
