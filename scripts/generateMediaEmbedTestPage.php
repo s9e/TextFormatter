@@ -14,14 +14,10 @@ if (isset($_SERVER['argv'][2]))
 $siteId = $_SERVER['argv'][1];
 $configurator->MediaEmbed->add($siteId);
 
-$dirpath  = realpath(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites');
-$siteFile = $dirpath . '/' . $siteId . '.xml';
-
 extract($configurator->finalize());
 
 $html = "\n";
-$site = simplexml_load_file($siteFile);
-foreach ($site->example as $example)
+foreach ($configurator->MediaEmbed->defaultSites[$siteId]['example'] as $example)
 {
 	$html .= $renderer->render($parser->parse($example)) . "\n";
 }
