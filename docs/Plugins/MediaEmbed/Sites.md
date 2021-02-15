@@ -151,7 +151,7 @@
 	</tr>
 	<tr title="GitHub Gist" id="gist">
 		<td style="font-size:75%"><code>gist</code></td>
-		<td style="font-size:50%">https://gist.github.com/s9e/0ee8433f5a9a779d08ef<br/>https://gist.github.com/6806305<br/>https://gist.github.com/s9e/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
+		<td style="font-size:50%">https://gist.github.com/JoshyPHP/0ee8433f5a9a779d08ef<br/>https://gist.github.com/6806305<br/>https://gist.github.com/JoshyPHP/6806305/ad88d904b082c8211afa040162402015aacb8599</td>
 	</tr>
 	<tr title="Global News" id="globalnews">
 		<td style="font-size:75%"><code>globalnews</code></td>
