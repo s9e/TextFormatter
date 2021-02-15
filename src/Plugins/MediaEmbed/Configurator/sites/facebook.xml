@@ -19,4 +19,26 @@
 	</scrape>
 
 	<iframe src="https://s9e.github.io/iframe/2/facebook.min.html#{@type}{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+
+	<amp custom-element="amp-facebook" src="https://cdn.ampproject.org/v0/amp-facebook-0.1.js">
+		<template><![CDATA[
+			<amp-facebook width="640" height="360">
+				<xsl:if test="starts-with(@type, 'v')">
+					<xsl:attribute name="data-embed-as">video</xsl:attribute>
+				</xsl:if>
+				<xsl:attribute name="data-href">
+					<xsl:text>https://www.facebook.com/</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@user"><xsl:value-of select="@user"/></xsl:when>
+						<xsl:otherwise>user</xsl:otherwise>
+					</xsl:choose>
+					<xsl:choose>
+						<xsl:when test="starts-with(@type, 'v')">/videos/</xsl:when>
+						<xsl:otherwise>/posts/</xsl:otherwise>
+					</xsl:choose>
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</amp-facebook>
+		]]></template>
+	</amp>
 </site>
