@@ -39,6 +39,7 @@ $out = '<!DOCTYPE html>
 <head>
 	<meta charset="utf-8">
 	<title>MediaEmbed test page</title>
+	<base href="http://localhost">
 	' . $head . '
 </head>
 <body>' . $html . '</body></html>';
