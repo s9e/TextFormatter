@@ -46,7 +46,7 @@
 	</iframe>
 	<amp custom-element="amp-youtube" src="https://cdn.ampproject.org/v0/amp-youtube-0.1.js">
 		<template><![CDATA[
-			<amp-youtube width="640" height="360"
+			<amp-youtube layout="intrinsic" width="640" height="360"
 				data-param-list="{@list}"
 				data-param-start="{@t}"
 				data-videoid="{@id}"

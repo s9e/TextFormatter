@@ -22,7 +22,7 @@
 
 	<amp custom-element="amp-facebook" src="https://cdn.ampproject.org/v0/amp-facebook-0.1.js">
 		<template><![CDATA[
-			<amp-facebook width="640" height="360">
+			<amp-facebook layout="intrinsic" width="640" height="360">
 				<xsl:if test="starts-with(@type, 'v')">
 					<xsl:attribute name="data-embed-as">video</xsl:attribute>
 				</xsl:if>
