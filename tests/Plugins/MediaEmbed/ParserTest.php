@@ -5439,6 +5439,21 @@ class ParserTest extends Test
 	{
 		return [
 			[
+				'facebook',
+				'https://www.facebook.com/video/video.php?v=10150451523596807',
+				'<amp-facebook width="640" height="360" data-embed-as="video" data-href="https://www.facebook.com/user/videos/10150451523596807"></amp-facebook>'
+			],
+			[
+				'facebook',
+				'https://www.facebook.com/watch/?v=224353158889229',
+				'<amp-facebook width="640" height="360" data-embed-as="video" data-href="https://www.facebook.com/user/videos/224353158889229"></amp-facebook>'
+			],
+			[
+				'facebook',
+				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
+				'<amp-facebook width="640" height="360" data-href="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553"></amp-facebook>'
+			],
+			[
 				'youtube',
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY',
 				'<amp-youtube width="640" height="360" data-param-list="" data-param-start="" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
