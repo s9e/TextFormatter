@@ -4523,7 +4523,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://www.bbc.com/news/video_and_audio/must_see/42847060/calls-to-clean-off-banksy-mural-in-hull',
-				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/video-42847060/embed"></iframe></span></span>',
+				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av-embeds/42847060"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
@@ -5272,7 +5272,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><BBCNEWS ad_site="/news/business" playlist="/news/business-29149086A" poster="/media/images/77590000/jpg/_77590973_mapopgetty.jpg">http://www.bbc.com/news/business-29149086</BBCNEWS></r>',
-				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/video-business-29149086A/embed"></iframe></span></span>',
+				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av-embeds/29149086#"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('bbcnews');
@@ -5280,7 +5280,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><BBCNEWS id="p0784g1m/48141248">https://www.bbc.co.uk/news/av/world-africa-48141248/fifteen-year-old-nigerian-builds-small-scale-construction-machines</BBCNEWS></r>',
-				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av/video-48141248/embed"></iframe></span></span>',
+				'<span data-s9e-mediaembed="bbcnews" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.bbc.com/news/av-embeds/48141248"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('bbcnews');

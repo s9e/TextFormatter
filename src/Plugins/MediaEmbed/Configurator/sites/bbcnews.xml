@@ -10,19 +10,26 @@
 	<extract>@bbc\.co(?:m|\.uk)/news/(?:av|video_and_audio)/(?:\w+-)+(?'id'\d+)@</extract>
 	<extract>@bbc\.co(?:m|\.uk)/news/(?:av|video_and_audio)/embed/(?'id'\w+/\d+)@</extract>
 	<extract>@bbc\.co(?:m|\.uk)/news/(?:av|video_and_audio)/\w+/(?'id'\d+)@</extract>
+	<extract>@bbc\.co(?:m|\.uk)/news/av-embeds/(?'id'\d+)@</extract>
 	<iframe>
 		<src><![CDATA[
-			<xsl:text>//www.bbc.com/news/av/video-</xsl:text>
+			<xsl:text>//www.bbc.com/news/av-embeds/</xsl:text>
 			<xsl:choose>
 				<xsl:when test="starts-with(@playlist, '/news/')">
-					<xsl:value-of select="substring-after(@playlist, '/news/')"/>
+					<xsl:choose>
+						<xsl:when test="contains(@playlist, '-')">
+							<xsl:value-of select="substring-after(substring-after(translate(@playlist, 'A', '#'), 'news/'), '-')"/>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="substring-after(translate(@playlist, 'A', '/'), '/news/')"/>
+						</xsl:otherwise>
+					</xsl:choose>
 				</xsl:when>
 				<xsl:when test="contains(@id, '/')">
 					<xsl:value-of select="substring-after(@id, '/')"/>
 				</xsl:when>
 				<xsl:otherwise><xsl:value-of select="@id"/></xsl:otherwise>
 			</xsl:choose>
-			<xsl:text>/embed</xsl:text>
 		]]></src>
 	</iframe>
 </site>
