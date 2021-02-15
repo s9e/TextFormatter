@@ -5448,6 +5448,11 @@ class ParserTest extends Test
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
 				'<amp-youtube width="640" height="360" data-param-list="" data-param-start="1425" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
 			],
+			[
+				'youtube',
+				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
+				'<amp-youtube width="640" height="360" data-param-list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" data-param-start="" data-videoid="pC35x6iIPmo"></amp-youtube>'
+			],
 		];
 	}
 }
