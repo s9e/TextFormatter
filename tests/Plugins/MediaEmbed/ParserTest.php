@@ -5419,4 +5419,35 @@ class ParserTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox AMP rendering tests
+	* @dataProvider getAmpRenderingTests
+	*/
+	public function testAmpRendering(string $siteId, string $text, string $html)
+	{
+		$this->configurator->MediaEmbed->add($siteId);
+		$this->configurator->tags[$siteId]->template = $this->configurator->MediaEmbed->defaultSites[$siteId]['amp']['template'];
+		$this->configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+
+		extract($this->configurator->finalize());
+
+		$this->assertSame($html, $renderer->render($parser->parse($text)));
+	}
+
+	public function getAmpRenderingTests()
+	{
+		return [
+			[
+				'youtube',
+				'http://www.youtube.com/watch?v=wZZ7oFKsKzY',
+				'<amp-youtube width="640" height="360" data-param-list="" data-param-start="" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
+			],
+			[
+				'youtube',
+				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
+				'<amp-youtube width="640" height="360" data-param-list="" data-param-start="1425" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
+			],
+		];
+	}
 }
