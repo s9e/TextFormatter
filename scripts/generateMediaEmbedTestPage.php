@@ -35,11 +35,10 @@ foreach ($siteConfig['example'] as $example)
 }
 
 $out = '<!DOCTYPE html>
-<html' . ($isAmp ? "\u{26A1}" : '') . '>
+<html' . ($isAmp ? " \u{26A1}" : '') . '>
 <head>
 	<meta charset="utf-8">
 	<title>MediaEmbed test page</title>
-	<base href="http://localhost"/>
 	' . $head . '
 </head>
 <body>' . $html . '</body></html>';
