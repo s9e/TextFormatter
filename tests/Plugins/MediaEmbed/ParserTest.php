@@ -5464,6 +5464,11 @@ class ParserTest extends Test
 				'<amp-gfycat layout="intrinsic" width="950" height="534" data-gfyid="LoathsomeHarmfulJenny"></amp-gfycat>'
 			],
 			[
+				'imgur',
+				'https://imgur.com/a/9UGCL',
+				'<amp-imgur layout="responsive" width="542" height="400" data-imgur-id="a/9UGCL"></amp-imgur>'
+			],
+			[
 				'youtube',
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY',
 				'<amp-youtube layout="intrinsic" width="640" height="360" data-param-list="" data-param-start="" data-videoid="wZZ7oFKsKzY"></amp-youtube>'

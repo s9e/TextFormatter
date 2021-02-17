@@ -25,4 +25,13 @@
 			<xsl:value-of select="@id"/>
 		]]></src>
 	</iframe>
+
+	<!-- https://github.com/ampproject/amphtml/pull/30589 -->
+	<amp custom-element="amp-imgur" src="https://cdn.ampproject.org/v0/amp-imgur-0.1.js">
+		<template><![CDATA[
+			<amp-imgur layout="responsive" width="542" height="400"
+				data-imgur-id="{@id}"
+			></amp-imgur>
+		]]></template>
+	</amp>
 </site>
