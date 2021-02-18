@@ -5484,6 +5484,16 @@ class ParserTest extends Test
 				'<amp-imgur layout="responsive" width="542" height="400" data-imgur-id="a/9UGCL"></amp-imgur>'
 			],
 			[
+				'instagram',
+				'https://instagram.com/p/gbGaIXBQbn/',
+				'<amp-instagram layout="responsive" width="540" height="540" data-captioned="" data-shortcode="gbGaIXBQbn"></amp-instagram>'
+			],
+			[
+				'izlesene',
+				'https://www.izlesene.com/video/kardan-adamin-salincak-keyfi/10553555',
+				'<amp-izlesene layout="intrinsic" width="640" height="360" data-videoid="10553555"></amp-izlesene>'
+			],
+			[
 				'youtube',
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY',
 				'<amp-youtube layout="intrinsic" width="640" height="360" data-param-list="" data-param-start="" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
