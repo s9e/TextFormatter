@@ -29,7 +29,7 @@ if ($isAmp)
 extract($configurator->finalize());
 
 $html = "\n";
-foreach ($siteConfig['example'] as $example)
+foreach ((array) $siteConfig['example'] as $example)
 {
 	$html .= $renderer->render($parser->parse($example)) . "\n";
 }
