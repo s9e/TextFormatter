@@ -5464,6 +5464,21 @@ class ParserTest extends Test
 				'<amp-gfycat layout="intrinsic" width="950" height="534" data-gfyid="LoathsomeHarmfulJenny"></amp-gfycat>'
 			],
 			[
+				'gist',
+				'https://gist.github.com/JoshyPHP/0ee8433f5a9a779d08ef',
+				'<amp-gist layout="fixed-height" height="180" data-gistid="0ee8433f5a9a779d08ef"></amp-gist>'
+			],
+			[
+				'gist',
+				'https://gist.github.com/6806305',
+				'<amp-gist layout="fixed-height" height="180" data-gistid="6806305"></amp-gist>'
+			],
+			[
+				'gist',
+				'https://gist.github.com/JoshyPHP/6806305/ad88d904b082c8211afa040162402015aacb8599',
+				'<amp-gist layout="fixed-height" height="180" data-gistid="6806305"></amp-gist>'
+			],
+			[
 				'imgur',
 				'https://imgur.com/a/9UGCL',
 				'<amp-imgur layout="responsive" width="542" height="400" data-imgur-id="a/9UGCL"></amp-imgur>'
