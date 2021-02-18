@@ -6,4 +6,12 @@
 	<host>izlesene.com</host>
 	<extract>!izlesene\.com/video/[-\w]+/(?'id'\d+)!</extract>
 	<iframe src="//www.izlesene.com/embedplayer/{@id}?autoplay=0"/>
+
+	<amp custom-element="amp-izlesene" src="https://cdn.ampproject.org/v0/amp-izlesene-0.1.js">
+		<template><![CDATA[
+			<amp-izlesene layout="intrinsic" width="640" height="360"
+				data-videoid="{@id}"
+			></amp-izlesene>
+		]]></template>
+	</amp>
 </site>
