@@ -5494,6 +5494,11 @@ class ParserTest extends Test
 				'<amp-izlesene layout="intrinsic" width="640" height="360" data-videoid="10553555"></amp-izlesene>'
 			],
 			[
+				'kaltura',
+				'https://www.kaltura.com/index.php/extwidget/preview/partner_id/1581781/uiconf_id/20490561/entry_id/0_ekjebl7h/embed/iframe',
+				'<amp-kaltura-player layout="intrinsic" width="640" height="360" data-service-url="cdnapisec.kaltura.com" data-uiconf="20490561" data-partner="1581781" data-entryid="0_ekjebl7h" data-param-streamertype="auto"></amp-kaltura-player>'
+			],
+			[
 				'youtube',
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY',
 				'<amp-youtube layout="intrinsic" width="640" height="360" data-param-list="" data-param-start="" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
