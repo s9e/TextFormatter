@@ -443,7 +443,7 @@
 	</tr>
 	<tr title="Twitch" id="twitch">
 		<td style="font-size:75%"><code>twitch</code></td>
-		<td style="font-size:50%">https://www.twitch.tv/twitch<br/>https://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://www.twitch.tv/videos/29415830?t=17m17s<br/>https://clips.twitch.tv/twitch/HorribleWoodpeckerHassanChop<br/>https://clips.twitch.tv/NeighborlyBetterJellyfishWTRuck</td>
+		<td style="font-size:50%">https://www.twitch.tv/twitch<br/>https://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://www.twitch.tv/videos/29415830?t=17m17s<br/>https://www.twitch.tv/chess/clip/CrepuscularOptimisticEagleOhMyDog-9jMi4oqxK5MN0F0C</td>
 	</tr>
 	<tr title="Twitter" id="twitter">
 		<td style="font-size:75%"><code>twitter</code></td>

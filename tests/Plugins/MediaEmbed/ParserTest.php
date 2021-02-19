@@ -3776,6 +3776,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.twitch.tv/chess/clip/CrepuscularOptimisticEagleOhMyDog-9jMi4oqxK5MN0F0C',
+				'<r><TWITCH channel="chess" clip_id="CrepuscularOptimisticEagleOhMyDog-9jMi4oqxK5MN0F0C">https://www.twitch.tv/chess/clip/CrepuscularOptimisticEagleOhMyDog-9jMi4oqxK5MN0F0C</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
+				'https://clips.twitch.tv/CrepuscularOptimisticEagleOhMyDog-9jMi4oqxK5MN0F0C',
+				'<r><TWITCH clip_id="CrepuscularOptimisticEagleOhMyDog-9jMi4oqxK5MN0F0C">https://clips.twitch.tv/CrepuscularOptimisticEagleOhMyDog-9jMi4oqxK5MN0F0C</TWITCH></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitch');
+				}
+			],
+			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
 				'<r><TWITTER id="266031293945503744">https://twitter.com/BarackObama/statuses/266031293945503744</TWITTER></r>',
 				[],
