@@ -1281,8 +1281,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://vm.tiktok.com/ZMJoUC76X/',
-				'<r><TIKTOK id="6923212296911080710">https://vm.tiktok.com/ZMJoUC76X/</TIKTOK></r>',
+				'https://vm.tiktok.com/ZMeNud8UD/',
+				'<r><TIKTOK id="6930698976291261702">https://vm.tiktok.com/ZMeNud8UD/</TIKTOK></r>',
 				[],
 				function ($configurator)
 				{
