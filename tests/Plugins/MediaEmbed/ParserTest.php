@@ -5423,6 +5423,7 @@ class ParserTest extends Test
 	/**
 	* @testdox AMP rendering tests
 	* @dataProvider getAmpRenderingTests
+	* @group needs-network
 	*/
 	public function testAmpRendering(string $siteId, string $text, string $html)
 	{
@@ -5497,6 +5498,21 @@ class ParserTest extends Test
 				'kaltura',
 				'https://www.kaltura.com/index.php/extwidget/preview/partner_id/1581781/uiconf_id/20490561/entry_id/0_ekjebl7h/embed/iframe',
 				'<amp-kaltura-player layout="intrinsic" width="640" height="360" data-service-url="cdnapisec.kaltura.com" data-uiconf="20490561" data-partner="1581781" data-entryid="0_ekjebl7h" data-param-streamertype="auto"></amp-kaltura-player>'
+			],
+			[
+				'soundcloud',
+				'https://api.soundcloud.com/tracks/98282116',
+				'<amp-soundcloud layout="fixed-height" height="150" data-playlistid="" data-secret-token="" data-trackid="98282116"></amp-soundcloud>'
+			],
+			[
+				'soundcloud',
+				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
+				'<amp-soundcloud layout="fixed-height" height="150" data-playlistid="1919974" data-secret-token="" data-trackid="44564704"></amp-soundcloud>'
+			],
+			[
+				'twitter',
+				'https://twitter.com/IJasonAlexander/statuses/526635414338023424',
+				'<amp-twitter layout="responsive" width="550" height="250" data-tweetid="526635414338023424"><blockquote placeholder=""><a href="https://twitter.com/user/status/526635414338023424">Twitter</a></blockquote></amp-twitter>'
 			],
 			[
 				'youtube',
