@@ -50,4 +50,14 @@
 			</xsl:choose>
 		]]></src>
 	</iframe>
+
+	<amp custom-element="amp-soundcloud" src="https://cdn.ampproject.org/v0/amp-soundcloud-0.1.js">
+		<template><![CDATA[
+			<amp-soundcloud layout="fixed-height" height="150"
+				data-playlistid="{@playlist_id}"
+				data-secret-token="{@secret_token}"
+				data-trackid="{@track_id}"
+			></amp-soundcloud>
+		]]></template>
+	</amp>
 </site>
