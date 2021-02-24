@@ -403,18 +403,7 @@ function outputTag(tag)
 	// Current paragraph must end before the tag if:
 	//  - the tag is a start (or self-closing) tag and it breaks paragraphs, or
 	//  - the tag is an end tag (but not self-closing)
-	var closeParagraph = false;
-	if (tag.isStartTag())
-	{
-		if (HINT.RULE_BREAK_PARAGRAPH && (tagFlags & RULE_BREAK_PARAGRAPH))
-		{
-			closeParagraph = true;
-		}
-	}
-	else
-	{
-		closeParagraph = true;
-	}
+	var closeParagraph = !!(!tag.isStartTag() || (HINT.RULE_BREAK_PARAGRAPH && (tagFlags & RULE_BREAK_PARAGRAPH)));
 
 	// Let the cursor catch up with this tag's position
 	outputText(tagPos, skipBefore, closeParagraph);

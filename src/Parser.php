@@ -464,18 +464,7 @@ class Parser
 		// Current paragraph must end before the tag if:
 		//  - the tag is a start (or self-closing) tag and it breaks paragraphs, or
 		//  - the tag is an end tag (but not self-closing)
-		$closeParagraph = false;
-		if ($tag->isStartTag())
-		{
-			if ($tagFlags & self::RULE_BREAK_PARAGRAPH)
-			{
-				$closeParagraph = true;
-			}
-		}
-		else
-		{
-			$closeParagraph = true;
-		}
+		$closeParagraph = (!$tag->isStartTag() || ($tagFlags & self::RULE_BREAK_PARAGRAPH));
 
 		// Let the cursor catch up with this tag's position
 		$this->outputText($tagPos, $skipBefore, $closeParagraph);
