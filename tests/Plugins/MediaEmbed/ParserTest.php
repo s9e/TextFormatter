@@ -1286,6 +1286,10 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped('No TikTok test on Travis');
+					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('tiktok');
 				}
