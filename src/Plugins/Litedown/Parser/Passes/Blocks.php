@@ -178,7 +178,7 @@ class Blocks extends AbstractPass
 					$m = [];
 				}
 			}
-			else
+			elseif (!isset($codeTag))
 			{
 				$hasListItem = !empty($m[4][0]);
 

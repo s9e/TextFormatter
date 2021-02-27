@@ -194,7 +194,7 @@ function parse()
 				m = {};
 			}
 		}
-		else
+		else if (!codeTag)
 		{
 			var hasListItem = !!m[4];
 

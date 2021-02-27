@@ -15,6 +15,83 @@ class BlocksTest extends AbstractTest
 	{
 		return self::fixTests([
 			[
+				// https://discuss.flarum.org/d/24881-indentation-problem-in-lists-with-code-blocks
+				[
+					'1. Run these commands:',
+					'```',
+					'foo',
+					'',
+					'bar',
+					'```',
+					'2. Edit your config to look like this:',
+					'```',
+					'[xxx]',
+					'yyy = zzz',
+					'',
+					'[aaa]',
+					'bbb = ccc',
+					'```',
+					"3. You're all set."
+				],
+				[
+					'<r><LIST type="decimal"><LI><s>1. </s>Run these commands:',
+					'<CODE><s>```</s><i>',
+					'</i>foo',
+					'',
+					'bar<i>',
+					'</i><e>```</e></CODE></LI>',
+					'<LI><s>2. </s>Edit your config to look like this:',
+					'<CODE><s>```</s><i>',
+					'</i>[xxx]',
+					'yyy = zzz',
+					'',
+					'[aaa]',
+					'bbb = ccc<i>',
+					'</i><e>```</e></CODE></LI>',
+					'<LI><s>3. </s>You\'re all set.</LI></LIST></r>'
+				]
+			],
+			[
+				[
+					'1. Run these commands:',
+					'',
+					' ```',
+					'foo',
+					'bar',
+					'```',
+					'',
+					'2. Edit your config to look like this:',
+					'',
+					' ```',
+					'[xxx]',
+					'yyy = zzz',
+					'[aaa]',
+					'bbb = ccc',
+					'```',
+					'',
+					"3. You're all set."
+				],
+				[
+					'<r><LIST type="decimal"><LI><s>1. </s><p>Run these commands:</p>',
+					'',
+					'<CODE><s> ```</s><i>',
+					'</i>foo',
+					'bar<i>',
+					'</i><e>```</e></CODE></LI>',
+					'',
+					'<LI><s>2. </s><p>Edit your config to look like this:</p>',
+					'',
+					'<CODE><s> ```</s><i>',
+					'</i>[xxx]',
+					'yyy = zzz',
+					'[aaa]',
+					'bbb = ccc<i>',
+					'</i><e>```</e></CODE></LI>',
+					'',
+					'<LI><s>3. </s><p>You\'re all set.</p></LI></LIST></r>'
+				]
+			],
+			[
 				'',
 				'<t></t>',
 			],

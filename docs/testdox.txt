@@ -4750,6 +4750,8 @@ Blocks (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Blocks)
  [x] Parsing tests with data set #113
  [x] Parsing tests with data set #114
  [x] Parsing tests with data set #115
+ [x] Parsing tests with data set #116
+ [x] Parsing tests with data set #117
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -4866,6 +4868,8 @@ Blocks (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Blocks)
  [x] Parsing tests (JavaScript) with data set #113
  [x] Parsing tests (JavaScript) with data set #114
  [x] Parsing tests (JavaScript) with data set #115
+ [x] Parsing tests (JavaScript) with data set #116
+ [x] Parsing tests (JavaScript) with data set #117
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
