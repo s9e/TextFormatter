@@ -20,6 +20,14 @@ class Configurator extends ConfiguratorBase
 		return;
 	}
 
+	/**
+	* {@inheritdoc}
+	*/
+	public function finalize()
+	{
+		$this->configureListItemTag();
+	}
+
 	protected function setUp(): void
 	{
 		if (!isset($this->configurator->tags['LI']))
@@ -28,17 +36,27 @@ class Configurator extends ConfiguratorBase
 		}
 
 		$this->createTaskTag();
-		$this->configureListItemTag($this->configurator->tags['LI']);
+		$this->configureListItemTag();
 	}
 
-	protected function configureListItemTag(Tag $tag): void
+	protected function configureListItemTag(): void
 	{
-		$tag->filterChain->append(Helper::class . '::filterListItem')
-			->resetParameters()
-			->addParameterByName('parser')
-			->addParameterByName('tag')
-			->addParameterByName('text')
-			->setJS(file_get_contents(__DIR__ . '/filterListItem.js'));
+		if (!isset($this->configurator->tags['LI']))
+		{
+			return;
+		}
+
+		$tag      = $this->configurator->tags['LI'];
+		$callback = Helper::class . '::filterListItem';
+		if (!$tag->filterChain->containsCallback($callback))
+		{
+			$tag->filterChain->append($callback)
+				->resetParameters()
+				->addParameterByName('parser')
+				->addParameterByName('tag')
+				->addParameterByName('text')
+				->setJS(file_get_contents(__DIR__ . '/filterListItem.js'));
+		}
 
 		$dom = $tag->template->asDOM();
 		foreach ($dom->query('//li[not(xsl:if[@test="TASK"])]') as $li)
