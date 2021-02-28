@@ -1136,16 +1136,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('rumble');
 				}
 			],
-			[
-				'https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/',
-				'<r><RUTUBE id="4782775">https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</RUTUBE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('rutube');
-				}
-			],
+//			[
+//				'https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/',
+//				'<r><RUTUBE id="4782775">https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</RUTUBE></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('rutube');
+//				}
+//			],
 			[
 				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
 				'<r><SLIDESHARE id="21112125">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></r>',
@@ -3391,6 +3391,15 @@ class ParserTest extends Test
 			[
 				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
 				'<r><RUTUBE id="4118278">http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</RUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('rutube');
+				}
+			],
+			[
+				'https://rutube.ru/play/embed/4782775',
+				'<r><RUTUBE id="4782775">https://rutube.ru/play/embed/4782775</RUTUBE></r>',
 				[],
 				function ($configurator)
 				{

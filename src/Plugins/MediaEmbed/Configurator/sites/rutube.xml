@@ -1,13 +1,13 @@
 <site name="Rutube" homepage="https://rutube.ru/">
-	<example>https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</example>
+	<example>https://rutube.ru/play/embed/4782775</example>
 	<example>https://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</example>
 
 	<tags><tag>.ru</tag></tags>
 
 	<host>rutube.ru</host>
-	<extract>!rutube\.ru/tracks/(?'id'\d+)!</extract>
-	<scrape url="http://rutube.ru/api/oembed/?url=https://rutube.ru/video/{@vid}/">
-		<header>User-agent: Mozilla/5.0 (X11; Linux x86_64; rv:62.0) Gecko/20100101 Firefox/62.0</header>
+	<extract>!rutube\.ru/(?:play/embed|tracks)/(?'id'\d+)!</extract>
+	<scrape url="https://rutube.ru/api/oembed/?url=https://rutube.ru/video/{@vid}/">
+		<header>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.0.0 Safari/537.36</header>
 		<match>!rutube\.ru/video/(?'vid'[0-9a-f]{32})!</match>
 		<extract>!rutube\.ru/play/embed/(?'id'\d+)!</extract>
 	</scrape>
