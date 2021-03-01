@@ -169,3 +169,5 @@ function patchFile($filepath)
 
 patchDir(__DIR__ . '/../src');
 //getMethodAnnotations('s9e\\TextFormatter\\Configurator\\Collections\\RulesGeneratorList');
+
+die("Done.\n");

@@ -42,3 +42,4 @@ if ($file !== $old)
 	file_put_contents($filepath, $file);
 }
 
+die("Done.\n");

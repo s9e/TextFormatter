@@ -34,3 +34,5 @@ array_map(
 		__DIR__ . '/../tests/Plugins/BBCodes/BBCodesTest.php'
 	]
 );
+
+die("Done.\n");
