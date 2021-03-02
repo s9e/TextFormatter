@@ -1,3 +1,26 @@
+2.8.4 (2021-03-02)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/46ff5bf0a660caae4291f19a50bc742d93b6bf3e...19699dc2fece04414df69e8a16444c538e052038)
+
+### Added
+
+ - `03edc53a0` MediaEmbed: added support for fb.watch URLs
+
+### Fixed
+
+ - `f3a88bece` Litedown: fixed an issue with fenced code blocks inside of lists
+
+### Changed
+
+ - `19699dc2f` Emoji: ignore aliases that are followed by U+FE0E
+ - `36e505ced` MediaEmbed: updated BBC News
+ - `e838f3779` MediaEmbed: updated Rutube
+ - `9f08233e6` MediaEmbed: updated Twitch
+ - `03af8d8e2` Parser: simplified outputTag()
+ - `a11f4c232` TaskLists: recheck tags at the end of configuration
+
+
 2.8.3 (2021-02-10)
 ==================
 
