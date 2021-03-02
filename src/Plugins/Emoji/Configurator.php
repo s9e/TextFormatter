@@ -95,7 +95,7 @@ class Configurator extends ConfiguratorBase
 		$custom = $this->getCustomAliases();
 		if (!empty($custom))
 		{
-			$regexp                 = '/' . RegexpBuilder::fromList($custom, ['unicode' => false]) . '/';
+			$regexp = '/' . RegexpBuilder::fromList($custom, ['unicode' => false]) . "(?!\u{FE0E})/";
 			$config['customRegexp'] = new Regexp($regexp, true);
 
 			$quickMatch = ConfigHelper::generateQuickMatchFromList($custom);

@@ -92,7 +92,7 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 
 		$this->assertArrayHasKey('customRegexp', $config);
-		$this->assertEquals('/:D/', $config['customRegexp']);
+		$this->assertEquals("/:D(?!\u{FE0E})/", $config['customRegexp']);
 	}
 
 	/**
@@ -107,7 +107,7 @@ class ConfiguratorTest extends Test
 		$config = $plugin->asConfig();
 
 		$this->assertArrayHasKey('customRegexp', $config);
-		$this->assertEquals('/ok(?:é)?/', $config['customRegexp']);
+		$this->assertEquals("/ok(?:é)?(?!\u{FE0E})/", $config['customRegexp']);
 	}
 
 	/**
