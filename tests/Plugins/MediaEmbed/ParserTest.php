@@ -5442,22 +5442,22 @@ class ParserTest extends Test
 			[
 				'dailymotion',
 				'https://www.dailymotion.com/video/x5e9eog?start=90',
-				'<amp-dailymotion layout="intrinsic" width="640" height="360" data-start="90" data-videoid="x5e9eog"></amp-dailymotion>'
+				'<amp-dailymotion layout="responsive" width="640" height="360" data-start="90" data-videoid="x5e9eog"></amp-dailymotion>'
 			],
 			[
 				'facebook',
 				'https://www.facebook.com/video/video.php?v=10150451523596807',
-				'<amp-facebook layout="intrinsic" width="640" height="360" data-embed-as="video" data-href="https://www.facebook.com/user/videos/10150451523596807"></amp-facebook>'
+				'<amp-facebook layout="responsive" width="640" height="360" data-embed-as="video" data-href="https://www.facebook.com/user/videos/10150451523596807"></amp-facebook>'
 			],
 			[
 				'facebook',
 				'https://www.facebook.com/watch/?v=224353158889229',
-				'<amp-facebook layout="intrinsic" width="640" height="360" data-embed-as="video" data-href="https://www.facebook.com/user/videos/224353158889229"></amp-facebook>'
+				'<amp-facebook layout="responsive" width="640" height="360" data-embed-as="video" data-href="https://www.facebook.com/user/videos/224353158889229"></amp-facebook>'
 			],
 			[
 				'facebook',
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<amp-facebook layout="intrinsic" width="640" height="360" data-href="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553"></amp-facebook>'
+				'<amp-facebook layout="responsive" width="640" height="360" data-href="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553"></amp-facebook>'
 			],
 			[
 				'gfycat',
@@ -5492,12 +5492,12 @@ class ParserTest extends Test
 			[
 				'izlesene',
 				'https://www.izlesene.com/video/kardan-adamin-salincak-keyfi/10553555',
-				'<amp-izlesene layout="intrinsic" width="640" height="360" data-videoid="10553555"></amp-izlesene>'
+				'<amp-izlesene layout="responsive" width="640" height="360" data-videoid="10553555"></amp-izlesene>'
 			],
 			[
 				'kaltura',
 				'https://www.kaltura.com/index.php/extwidget/preview/partner_id/1581781/uiconf_id/20490561/entry_id/0_ekjebl7h/embed/iframe',
-				'<amp-kaltura-player layout="intrinsic" width="640" height="360" data-service-url="cdnapisec.kaltura.com" data-uiconf="20490561" data-partner="1581781" data-entryid="0_ekjebl7h" data-param-streamertype="auto"></amp-kaltura-player>'
+				'<amp-kaltura-player layout="responsive" width="640" height="360" data-service-url="cdnapisec.kaltura.com" data-uiconf="20490561" data-partner="1581781" data-entryid="0_ekjebl7h" data-param-streamertype="auto"></amp-kaltura-player>'
 			],
 			[
 				'soundcloud',
@@ -5517,17 +5517,17 @@ class ParserTest extends Test
 			[
 				'youtube',
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY',
-				'<amp-youtube layout="intrinsic" width="640" height="360" data-param-list="" data-param-start="" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
+				'<amp-youtube layout="responsive" width="640" height="360" data-param-list="" data-param-start="" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
 			],
 			[
 				'youtube',
 				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
-				'<amp-youtube layout="intrinsic" width="640" height="360" data-param-list="" data-param-start="1425" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
+				'<amp-youtube layout="responsive" width="640" height="360" data-param-list="" data-param-start="1425" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
 			],
 			[
 				'youtube',
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
-				'<amp-youtube layout="intrinsic" width="640" height="360" data-param-list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" data-param-start="" data-videoid="pC35x6iIPmo"></amp-youtube>'
+				'<amp-youtube layout="responsive" width="640" height="360" data-param-list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" data-param-start="" data-videoid="pC35x6iIPmo"></amp-youtube>'
 			],
 		];
 	}

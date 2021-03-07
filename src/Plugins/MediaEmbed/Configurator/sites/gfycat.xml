@@ -30,7 +30,7 @@
 
 	<amp custom-element="amp-gfycat" src="https://cdn.ampproject.org/v0/amp-gfycat-0.1.js">
 		<template><![CDATA[
-			<amp-gfycat layout="intrinsic" width="{@width}" height="{@height}"
+			<amp-gfycat layout="responsive" width="{@width}" height="{@height}"
 				data-gfyid="{@id}"
 			></amp-gfycat>
 		]]></template>

@@ -9,7 +9,7 @@
 
 	<amp custom-element="amp-izlesene" src="https://cdn.ampproject.org/v0/amp-izlesene-0.1.js">
 		<template><![CDATA[
-			<amp-izlesene layout="intrinsic" width="640" height="360"
+			<amp-izlesene layout="responsive" width="640" height="360"
 				data-videoid="{@id}"
 			></amp-izlesene>
 		]]></template>
