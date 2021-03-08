@@ -16,4 +16,14 @@
 			<xsl:if test="$MEDIAEMBED_THEME = 'light'">?light=true</xsl:if>
 		]]></src>
 	</iframe>
+
+	<amp custom-element="amp-megaphone" src="https://cdn.ampproject.org/v0/amp-megaphone-0.1.js">
+		<template><![CDATA[
+			<amp-megaphone layout="fixed-height" height="200" data-episode="{@id}">
+				<xsl:if test="$MEDIAEMBED_THEME = 'light'">
+					<xsl:attribute name="data-light"/>
+				</xsl:if>
+			</amp-megaphone>
+		]]></template>
+	</amp>
 </site>
