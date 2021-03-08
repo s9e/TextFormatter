@@ -5425,11 +5425,15 @@ class ParserTest extends Test
 	* @dataProvider getAmpRenderingTests
 	* @group needs-network
 	*/
-	public function testAmpRendering(string $siteId, string $text, string $html)
+	public function testAmpRendering(string $siteId, string $text, string $html, $setup = null)
 	{
 		$this->configurator->MediaEmbed->add($siteId);
 		$this->configurator->tags[$siteId]->template = $this->configurator->MediaEmbed->defaultSites[$siteId]['amp']['template'];
 		$this->configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+		if (isset($setup))
+		{
+			$setup($this->configurator);
+		}
 
 		extract($this->configurator->finalize());
 
@@ -5462,7 +5466,7 @@ class ParserTest extends Test
 			[
 				'gfycat',
 				'https://gfycat.com/LoathsomeHarmfulJenny',
-				'<amp-gfycat layout="intrinsic" width="950" height="534" data-gfyid="LoathsomeHarmfulJenny"></amp-gfycat>'
+				'<amp-gfycat layout="responsive" width="950" height="534" data-gfyid="LoathsomeHarmfulJenny"></amp-gfycat>'
 			],
 			[
 				'gist',
@@ -5498,6 +5502,20 @@ class ParserTest extends Test
 				'kaltura',
 				'https://www.kaltura.com/index.php/extwidget/preview/partner_id/1581781/uiconf_id/20490561/entry_id/0_ekjebl7h/embed/iframe',
 				'<amp-kaltura-player layout="responsive" width="640" height="360" data-service-url="cdnapisec.kaltura.com" data-uiconf="20490561" data-partner="1581781" data-entryid="0_ekjebl7h" data-param-streamertype="auto"></amp-kaltura-player>'
+			],
+			[
+				'megaphone',
+				'https://player.megaphone.fm/LKN8165322853',
+				'<amp-megaphone layout="fixed-height" height="200" data-episode="LKN8165322853"></amp-megaphone>'
+			],
+			[
+				'megaphone',
+				'https://player.megaphone.fm/LKN8165322853',
+				'<amp-megaphone layout="fixed-height" height="200" data-episode="LKN8165322853" data-light=""></amp-megaphone>',
+				function ($configurator)
+				{
+					$configurator->rendering->parameters['MEDIAEMBED_THEME'] = 'light';
+				}
 			],
 			[
 				'soundcloud',
