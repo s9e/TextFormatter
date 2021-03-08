@@ -4832,6 +4832,26 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://player.megaphone.fm/LKN8165322853',
+				'<iframe data-s9e-mediaembed="megaphone" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:200px;max-width:900px;width:100%" src="https://player.megaphone.fm/LKN8165322853"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('megaphone');
+					$configurator->rendering->parameters['MEDIAEMBED_THEME'] = 'dark';
+				}
+			],
+			[
+				'https://player.megaphone.fm/LKN8165322853',
+				'<iframe data-s9e-mediaembed="megaphone" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:200px;max-width:900px;width:100%" src="https://player.megaphone.fm/LKN8165322853?light=true"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('megaphone');
+					$configurator->rendering->parameters['MEDIAEMBED_THEME'] = 'light';
+				}
+			],
+			[
 				'http://www.metacafe.com/watch/10785282/chocolate_treasure_chest_epic_meal_time/',
 				'<span data-s9e-mediaembed="metacafe" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.metacafe.com/embed/10785282/" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],

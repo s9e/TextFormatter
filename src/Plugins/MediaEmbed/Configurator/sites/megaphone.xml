@@ -9,5 +9,11 @@
 	<extract>@megaphone\.fm/.*?\?(?:e|selected)=(?'id'\w+)@</extract>
 	<extract>@(?:dcs|player|traffic)\.megaphone\.fm/(?'id'\w+)@</extract>
 	<extract>@megaphone\.link/(?'id'\w+)@</extract>
-	<iframe width="100%" height="200" max-width="900" src="https://player.megaphone.fm/{@id}"/>
+	<iframe width="100%" height="200" max-width="900">
+		<src><![CDATA[
+			<xsl:text>https://player.megaphone.fm/</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:if test="$MEDIAEMBED_THEME = 'light'">?light=true</xsl:if>
+		]]></src>
+	</iframe>
 </site>
