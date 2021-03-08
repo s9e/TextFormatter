@@ -16,4 +16,14 @@
 			</xsl:choose>
 		]]></width>
 	</iframe>
+
+	<amp custom-element="amp-pinterest" src="https://cdn.ampproject.org/v0/amp-pinterest-0.1.js">
+		<template><![CDATA[
+			<amp-pinterest width="245" height="330"
+				data-do="embedPin"
+				data-url="https://www.pinterest.com/pin/{@id}/"
+			>
+			</amp-pinterest>
+		]]></template>
+	</amp>
 </site>

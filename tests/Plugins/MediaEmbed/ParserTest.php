@@ -5518,6 +5518,11 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'pinterest',
+				'https://www.pinterest.com/pin/99360735500167749/',
+				'<amp-pinterest width="245" height="330" data-do="embedPin" data-url="https://www.pinterest.com/pin/99360735500167749/"></amp-pinterest>'
+			],
+			[
 				'soundcloud',
 				'https://api.soundcloud.com/tracks/98282116',
 				'<amp-soundcloud layout="fixed-height" height="150" data-playlistid="" data-secret-token="" data-trackid="98282116"></amp-soundcloud>'
