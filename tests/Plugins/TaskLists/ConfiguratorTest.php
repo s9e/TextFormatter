@@ -107,7 +107,6 @@ class ConfiguratorTest extends Test
 
 	/**
 	* @testdox Nothing happens if LI is deleted
-	* @doesNotPerformAssertions
 	*/
 	public function testNoListItem()
 	{
@@ -115,5 +114,6 @@ class ConfiguratorTest extends Test
 		unset($this->configurator->tags['LI']);
 
 		$this->configurator->finalize();
+		$this->assertFalse(isset($this->configurator->tags['LI']));
 	}
 }

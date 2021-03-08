@@ -5519,6 +5519,29 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Legacy rendering tests with data set #11
  [x] Legacy rendering tests with data set #12
  [x] Legacy rendering tests with data set #13
+ [x] AMP rendering tests with data set #0
+ [x] AMP rendering tests with data set #1
+ [x] AMP rendering tests with data set #2
+ [x] AMP rendering tests with data set #3
+ [x] AMP rendering tests with data set #4
+ [x] AMP rendering tests with data set #5
+ [x] AMP rendering tests with data set #6
+ [x] AMP rendering tests with data set #7
+ [x] AMP rendering tests with data set #8
+ [x] AMP rendering tests with data set #9
+ [x] AMP rendering tests with data set #10
+ [x] AMP rendering tests with data set #11
+ [x] AMP rendering tests with data set #12
+ [x] AMP rendering tests with data set #13
+ [x] AMP rendering tests with data set #14
+ [x] AMP rendering tests with data set #15
+ [x] AMP rendering tests with data set #16
+ [x] AMP rendering tests with data set #17
+ [x] AMP rendering tests with data set #18
+ [x] AMP rendering tests with data set #19
+ [x] AMP rendering tests with data set #20
+ [x] AMP rendering tests with data set #21
+ [x] AMP rendering tests with data set #22
  [x] Parsing tests with data set #0
  [x] Parsing tests with data set #1
  [x] Parsing tests with data set #2
