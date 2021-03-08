@@ -5523,6 +5523,11 @@ class ParserTest extends Test
 				'<amp-pinterest width="245" height="330" data-do="embedPin" data-url="https://www.pinterest.com/pin/99360735500167749/"></amp-pinterest>'
 			],
 			[
+				'reddit',
+				'https://www.reddit.com/r/pics/comments/9wp1qg/my_mom_recently_started_watercolor_painting_and/',
+				'<amp-reddit layout="responsive" width="450" height="300" data-embedtype="post" data-src="https://www.reddit.com/r/pics/comments/9wp1qg/"></amp-reddit>'
+			],
+			[
 				'soundcloud',
 				'https://api.soundcloud.com/tracks/98282116',
 				'<amp-soundcloud layout="fixed-height" height="150" data-playlistid="" data-secret-token="" data-trackid="98282116"></amp-soundcloud>'
@@ -5536,6 +5541,11 @@ class ParserTest extends Test
 				'twitter',
 				'https://twitter.com/IJasonAlexander/statuses/526635414338023424',
 				'<amp-twitter layout="responsive" width="550" height="250" data-tweetid="526635414338023424"><blockquote placeholder=""><a href="https://twitter.com/user/status/526635414338023424">Twitter</a></blockquote></amp-twitter>'
+			],
+			[
+				'vimeo',
+				'https://vimeo.com/67207222',
+				'<amp-vimeo layout="responsive" width="640" height="360" data-videoid="67207222"></amp-vimeo>'
 			],
 			[
 				'youtube',
