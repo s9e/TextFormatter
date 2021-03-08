@@ -22,4 +22,12 @@
 			<xsl:if test="@t">#t=<xsl:value-of select="@t"/></xsl:if>
 		]]></src>
 	</iframe>
+
+	<amp custom-element="amp-vimeo" src="https://cdn.ampproject.org/v0/amp-vimeo-0.1.js">
+		<template><![CDATA[
+			<amp-vimeo layout="responsive" width="640" height="360"
+				data-videoid="{@id}"
+			></amp-vimeo>
+		]]></template>
+	</amp>
 </site>

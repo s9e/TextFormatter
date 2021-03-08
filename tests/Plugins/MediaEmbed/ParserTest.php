@@ -5419,4 +5419,159 @@ class ParserTest extends Test
 			],
 		];
 	}
+
+	/**
+	* @testdox AMP rendering tests
+	* @dataProvider getAmpRenderingTests
+	* @group needs-network
+	*/
+	public function testAmpRendering(string $siteId, string $text, string $html, $setup = null)
+	{
+		$this->configurator->MediaEmbed->add($siteId);
+		$this->configurator->tags[$siteId]->template = $this->configurator->MediaEmbed->defaultSites[$siteId]['amp']['template'];
+		$this->configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+		if (isset($setup))
+		{
+			$setup($this->configurator);
+		}
+
+		extract($this->configurator->finalize());
+
+		$this->assertSame($html, $renderer->render($parser->parse($text)));
+	}
+
+	public function getAmpRenderingTests()
+	{
+		return [
+			[
+				'dailymotion',
+				'https://www.dailymotion.com/video/x5e9eog?start=90',
+				'<amp-dailymotion layout="responsive" width="640" height="360" data-start="90" data-videoid="x5e9eog"></amp-dailymotion>'
+			],
+			[
+				'facebook',
+				'https://www.facebook.com/video/video.php?v=10150451523596807',
+				'<amp-facebook layout="responsive" width="640" height="360" data-embed-as="video" data-href="https://www.facebook.com/user/videos/10150451523596807"></amp-facebook>'
+			],
+			[
+				'facebook',
+				'https://www.facebook.com/watch/?v=224353158889229',
+				'<amp-facebook layout="responsive" width="640" height="360" data-embed-as="video" data-href="https://www.facebook.com/user/videos/224353158889229"></amp-facebook>'
+			],
+			[
+				'facebook',
+				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
+				'<amp-facebook layout="responsive" width="640" height="360" data-href="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553"></amp-facebook>'
+			],
+			[
+				'gfycat',
+				'https://gfycat.com/LoathsomeHarmfulJenny',
+				'<amp-gfycat layout="responsive" width="950" height="534" data-gfyid="LoathsomeHarmfulJenny"></amp-gfycat>'
+			],
+			[
+				'gist',
+				'https://gist.github.com/JoshyPHP/0ee8433f5a9a779d08ef',
+				'<amp-gist layout="fixed-height" height="180" data-gistid="0ee8433f5a9a779d08ef"></amp-gist>'
+			],
+			[
+				'gist',
+				'https://gist.github.com/6806305',
+				'<amp-gist layout="fixed-height" height="180" data-gistid="6806305"></amp-gist>'
+			],
+			[
+				'gist',
+				'https://gist.github.com/JoshyPHP/6806305/ad88d904b082c8211afa040162402015aacb8599',
+				'<amp-gist layout="fixed-height" height="180" data-gistid="6806305"></amp-gist>'
+			],
+			[
+				'imgur',
+				'https://imgur.com/a/9UGCL',
+				'<amp-imgur layout="responsive" width="542" height="400" data-imgur-id="a/9UGCL"></amp-imgur>'
+			],
+			[
+				'instagram',
+				'https://instagram.com/p/gbGaIXBQbn/',
+				'<amp-instagram layout="responsive" width="540" height="540" data-captioned="" data-shortcode="gbGaIXBQbn"></amp-instagram>'
+			],
+			[
+				'izlesene',
+				'https://www.izlesene.com/video/kardan-adamin-salincak-keyfi/10553555',
+				'<amp-izlesene layout="responsive" width="640" height="360" data-videoid="10553555"></amp-izlesene>'
+			],
+			[
+				'kaltura',
+				'https://www.kaltura.com/index.php/extwidget/preview/partner_id/1581781/uiconf_id/20490561/entry_id/0_ekjebl7h/embed/iframe',
+				'<amp-kaltura-player layout="responsive" width="640" height="360" data-service-url="cdnapisec.kaltura.com" data-uiconf="20490561" data-partner="1581781" data-entryid="0_ekjebl7h" data-param-streamertype="auto"></amp-kaltura-player>'
+			],
+			[
+				'megaphone',
+				'https://player.megaphone.fm/LKN8165322853',
+				'<amp-megaphone layout="fixed-height" height="200" data-episode="LKN8165322853"></amp-megaphone>'
+			],
+			[
+				'megaphone',
+				'https://player.megaphone.fm/LKN8165322853',
+				'<amp-megaphone layout="fixed-height" height="200" data-episode="LKN8165322853" data-light=""></amp-megaphone>',
+				function ($configurator)
+				{
+					$configurator->rendering->parameters['MEDIAEMBED_THEME'] = 'light';
+				}
+			],
+			[
+				'pinterest',
+				'https://www.pinterest.com/pin/99360735500167749/',
+				'<amp-pinterest width="245" height="330" data-do="embedPin" data-url="https://www.pinterest.com/pin/99360735500167749/"></amp-pinterest>'
+			],
+			[
+				'reddit',
+				'https://www.reddit.com/r/pics/comments/9wp1qg/my_mom_recently_started_watercolor_painting_and/',
+				'<amp-reddit layout="responsive" width="450" height="300" data-embedtype="post" data-src="https://www.reddit.com/r/pics/comments/9wp1qg/"></amp-reddit>'
+			],
+			[
+				'soundcloud',
+				'https://api.soundcloud.com/tracks/98282116',
+				'<amp-soundcloud layout="fixed-height" height="150" data-playlistid="" data-secret-token="" data-trackid="98282116"></amp-soundcloud>'
+			],
+			[
+				'soundcloud',
+				'https://soundcloud.com/tenaciousd/sets/rize-of-the-fenix/',
+				'<amp-soundcloud layout="fixed-height" height="150" data-playlistid="1919974" data-secret-token="" data-trackid="44564704"></amp-soundcloud>'
+			],
+			[
+				'twitter',
+				'https://twitter.com/IJasonAlexander/statuses/526635414338023424',
+				'<amp-twitter layout="responsive" width="550" height="250" data-tweetid="526635414338023424"><blockquote placeholder=""><a href="https://twitter.com/user/status/526635414338023424">Twitter</a></blockquote></amp-twitter>'
+			],
+			[
+				'vimeo',
+				'https://vimeo.com/67207222',
+				'<amp-vimeo layout="responsive" width="640" height="360" data-videoid="67207222"></amp-vimeo>'
+			],
+			[
+				'vine',
+				'https://vine.co/v/bYwPIluIipH',
+				'<amp-vine layout="responsive" width="400" height="400" data-vineid="bYwPIluIipH"></amp-vine>'
+			],
+			[
+				'wistia',
+				'https://thoughtworks.wistia.com/medias/b6al55s35k',
+				'<amp-wistia-player layout="responsive" width="640" height="360" data-media-hashed-id="b6al55s35k"></amp-wistia-player>'
+			],
+			[
+				'youtube',
+				'http://www.youtube.com/watch?v=wZZ7oFKsKzY',
+				'<amp-youtube layout="responsive" width="640" height="360" data-param-list="" data-param-start="" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
+			],
+			[
+				'youtube',
+				'http://www.youtube.com/watch?v=wZZ7oFKsKzY&t=23m45s',
+				'<amp-youtube layout="responsive" width="640" height="360" data-param-list="" data-param-start="1425" data-videoid="wZZ7oFKsKzY"></amp-youtube>'
+			],
+			[
+				'youtube',
+				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
+				'<amp-youtube layout="responsive" width="640" height="360" data-param-list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA" data-param-start="" data-videoid="pC35x6iIPmo"></amp-youtube>'
+			],
+		];
+	}
 }

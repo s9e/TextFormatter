@@ -48,6 +48,10 @@ foreach ($cache as $siteId => $siteConfig)
 			}
 		);
 	}
+	if (isset($siteConfig['amp']['template']))
+	{
+		$siteConfig['amp']['template'] = $normalizer->normalizeTemplate($siteConfig['amp']['template']);
+	}
 
 	$cache[$siteId] = $siteConfig;
 }

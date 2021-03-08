@@ -6,4 +6,12 @@
 	<host>vine.co</host>
 	<extract>!vine\.co/v/(?'id'[^/]+)!</extract>
 	<iframe width="480" height="480" src="https://vine.co/v/{@id}/embed/simple?audio=1"/>
+
+	<amp custom-element="amp-vine" src="https://cdn.ampproject.org/v0/amp-vine-0.1.js">
+		<template><![CDATA[
+			<amp-vine layout="responsive" width="400" height="400"
+				data-vineid="{@id}"
+			></amp-vine>
+		]]></template>
+	</amp>
 </site>

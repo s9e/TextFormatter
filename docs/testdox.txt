@@ -5542,6 +5542,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] AMP rendering tests with data set #20
  [x] AMP rendering tests with data set #21
  [x] AMP rendering tests with data set #22
+ [x] AMP rendering tests with data set #23
+ [x] AMP rendering tests with data set #24
  [x] Parsing tests with data set #0
  [x] Parsing tests with data set #1
  [x] Parsing tests with data set #2

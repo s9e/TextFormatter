@@ -18,4 +18,12 @@
 			<iframe src="https://fast.wistia.net/embed/iframe/{@id}"/>
 		</otherwise>
 	</choose>
+
+	<amp custom-element="amp-wistia-player" src="https://cdn.ampproject.org/v0/amp-wistia-player-0.1.js">
+		<template><![CDATA[
+			<amp-wistia-player layout="responsive" width="640" height="360"
+				data-media-hashed-id="{@id}"
+			></amp-wistia-player>
+		]]></template>
+	</amp>
 </site>

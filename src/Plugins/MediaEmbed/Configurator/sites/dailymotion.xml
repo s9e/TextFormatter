@@ -20,4 +20,13 @@
 			<xsl:if test="@t">?start=<xsl:value-of select="@t"/></xsl:if>
 		]]></src>
 	</iframe>
+
+	<amp custom-element="amp-dailymotion" src="https://cdn.ampproject.org/v0/amp-dailymotion-0.1.js">
+		<template><![CDATA[
+			<amp-dailymotion layout="responsive" width="640" height="360"
+				data-start="{@t}"
+				data-videoid="{@id}"
+			></amp-dailymotion>
+		]]></template>
+	</amp>
 </site>

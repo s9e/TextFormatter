@@ -1,9 +1,17 @@
 <site name="&#x130;zlesene" homepage="https://www.izlesene.com/">
-	<example>https://www.izlesene.com/video/tam-1-kilo-yap-gram-gram-kapisma/10412573</example>
+	<example>https://www.izlesene.com/video/kardan-adamin-salincak-keyfi/10553555</example>
 
 	<tags><tag>.tr</tag></tags>
 
 	<host>izlesene.com</host>
 	<extract>!izlesene\.com/video/[-\w]+/(?'id'\d+)!</extract>
 	<iframe src="//www.izlesene.com/embedplayer/{@id}?autoplay=0"/>
+
+	<amp custom-element="amp-izlesene" src="https://cdn.ampproject.org/v0/amp-izlesene-0.1.js">
+		<template><![CDATA[
+			<amp-izlesene layout="responsive" width="640" height="360"
+				data-videoid="{@id}"
+			></amp-izlesene>
+		]]></template>
+	</amp>
 </site>

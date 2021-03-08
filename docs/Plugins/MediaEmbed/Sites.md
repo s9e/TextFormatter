@@ -207,7 +207,7 @@
 	</tr>
 	<tr title="İzlesene" id="izlesene">
 		<td style="font-size:75%"><code>izlesene</code></td>
-		<td style="font-size:50%">https://www.izlesene.com/video/tam-1-kilo-yap-gram-gram-kapisma/10412573</td>
+		<td style="font-size:50%">https://www.izlesene.com/video/kardan-adamin-salincak-keyfi/10553555</td>
 	</tr>
 	<tr title="JSFiddle" id="jsfiddle">
 		<td style="font-size:75%"><code>jsfiddle</code></td>

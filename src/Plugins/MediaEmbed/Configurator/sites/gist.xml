@@ -8,4 +8,28 @@
 	<host>github.com</host>
 	<extract>!gist\.github\.com/(?'id'(?:\w+/)?[\da-f]+(?:/[\da-f]+)?)!</extract>
 	<iframe width="100%" height="180" scrolling="" src="https://s9e.github.io/iframe/2/gist.min.html#{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+
+	<amp custom-element="amp-gist" src="https://cdn.ampproject.org/v0/amp-gist-0.1.js">
+		<template><![CDATA[
+			<amp-gist layout="fixed-height" height="180">
+				<xsl:attribute name="data-gistid">
+					<xsl:choose>
+						<xsl:when test="contains(@id, '/')">
+							<xsl:choose>
+								<xsl:when test="contains(substring-after(@id, '/'), '/')">
+									<xsl:value-of select="substring-before(substring-after(@id, '/'), '/')"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:value-of select="substring-after(@id, '/')"/>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:value-of select="@id"/>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:attribute>
+			</amp-gist>
+		]]></template>
+	</amp>
 </site>

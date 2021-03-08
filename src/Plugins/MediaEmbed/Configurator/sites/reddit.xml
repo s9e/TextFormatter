@@ -8,4 +8,14 @@
 	<host>reddit.com</host>
 	<extract>!(?'id'\w+/comments/\w+(?:/\w+/\w+)?)!</extract>
 	<iframe width="800" height="165" src="https://s9e.github.io/iframe/2/reddit.min.html#{@id}{@path}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+
+	<amp custom-element="amp-reddit" src="https://cdn.ampproject.org/v0/amp-reddit-0.1.js">
+		<template><![CDATA[
+			<amp-reddit layout="responsive" width="450" height="300"
+				data-embedtype="post"
+				data-src="https://www.reddit.com/r/{@id}/"
+			>
+			</amp-reddit>
+		]]></template>
+	</amp>
 </site>

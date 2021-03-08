@@ -27,4 +27,12 @@
 		<source type="video/webm" src="https://giant.gfycat.com/{@id}.webm"/>
 		<source type="video/mp4"  src="https://thumbs.gfycat.com/{@id}-mobile.mp4"/>
 	</video>
+
+	<amp custom-element="amp-gfycat" src="https://cdn.ampproject.org/v0/amp-gfycat-0.1.js">
+		<template><![CDATA[
+			<amp-gfycat layout="responsive" width="{@width}" height="{@height}"
+				data-gfyid="{@id}"
+			></amp-gfycat>
+		]]></template>
+	</amp>
 </site>
