@@ -31,7 +31,7 @@ foreach ($cache as $siteId => $siteConfig)
 		$siteConfig['tags'] = (array) $siteConfig['tags'];
 		$siteConfig['tags'] = (array) end($siteConfig['tags']);
 	}
-	foreach (['flash', 'iframe'] as $type)
+	foreach (['choose', 'flash', 'iframe'] as $type)
 	{
 		if (!isset($siteConfig[$type]))
 		{
