@@ -90,6 +90,7 @@ class RulesGeneratorTest extends Test
 						'OL' => [
 							'allowChild'                  => ['LI'],
 							'allowDescendant'             => ['LI', 'OL'],
+							'breakParagraph'              => true,
 							'ignoreSurroundingWhitespace' => true,
 							'ignoreText'                  => true,
 							'preventLineBreaks'           => true,
@@ -128,6 +129,7 @@ class RulesGeneratorTest extends Test
 					'tags' => [
 						'CODE' => [
 							'allowDescendant'             => ['CODE'],
+							'breakParagraph'              => true,
 							'disableAutoLineBreaks'       => true,
 							'ignoreTags'                  => true,
 							'ignoreSurroundingWhitespace' => true,
@@ -154,6 +156,7 @@ class RulesGeneratorTest extends Test
 						],
 						'X' => [
 							'autoClose'                   => true,
+							'breakParagraph'              => true,
 							'closeParent'                 => ['B'],
 							'disableAutoLineBreaks'       => true,
 							'ignoreSurroundingWhitespace' => true,

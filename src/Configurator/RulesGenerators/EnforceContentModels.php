@@ -21,6 +21,11 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	/**
 	* @var TemplateInspector
 	*/
+	protected $p;
+
+	/**
+	* @var TemplateInspector
+	*/
 	protected $span;
 
 	/**
@@ -31,6 +36,7 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 	public function __construct()
 	{
 		$this->br   = new TemplateInspector('<br/>');
+		$this->p    = new TemplateInspector('<p><xsl:apply-templates/></p>');
 		$this->span = new TemplateInspector('<span><xsl:apply-templates/></span>');
 	}
 
@@ -53,6 +59,10 @@ class EnforceContentModels implements BooleanRulesGenerator, TargetedRulesGenera
 		{
 			$rules['disableAutoLineBreaks'] = true;
 			$rules['preventLineBreaks'] = true;
+		}
+		if ($src->closesParent($this->p))
+		{
+			$rules['breakParagraph'] = true;
 		}
 
 		return $rules;

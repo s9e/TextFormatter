@@ -92,13 +92,17 @@ class EnforceContentModelsTest extends AbstractTest
 	}
 
 	/**
-	* @testdox Generates a preventLineBreaks rule and a suspendAutoLineBreaks rule for <ul>
+	* @testdox Generates a breakParagraph, preventLineBreaks and suspendAutoLineBreaks rule for <ul>
 	*/
 	public function testLineBreaksUl()
 	{
 		$this->assertBooleanRules(
 			'<ul><xsl:apply-templates/></ul>',
-			['preventLineBreaks' => true, 'suspendAutoLineBreaks' => true]
+			[
+				'breakParagraph'        => true,
+				'preventLineBreaks'     => true,
+				'suspendAutoLineBreaks' => true
+			]
 		);
 	}
 
