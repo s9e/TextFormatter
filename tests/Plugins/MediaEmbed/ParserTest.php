@@ -1209,16 +1209,14 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.sportsnet.ca/videos/shows/tim-and-sid-video/',
-				'(<r><SPORTSNET id="\\d+001">http://www.sportsnet.ca/videos/shows/tim-and-sid-video/</SPORTSNET></r>)',
+				'https://www.sportsnet.ca/soccer/west-ham-2-hull-2/',
+				'<r><SPORTSNET id="3786409870001">https://www.sportsnet.ca/soccer/west-ham-2-hull-2/</SPORTSNET></r>',
 				[],
 				function ($configurator)
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('sportsnet');
-				},
-				null,
-				'assertMatchesRegularExpression'
+				}
 			],
 			[
 				'https://link.tospotify.com/kpRZPpEGnbb',
