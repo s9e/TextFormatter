@@ -1,3 +1,19 @@
+2.8.5 (2021-03-15)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/7856f66f4cfaf1402b8ec30c0f0ba124da4e9b76...d11cd32f195904510ab24c0f69f613261e267056)
+
+### Added
+
+ - `33168acaa` MediaEmbed: added AMP metadata
+
+### Changed
+
+ - `b52de21fd` EnforceContentModels: generate breakParagraph rules where applicable
+ - `813be2c3d` MediaEmbed: updated Megaphone
+ - `126771444` MediaEmbed: updated Sportsnet
+
+
 2.8.4 (2021-03-02)
 ==================
 
