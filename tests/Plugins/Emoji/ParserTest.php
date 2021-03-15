@@ -167,8 +167,8 @@ class ParserTest extends Test
 				[],
 				function ($configurator, $plugin)
 				{
-					$plugin->setRegexpLimit(10000);
-					$plugin->getTag()->tagLimit = 10000;
+					$plugin->setRegexpLimit(100000);
+					$plugin->getTag()->tagLimit = 100000;
 				}
 			],
 		];
