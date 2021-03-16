@@ -47,7 +47,7 @@ See [Tag rules](Tag_rules.md) for the rules definitions.
 <dt id="enforcecontentmodels">EnforceContentModels</dt>
 <dd>
 	<p><i>Purpose: compliance. Default: enabled.</i></p>
-	<p>Generates <code>denyChild</code>, <code>denyDescendant</code>, <code>disableAutoLineBreaks</code>, <code>enableAutoLineBreaks</code> and <code>suspendAutoLineBreaks</code> rules to disallow tags in contexts where their HTML representation is not allowed.</p>
+	<p>Generates <code>breakParagraph</code>, <code>denyChild</code>, <code>denyDescendant</code>, <code>disableAutoLineBreaks</code>, <code>enableAutoLineBreaks</code> and <code>suspendAutoLineBreaks</code> rules to disallow tags in contexts where their HTML representation is not allowed.</p>
 	<p>See <a href="https://www.w3.org/TR/html5/dom.html#content-models">HTML5 Content Models</a>.</p>
 </dd>
 
