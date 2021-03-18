@@ -1199,6 +1199,20 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://soundcloud.com/user-56185579/sets/deep-impact-for-u-he-zebra-2',
+				'<r><SOUNDCLOUD id="user-56185579/sets/deep-impact-for-u-he-zebra-2" playlist_id="1227667873" track_id="1009549597">https://soundcloud.com/user-56185579/sets/deep-impact-for-u-he-zebra-2</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped('SoundCloud does not like requests from Travis containers');
+					}
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
 				'https://www.sporcle.com/games/eyes355/find-five-countries',
 				'<r><SPORCLE id="15d32a898365">https://www.sporcle.com/games/eyes355/find-five-countries</SPORCLE></r>',
 				[],

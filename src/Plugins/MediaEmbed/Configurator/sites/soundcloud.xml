@@ -18,7 +18,7 @@
 	</scrape>
 	<scrape>
 		<header>User-agent: PHP (not Mozilla)</header>
-		<match>@soundcloud\.com/\w+/sets/@</match>
+		<match>@soundcloud\.com/[-\w]+/sets/@</match>
 		<extract>@soundcloud://playlists:(?'playlist_id'\d+)@</extract>
 	</scrape>
 	<iframe width="100%" max-width="900">
