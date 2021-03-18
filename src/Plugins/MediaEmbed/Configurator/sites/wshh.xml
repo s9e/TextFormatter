@@ -1,15 +1,15 @@
 <site name="WorldStarHipHop" homepage="https://www.worldstarhiphop.com/">
-	<example>https://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</example>
-	<example>https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</example>
+	<example>https://worldstar.com/video.php?v=wshhn7nmk3033k8m66ZG</example>
 	<example>https://www.worldstarhiphop.com/featured/71630</example>
 
 	<tags><tag>videos</tag></tags>
 
+	<host>worldstar.com</host>
 	<host>worldstarhiphop.com</host>
-	<extract>!worldstarhiphop\.com/featured/(?'id'\d+)!</extract>
+	<extract>!worldstar(?:hiphop)?\.com/(?:emb|featur)ed/(?'id'\d+)!</extract>
 	<scrape>
-		<match>!worldstarhiphop\.com/(?:\w+/)?video\.php\?v=\w+!</match>
+		<match>!worldstar(?:hiphop)?\.com/(?:\w+/)?video\.php\?v=\w+!</match>
 		<extract>!v: ?"?(?'id'\d+)!</extract>
 	</scrape>
-	<iframe src="//www.worldstarhiphop.com/embed/{@id}"/>
+	<iframe src="//worldstarhiphop.com/embed/{@id}"/>
 </site>

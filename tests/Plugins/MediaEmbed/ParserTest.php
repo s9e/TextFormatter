@@ -1391,8 +1391,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
-				'<r><WSHH id="63133">http://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
+				'https://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
+				'<r><WSHH id="63133">https://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
 				[],
 				function ($configurator)
 				{
@@ -1401,8 +1401,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
-				'<r><WSHH id="63175">http://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
+				'https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
+				'<r><WSHH id="63175">https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
 				[],
 				function ($configurator)
 				{
@@ -1411,8 +1411,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo',
-				'<r><WSHH id="71468">http://m.worldstarhiphop.com/apple/video.php?v=wshh9yky3fx1Sj96E2mo</WSHH></r>',
+				'https://worldstar.com/video.php?v=wshhn7nmk3033k8m66ZG',
+				'<r><WSHH id="164634">https://worldstar.com/video.php?v=wshhn7nmk3033k8m66ZG</WSHH></r>',
 				[],
 				function ($configurator)
 				{

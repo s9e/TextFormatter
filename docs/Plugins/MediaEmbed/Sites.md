@@ -499,7 +499,7 @@
 	</tr>
 	<tr title="WorldStarHipHop" id="wshh">
 		<td style="font-size:75%"><code>wshh</code></td>
-		<td style="font-size:50%">https://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0<br/>https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61<br/>https://www.worldstarhiphop.com/featured/71630</td>
+		<td style="font-size:50%">https://worldstar.com/video.php?v=wshhn7nmk3033k8m66ZG<br/>https://www.worldstarhiphop.com/featured/71630</td>
 	</tr>
 	<tr title="The Wall Street Journal Online" id="wsj">
 		<td style="font-size:75%"><code>wsj</code></td>
