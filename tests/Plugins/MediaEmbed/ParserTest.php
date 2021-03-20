@@ -3693,6 +3693,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://m.tiktok.com/v/6789430799839104261.html',
+				'<r><TIKTOK id="6789430799839104261">https://m.tiktok.com/v/6789430799839104261.html</TIKTOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('tiktok');
+				}
+			],
+			[
 				'http://www.tmz.com/videos/0_2pr9x3rb/',
 				'<r><TMZ id="0_2pr9x3rb">http://www.tmz.com/videos/0_2pr9x3rb/</TMZ></r>',
 				[],
