@@ -3347,6 +3347,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.podbean.com/ew/pb-gmyyz-d6e065',
+				'<r><PODBEAN id="gmyyz-d6e065">https://www.podbean.com/ew/pb-gmyyz-d6e065</PODBEAN></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('podbean');
+				}
+			],
+			[
 				'http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/',
 				'<r><PREZI id="5ye8po_hmikp">http://prezi.com/5ye8po_hmikp/10-most-common-rookie-presentation-mistakes/</PREZI></r>',
 				[],

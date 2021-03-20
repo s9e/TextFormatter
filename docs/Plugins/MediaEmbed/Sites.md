@@ -319,7 +319,7 @@
 	</tr>
 	<tr title="Podbean" id="podbean">
 		<td style="font-size:75%"><code>podbean</code></td>
-		<td style="font-size:50%">https://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/<br/>https://www.podbean.com/media/share/pb-qtwub-4ee10c</td>
+		<td style="font-size:50%">https://dialhforheroclix.podbean.com/e/dial-h-for-heroclix-episode-46-all-ya-need-is-love/<br/>https://www.podbean.com/ew/pb-gmyyz-d6e065</td>
 	</tr>
 	<tr title="Prezi" id="prezi">
 		<td style="font-size:75%"><code>prezi</code></td>
