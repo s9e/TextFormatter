@@ -1,3 +1,17 @@
+2.8.6 (2021-03-29)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/995235f221dbc7fd3ac495313f86af1e46aea441...4b83f7c67060b8a028856d000b5bd89302ce3bb3)
+
+### Changed
+
+ - `4b83f7c67` BBCodes: updated default CODE BBCode
+ - `c7b72ac82` MediaEmbed: updated Podbean
+ - `ed19f57c0` MediaEmbed: updated SoundCloud
+ - `6a233cf46` MediaEmbed: updated TikTok
+ - `739cd5f10` MediaEmbed: updated WorldStarHipHop
+
+
 2.8.5 (2021-03-15)
 ==================
 
