@@ -1232,16 +1232,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('sportsnet');
 				}
 			],
-			[
-				'https://link.tospotify.com/kpRZPpEGnbb',
-				'<r><SPOTIFY id="playlist/12UZc2MhOI29wE7eBgmKwi">https://link.tospotify.com/kpRZPpEGnbb</SPOTIFY></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('spotify');
-				}
-			],
+//			[
+//				'https://link.tospotify.com/kpRZPpEGnbb',
+//				'<r><SPOTIFY id="playlist/12UZc2MhOI29wE7eBgmKwi">https://link.tospotify.com/kpRZPpEGnbb</SPOTIFY></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('spotify');
+//				}
+//			],
 			[
 				'https://www.spreaker.com/show/2-up-front_1',
 				'<r><SPREAKER show_id="1374587">https://www.spreaker.com/show/2-up-front_1</SPREAKER></r>',
