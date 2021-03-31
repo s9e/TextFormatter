@@ -1792,6 +1792,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://podcasts.apple.com/dk/podcast/say-his-name-george-floyd-retssagen-begynder/id1429569036',
+				'<r><APPLEPODCASTS country="dk" podcast_id="1429569036">https://podcasts.apple.com/dk/podcast/say-his-name-george-floyd-retssagen-begynder/id1429569036</APPLEPODCASTS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('applepodcasts');
+				}
+			],
+			[
+				'https://podcasts.apple.com/dk/podcast/say-his-name-george-floyd-retssagen-begynder/id1429569036?i=1000514458995',
+				'<r><APPLEPODCASTS country="dk" episode_id="1000514458995" podcast_id="1429569036">https://podcasts.apple.com/dk/podcast/say-his-name-george-floyd-retssagen-begynder/id1429569036?i=1000514458995</APPLEPODCASTS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('applepodcasts');
+				}
+			],
+			[
 				'http://audioboo.fm/boos/2439994-deadline-day-update',
 				'<r><AUDIOBOOM id="2439994">http://audioboo.fm/boos/2439994-deadline-day-update</AUDIOBOOM></r>',
 				[],
