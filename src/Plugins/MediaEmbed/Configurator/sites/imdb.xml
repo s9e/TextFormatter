@@ -1,10 +1,13 @@
-<site name="IMDb" homepage="https://www.imdb.com/">
+<site name="IMDb trailers" homepage="https://www.imdb.com/trailers/">
 	<example>https://www.imdb.com/video/imdb/vi2482677785/</example>
 	<example>https://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</example>
 
 	<tags><tag>movies</tag></tags>
 
 	<host>imdb.com</host>
-	<extract>!imdb\.com/[/\w]+/vi(?'id'\d+)!</extract>
+	<scrape url="https://www.imdb.com/video/imdb/vi{@id}/imdb/embed">
+		<match>!imdb\.com/[/\w]+?/vi(?'id'\d+)!</match>
+		<extract>!imdb\.com/[/\w]+?/vi(?'id'\d+)/[/\w]*?embed!</extract>
+	</scrape>
 	<iframe src="//www.imdb.com/video/imdb/vi{@id}/imdb/embed?autoplay=false&amp;width=640"/>
 </site>

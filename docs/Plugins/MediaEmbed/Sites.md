@@ -189,7 +189,7 @@
 		<td style="font-size:75%"><code>ign</code></td>
 		<td style="font-size:50%">https://www.ign.com/videos/2013/07/12/pokemon-x-version-pokemon-y-version-battle-trailer</td>
 	</tr>
-	<tr title="IMDb" id="imdb">
+	<tr title="IMDb trailers" id="imdb">
 		<td style="font-size:75%"><code>imdb</code></td>
 		<td style="font-size:50%">https://www.imdb.com/video/imdb/vi2482677785/<br/>https://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</td>
 	</tr>

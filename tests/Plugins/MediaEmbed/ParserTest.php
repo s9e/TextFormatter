@@ -861,6 +861,36 @@ class ParserTest extends Test
 //				}
 //			],
 			[
+				'http://www.imdb.com/video/epk/vi387296537/',
+				'<r><IMDB id="387296537">http://www.imdb.com/video/epk/vi387296537/</IMDB></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imdb');
+				}
+			],
+			[
+				'http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785',
+				'<r><IMDB id="2482677785">http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</IMDB></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imdb');
+				}
+			],
+			[
+				'https://www.imdb.com/video/vi4085711129',
+				'<t>https://www.imdb.com/video/vi4085711129</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('imdb');
+				}
+			],
+			[
 				'http://imgur.com/gallery/9UGCL',
 				'<r><IMGUR id="a/9UGCL">http://imgur.com/gallery/9UGCL</IMGUR></r>',
 				[],
@@ -2630,24 +2660,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('ign');
-				}
-			],
-			[
-				'http://www.imdb.com/video/epk/vi387296537/',
-				'<r><IMDB id="387296537">http://www.imdb.com/video/epk/vi387296537/</IMDB></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('imdb');
-				}
-			],
-			[
-				'http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785',
-				'<r><IMDB id="2482677785">http://www.imdb.com/title/tt2294629/videoplayer/vi2482677785</IMDB></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('imdb');
 				}
 			],
 			[
