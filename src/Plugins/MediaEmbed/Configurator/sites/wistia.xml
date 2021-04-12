@@ -6,9 +6,9 @@
 
 	<host>wistia.com</host>
 	<extract>!wistia.com/(?:(?:embed/iframe|medias)/|.*wmediaid=)(?'id'\w+)!</extract>
-	<scrape url="https://fast.wistia.com/oembed.json?url=https%3A%2F%2Ffast.wistia.com%2Fmedias%2F{@id}">
+	<scrape url="https://fast.wistia.net/embed/iframe/{@id}">
 		<match>!wistia.com/(?:(?:embed/iframe|medias)/|.*wmediaid=)\w!</match>
-		<extract>!"type":"(?'type'audio)!</extract>
+		<extract>!"type":"(?:\w+_)?(?'type'audio)!</extract>
 	</scrape>
 	<choose>
 		<when test="@type = 'audio'">
