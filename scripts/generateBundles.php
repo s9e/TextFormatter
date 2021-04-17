@@ -34,17 +34,10 @@ foreach (glob(__DIR__ . '/../src/Configurator/Bundles/*.php') as $filepath)
 	$rendererGenerator->filepath  = $bundleDir . '/Renderer.php';
 
 	// Replace the XPathConvertor to work under the minimum requirements
-	$parser     = new RecursiveParser;
-	$matchers   = [];
-	$matchers[] = new SingleByteStringFunctions($parser);
-	$matchers[] = new BooleanFunctions($parser);
-	$matchers[] = new BooleanOperators($parser);
-	$matchers[] = new Comparisons($parser);
-	$matchers[] = new Core($parser);
-	$matchers[] = new Math($parser);
-	$matchers[] = new SingleByteStringManipulation($parser);
-	$parser->setMatchers($matchers);
-	$rendererGenerator->serializer->convertor = new XPathConvertor($parser);
+	$rendererGenerator->serializer->convertor->features = [
+		'mbstring' => false,
+		'php80'    => false
+	];
 
 	$configurator->enableJavaScript();
 	$filepath = __DIR__ . '/../vendor/node_modules/google-closure-compiler-linux/compiler';

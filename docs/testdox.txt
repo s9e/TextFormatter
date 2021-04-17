@@ -6528,6 +6528,10 @@ Single Byte String Manipulation (s9e\TextFormatter\Tests\Configurator\RendererGe
  [x]  with data set #9
 
 XPath Convertor (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor)
+ [x] PHP features can be toggled before first use with data set #0
+ [x] PHP features can be toggled before first use with data set #1
+ [x] PHP features can be toggled before first use with data set #2
+ [x] PHP features can be toggled before first use with data set #3
  [x] convertXPath() tests with data set #0
  [x] convertXPath() tests with data set #1
  [x] convertXPath() tests with data set #2

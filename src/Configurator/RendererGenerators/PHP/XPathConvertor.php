@@ -22,6 +22,11 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convert
 class XPathConvertor
 {
 	/**
+	* @var array Array of togglable PHP features ("mbstring" and "php80")
+	*/
+	public $features;
+
+	/**
 	* @var RecursiveParser
 	*/
 	protected $parser;
@@ -31,7 +36,14 @@ class XPathConvertor
 	*/
 	public function __construct(RecursiveParser $parser = null)
 	{
-		$this->parser = $parser ?: $this->getDefaultParser();
+		$this->features = [
+			'mbstring' => extension_loaded('mbstring'),
+			'php80'    => version_compare(PHP_VERSION, '8.0', '>=')
+		];
+		if (isset($parser))
+		{
+			$this->parser = $parser;
+		}
 	}
 
 	/**
@@ -61,7 +73,7 @@ class XPathConvertor
 
 		try
 		{
-			return $this->parser->parse($expr)['value'];
+			return $this->getParser()->parse($expr)['value'];
 		}
 		catch (RuntimeException $e)
 		{
@@ -89,7 +101,7 @@ class XPathConvertor
 		$expr = trim($expr);
 		try
 		{
-			return $this->parser->parse($expr)['value'];
+			return $this->getParser()->parse($expr)['value'];
 		}
 		catch (RuntimeException $e)
 		{
@@ -175,12 +187,12 @@ class XPathConvertor
 		$matchers[] = new Comparisons($parser);
 		$matchers[] = new Core($parser);
 		$matchers[] = new Math($parser);
-		if (extension_loaded('mbstring'))
+		if (!empty($this->features['mbstring']))
 		{
 			$matchers[] = new MultiByteStringManipulation($parser);
 		}
 		$matchers[] = new SingleByteStringManipulation($parser);
-		if (version_compare(PHP_VERSION, '8.0', '>='))
+		if (!empty($this->features['php80']))
 		{
 			$matchers[] = new PHP80Functions($parser);
 		}
@@ -188,6 +200,21 @@ class XPathConvertor
 		$parser->setMatchers($matchers);
 
 		return $parser;
+	}
+
+	/**
+	* Return (and if necessary, create) the cached instance of the XPath parser
+	*
+	* @return RecursiveParser
+	*/
+	protected function getParser(): RecursiveParser
+	{
+		if (!isset($this->parser))
+		{
+			$this->parser = $this->getDefaultParser();
+		}
+
+		return $this->parser;
 	}
 
 	/**

@@ -16,6 +16,44 @@ use s9e\TextFormatter\Tests\Test;
 class XPathConvertorTest extends Test
 {
 	/**
+	* @dataProvider getFeaturesTests
+	* @testdox PHP features can be toggled before first use
+	*/
+	public function testFeatures($features, $original, $expected)
+	{
+		$convertor           = new XPathConvertor;
+		$convertor->features = $features;
+
+		$this->assertSame($expected, $convertor->convertXPath($original));
+	}
+
+	public function getFeaturesTests()
+	{
+		return [
+			[
+				['mbstring' => false],
+				'substring(.,1,2)',
+				"\$this->xpath->evaluate('substring(.,1,2)',\$node)"
+			],
+			[
+				['mbstring' => true],
+				'substring(.,1,2)',
+				"mb_substr(\$node->textContent,0,2,'utf-8')"
+			],
+			[
+				['php80' => false],
+				'contains(.,"x")',
+				"(strpos(\$node->textContent,'x')!==false)"
+			],
+			[
+				['php80' => true],
+				'contains(.,"x")',
+				"str_contains(\$node->textContent,'x')"
+			],
+		];
+	}
+
+	/**
 	* @dataProvider getConvertXPathTests
 	* @testdox convertXPath() tests
 	*/
