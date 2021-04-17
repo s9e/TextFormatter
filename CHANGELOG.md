@@ -1,3 +1,22 @@
+2.9.0 (2021-04-17)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/e2d5fba85a92a62b477957943de3aecc0cc4d023...561eec5a1770736c08aa83778e287d05de5fc2d0)
+
+### Added
+
+ - `4256d1f08` MediaEmbed: added Apple Podcasts
+ - `beb0082bc` XPathConvertor: added support for PHP 8.0 string functions
+
+### Changed
+
+ - `f801b61f2` MediaEmbed: updated IMDb
+ - `44f22bfc8` MediaEmbed: updated Wistia
+ - `bd16776c5` Updated bundles
+ - `f1fe19a42` XPathConvertor: made the optional PHP features togglable
+ - `26ac52914` XSLT: explicitly set htmlspecialchars() escape mode
+
+
 2.8.6 (2021-03-29)
 ==================
 
