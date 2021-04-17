@@ -16,6 +16,24 @@ use s9e\TextFormatter\Tests\Test;
 class XPathConvertorTest extends Test
 {
 	/**
+	* @testdox The constructor accepts an instance of RecursiveParser
+	*/
+	public function testParserConstructor()
+	{
+		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\RecursiveParser')
+		             ->setMethods(['parse'])
+		             ->getMock();
+		$mock->expects($this->once())
+		     ->method('parse')
+		     ->with('xxx')
+		     ->will($this->returnValue(['value' => 'foo']));
+
+		$convertor = new XPathConvertor($mock);
+		$this->assertSame('foo', $convertor->convertXPath('xxx'));
+	}
+
+
+	/**
 	* @dataProvider getFeaturesTests
 	* @testdox PHP features can be toggled before first use
 	*/
