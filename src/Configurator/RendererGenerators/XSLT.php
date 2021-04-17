@@ -138,7 +138,7 @@ class XSLT implements RendererGenerator
 		$xml = '<' . $tagName;
 		foreach ($attributes as $attrName => $attrValue)
 		{
-			$xml .= ' ' . $attrName . '="' . htmlspecialchars($attrValue) . '"';
+			$xml .= ' ' . $attrName . '="' . htmlspecialchars($attrValue, ENT_COMPAT, 'utf-8') . '"';
 		}
 		if ($content === '')
 		{
