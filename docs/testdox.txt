@@ -6494,6 +6494,15 @@ Multi Byte String Manipulation (s9e\TextFormatter\Tests\Configurator\RendererGen
  [x]  with data set #8
  [x]  with data set #9
 
+PHP80 Functions (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\PHP80Functions)
+ [x]  with data set #0
+ [x]  with data set #1
+ [x]  with data set #2
+ [x]  with data set #3
+ [x]  with data set #4
+ [x]  with data set #5
+ [x]  with data set #6
+
 Single Byte String Functions (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions)
  [x]  with data set #0
  [x]  with data set #1
@@ -6732,6 +6741,7 @@ Quick (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick)
  [x] Source with data set #21
  [x] Source with data set #22
  [x] Source with data set #23
+ [x] Source with data set #24
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text

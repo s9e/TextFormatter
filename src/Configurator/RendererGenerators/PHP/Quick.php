@@ -441,13 +441,25 @@ class Quick
 			'(strpos\\(' . $getAttribute . ',(' . $string . ')\\)([!=]==(?:0|false)))s'
 				=> function ($m)
 				{
-					return 'strpos($attributes[' . $m[1] . "]," . htmlspecialchars($m[2], ENT_COMPAT) . ')' . $m[3];
+					return 'strpos($attributes[' . $m[1] . '],' . htmlspecialchars($m[2], ENT_COMPAT) . ')' . $m[3];
 				},
 
 			'(strpos\\((' . $string . '),' . $getAttribute . '\\)([!=]==(?:0|false)))s'
 				=> function ($m)
 				{
 					return 'strpos(' . htmlspecialchars($m[1], ENT_COMPAT) . ',$attributes[' . $m[2] . '])' . $m[3];
+				},
+
+			'(str_(contains|(?:end|start)s_with)\\(' . $getAttribute . ',(' . $string . ')\\))s'
+				=> function ($m)
+				{
+					return 'str_' . $m[1] . '($attributes[' . $m[2] . '],' . htmlspecialchars($m[3], ENT_COMPAT) . ')';
+				},
+
+			'(str_(contains|(?:end|start)s_with)\\((' . $string . '),' . $getAttribute . '\\))s'
+				=> function ($m)
+				{
+					return 'str_' . $m[1] . '(' . htmlspecialchars($m[2], ENT_COMPAT) . ',$attributes[' . $m[3] . '])';
 				},
 
 			// An attribute value used in an arithmetic comparison or operation does not need to be

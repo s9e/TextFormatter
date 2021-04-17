@@ -15,6 +15,7 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convert
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Core;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Math;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\MultiByteStringManipulation;
+use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\PHP80Functions;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions;
 use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringManipulation;
 
@@ -179,6 +180,10 @@ class XPathConvertor
 			$matchers[] = new MultiByteStringManipulation($parser);
 		}
 		$matchers[] = new SingleByteStringManipulation($parser);
+		if (version_compare(PHP_VERSION, '8.0', '>='))
+		{
+			$matchers[] = new PHP80Functions($parser);
+		}
 
 		$parser->setMatchers($matchers);
 

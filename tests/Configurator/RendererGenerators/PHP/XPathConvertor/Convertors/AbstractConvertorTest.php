@@ -28,8 +28,14 @@ abstract class AbstractConvertorTest extends Test
 			$this->expectException('RuntimeException', 'Cannot convert');
 		}
 
-		$parser     = new RecursiveParser;
+		$parser = new RecursiveParser;
+		$parser->setMatchers($this->getMatchers($parser));
 
+		$this->assertEquals($expected, $parser->parse($original)['value']);
+	}
+
+	protected function getMatchers($parser)
+	{
 		$matchers   = [];
 		$matchers[] = new SingleByteStringFunctions($parser);
 		$matchers[] = new BooleanFunctions($parser);
@@ -40,9 +46,7 @@ abstract class AbstractConvertorTest extends Test
 		$matchers[] = new MultiByteStringManipulation($parser);
 		$matchers[] = new SingleByteStringManipulation($parser);
 
-		$parser->setMatchers($matchers);
-
-		$this->assertEquals($expected, $parser->parse($original)['value']);
+		return $matchers;
 	}
 
 	abstract public function getConvertorTests();

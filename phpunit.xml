@@ -290,6 +290,7 @@
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/CoreTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/MathTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/MultiByteStringManipulationTest.php</file>
+			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/PHP80FunctionsTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/SingleByteStringFunctionsTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertor/Convertors/SingleByteStringManipulationTest.php</file>
 			<file>tests/Configurator/RendererGenerators/PHP/XPathConvertorTest.php</file>

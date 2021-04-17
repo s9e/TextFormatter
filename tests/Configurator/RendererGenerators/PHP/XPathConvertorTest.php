@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP;
 
+use Closure;
 use Exception;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -20,14 +21,7 @@ class XPathConvertorTest extends Test
 	*/
 	public function testConvertXPath($original, $expected)
 	{
-		$convertor = new XPathConvertor;
-		if ($expected instanceof Exception)
-		{
-			$this->expectException(get_class($expected));
-			$this->expectExceptionMessage($expected->getMessage());
-
-		}
-		$this->assertSame($expected, $convertor->convertXPath($original));
+		$this->runConvertTest('convertXPath', $original, $expected);
 	}
 
 	/**
@@ -36,8 +30,19 @@ class XPathConvertorTest extends Test
 	*/
 	public function testConvertCondition($original, $expected)
 	{
+		$this->runConvertTest('convertCondition', $original, $expected);
+	}
+
+	protected function runConvertTest($methodName, $original, $expected)
+	{
+		if ($expected instanceof Exception)
+		{
+			$this->expectException(get_class($expected));
+			$this->expectExceptionMessage($expected->getMessage());
+		}
+
 		$convertor = new XPathConvertor;
-		$this->assertSame($expected, $convertor->convertCondition($original));
+		$this->assertSame($expected, $convertor->$methodName($original));
 	}
 
 	public function getConvertXPathTests()
@@ -182,7 +187,12 @@ class XPathConvertorTest extends Test
 			],
 			[
 				'contains(@foo, "foo") + string-length(@bar)',
-				"(strpos(\$node->getAttribute('foo'),'foo')!==false)+preg_match_all('(.)su',\$node->getAttribute('bar'))"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "str_contains(\$node->getAttribute('foo'),'foo')+preg_match_all('(.)su',\$node->getAttribute('bar'))"
+						: "(strpos(\$node->getAttribute('foo'),'foo')!==false)+preg_match_all('(.)su',\$node->getAttribute('bar'))";
+				})()
 			],
 		];
 	}
@@ -288,19 +298,39 @@ class XPathConvertorTest extends Test
 			],
 			[
 				"contains(@foo,'x')",
-				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "str_contains(\$node->getAttribute('foo'),'x')"
+						: "(strpos(\$node->getAttribute('foo'),'x')!==false)";
+				})()
 			],
 			[
 				" contains( @foo , 'x' ) ",
-				"(strpos(\$node->getAttribute('foo'),'x')!==false)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "str_contains(\$node->getAttribute('foo'),'x')"
+						: "(strpos(\$node->getAttribute('foo'),'x')!==false)";
+				})()
 			],
 			[
 				"not(contains(@id, 'bar'))",
-				"(strpos(\$node->getAttribute('id'),'bar')===false)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "!str_contains(\$node->getAttribute('id'),'bar')"
+						: "(strpos(\$node->getAttribute('id'),'bar')===false)";
+				})()
 			],
 			[
 				"starts-with(@foo,'bar')",
-				"(strpos(\$node->getAttribute('foo'),'bar')===0)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "str_starts_with(\$node->getAttribute('foo'),'bar')"
+						: "(strpos(\$node->getAttribute('foo'),'bar')===0)";
+				})()
 			],
 			[
 				'@foo and (@bar or @baz)',
@@ -316,7 +346,12 @@ class XPathConvertorTest extends Test
 			],
 			[
 				"starts-with(@type,'decimal-') or starts-with(@type,'lower-') or starts-with(@type,'upper-')",
-				"(strpos(\$node->getAttribute('type'),'decimal-')===0)||(strpos(\$node->getAttribute('type'),'lower-')===0)||(strpos(\$node->getAttribute('type'),'upper-')===0)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "str_starts_with(\$node->getAttribute('type'),'decimal-')||str_starts_with(\$node->getAttribute('type'),'lower-')||str_starts_with(\$node->getAttribute('type'),'upper-')"
+						: "(strpos(\$node->getAttribute('type'),'decimal-')===0)||(strpos(\$node->getAttribute('type'),'lower-')===0)||(strpos(\$node->getAttribute('type'),'upper-')===0)";
+				})()
 			],
 			[
 				'@tld="es" and $AMAZON_ASSOCIATE_TAG_ES',

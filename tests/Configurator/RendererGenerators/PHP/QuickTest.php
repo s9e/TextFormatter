@@ -702,27 +702,66 @@ class QuickTest extends Test
 			],
 			[
 				['X' => '<xsl:if test="contains(@x,\'&quot;\')">x</xsl:if>'],
-				"(strpos(\$attributes['x'],'&quot;')!==false)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "(str_contains(\$attributes['x'],'&quot;'))"
+						: "(strpos(\$attributes['x'],'&quot;')!==false)";
+				})()
 			],
 			[
 				['X' => '<xsl:if test="contains(\'&quot;&lt;&gt;\',@x)">x</xsl:if>'],
-				"(strpos('&quot;&lt;&gt;',\$attributes['x'])!==false)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "(str_contains('&quot;&lt;&gt;',\$attributes['x']))"
+						: "(strpos('&quot;&lt;&gt;',\$attributes['x'])!==false)";
+				})()
 			],
 			[
 				['X' => '<xsl:if test="starts-with(\'&quot;&lt;&gt;\',@x)">x</xsl:if>'],
-				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===0)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "(str_starts_with('&quot;&lt;&gt;',\$attributes['x']))"
+						: "(strpos('&quot;&lt;&gt;',\$attributes['x'])===0)";
+				})()
 			],
 			[
 				['X' => '<xsl:if test="starts-with(@x,\'&quot;&lt;&gt;\')">x</xsl:if>'],
-				"(strpos(\$attributes['x'],'&quot;&lt;&gt;')===0)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "(str_starts_with(\$attributes['x'],'&quot;&lt;&gt;'))"
+						: "(strpos(\$attributes['x'],'&quot;&lt;&gt;')===0)";
+				})()
 			],
 			[
 				['X' => '<xsl:if test="not(contains(@x,\'&quot;\'))">x</xsl:if>'],
-				"(strpos(\$attributes['x'],'&quot;')===false)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "(!str_contains(\$attributes['x'],'&quot;'))"
+						: "(strpos(\$attributes['x'],'&quot;')===false)";
+				})()
 			],
 			[
 				['X' => '<xsl:if test="not(contains(\'&quot;&lt;&gt;\',@x))">x</xsl:if>'],
-				"(strpos('&quot;&lt;&gt;',\$attributes['x'])===false)"
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "(!str_contains('&quot;&lt;&gt;',\$attributes['x']))"
+						: "(strpos('&quot;&lt;&gt;',\$attributes['x'])===false)";
+				})()
+			],
+			[
+				['X' => '<xsl:if test="ends-with(@x,\'&quot;&lt;&gt;\')">x</xsl:if>'],
+				(function ()
+				{
+					return (version_compare(PHP_VERSION, '8.0', '>='))
+						? "(str_ends_with(\$attributes['x'],'&quot;&lt;&gt;'))"
+						: "(substr(htmlspecialchars_decode(\$attributes['x']),-3)==='\"<>')";
+				})()
 			],
 			[
 				['X' => "<hr title=\"{translate(@x,'_','-')}\"/>"],
