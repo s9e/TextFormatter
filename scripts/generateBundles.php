@@ -1,18 +1,6 @@
 #!/usr/bin/php
 <?php
 
-use s9e\TextFormatter\Configurator\RecursiveParser;
-use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor;
-use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\{
-	BooleanFunctions,
-	BooleanOperators,
-	Comparisons,
-	Core,
-	Math,
-	SingleByteStringFunctions,
-	SingleByteStringManipulation
-};
-
 include __DIR__ . '/../vendor/autoload.php';
 
 $bundlesDir = __DIR__ . '/../src/Bundles';
