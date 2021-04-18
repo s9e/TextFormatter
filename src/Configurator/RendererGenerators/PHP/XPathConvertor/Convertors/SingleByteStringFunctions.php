@@ -14,14 +14,16 @@ class SingleByteStringFunctions extends AbstractConvertor
 	*/
 	public function getMatchers(): array
 	{
+		$groups = 'Boolean:BooleanFunction:';
+
 		return [
-			'Boolean:BooleanFunction:Contains'      => 'contains \\( ((?&String)) , ((?&String)) \\)',
-			'Boolean:BooleanFunction:EndsWith'      => 'ends-with \\( ((?&String)) , ((?&String)) \\)',
-			'Boolean:BooleanFunction:NotContains'   => 'not \\( contains \\( ((?&String)) , ((?&String)) \\) \\)',
-			'Boolean:BooleanFunction:NotEndsWith'   => 'not \\( ends-with \\( ((?&String)) , ((?&String)) \\) \\)',
-			'Boolean:BooleanFunction:NotStartsWith' => 'not \\( starts-with \\( ((?&String)) , ((?&String)) \\) \\)',
-			'Boolean:BooleanFunction:StartsWith'    => 'starts-with \\( ((?&String)) , ((?&String)) \\)',
-			'Number:StringLength'                   => 'string-length \\( ((?&String))? \\)'
+			$groups . 'Contains'      => 'contains \\( ((?&String)) , ((?&String)) \\)',
+			$groups . 'EndsWith'      => 'ends-with \\( ((?&String)) , ((?&String)) \\)',
+			$groups . 'NotContains'   => 'not \\( contains \\( ((?&String)) , ((?&String)) \\) \\)',
+			$groups . 'NotEndsWith'   => 'not \\( ends-with \\( ((?&String)) , ((?&String)) \\) \\)',
+			$groups . 'NotStartsWith' => 'not \\( starts-with \\( ((?&String)) , ((?&String)) \\) \\)',
+			$groups . 'StartsWith'    => 'starts-with \\( ((?&String)) , ((?&String)) \\)',
+			'Number:StringLength'     => 'string-length \\( ((?&String))? \\)'
 		];
 	}
 
