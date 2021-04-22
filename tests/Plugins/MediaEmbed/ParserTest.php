@@ -1460,22 +1460,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('wsj');
 				}
 			],
-//			[
-//				'https://www.youtube.com/shared?ci=_OouqtitfX4',
-//				'<r><YOUTUBE id="qvW2nxnj9Tw">https://www.youtube.com/shared?ci=_OouqtitfX4</YOUTUBE></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					// Skip during cache preload
-//					if (isset($_SERVER['TRAVIS']) && isset($_SERVER['CACHE_PRELOAD']))
-//					{
-//						$this->markTestSkipped();
-//					}
-//
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('youtube');
-//				}
-//			],
 		];
 	}
 
@@ -4469,6 +4453,15 @@ class ParserTest extends Test
 			[
 				'https://www.youtube.com/playlist?list=PLagyxbJHFyL14ge59s3CSZkz_oFYFr6ob',
 				'<r><YOUTUBE list="PLagyxbJHFyL14ge59s3CSZkz_oFYFr6ob">https://www.youtube.com/playlist?list=PLagyxbJHFyL14ge59s3CSZkz_oFYFr6ob</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://www.youtube.com/shorts/QH2-TGUlwu4',
+				'<r><YOUTUBE id="QH2-TGUlwu4">https://www.youtube.com/shorts/QH2-TGUlwu4</YOUTUBE></r>',
 				[],
 				function ($configurator)
 				{

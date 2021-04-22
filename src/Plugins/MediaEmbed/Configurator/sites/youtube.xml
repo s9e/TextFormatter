@@ -17,14 +17,10 @@
 
 	<host>youtube.com</host>
 	<host>youtu.be</host>
-	<extract>!youtube\.com/(?:watch.*?v=|v/|attribution_link.*?v%3D)(?'id'[-\w]+)!</extract>
+	<extract>!youtube\.com/(?:watch.*?v=|shorts/|v/|attribution_link.*?v%3D)(?'id'[-\w]+)!</extract>
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
 	<extract>@[#&amp;?]t=(?'t'\d[\dhms]*)@</extract>
 	<extract>![&amp;?]list=(?'list'[-\w]+)!</extract>
-	<scrape>
-		<match>!/shared\?ci=!</match>
-		<extract>!/vi/(?'id'[-\w]+)!</extract>
-	</scrape>
 	<iframe>
 		<src><![CDATA[
 			<xsl:text>https://www.youtube.com/embed/</xsl:text>
