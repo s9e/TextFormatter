@@ -1147,6 +1147,16 @@ class ParserTest extends Test
 //				}
 //			],
 			[
+				'https://odysee.com/@veritasium:f/the-secret-of-synchronization:2',
+				'<r><ODYSEE id="21cdece6e3221864d9ea10d84f95a86cb8dad097">https://odysee.com/@veritasium:f/the-secret-of-synchronization:2</ODYSEE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('odysee');
+				}
+			],
+			[
 				'https://howtofail.podbean.com/e/how-to-fail-m-gawdat-c19/',
 				'<r><PODBEAN id="gmyyz-d6e065">https://howtofail.podbean.com/e/how-to-fail-m-gawdat-c19/</PODBEAN></r>',
 				[],
@@ -3241,6 +3251,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('nytimes');
+				}
+			],
+			[
+				'https://odysee.com/$/embed/the-secret-of-synchronization/21cdece6e3221864d9ea10d84f95a86cb8dad097',
+				'<r><ODYSEE id="21cdece6e3221864d9ea10d84f95a86cb8dad097">https://odysee.com/$/embed/the-secret-of-synchronization/21cdece6e3221864d9ea10d84f95a86cb8dad097</ODYSEE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('odysee');
+				}
+			],
+			[
+				'https://odysee.com/the-secret-of-synchronization:21cdece6e3221864d9ea10d84f95a86cb8dad097',
+				'<r><ODYSEE id="21cdece6e3221864d9ea10d84f95a86cb8dad097">https://odysee.com/the-secret-of-synchronization:21cdece6e3221864d9ea10d84f95a86cb8dad097</ODYSEE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('odysee');
 				}
 			],
 			[

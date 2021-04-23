@@ -1,0 +1,13 @@
+<site name="Odysee" homepage="https://odysee.com/">
+	<example>https://odysee.com/@veritasium:f/the-secret-of-synchronization:2</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>odysee.com</host>
+	<extract>#odysee\.com/(?:[-\w]+:|\$/\w+/[-\w]+/)(?'id'\w{40})#</extract>
+	<scrape>
+		<match>#odysee\.com/@[-\w]+:\w/\w#</match>
+		<extract>#odysee\.com/[-\w]+:(?'id'\w{40})#</extract>
+	</scrape>
+	<iframe src="https://odysee.com/$/embed/-/{@id}"/>
+</site>

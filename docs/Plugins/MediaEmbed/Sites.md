@@ -309,6 +309,10 @@
 		<td style="font-size:75%"><code>nytimes</code></td>
 		<td style="font-size:50%">https://www.nytimes.com/video/magazine/100000003166834/small-plates.html<br/>https://www.nytimes.com/video/technology/personaltech/100000002907606/soylent-taste-test.html<br/>https://www.nytimes.com/video/2012/12/17/business/100000001950744/how-wal-mart-conquered-teotihuacan.html<br/>https://movies.nytimes.com/movie/131154/Crooklyn/trailers</td>
 	</tr>
+	<tr title="Odysee" id="odysee">
+		<td style="font-size:75%"><code>odysee</code></td>
+		<td style="font-size:50%">https://odysee.com/@veritasium:f/the-secret-of-synchronization:2</td>
+	</tr>
 	<tr title="Orfium" id="orfium">
 		<td style="font-size:75%"><code>orfium</code></td>
 		<td style="font-size:50%">https://www.orfium.com/album/24371/everybody-loves-kanye-totom/<br/>https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/<br/>https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/<br/>https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/</td>
