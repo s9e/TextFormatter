@@ -1776,6 +1776,8 @@ Fix Unescaped Curly Braces In Html Attributes (s9e\TextFormatter\Tests\Configura
  [x] Works with data set #16
  [x] Works with data set #17
  [x] Works with data set #18
+ [x] Works with data set #19
+ [x] Works with data set #20
 
 Fold Arithmetic Constants (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldArithmeticConstants)
  [x] Ignores locale
