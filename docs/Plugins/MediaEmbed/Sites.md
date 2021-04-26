@@ -45,10 +45,6 @@
 		<td style="font-size:75%"><code>bleacherreport</code></td>
 		<td style="font-size:50%">https://bleacherreport.com/articles/2687569-how-bell-brown-have-shattered-records-on-steelers-historic-playoff-run</td>
 	</tr>
-	<tr title="Break" id="break">
-		<td style="font-size:75%"><code>break</code></td>
-		<td style="font-size:50%">https://www.break.com/video/video-game-playing-frog-wants-more-2278131</td>
-	</tr>
 	<tr title="Brightcove" id="brightcove">
 		<td style="font-size:75%"><code>brightcove</code></td>
 		<td style="font-size:50%">https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001<br/>https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</td>
@@ -132,10 +128,6 @@
 	<tr title="Gamespot" id="gamespot">
 		<td style="font-size:75%"><code>gamespot</code></td>
 		<td style="font-size:50%">https://www.gamespot.com/destiny/videos/destiny-the-moon-trailer-6415176/<br/>https://www.gamespot.com/events/game-crib-tsm-snapdragon/gamecrib-extras-cooking-with-dan-dinh-6412922/<br/>https://www.gamespot.com/videos/beat-the-pros-pax-prime-2013/2300-6414307/</td>
-	</tr>
-	<tr title="GameTrailers" id="gametrailers">
-		<td style="font-size:75%"><code>gametrailers</code></td>
-		<td style="font-size:50%">https://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</td>
 	</tr>
 	<tr title="Getty Images" id="getty">
 		<td style="font-size:75%"><code>getty</code></td>
@@ -264,10 +256,6 @@
 	<tr title="Mixcloud" id="mixcloud">
 		<td style="font-size:75%"><code>mixcloud</code></td>
 		<td style="font-size:50%">https://www.mixcloud.com/OneTakeTapes/timsch-one-take-tapes-2/</td>
-	</tr>
-	<tr title="Mixer" id="mixer">
-		<td style="font-size:75%"><code>mixer</code></td>
-		<td style="font-size:50%">https://mixer.com/Ninja<br/>https://mixer.com/Ninja?vod=p4sVuGe4Fk-4EPoN5enIzw</td>
 	</tr>
 	<tr title="MLB" id="mlb">
 		<td style="font-size:75%"><code>mlb</code></td>

@@ -619,16 +619,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('flickr');
 				}
 			],
-//			[
-//				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
-//				'<r><GAMETRAILERS id="2954127">http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream</GAMETRAILERS></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('gametrailers');
-//				}
-//			],
 			[
 				'https://gty.im/3232182',
 				'(<r><GETTY et="[-\\w]{22}" height="399" id="3232182" sig="[-\\w]{43}=" width="594">https://gty.im/3232182</GETTY></r>)',
@@ -1526,16 +1516,6 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('comedycentral');
 //				}
 //			],
-//			[
-//				'http://www.gametrailers.com/videos/view/pop-fiction/102300-Metal-Gear-Solid-3-Still-in-a-Dream',
-//				'<span data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//embed.gametrailers.com/embed/2954127?embed=1&amp;suppressBumper=1"></iframe></span></span>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('gametrailers');
-//				}
-//			],
 			[
 				'https://www.gettyimages.com/detail/3232182',
 				'(<span data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:67\\.1717171717172%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\w]{22}&amp;tld=com&amp;sig=[-\w]{43}=&amp;caption=false&amp;ver=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>)',
@@ -1930,15 +1910,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('bitchute');
-				}
-			],
-			[
-				'http://www.break.com/video/video-game-playing-frog-wants-more-2278131',
-				'<r><BREAK id="2278131">http://www.break.com/video/video-game-playing-frog-wants-more-2278131</BREAK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('break');
 				}
 			],
 			[
@@ -3078,42 +3049,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('mixcloud');
-				}
-			],
-			[
-				'https://mixer.com/Ninja',
-				'<r><MIXER channel="Ninja">https://mixer.com/Ninja</MIXER></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('mixer');
-				}
-			],
-			[
-				'https://mixer.com/Ninja?vod=p4sVuGe4Fk-4EPoN5enIzw',
-				'<r><MIXER channel="Ninja" vod="p4sVuGe4Fk-4EPoN5enIzw">https://mixer.com/Ninja?vod=p4sVuGe4Fk-4EPoN5enIzw</MIXER></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('mixer');
-				}
-			],
-			[
-				'https://mixer.com/Ninja?clip=bW6ij9V7Dk-lOObMl0wiAg',
-				'<t>https://mixer.com/Ninja?clip=bW6ij9V7Dk-lOObMl0wiAg</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('mixer');
-				}
-			],
-			[
-				'https://mixer.com/browse/games/70323/fortnite',
-				'<t>https://mixer.com/browse/games/70323/fortnite</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('mixer');
 				}
 			],
 			[
@@ -5449,14 +5384,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('hudl');
-				}
-			],
-			[
-				'<r><GAMETRAILERS id="mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c">http://www.gametrailers.com/videos/jz8rt1/tom-clancy-s-the-division-vgx-2013--world-premiere-featurette-</GAMETRAILERS></r>',
-				'<span data-s9e-mediaembed="gametrailers" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//media.mtvnservices.com/embed/mgid:arc:video:gametrailers.com:85dee3c3-60f6-4b80-8124-cf3ebd9d2a6c"></iframe></span></span>',
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('gametrailers');
 				}
 			],
 			[

@@ -1,9 +1,0 @@
-<site name="Break" homepage="https://www.break.com/">
-	<example>https://www.break.com/video/video-game-playing-frog-wants-more-2278131</example>
-
-	<tags><tag>entertainment</tag></tags>
-
-	<host>break.com</host>
-	<extract>!break\.com/video/.*-(?'id'\d+)$!</extract>
-	<iframe width="464" height="280" src="//break.com/embed/{@id}"/>
-</site>
