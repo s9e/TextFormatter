@@ -4,10 +4,10 @@
 	<tags><tag>videos</tag></tags>
 
 	<host>odysee.com</host>
-	<extract>#odysee\.com/(?:[-\w]+:|\$/\w+/[-\w]+/)(?'id'\w{40})#</extract>
+	<extract>#odysee\.com/(?:[^/:]+:|\$/\w+/[^/:]+/)(?'id'\w{40})#</extract>
 	<scrape>
-		<match>#odysee\.com/@[-\w]+:\w/\w#</match>
-		<extract>#odysee\.com/[-\w]+:(?'id'\w{40})#</extract>
+		<match>#odysee\.com/@[^/:]+:\w+/.#</match>
+		<extract>#odysee\.com/[^/:]+:(?'id'\w{40})#</extract>
 	</scrape>
 	<iframe src="https://odysee.com/$/embed/-/{@id}"/>
 </site>

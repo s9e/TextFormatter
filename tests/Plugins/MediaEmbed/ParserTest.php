@@ -1147,8 +1147,8 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'https://odysee.com/@veritasium:f/the-secret-of-synchronization:2',
-				'<r><ODYSEE id="21cdece6e3221864d9ea10d84f95a86cb8dad097">https://odysee.com/@veritasium:f/the-secret-of-synchronization:2</ODYSEE></r>',
+				'https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8',
+				'<r><ODYSEE id="8726b01100463c4e254a38c3108ef3e05791aeda">https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8</ODYSEE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3265,6 +3265,15 @@ class ParserTest extends Test
 			[
 				'https://odysee.com/the-secret-of-synchronization:21cdece6e3221864d9ea10d84f95a86cb8dad097',
 				'<r><ODYSEE id="21cdece6e3221864d9ea10d84f95a86cb8dad097">https://odysee.com/the-secret-of-synchronization:21cdece6e3221864d9ea10d84f95a86cb8dad097</ODYSEE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('odysee');
+				}
+			],
+			[
+				'https://odysee.com/Deni-Juric-Goal-2-0-ŠIBENIK-vs-SLAVEN-Apr21:8726b01100463c4e254a38c3108ef3e05791aeda',
+				'<r><ODYSEE id="8726b01100463c4e254a38c3108ef3e05791aeda">https://odysee.com/Deni-Juric-Goal-2-0-ŠIBENIK-vs-SLAVEN-Apr21:8726b01100463c4e254a38c3108ef3e05791aeda</ODYSEE></r>',
 				[],
 				function ($configurator)
 				{
