@@ -594,7 +594,7 @@ class RegexpBuilderTest extends Test
 
 		$expected = $data[$k][0];
 		$words    = $data[$k][1];
-		$options  = (isset($data[$k][2])) ? $data[$k][2] : [];
+		$options  = $data[$k][2] ?? [];
 
 		$this->assertSame($expected, RegexpBuilder::fromList($words, $options));
 	}

@@ -145,7 +145,7 @@ function patchFile($filepath)
 		"#(?<=\n)(?:(/[*]+\n(?:[*](?! @method).*\n)*?)(?:[*]\n)*(?:[*] @method.*\n)*[*]/\n)?class#",
 		function ($m) use ($methods)
 		{
-			$doc = (isset($m[1])) ? $m[1] : "\n/**\n";
+			$doc = $m[1] ?? "\n/**\n";
 
 			foreach ($methods as $text)
 			{

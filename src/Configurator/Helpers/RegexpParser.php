@@ -197,7 +197,7 @@ abstract class RegexpParser
 		{
 			if ($tok['type'] === 'capturingSubpatternStart')
 			{
-				$map[] = (isset($tok['name'])) ? $tok['name'] : '';
+				$map[] = $tok['name'] ?? '';
 			}
 		}
 

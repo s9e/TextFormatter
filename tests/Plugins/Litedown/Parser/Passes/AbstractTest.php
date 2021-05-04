@@ -36,7 +36,7 @@ abstract class AbstractTest extends Test
 				$test[2] = [];
 			}
 
-			$callback = (isset($test[3])) ? $test[3] : null;
+			$callback = $test[3] ?? null;
 			$test[3] = function ($configurator) use ($callback)
 			{
 				if (isset($callback))

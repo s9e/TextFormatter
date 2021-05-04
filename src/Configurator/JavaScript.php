@@ -132,7 +132,7 @@ class JavaScript
 		$this->xsl = $xslt->getXSL($this->configurator->rendering);
 
 		// Prepare the parser's config
-		$this->config = (isset($config)) ? $config : $this->configurator->asConfig();
+		$this->config = $config ?? $this->configurator->asConfig();
 		$this->config = ConfigHelper::filterConfig($this->config, 'JS');
 		$this->config = $this->callbackGenerator->replaceCallbacks($this->config);
 

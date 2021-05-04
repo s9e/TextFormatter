@@ -202,7 +202,7 @@ class FilterProcessing
 		{
 			foreach ($filter['params'] as $k => $v)
 			{
-				$args[] = (isset($vars[$k])) ? $vars[$k] : $v;
+				$args[] = $vars[$k] ?? $v;
 			}
 		}
 

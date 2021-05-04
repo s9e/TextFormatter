@@ -391,7 +391,7 @@ class Configurator extends ConfiguratorBase
 			}
 			$this->captures[] = [
 				'pos'    => $token['pos'],
-				'name'   => (isset($token['name'])) ? $token['name'] : null,
+				'name'   => $token['name'] ?? null,
 				'expr'   => $token['content']
 			];
 		}

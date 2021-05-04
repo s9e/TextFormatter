@@ -31,7 +31,7 @@ abstract class Http
 	public static function getCachingClient($cacheDir = null)
 	{
 		$client = new Cached(self::getClient());
-		$client->cacheDir = (isset($cacheDir)) ? $cacheDir : sys_get_temp_dir();
+		$client->cacheDir = $cacheDir ?? sys_get_temp_dir();
 
 		return $client;
 	}

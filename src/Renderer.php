@@ -103,7 +103,7 @@ abstract class Renderer
 	*/
 	public function getParameter($paramName)
 	{
-		return (isset($this->params[$paramName])) ? $this->params[$paramName] : '';
+		return $this->params[$paramName] ?? '';
 	}
 
 	/**

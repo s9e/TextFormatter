@@ -184,7 +184,7 @@ class RulesGenerator implements ArrayAccess, Iterator
 		foreach ($tags as $tagName => $tag)
 		{
 			// Use the tag's template if applicable or XSLT's implicit default otherwise
-			$template = (isset($tag->template)) ? $tag->template : '<xsl:apply-templates/>';
+			$template = $tag->template ?? '<xsl:apply-templates/>';
 			$tagInspectors[$tagName] = new TemplateInspector($template);
 		}
 

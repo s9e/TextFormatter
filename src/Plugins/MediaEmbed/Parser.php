@@ -200,7 +200,7 @@ class Parser extends ParserBase
 			'(\\{@(\\w+)\\})',
 			function ($m) use ($vars)
 			{
-				return (isset($vars[$m[1]])) ? $vars[$m[1]] : '';
+				return $vars[$m[1]] ?? '';
 			},
 			$str
 		);

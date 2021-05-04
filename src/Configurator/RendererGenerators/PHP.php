@@ -97,7 +97,7 @@ class PHP implements RendererGenerator
 	*/
 	public function __construct($cacheDir = null)
 	{
-		$this->cacheDir = (isset($cacheDir)) ? $cacheDir : sys_get_temp_dir();
+		$this->cacheDir = $cacheDir ?? sys_get_temp_dir();
 		if (extension_loaded('tokenizer'))
 		{
 			$this->controlStructuresOptimizer = new ControlStructuresOptimizer;

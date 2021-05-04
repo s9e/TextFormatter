@@ -357,7 +357,7 @@ class ElementInspector
 	*/
 	protected static function getProperties(DOMElement $element)
 	{
-		return (isset(self::$htmlElements[$element->nodeName])) ? self::$htmlElements[$element->nodeName] : self::$htmlElements['span'];
+		return self::$htmlElements[$element->nodeName] ?? self::$htmlElements['span'];
 	}
 
 	/**
