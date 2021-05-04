@@ -540,11 +540,12 @@ class TemplateInspectorTest extends Test
 				'allowsChild',
 				'<span/>'
 			],
-			// https://www.w3.org/TR/html52/changes.html#fixing-bugs-and-matching-reality-better
 			[
-				'<div> allows <style> as child',
+				// https://www.w3.org/TR/html52/changes.html#fixing-bugs-and-matching-reality-better
+				// Reverted: https://html.spec.whatwg.org/multipage/semantics.html#the-style-element
+				'<div> denies <style> as child',
 				'<div><xsl:apply-templates/></div>',
-				'allowsChild',
+				'!allowsChild',
 				'<style/>'
 			],
 			[
