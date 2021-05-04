@@ -42,7 +42,7 @@ foreach ($xpath->query($query) as $a)
 	}
 }
 
-$page  = loadPage('http://w3c.github.io/html/fullindex.html');
+$page  = loadPage('https://html.spec.whatwg.org/multipage/indices.html');
 $xpath = new DOMXPath($page);
 $query = '//table[@id="attributes-1"]/tbody/tr/th';
 foreach ($xpath->query($query) as $th)
