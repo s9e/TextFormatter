@@ -148,10 +148,10 @@ function parseAttributes()
 		}
 
 		// Capture the attribute name
-		var spn = /^[-\w]*/.exec(text.substr(pos, 100))[0].length;
+		var spn = /^[-\w]*/.exec(text.substring(pos, pos + 100))[0].length;
 		if (spn)
 		{
-			attrName = text.substr(pos, spn).toLowerCase();
+			attrName = text.substring(pos, pos + spn).toLowerCase();
 			pos += spn;
 			if (pos >= textLen)
 			{
@@ -206,7 +206,7 @@ function parseAttributeValue()
 	// NOTE: this is for compatibility with some forums (such as vBulletin it seems)
 	//       that do not put attribute values in quotes, e.g.
 	//       [quote=John Smith;123456] (quoting "John Smith" from post #123456)
-	var match     = /(?:[^\s\]]|[ \t](?!\s*(?:[-\w]+=|\/?\])))*/.exec(text.substr(pos)),
+	var match     = /(?:[^\s\]]|[ \t](?!\s*(?:[-\w]+=|\/?\])))*/.exec(text.substring(pos)),
 		attrValue = match[0];
 	pos += attrValue.length;
 
@@ -256,7 +256,7 @@ function parseBBCode()
 	else
 	{
 		// Test whether this is a self-closing tag
-		if (text.substr(pos, 2) === '/]')
+		if (text.substring(pos, pos + 2) === '/]')
 		{
 			pos += 2;
 			addBBCodeSelfClosingTag();
@@ -285,7 +285,7 @@ function parseBBCode()
 	{
 		contentAttributes.forEach(function(attrName)
 		{
-			attributes[attrName] = text.substr(pos, endTag.getPos() - pos);
+			attributes[attrName] = text.substring(pos, endTag.getPos());
 		});
 	}
 	else if (requireEndTag)
@@ -315,7 +315,7 @@ function parseBBCodeSuffix()
 	if (text[pos] === ':')
 	{
 		// Capture the colon and the (0 or more) digits following it
-		bbcodeSuffix = /^:\d*/.exec(text.substr(pos))[0];
+		bbcodeSuffix = /^:\d*/.exec(text.substring(pos))[0];
 
 		// Move past the suffix
 		pos += bbcodeSuffix.length;
@@ -350,7 +350,7 @@ function parseQuotedAttributeValue()
 	}
 	while (n % 2 === 0);
 
-	var attrValue = text.substr(valuePos, pos - valuePos);
+	var attrValue = text.substring(valuePos, pos);
 	if (attrValue.indexOf('\\') > -1)
 	{
 		attrValue = attrValue.replace(/\\([\\'"])/g, '$1');

@@ -255,7 +255,7 @@ function parseSymbolsAfterDigits()
 		}
 
 		// Test for an apostrophe/prime right after the digit
-		var str = m[0].substr(1, 2);
+		var str = m[0].substring(1, 3);
 		if (map[str])
 		{
 			addTag(m.index + 1, 1, map[str]);

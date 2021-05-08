@@ -27,7 +27,7 @@ function addLine(line)
 
 		// Make the table start at the first non-space character
 		ignoreLen = /^ */.exec(line)[0].length;
-		line      = line.substr(ignoreLen);
+		line      = line.substring(ignoreLen);
 	}
 
 	// Overwrite the outermost pipes

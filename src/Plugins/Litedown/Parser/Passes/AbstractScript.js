@@ -64,7 +64,7 @@ function parseAbstractScript(tagName, syntaxChar, shortRegexp, longRegexp)
 				matchPos = m.index,
 				matchLen = match.length,
 				startPos = matchPos,
-				endLen   = (match.substr(-1) === syntaxChar) ? 1 : 0,
+				endLen   = (match.charAt(matchLen - 1) === syntaxChar) ? 1 : 0,
 				endPos   = matchPos + matchLen - endLen;
 
 			addTagPair(tagName, startPos, 1, endPos, endLen);

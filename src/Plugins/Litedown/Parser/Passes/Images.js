@@ -46,7 +46,7 @@ function parseInlineImages()
 			startPos = m.index,
 			endLen   = 3 + linkInfo.length,
 			endPos   = startPos + m[0].length - endLen,
-			alt      = m[0].substr(2, m[0].length - endLen - 2);
+			alt      = m[0].substring(2, m[0].length - endLen);
 
 		addImageTag(startPos, endPos, endLen, linkInfo, alt);
 	}

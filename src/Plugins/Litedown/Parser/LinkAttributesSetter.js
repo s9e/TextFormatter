@@ -12,8 +12,8 @@ function setLinkAttributes(tag, linkInfo, attrName)
 		pos   = url.indexOf(' ');
 	if (pos !== -1)
 	{
-		title = url.substr(pos).replace(/^\s*\S/, '').replace(/\S\s*$/, '');
-		url   = url.substr(0, pos);
+		title = url.substring(pos).replace(/^\s*\S/, '').replace(/\S\s*$/, '');
+		url   = url.substring(0, pos);
 	}
 	if (/^<.+>$/.test(url))
 	{

@@ -410,7 +410,7 @@ function outputTag(tag)
 
 	// Capture the text consumed by the tag
 	var tagText = (tagLen)
-				? htmlspecialchars_noquotes(text.substr(tagPos, tagLen))
+				? htmlspecialchars_noquotes(text.substring(tagPos, tagPos + tagLen))
 				: '';
 
 	// Output current tag
@@ -428,7 +428,7 @@ function outputTag(tag)
 			var colonPos = tagName.indexOf(':');
 			if (colonPos > 0)
 			{
-				namespaces[tagName.substr(0, colonPos)] = 0;
+				namespaces[tagName.substring(0, colonPos)] = 0;
 			}
 		}
 
@@ -536,7 +536,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	if (wsPos > pos)
 	{
 		var skipPos = Math.min(catchupPos, wsPos);
-		output += text.substr(pos, skipPos - pos);
+		output += text.substring(pos, skipPos);
 		pos = skipPos;
 
 		if (pos >= catchupPos)
@@ -549,13 +549,12 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		}
 	}
 
-	var catchupLen, catchupText;
+	var catchupText;
 
 	// Test whether we're even supposed to output anything
 	if (HINT.RULE_IGNORE_TEXT && context.flags & RULE_IGNORE_TEXT)
 	{
-		catchupLen  = catchupPos - pos,
-		catchupText = text.substr(pos, catchupLen);
+		catchupText = text.substring(pos, catchupPos);
 
 		// If the catchup text is not entirely composed of whitespace, we put it inside ignore tags
 		if (!/^[ \n\t]*$/.test(catchupText))
@@ -627,7 +626,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	if (catchupPos > pos)
 	{
 		catchupText = htmlspecialchars_noquotes(
-			text.substr(pos, catchupPos - pos)
+			text.substring(pos, catchupPos)
 		);
 
 		// Format line breaks if applicable
@@ -648,7 +647,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	// Add the ignored text if applicable
 	if (ignoreLen)
 	{
-		output += text.substr(catchupPos, ignoreLen);
+		output += text.substring(catchupPos, catchupPos + ignoreLen);
 	}
 
 	// Move the cursor past the text
@@ -677,7 +676,7 @@ function outputIgnoreTag(tag)
 		tagLen = tag.getLen();
 
 	// Capture the text to ignore
-	var ignoreText = text.substr(tagPos, tagLen);
+	var ignoreText = text.substring(tagPos, tagPos + tagLen);
 
 	// Catch up with the tag's position then output the tag
 	outputText(tagPos, 0, false);
@@ -1015,7 +1014,7 @@ function createChild(tag)
 	if (tagConfig.rules.createChild)
 	{
 		var priority = -1000,
-			_text    = text.substr(pos),
+			_text    = text.substring(pos),
 			tagPos   = pos + _text.length - _text.replace(/^[ \n\r\t]+/, '').length;
 		tagConfig.rules.createChild.forEach(function(tagName)
 		{
@@ -1872,7 +1871,7 @@ function addTag(type, name, pos, len, prio)
 */
 function isInvalidTextSpan(pos, len)
 {
-	return (len < 0 || pos < 0 || pos + len > textLen || /[\uDC00-\uDFFF]/.test(text.substr(pos, 1) + text.substr(pos + len, 1)));
+	return (len < 0 || pos < 0 || pos + len > textLen || /[\uDC00-\uDFFF]/.test(text.substring(pos, pos + 1) + text.substring(pos + len, pos + len + 1)));
 }
 
 /**
@@ -2016,5 +2015,5 @@ function hex32(number)
 {
 	var hex = number.toString(16);
 
-	return "        ".substr(hex.length) + hex;
+	return "        ".substring(hex.length) + hex;
 }

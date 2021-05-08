@@ -66,7 +66,7 @@ function captureAttributes(tag, elName, str)
 		// Remove quotes around the value
 		if (/^["']/.test(attrValue))
 		{
-			attrValue = attrValue.substr(1, attrValue.length - 2);
+			attrValue = attrValue.substring(1, attrValue.length - 1);
 		}
 
 		tag.setAttribute(attrName, html_entity_decode(attrValue));

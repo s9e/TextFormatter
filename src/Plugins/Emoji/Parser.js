@@ -116,7 +116,7 @@ function parseShortnames(text)
 		}
 		else if (/^:[0-3][0-9a-f]{3,4}(?:-[0-9a-f]{4,5})*:$/.test(alias))
 		{
-			addTag(tagPos, tagLen, alias.substr(1, tagLen - 2));
+			addTag(tagPos, tagLen, alias.substring(1, tagLen - 1));
 		}
 	}
 }

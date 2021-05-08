@@ -142,7 +142,7 @@ function isWhitespace(chr)
 */
 function markBoundary(pos)
 {
-	text = text.substr(0, pos) + "\x17" + text.substr(pos + 1);
+	text = text.substring(0, pos) + "\x17" + text.substring(pos + 1);
 }
 
 /**
@@ -155,6 +155,6 @@ function overwrite(pos, len)
 {
 	if (len > 0)
 	{
-		text = text.substr(0, pos) + new Array(1 + len).join("\x1A") + text.substr(pos + len);
+		text = text.substring(0, pos) + new Array(1 + len).join("\x1A") + text.substring(pos + len);
 	}
 }
