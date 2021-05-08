@@ -3216,6 +3216,7 @@ Url Filter (s9e\TextFormatter\Tests\Parser\AttributeFilters\UrlFilter)
  [x] Filter with data set #59
  [x] Filter with data set #60
  [x] Filter with data set #61
+ [x] Filter with data set #62
  [x] J s filter with data set #0
  [x] J s filter with data set #1
  [x] J s filter with data set #2
@@ -3278,6 +3279,7 @@ Url Filter (s9e\TextFormatter\Tests\Parser\AttributeFilters\UrlFilter)
  [x] J s filter with data set #59
  [x] J s filter with data set #60
  [x] J s filter with data set #61
+ [x] J s filter with data set #62
 
 Parser (s9e\TextFormatter\Tests\Parser)
  [x] Parser is serializable
@@ -5498,7 +5500,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #61
  [x] Scraping tests with data set #62
  [x] Scraping tests with data set #63
- [x] Scraping tests with data set #64
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
@@ -5856,7 +5857,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #304
  [x] Parsing tests with data set #305
  [x] Parsing tests with data set #306
- [x] Parsing tests with data set #307
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -6164,7 +6164,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #304
  [x] Parsing tests (JavaScript) with data set #305
  [x] Parsing tests (JavaScript) with data set #306
- [x] Parsing tests (JavaScript) with data set #307
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2

@@ -827,6 +827,11 @@ class UrlFilterTest extends AbstractFilterTest
 					$configurator->urlConfig->allowScheme('mailto');
 				}
 			],
+			[
+				new UrlFilter,
+				'http://example.org/ !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~',
+				'http://example.org/%20!%22#$%25&%27%28%29*+,-./0123456789:;%3C=%3E?@ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60abcdefghijklmnopqrstuvwxyz%7B%7C%7D~'
+			],
 		];
 	}
 }

@@ -183,7 +183,13 @@ var UrlFilter =
 	*/
 	sanitizeUrl: function(url)
 	{
-		return url.replace(/[^\u0020-\u007E]+/g, encodeURIComponent).replace(/%(?![0-9A-Fa-f]{2})|[^!#-&*-;=?-Z_a-z~]/g, escape);
+		return url.replace(/[^\u0020-\u007E]+/g, encodeURIComponent).replace(
+			/%(?![0-9A-Fa-f]{2})|[^!#-&*-;=?-Z_a-z~]/g,
+			function (m)
+			{
+				return '%' + m[0].charCodeAt(0).toString(16).toUpperCase();
+			}
+		);
 	},
 
 	/**
