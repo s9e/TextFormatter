@@ -1014,16 +1014,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('libsyn');
 				}
 			],
-			[
-				'https://www.liveleak.com/view?t=sby0J_1571998103',
-				'<r><LIVELEAK id="Szpn_1571998103">https://www.liveleak.com/view?t=sby0J_1571998103</LIVELEAK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('liveleak');
-				}
-			],
+//			[
+//				'https://www.liveleak.com/view?t=sby0J_1571998103',
+//				'<r><LIVELEAK id="Szpn_1571998103">https://www.liveleak.com/view?t=sby0J_1571998103</LIVELEAK></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('liveleak');
+//				}
+//			],
 //			[
 //				'http://livestre.am/1aHRU',
 //				'<r><LIVESTREAM channel="maps_cp" clip_id="pla_d1501f90-438c-401d-98ae-e96ab34a09ae">http://livestre.am/1aHRU</LIVESTREAM></r>',
@@ -2871,15 +2871,15 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('kickstarter');
 				}
 			],
-			[
-				'https://www.liveleak.com/view?i=Clka1_1520190526',
-				'<r><LIVELEAK id="Clka1_1520190526">https://www.liveleak.com/view?i=Clka1_1520190526</LIVELEAK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('liveleak');
-				}
-			],
+//			[
+//				'https://www.liveleak.com/view?i=Clka1_1520190526',
+//				'<r><LIVELEAK id="Clka1_1520190526">https://www.liveleak.com/view?i=Clka1_1520190526</LIVELEAK></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->MediaEmbed->add('liveleak');
+//				}
+//			],
 			[
 				'http://new.livestream.com/accounts/9999999999/events/9999999999',
 				'<r><LIVESTREAM account_id="9999999999" event_id="9999999999">http://new.livestream.com/accounts/9999999999/events/9999999999</LIVESTREAM></r>',
