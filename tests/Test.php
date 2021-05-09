@@ -159,6 +159,7 @@ abstract class Test extends TestCase
 		if (!isset($exec))
 		{
 			$interpreters = [
+				'duk'  => ['print', ''],
 				'js78' => ['print', ''],
 				'd8'   => ['print', ''],
 				'node' => ['console.log', '']
