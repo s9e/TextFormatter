@@ -1,3 +1,27 @@
+2.9.1 (2021-05-09)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/d764e9e4ac70b9bc398afe15b45b27568aa3ff23...e58944ee6476cf3732add1c042c40845fa3ee87d)
+
+### Added
+
+ - `2091db6b6` FixUnescapedCurlyBracesInHtmlAttributes: added support for arrow functions
+ - `129691ddd` MediaEmbed: added Odysee
+
+### Removed
+
+ - `ce1817bf0` MediaEmbed: removed defunct sites Break, GameTrailers, and Mixer
+
+### Changed
+
+ - `16a01b3df` ElementInspector: updated definitions from HTML specs
+ - `70e05f3c3` JavaScript: replaced substr() with substring()
+ - `632452c0a` MediaEmbed: updated Odysee
+ - `fa6ce8f1a` MediaEmbed: updated YouTube
+ - `b680fbcd0` Replaced ternaries with null coalescing operators
+ - `e51239b7e` UrlFilter: updated regexp and JavaScript version
+
+
 2.9.0 (2021-04-17)
 ==================
 
