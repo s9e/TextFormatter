@@ -1609,6 +1609,7 @@ Stylesheet Compressor (s9e\TextFormatter\Tests\Configurator\StylesheetCompressor
  [x] encode() tests with data set #3
  [x] encode() tests with data set #4
  [x] encode() tests with data set #5
+ [x] encode() tests with data set #6
 
 Recursive Parser (s9e\TextFormatter\Tests\Configurator\RecursiveParser)
  [x] Throws an exception if the input cannot be matched
