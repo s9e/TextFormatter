@@ -1,3 +1,13 @@
+2.9.2 (2021-05-17)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/e81057d923f654f1fa6a5a6ed22c872723ff6c33...d7b5af5a7e90c2d2aa203aa4209fe04c71112b21)
+
+### Fixed
+
+ - `5df3c57b9` StylesheetCompressor: fixed an issue with UTF-8 chars incorrectly split
+
+
 2.9.1 (2021-05-09)
 ==================
 
