@@ -1,3 +1,14 @@
+2.9.3 (2021-05-30)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/918f105365229056cb2b8710fc2e2470f4783ae4...699577a02f4d0fd0c6d91900caf1888fc895b8ac)
+
+### Changed
+
+ - `fd0df9fe2` BBCodes: updated default CODE BBCode
+ - `699577a02` Quick renderer: do not transform switch statements
+
+
 2.9.2 (2021-05-17)
 ==================
 
