@@ -10,7 +10,7 @@
 		"ext-dom":    "*",
 		"ext-filter": "*",
 		"lib-pcre":   ">=8.13",
-
+		"nette/php-generator": "^3.2 || ^4.0",
 		"s9e/regexp-builder": "^1.4",
 		"s9e/sweetdom":       "^3.4"
 	},
