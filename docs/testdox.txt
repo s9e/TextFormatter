@@ -6720,6 +6720,7 @@ Quick (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick)
  [x] Rendering strategy with data set #27
  [x] Rendering strategy with data set #28
  [x] Rendering strategy with data set #29
+ [x] Rendering strategy with data set #30
  [x] Source with data set #0
  [x] Source with data set #1
  [x] Source with data set #2

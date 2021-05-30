@@ -605,6 +605,10 @@ class QuickTest extends Test
 				'<b title="{.}"><xsl:apply-templates/></b>',
 				[]
 			],
+			[
+				'<xsl:choose><xsl:when test="@a=1"/><xsl:when test="@a=2"/><xsl:otherwise><xsl:apply-templates/></xsl:otherwise></xsl:choose>',
+				[]
+			],
 		];
 	}
 

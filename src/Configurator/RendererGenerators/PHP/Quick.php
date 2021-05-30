@@ -158,8 +158,8 @@ class Quick
 	*/
 	protected static function getQuickRendering($php)
 	{
-		// xsl:apply-templates elements with a select expression are not supported
-		if (preg_match('(\\$this->at\\((?!\\$node\\);))', $php))
+		// xsl:apply-templates elements with a select expression and switch statements are not supported
+		if (preg_match('(\\$this->at\\((?!\\$node\\);)|switch\()', $php))
 		{
 			return [];
 		}
