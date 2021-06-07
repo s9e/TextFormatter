@@ -55,9 +55,9 @@
 					<xsl:apply-templates />
 				</code>
 				<script async="" crossorigin="anonymous">
-					<xsl:if test="'default' != ']]><var name='style' description='highlight.js style name (or &quot;none&quot;)'>github-gist</var><![CDATA['">
+					<xsl:if test="'default' != ']]><var name='style' description='highlight.js style name (or &quot;none&quot;)'>github</var><![CDATA['">
 						<xsl:attribute name="data-hljs-style">]]>
-							<var name='style'>github-gist</var>
+							<var name='style'>github</var>
 						<![CDATA[</xsl:attribute>
 					</xsl:if>
 					<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.0/build/' != ']]><var name='url' description='highlight.js CDN URL'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.0/build/</var><![CDATA['">
