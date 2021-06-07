@@ -12,3 +12,9 @@ tr:target
 {
 	outline: red solid 2px;
 }
+/* Plugins/BBCodes/Add_from_the_repository.md */
+h6
+{
+	line-height:   2em;
+	margin-bottom: 0;
+}

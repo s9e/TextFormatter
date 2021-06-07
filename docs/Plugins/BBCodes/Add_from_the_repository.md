@@ -19,6 +19,7 @@ echo $html;
 Here be <a href="http://example.org">the <b>bold</b> <i>italic</i> URL</a>.
 ```
 
+
 ### Add a configurable BBCode from the bundled repository
 
 ```php
@@ -38,6 +39,29 @@ echo $html;
 <span style="font-size:5px">Smallest</span>
 <span style="font-size:40px">Biggest</span>
 ```
+
+
+### Inspect BBCodes from the bundled repository
+
+The definitions from the bundled `default` repository can be retrieved by name via the BBCodes plugin without actually creating the corresponding BBCodes. The returned array contains the BBCode's name, a [BBCode object](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Plugins/BBCodes/Configurator/BBCode.html), and a [Tag object](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Configurator/Items/Tag.html).
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+$definition = $configurator->BBCodes->repositories['default']->get('B');
+
+var_dump(trim($definition['tag']->template));
+var_export(array_keys($definition));
+```
+```
+string(29) "<b><xsl:apply-templates/></b>"
+array (
+  0 => 'bbcode',
+  1 => 'bbcodeName',
+  2 => 'tag',
+)
+```
+
 
 ### List of bundled BBCodes
 
