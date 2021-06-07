@@ -66,9 +66,9 @@
 						<![CDATA[</xsl:attribute>
 					</xsl:if>
 					<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
-					<xsl:attribute name="integrity">sha384-ApZEJ0Xp885xfW2XkSo/ExMDLktFehU+dHjw7BJHxQCFf1PBDYVkMo8qZSO5lqoa</xsl:attribute>
+					<xsl:attribute name="integrity">sha384-t+82niWiIIbaln9oQeGls7B9M6d5/fZztzYzNtizyxznmrh/vGK2ZOkvvUKXGfA/</xsl:attribute>
 					<xsl:attribute name="onload">hljsLoader.highlightBlocks(this.parentNode)</xsl:attribute>
-					<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.22/loader.min.js</xsl:attribute>
+					<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.23/loader.min.js</xsl:attribute>
 				</script>
 			</pre>
 		]]></template>
