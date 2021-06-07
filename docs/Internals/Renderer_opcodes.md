@@ -24,21 +24,24 @@ TODO: add output_method=(text|html) to buffer_transform.
 	<dt>buffer_xpath</dt>
 	<dd>Append the result of XPath expression <code>select</code> to buffer <code>id</code>, escaped using the <code>escape</code> method.</dd>
 
-	<dt>block_choose</dt>
-	<dd></dd>
-
-	<dt>block_match</dt>
+	<dt>conditional_match</dt>
 	<dd>Match each condition of this block against the string value of XPath expression <code>select</code>.</dd>
+
+	<dt>conditional_test</dt>
+	<dd></dd>
 
 	<dt>clear_buffer</dt>
 	<dd>Set the value of buffer <code>id</code> to an empty string.</dd>
 
-	<dt>condition_match</dt>
+	<dt>condition_match_literal</dt>
 	<dd>Match literal string <code>value</code> against this block's value.</dd>
 
-	<dt>condition_otherwise</dt>
+	<dt>condition_match_default</dt>
 	<dd></dd>
 
-	<dt>condition_when</dt>
+	<dt>condition_test_default</dt>
+	<dd></dd>
+
+	<dt>condition_test_xpath</dt>
 	<dd><code>test</code></dd>
 </dl>
