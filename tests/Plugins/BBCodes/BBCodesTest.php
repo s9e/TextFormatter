@@ -162,11 +162,11 @@ class BBCodesTest extends Test
 			],
 			[
 				'[code]echo "Hello world";[/code]',
-				'<pre><code>echo "Hello world";</code><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-ApZEJ0Xp885xfW2XkSo/ExMDLktFehU+dHjw7BJHxQCFf1PBDYVkMo8qZSO5lqoa" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.22/loader.min.js"></script></pre>',
+				'<pre><code>echo "Hello world";</code><script async="" crossorigin="anonymous" data-hljs-style="github" integrity="sha384-ApZEJ0Xp885xfW2XkSo/ExMDLktFehU+dHjw7BJHxQCFf1PBDYVkMo8qZSO5lqoa" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.22/loader.min.js"></script></pre>',
 			],
 			[
 				'[code=html]<b>Hello world</b>[/code]',
-				'<pre><code class="language-html">&lt;b&gt;Hello world&lt;/b&gt;</code><script async="" crossorigin="anonymous" data-hljs-style="github-gist" integrity="sha384-ApZEJ0Xp885xfW2XkSo/ExMDLktFehU+dHjw7BJHxQCFf1PBDYVkMo8qZSO5lqoa" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.22/loader.min.js"></script></pre>',
+				'<pre><code class="language-html">&lt;b&gt;Hello world&lt;/b&gt;</code><script async="" crossorigin="anonymous" data-hljs-style="github" integrity="sha384-ApZEJ0Xp885xfW2XkSo/ExMDLktFehU+dHjw7BJHxQCFf1PBDYVkMo8qZSO5lqoa" onload="hljsLoader.highlightBlocks(this.parentNode)" src="https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.22/loader.min.js"></script></pre>',
 			],
 			[
 				'[code]echo "Hello world";[/code]',

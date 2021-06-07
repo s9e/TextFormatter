@@ -88,9 +88,9 @@ echo $html;
 		<xsl:apply-templates />
 	</code>
 	<script async="" crossorigin="anonymous">
-		<xsl:if test="'default' != 'github-gist'">
+		<xsl:if test="'default' != 'github'">
 			<xsl:attribute name="data-hljs-style">
-				github-gist
+				github
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.0/build/' != 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.0/build/'">
@@ -113,7 +113,7 @@ echo $html;
 	</tr>
 	<tr>
 		<td><code>style</code></td>
-		<td>github-gist</td>
+		<td>github</td>
 		<td>highlight.js style name (or "none")</td>
 	</tr>
 	<tr>
