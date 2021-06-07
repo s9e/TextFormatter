@@ -93,9 +93,9 @@ echo $html;
 				github
 			</xsl:attribute>
 		</xsl:if>
-		<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.0/build/' != 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.0/build/'">
+		<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/' != 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/'">
 			<xsl:attribute name="data-hljs-url">
-				https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.0/build/
+				https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
@@ -118,7 +118,7 @@ echo $html;
 	</tr>
 	<tr>
 		<td><code>url</code></td>
-		<td>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.0/build/</td>
+		<td>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.0.1/build/</td>
 		<td>highlight.js CDN URL</td>
 	</tr>
 </table>
