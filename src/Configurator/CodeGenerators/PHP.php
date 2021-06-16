@@ -11,37 +11,47 @@ use DOMElement;
 
 class PHP extends AbstractCodeGenerator
 {
-	public function bufferBuffer(int $id, int $source): string
+	public function bufferBuffer(Element $context, int $id, int $source): string
 	{
 		return '$this->buffers[' . $id . '] .= $this->buffers[' . $id . ']';
 	}
 
-	public function bufferLiteral(int $id, string $value):
+	public function bufferLiteral(Element $context, int $id, string $value):
 	{
-		return '$this->buffers[' . $id . '] .= ' . var_export($value);
+		return '$this->buffers[' . $id . '] .= ' . $this->export($value);
 	}
 
-	public function bufferTransform(int $id, string $escape, ?string $select = null): string
+	public function bufferTransform(Element $context, int $id, string $escape, ?string $select = null): string
 	{
 		$php = '$this->buffers[' . $id . '] .= $this->escape($this->transform(';
 		if (isset($select))
 		{
-			$php .= var_export($select);
+			$php .= $this->export($select);
 		}
-		$php .= '), ' . var_export($escape) . ')';
+		$php .= '), ' . $this->export($escape) . ')';
 		
 		return $php;
 	}
 
-	public function bufferXPath(int $id, string $select, string $escape): string;
+	public function bufferXPath(Element $context, int $id, string $select, string $escape): string;
 
-	public function clearBuffer(int $id): string;
+	public function clearBuffer(Element $context, int $id): string;
 	{
 		return '$this->buffers[' . $id . "] .= ''";
 	}
 
-	public function conditionMatchDefault(): string;
-	public function conditionMatchLiteral(string $value): string;
-	public function conditionTestDefault(string $test): string;
-	public function conditionTestXPath(string $test): string;
+	public function conditionMatchDefault(Element $context): string;
+	public function conditionMatchLiteral(Element $context, string $value): string;
+	public function conditionTestDefault(Element $context, string $test): string;
+	public function conditionTestXPath(Element $context, string $test): string;
+
+	/**
+	* 
+	*
+	* @return void
+	*/
+	protected function export($value): string
+	{
+		return var_export($this->export);
+	}
 }

@@ -7,15 +7,17 @@
 */
 namespace s9e\TextFormatter\Configurator\CodeGenerators;
 
+use s9e\SweetDOM\Element;
+
 interface CodeGeneratorInterface
 {
-	public function bufferBuffer(int $id, int $source): string;
-	public function bufferLiteral(int $id, string $value): string;
-	public function bufferTransform(int $id, string $escape, ?string $select = null): string;
-	public function bufferXPath(int $id, string $select, string $escape): string;
-	public function clearBuffer(int $id): string;
-	public function conditionMatchDefault(): string;
-	public function conditionMatchLiteral(string $value): string;
-	public function conditionTestDefault(string $test): string;
-	public function conditionTestXPath(string $test): string;
+	public function bufferBuffer(Element $context, int $id, int $source): string;
+	public function bufferLiteral(Element $context, int $id, string $value): string;
+	public function bufferTransform(Element $context, int $id, string $escape, string $select = null): string;
+	public function bufferXPath(Element $context, int $id, string $select, string $escape): string;
+	public function clearBuffer(Element $context, int $id): string;
+	public function conditionMatchDefault(Element $context): string;
+	public function conditionMatchLiteral(Element $context, string $value): string;
+	public function conditionTestDefault(Element $context, string $test): string;
+	public function conditionTestXPath(Element $context, string $test): string;
 }
