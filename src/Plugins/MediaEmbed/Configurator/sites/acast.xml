@@ -1,0 +1,18 @@
+<site name="Acast" homepage="https://play.acast.com/">
+	<example>https://play.acast.com/s/the-taskmaster-podcast/ep31.leemack-s11ep.8</example>
+	<example>https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202</example>
+
+	<oembed endpoint="https://oembed.acast.com/v1/embed-player"
+	          scheme="https://play.acast.com/s/{@show_id}/{@episode_id}"/>
+
+	<tags><tag>podcasts</tag></tags>
+
+	<host>acast.com</host>
+	<extract>@play.acast.com/s/(?'show_id'[-.\w]+)/(?'episode_id'[-.\w]+)(?:\?seek=(?'t'\d+))?@</extract>
+	<scrape url="https://feeder.acast.com/api/v1/shows/{@show_id}/episodes/{@episode_id}">
+		<match>@play.acast.com/s/(?![0-9a-f]{8}(?:-[0-9a-f]{4}){4}[0-9a-f]{8}/[0-9a-f]{4}(?:[0-9a-f]{4}-){4}[0-9a-f]{12})(?'show_id'[-.\w]+)/(?'episode_id'[-.\w]+)@</match>
+		<extract>@"showId":"(?'show_id'[0-9a-f]{8}(?:-[0-9a-f]{4}){4}[0-9a-f]{8})@</extract>
+		<extract>@"id":"(?'episode_id'[0-9a-f]{4}(?:[0-9a-f]{4}-){4}[0-9a-f]{12})@</extract>
+	</scrape>
+	<iframe width="100%" height="188" max-width="900" src="https://embed.acast.com/{@show_id}/{@episode_id}?seek={@t}"/>
+</site>
