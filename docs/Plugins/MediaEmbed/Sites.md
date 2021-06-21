@@ -517,6 +517,10 @@
 		<td style="font-size:75%"><code>youku</code></td>
 		<td style="font-size:50%">https://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</td>
 	</tr>
+	<tr title="YouMaker" id="youmaker">
+		<td style="font-size:75%"><code>youmaker</code></td>
+		<td style="font-size:50%">https://www.youmaker.com/v/EnDXOWo8OOvQ<br/>https://www.youmaker.com/video/b3ce8457-2cbe-4661-84ec-829fa8fe0754</td>
+	</tr>
 	<tr title="YouTube" id="youtube">
 		<td style="font-size:75%"><code>youtube</code></td>
 		<td style="font-size:50%">https://www.youtube.com/watch?v=-cEzsCAzTak<br/>https://youtu.be/-cEzsCAzTak<br/>https://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40<br/>https://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</td>

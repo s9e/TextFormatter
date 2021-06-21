@@ -1,0 +1,10 @@
+<site name="YouMaker" homepage="https://www.youmaker.com/">
+	<example>https://www.youmaker.com/v/EnDXOWo8OOvQ</example>
+	<example>https://www.youmaker.com/video/b3ce8457-2cbe-4661-84ec-829fa8fe0754</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>youmaker.com</host>
+	<extract>!youmaker\.com/(?:embed|v(?:ideo)?)/(?'id'[-\w]+)!</extract>
+	<iframe src="https://www.youmaker.com/embed/{@id}"/>
+</site>

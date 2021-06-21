@@ -4209,6 +4209,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.youmaker.com/video/b3ce8457-2cbe-4661-84ec-829fa8fe0754',
+				'<r><YOUMAKER id="b3ce8457-2cbe-4661-84ec-829fa8fe0754">https://www.youmaker.com/video/b3ce8457-2cbe-4661-84ec-829fa8fe0754</YOUMAKER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youmaker');
+				}
+			],
+			[
+				'https://www.youmaker.com/v/EnDXOWo8OOvQ',
+				'<r><YOUMAKER id="EnDXOWo8OOvQ">https://www.youmaker.com/v/EnDXOWo8OOvQ</YOUMAKER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youmaker');
+				}
+			],
+			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
 				'<r><YOUTUBE id="-cEzsCAzTak"><s>[media]</s>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<e>[/media]</e></YOUTUBE></r>',
 				[],

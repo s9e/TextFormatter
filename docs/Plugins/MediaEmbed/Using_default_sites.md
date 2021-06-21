@@ -77,7 +77,7 @@ echo count($configurator->MediaEmbed->defaultSites), " sites remaining.\n";
 ```
 Does YouTube exist? yes
 What about now? no
-129 sites remaining.
+130 sites remaining.
 0 sites remaining.
 ```
 
