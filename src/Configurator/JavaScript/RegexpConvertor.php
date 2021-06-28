@@ -25,16 +25,20 @@ abstract class RegexpConvertor
 	*
 	* @param  string $regexp   PCRE regexp
 	* @param  bool   $isGlobal Whether the global flag should be set
-	* @return Code             JavaScript regexp
+	* @return string           JavaScript regexp
 	*/
 	public static function toJS($regexp, $isGlobal = false)
 	{
 		$regexpInfo = RegexpParser::parse($regexp);
 		$dotAll     = (strpos($regexpInfo['modifiers'], 's') !== false);
 
+		if ($regexpInfo['regexp'] === '')
+		{
+			return '/(?:)/';
+		}
+
 		$regexp = '';
 		$pos = 0;
-
 		foreach ($regexpInfo['tokens'] as $tok)
 		{
 			$regexp .= self::convertUnicodeCharacters(
@@ -63,11 +67,6 @@ abstract class RegexpConvertor
 		if ($isGlobal)
 		{
 			$modifiers .= 'g';
-		}
-
-		if ($regexp === '')
-		{
-			$regexp = '(?:)';
 		}
 
 		return '/' . self::escapeLineTerminators($regexp) . '/' . $modifiers;
