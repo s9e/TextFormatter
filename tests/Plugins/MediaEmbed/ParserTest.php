@@ -2934,6 +2934,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://medium.com/an-idea/defunding-is-great-but-lets-talk-about-disarming-the-police-177cdbf3d9af',
+				'<r><MEDIUM id="177cdbf3d9af">https://medium.com/an-idea/defunding-is-great-but-lets-talk-about-disarming-the-police-177cdbf3d9af</MEDIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('medium');
+				}
+			],
+			[
 				'https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853',
 				'<r><MEGAPHONE id="LKN8165322853">https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853</MEGAPHONE></r>',
 				[],
