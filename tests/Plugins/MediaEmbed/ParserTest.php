@@ -861,16 +861,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.imdb.com/video/vi4085711129',
-				'<t>https://www.imdb.com/video/vi4085711129</t>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('imdb');
-				}
-			],
-			[
 				'http://imgur.com/gallery/9UGCL',
 				'<r><IMGUR id="a/9UGCL">http://imgur.com/gallery/9UGCL</IMGUR></r>',
 				[],
