@@ -1,3 +1,25 @@
+2.9.4 (2021-07-09)
+==================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/a8767be0fd9febecf4d1f88a76b8fc01c26abed9...c88fe365373a4656cf8129daf55314a2998c5487)
+
+### Added
+
+ - `6d3c5af8e` MediaEmbed: added Acast
+ - `0c4e0c15c` MediaEmbed: added YouMaker
+ - `dcf3cbf98` RegexpConvertor: added early return for empty regexps
+
+### Changed
+
+ - `c88fe3653` BBCodes: updated default CODE BBCode
+ - `62b4e7f4b` BBCodes: updated default CODE BBCode
+ - `29d5bcf16` Change code highlighting theme from `github-gist` to `github`.
+ - `37fadd4e9` MediaEmbed: scrape from HTTP headers as well as body
+ - `6e66120f0` MediaEmbed: updated 247Sports
+ - `83629d2c4` MediaEmbed: updated Medium
+ - `03c9dd73a` Use HLJS 11.0.1
+
+
 2.9.3 (2021-05-30)
 ==================
 
