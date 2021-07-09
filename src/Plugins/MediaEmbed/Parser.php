@@ -243,7 +243,8 @@ class Parser extends ParserBase
 	protected static function wget($url, $cacheDir, $config)
 	{
 		$options = [
-			'headers' => (isset($config['header'])) ? (array) $config['header'] : []
+			'headers'       => (isset($config['header'])) ? (array) $config['header'] : [],
+			'returnHeaders' => true
 		];
 
 		return @self::getHttpClient($cacheDir)->get($url, $options);
