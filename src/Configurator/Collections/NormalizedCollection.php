@@ -154,9 +154,16 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	*/
 	public function delete($key)
 	{
-		$key = $this->normalizeKey($key);
+		try
+		{
+			$key = $this->normalizeKey($key);
 
-		unset($this->items[$key]);
+			unset($this->items[$key]);
+		}
+		catch (InvalidArgumentException $e)
+		{
+			// Do nothing
+		}
 	}
 
 	/**
@@ -167,7 +174,14 @@ class NormalizedCollection extends Collection implements ArrayAccess
 	*/
 	public function exists($key)
 	{
-		$key = $this->normalizeKey($key);
+		try
+		{
+			$key = $this->normalizeKey($key);
+		}
+		catch (InvalidArgumentException $e)
+		{
+			return false;
+		}
 
 		return array_key_exists($key, $this->items);
 	}

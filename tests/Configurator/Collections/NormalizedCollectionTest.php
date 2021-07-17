@@ -3,6 +3,7 @@
 namespace s9e\TextFormatter\Tests\Configurator\Collections;
 
 use Exception;
+use InvalidArgumentException;
 use stdClass;
 use s9e\TextFormatter\Configurator\Collections\NormalizedCollection;
 use s9e\TextFormatter\Tests\Test;
@@ -133,6 +134,16 @@ class NormalizedCollectionTest extends Test
 	}
 
 	/**
+	* @testdox exists() ignores InvalidArgumentException from normalizeKey()
+	*/
+	public function testExistsInvalidArgumentException()
+	{
+		$collection = new DummyNormalizedCollection([]);
+		$this->assertFalse($collection->exists('invalid'));
+		$this->assertFalse(isset($collection['invalid']));
+	}
+
+	/**
 	* @testdox get() returns an item by name
 	*/
 	public function testGet()
@@ -204,6 +215,17 @@ class NormalizedCollectionTest extends Test
 		catch (Exception $e)
 		{
 		}
+	}
+
+	/**
+	* @testdox delete() ignores InvalidArgumentException from normalizeKey()
+	* @doesNotPerformAssertions
+	*/
+	public function testDeleteInvalidArgumentException()
+	{
+		$collection = new DummyNormalizedCollection([]);
+		$collection->delete('invalid');
+		unset($collection['invalid']);
 	}
 
 	/**
@@ -436,5 +458,15 @@ class DummyNormalizedCollection extends NormalizedCollection
 	public function __construct(array $items)
 	{
 		$this->items = $items;
+	}
+
+	public function normalizeKey($key)
+	{
+		if ($key === 'invalid')
+		{
+			throw new InvalidArgumentException;
+		}
+
+		return $key;
 	}
 }

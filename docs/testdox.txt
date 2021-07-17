@@ -14,11 +14,13 @@ Normalized Collection (s9e\TextFormatter\Tests\Configurator\Collections\Normaliz
  [x] exists() returns TRUE if the item exists
  [x] exists() returns FALSE if the item does not exist
  [x] exists() calls normalizeKey()
+ [x] exists() ignores InvalidArgumentException from normalizeKey()
  [x] get() returns an item by name
  [x] get() calls normalizeKey()
  [x] get() throws a RuntimeException if the item does not exist
  [x] delete() removes an item by name
  [x] delete() calls the item's normalizeKey() method
+ [x] delete() ignores InvalidArgumentException from normalizeKey()
  [x] isset($collection['foo']) maps to $collection->exists('foo')
  [x] $collection['foo'] maps to $collection->get('foo')
  [x] $collection['foo'] = 42 maps to $collection->set('foo', 42)
@@ -5327,11 +5329,9 @@ Superscript (s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes\Superscript)
 Cached Definition Collection (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections\CachedDefinitionCollection)
  [x] isset('youtube') returns TRUE
  [x] isset('unknown') returns FALSE
- [x] get('*invalid*') throws an exception
  [x] Is iterable
  [x] get('youtube') returns a configuration
  [x] get('unknown') returns FALSE
- [x] get('*invalid*') throws an exception
  [x] Site definitions contain the site's name
  [x] Site definitions contain the site's tags
 
@@ -5350,12 +5350,10 @@ Site Definition Collection (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configura
 Xml File Definition Collection (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\Collections\XmlFileDefinitionCollection)
  [x] isset() returns TRUE if the site config exists
  [x] isset('unknown') returns FALSE
- [x] isset('*invalid*') throws an exception
  [x] Works if libxml2 entity loader is disabled
  [x] Is iterable
  [x] get('foo') returns a configuration if foo.xml exists
  [x] get('unknown') throws an exception
- [x] get('*invalid*') throws an exception
  [x] The constructor throws an exception if the dir does not exist
  [x] get() correctly interprets multiple nodes of the same name in XML
  [x] Properly reads child elements with no whitespace

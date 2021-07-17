@@ -54,18 +54,6 @@ class XmlFileDefinitionCollectionTest extends Test
 	}
 
 	/**
-	* @testdox isset('*invalid*') throws an exception
-	*/
-	public function testIssetInvalid()
-	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('Invalid site ID');
-
-		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
-		isset($collection['*invalid*']);
-	}
-
-	/**
 	* @testdox Works if libxml2 entity loader is disabled
 	*/
 	public function testDisableEntityLoader()
@@ -112,18 +100,6 @@ class XmlFileDefinitionCollectionTest extends Test
 
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get('unknown');
-	}
-
-	/**
-	* @testdox get('*invalid*') throws an exception
-	*/
-	public function testGetInvalid()
-	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('Invalid site ID');
-
-		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
-		$siteConfig = $collection->get('*invalid*');
 	}
 
 	/**

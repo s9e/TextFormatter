@@ -30,18 +30,6 @@ class CachedDefinitionCollectionTest extends Test
 	}
 
 	/**
-	* @testdox get('*invalid*') throws an exception
-	*/
-	public function testIssetInvalid()
-	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('Invalid site ID');
-
-		$collection = new CachedDefinitionCollection;
-		$collection->get('*invalid*');
-	}
-
-	/**
 	* @testdox Is iterable
 	*/
 	public function testIsIterable()
@@ -74,18 +62,6 @@ class CachedDefinitionCollectionTest extends Test
 
 		$collection = new CachedDefinitionCollection;
 		$siteConfig = $collection->get('unknown');
-	}
-
-	/**
-	* @testdox get('*invalid*') throws an exception
-	*/
-	public function testGetInvalid()
-	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('Invalid site ID');
-
-		$collection = new CachedDefinitionCollection;
-		$siteConfig = $collection->get('*invalid*');
 	}
 
 	/**
