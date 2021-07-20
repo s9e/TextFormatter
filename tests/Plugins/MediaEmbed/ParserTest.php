@@ -3740,6 +3740,15 @@ class ParserTest extends Test
 //				}
 //			],
 			[
+				'https://mydailyfreedom.com/tv/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html',
+				'<r><TRENDINGVIEWS id="8213">https://mydailyfreedom.com/tv/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html</TRENDINGVIEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('trendingviews');
+				}
+			],
+			[
 				'https://trendingviews.co/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html',
 				'<r><TRENDINGVIEWS id="8213">https://trendingviews.co/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html</TRENDINGVIEWS></r>',
 				[],
