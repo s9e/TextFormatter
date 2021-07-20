@@ -89,7 +89,8 @@ function addBBCodeSelfClosingTag()
 */
 function addBBCodeStartTag()
 {
-	var tag = addStartTag(getTagName(), startPos, pos - startPos);
+	var prio = (bbcodeSuffix !== '') ? -10 : 0,
+		tag = addStartTag(getTagName(), startPos, pos - startPos, prio);
 	tag.setAttributes(attributes);
 
 	return tag;

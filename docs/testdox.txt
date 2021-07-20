@@ -3764,6 +3764,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\BBCodes\Parser)
  [x] Parsing tests with data set #49
  [x] Parsing tests with data set #50
  [x] Parsing tests with data set #51
+ [x] Parsing tests with data set #52
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -3816,6 +3817,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\BBCodes\Parser)
  [x] Parsing tests (JavaScript) with data set #49
  [x] Parsing tests (JavaScript) with data set #50
  [x] Parsing tests (JavaScript) with data set #51
+ [x] Parsing tests (JavaScript) with data set #52
 
 BBCodes (s9e\TextFormatter\Tests\Plugins\BBCodes\BBCodes)
  [x] Examples from BBCodeMonkey.md with data set #0

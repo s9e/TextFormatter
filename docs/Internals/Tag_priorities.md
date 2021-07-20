@@ -7,6 +7,7 @@ Autoimage  | IMG      |        2 |
 Autolink   | URL      |        1 |
 Autolink   | v        |     1000 |
 Autovideo  | VIDEO    |       -1 |
+BBCodes    | *any*    |      -10 | BBCodes with suffix
 Emoji      | EMOJI    |       10 |
 FancyPants | FP       |       10 | Only on single quotes
 MediaEmbed | MEDIA    |      -10 |

@@ -118,7 +118,8 @@ class Parser extends ParserBase
 	*/
 	protected function addBBCodeStartTag()
 	{
-		$tag = $this->parser->addStartTag($this->getTagName(), $this->startPos, $this->pos - $this->startPos);
+		$prio = ($this->bbcodeSuffix !== '') ? -10 : 0;
+		$tag  = $this->parser->addStartTag($this->getTagName(), $this->startPos, $this->pos - $this->startPos, $prio);
 		$tag->setAttributes($this->attributes);
 
 		return $tag;

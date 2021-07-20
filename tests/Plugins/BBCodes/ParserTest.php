@@ -566,6 +566,17 @@ class ParserTest extends Test
 					$configurator->BBCodes->addCustom('[x={TEXT1;useContent}]{TEXT2}[/x]', '');
 				}
 			],
+			[
+				'[b:1](https://en.wikipedia.org/wiki/B)[/b:1]',
+				'<r><p><B><s>[b:1]</s>(https://en.wikipedia.org/wiki/B)<e>[/b:1]</e></B></p></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->Litedown;
+					$configurator->BBCodes->add('B');
+					$configurator->tags->add('B');
+				}
+			],
 		];
 	}
 }
