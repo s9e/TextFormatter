@@ -503,6 +503,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('acast');
 				}
 			],
+			[
+				'https://shows.acast.com/chaotic-normal/episodes/the-rising-tide',
+				'<r><ACAST episode_id="60f641a3fb28380014c4d8f0" show_id="60ef8f477fe7b1001343d9d6">https://shows.acast.com/chaotic-normal/episodes/the-rising-tide</ACAST></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('acast');
+				}
+			],
 //			[
 //				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
 //				'<r><BANDCAMP album_id="1122163921">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></r>',

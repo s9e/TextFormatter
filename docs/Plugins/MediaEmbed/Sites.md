@@ -11,7 +11,7 @@
 	</tr>
 	<tr title="Acast" id="acast">
 		<td style="font-size:75%"><code>acast</code></td>
-		<td style="font-size:50%">https://play.acast.com/s/the-taskmaster-podcast/ep31.leemack-s11ep.8<br/>https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202</td>
+		<td style="font-size:50%">https://play.acast.com/s/the-taskmaster-podcast/ep31.leemack-s11ep.8<br/>https://shows.acast.com/chaotic-normal/episodes/the-rising-tide</td>
 	</tr>
 	<tr title="Amazon Product" id="amazon">
 		<td style="font-size:75%"><code>amazon</code></td>
