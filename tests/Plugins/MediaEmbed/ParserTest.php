@@ -2446,6 +2446,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://gist.github.com/Untrusted-Game/172a510a34cf0ba9cf7533dc9f55d960/ffe65e387a97ee479cbeaa82660f5af42aa80cb1',
+				'<r><GIST id="Untrusted-Game/172a510a34cf0ba9cf7533dc9f55d960/ffe65e387a97ee479cbeaa82660f5af42aa80cb1">https://gist.github.com/Untrusted-Game/172a510a34cf0ba9cf7533dc9f55d960/ffe65e387a97ee479cbeaa82660f5af42aa80cb1</GIST></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
+				'https://gist.github.com/Untrusted-Game/172a510a34cf0ba9cf7533dc9f55d960/archive/ffe65e387a97ee479cbeaa82660f5af42aa80cb1.zip',
+				'<t>https://gist.github.com/Untrusted-Game/172a510a34cf0ba9cf7533dc9f55d960/archive/ffe65e387a97ee479cbeaa82660f5af42aa80cb1.zip</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gist');
+				}
+			],
+			[
 				'http://globalnews.ca/video/1647385/mark-channels-his-70s-look/',
 				'<r><GLOBALNEWS id="1647385">http://globalnews.ca/video/1647385/mark-channels-his-70s-look/</GLOBALNEWS></r>',
 				[],
