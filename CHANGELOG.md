@@ -1,3 +1,18 @@
+2.10.0 (2021-08-11)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/8d3c93c4ac9fbc600d299d41aa83d4125a7b1abd...a44412919c43cc092703df30f697725a9d3bb78f)
+
+### Changed
+
+ - `2bacb5d24` BBCodes: give explicitly-paired BBCodes slightly better priority
+ - `1c00f2624` MediaEmbed: ignore Gist archive links
+ - `11c766817` MediaEmbed: updated Acast
+ - `e75f9f3d2` MediaEmbed: updated Gist
+ - `a81e56567` MediaEmbed: updated TrendingViews
+ - `f80f790b0` NormalizedCollection: ignore invalid keys in delete() and exists()
+
+
 2.9.4 (2021-07-09)
 ==================
 
