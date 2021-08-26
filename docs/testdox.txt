@@ -1583,6 +1583,20 @@ Closure Compiler Application (s9e\TextFormatter\Tests\Configurator\JavaScript\Mi
  [x] minify() throws an exception if an error occurs during minification
  [x] Replaces the default externs with custom externs if compilationLevel is ADVANCED_OPTIMIZATIONS and excludeDefaultExterns is true
 
+Closure Compiler Service (s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService)
+ [x] Works
+ [x] Compilation level is ADVANCED_OPTIMIZATIONS by default
+ [x] Excludes default externs by default
+ [x] Includes our custom externs by default
+ [x] Allows caching
+ [x] The cache key depends on the compilation level
+ [x] The cache key depends on whether the default externs are excluded
+ [x] If the default externs are excluded, the custom externs are baked into the cache key
+ [x] Throws an exception in case of a request failure
+ [x] Throws an exception if the response isn't valid JSON
+ [x] Throws an exception in case of a server error
+ [x] Throws an exception in case of a compilation error
+
 Matthias Mullie Minify (s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\MatthiasMullieMinify)
  [x] minify() works
 
@@ -5485,6 +5499,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #59
  [x] Scraping tests with data set #60
  [x] Scraping tests with data set #61
+ [x] Scraping tests with data set #62
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
@@ -5848,7 +5863,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #310
  [x] Parsing tests with data set #311
  [x] Parsing tests with data set #312
- [x] Parsing tests with data set #313
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -6162,7 +6176,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #310
  [x] Parsing tests (JavaScript) with data set #311
  [x] Parsing tests (JavaScript) with data set #312
- [x] Parsing tests (JavaScript) with data set #313
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2

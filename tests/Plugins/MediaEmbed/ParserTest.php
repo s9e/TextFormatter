@@ -513,6 +513,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('acast');
 				}
 			],
+			[
+				'https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125',
+				'<r><ACAST episode_id="f38da59a-9eb9-42f7-a0bf-a633ef813202" show_id="e3178447-8d7d-556e-bece-5d8f7c4dd539" t="125">https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125</ACAST></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('acast');
+				}
+			],
 //			[
 //				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
 //				'<r><BANDCAMP album_id="1122163921">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></r>',
@@ -1666,15 +1676,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('abcnews');
-				}
-			],
-			[
-				'https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125',
-				'<r><ACAST episode_id="f38da59a-9eb9-42f7-a0bf-a633ef813202" show_id="e3178447-8d7d-556e-bece-5d8f7c4dd539" t="125">https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125</ACAST></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('acast');
 				}
 			],
 			[
