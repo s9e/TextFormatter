@@ -11,6 +11,7 @@
 	<extract>@facebook\.com/(?'user'[.\w]+)/(?=(?:post|video)s?/)(?'type'[pv])@</extract>
 	<extract>@facebook\.com/video/(?=post|video)(?'type'[pv])@</extract>
 	<extract>@facebook\.com/watch/\?(?'type'[pv])=@</extract>
+	<extract>@facebook.com/groups/[^/]*/(?'type'p)osts/(?'id'\d+)@</extract>
 	<scrape>
 		<header>User-agent: PHP (not Mozilla)</header>
 		<match>@fb\.watch/.@</match>
