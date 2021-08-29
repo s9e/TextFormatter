@@ -523,6 +523,36 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('acast');
 				}
 			],
+			[
+				'https://audius.co/manilakilla/chet-porter-the-longest-day-ever-manila-killa-edit',
+				'<r><AUDIUS track_id="JGMvo">https://audius.co/manilakilla/chet-porter-the-longest-day-ever-manila-killa-edit</AUDIUS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('audius');
+				}
+			],
+			[
+				'https://audius.co/feedbachmusic/album/lights-ii-62147',
+				'<r><AUDIUS album_id="eb39M">https://audius.co/feedbachmusic/album/lights-ii-62147</AUDIUS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('audius');
+				}
+			],
+			[
+				'https://audius.co/ezzyland/playlist/audius-asia-%E2%94%81%E2%98%86%EF%BE%9F.%EF%BD%A5%EF%BD%A1%EF%BE%9F-32183',
+				'<r><AUDIUS playlist_id="noq27">https://audius.co/ezzyland/playlist/audius-asia-%E2%94%81%E2%98%86%EF%BE%9F.%EF%BD%A5%EF%BD%A1%EF%BE%9F-32183</AUDIUS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('audius');
+				}
+			],
 //			[
 //				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
 //				'<r><BANDCAMP album_id="1122163921">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></r>',

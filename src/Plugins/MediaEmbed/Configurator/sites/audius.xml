@@ -1,0 +1,56 @@
+<site name="Audius" homepage="https://audius.co/">
+	<example>https://audius.co/feedbachmusic/album/lights-ii-62147</example>
+	<example>https://audius.co/audiusplaylists/playlist/culture-over-clout-56948</example>
+	<example>https://audius.co/manilakilla/chet-porter-the-longest-day-ever-manila-killa-edit</example>
+
+	<tags><tag>music</tag></tags>
+
+	<host>audius.co</host>
+	<scrape url="https://discoveryprovider.audius.co/v1/resolve?app_name=s9e-textformatter&amp;url=/{@user}/{@slug}">
+		<match>@audius\.co/(?!v1/)(?'user'[-.\w]+)/(?!album/|playlist/)(?'slug'[%\-.\w]+)@</match>
+		<extract>!"id"\s*:\s*"(?'track_id'\w+)"!</extract>
+	</scrape>
+	<scrape url="https://discoveryprovider.audius.co/v1/resolve?app_name=s9e-textformatter&amp;url=/{@user}/album/{@slug}">
+		<match>@audius\.co/(?!v1/)(?'user'[-.\w]+)/album/(?'slug'[%\-.\w]+)@</match>
+		<extract>!"id"\s*:\s*"(?'album_id'\w+)"!</extract>
+	</scrape>
+	<scrape url="https://discoveryprovider.audius.co/v1/resolve?app_name=s9e-textformatter&amp;url=/{@user}/playlist/{@slug}">
+		<match>@audius\.co/(?!v1/)(?'user'[-.\w]+)/playlist/(?'slug'[%\-.\w]+)@</match>
+		<extract>!"id"\s*:\s*"(?'playlist_id'\w+)"!</extract>
+	</scrape>
+
+	<iframe width="100%">
+		<height><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@track_id">120</xsl:when>
+				<xsl:otherwise>480</xsl:otherwise>
+			</xsl:choose>
+		]]></height>
+		<max-width><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@track_id">900</xsl:when>
+				<xsl:otherwise>400</xsl:otherwise>
+			</xsl:choose>
+		]]></max-width>
+		<src><![CDATA[
+			<xsl:text>https://audius.co/embed/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@track_id">
+					<xsl:text>track/</xsl:text>
+					<xsl:value-of select="@track_id"/>
+					<xsl:text>?flavor=compact</xsl:text>
+				</xsl:when>
+				<xsl:when test="@album_id">
+					<xsl:text>album/</xsl:text>
+					<xsl:value-of select="@album_id"/>
+					<xsl:text>?flavor=card</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>playlist/</xsl:text>
+					<xsl:value-of select="@playlist_id"/>
+					<xsl:text>?flavor=card</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+	</iframe>
+</site>

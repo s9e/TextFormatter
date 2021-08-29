@@ -33,6 +33,10 @@
 		<td style="font-size:75%"><code>audiomack</code></td>
 		<td style="font-size:50%">https://www.audiomack.com/your-music-fix/song/jammin-kungs-remix-1<br/>https://www.audiomack.com/chance-the-rapper/album/acid-rap</td>
 	</tr>
+	<tr title="Audius" id="audius">
+		<td style="font-size:75%"><code>audius</code></td>
+		<td style="font-size:50%">https://audius.co/feedbachmusic/album/lights-ii-62147<br/>https://audius.co/audiusplaylists/playlist/culture-over-clout-56948<br/>https://audius.co/manilakilla/chet-porter-the-longest-day-ever-manila-killa-edit</td>
+	</tr>
 	<tr title="Bandcamp" id="bandcamp">
 		<td style="font-size:75%"><code>bandcamp</code></td>
 		<td style="font-size:50%">https://proleter.bandcamp.com/album/curses-from-past-times-ep<br/>https://proleter.bandcamp.com/track/downtown-irony<br/>https://therunons.bandcamp.com/track/still-feel</td>
