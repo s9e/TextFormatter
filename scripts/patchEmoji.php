@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
 
-$emojiVersion = '13.1';
-$ucdVersion   = '13.0.0';
+$emojiVersion = '14.0';
+$ucdVersion   = '14.0.0';
 
 $emoji   = [];
 $file    = wget('http://unicode.org/Public/' . $ucdVersion . '/ucd/emoji/emoji-data.txt');
