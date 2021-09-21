@@ -50,4 +50,4 @@ http://notexample.org
 http://www.example.org
 ```
 
-Note that disallowing hosts does not *remove* the host name from the text, it only prevents *linking* to it. The [Censor](/Plugins/Censor) plugin can be used to censor them in plain text as well.
+Note that disallowing hosts does not *remove* the host name from the text, it only prevents *linking* to it. The [Censor](/Plugins/Censor/Synopsis) plugin can be used to censor them in plain text as well.
