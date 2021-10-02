@@ -1,3 +1,20 @@
+2.11.0 (2021-10-02)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/00df71d0a803c041efa320ce2f2c0e56c1a6fca9...bc58b94ed28b14726875b926f0282eabf8efa722)
+
+### Added
+
+ - `bc58b94ed` Added support for PHP 8.1
+ - `cf6fb85ce` MediaEmbed: added Audius
+
+### Changed
+
+ - `1d5e3e2a1` Emoji: updated to Unicode 14.0
+ - `e8ff4904d` MediaEmbed: updated Facebook
+ - `7b7dcd3cb` Updated BBCodes doc
+
+
 2.10.0 (2021-08-11)
 ===================
 
