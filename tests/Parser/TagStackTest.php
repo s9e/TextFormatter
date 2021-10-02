@@ -646,6 +646,7 @@ class DummyStack extends Parser
 	public function __construct()
 	{
 		$this->logger = new Logger;
+		$this->text   = str_repeat(' ', $this->textLen);
 	}
 	public function sortTags()
 	{

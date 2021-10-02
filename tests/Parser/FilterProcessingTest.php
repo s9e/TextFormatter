@@ -235,6 +235,8 @@ class FilterProcessingTest extends Test
 		$tag->filterChain->append([$mock, 'bar']);
 
 		extract($this->configurator->finalize());
+		$parser->parse('');
+
 		$config = $this->configurator->asConfig();
 		$tag    = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
@@ -256,6 +258,8 @@ class FilterProcessingTest extends Test
 		$tag->filterChain->append([$mock, 'bar']);
 
 		extract($this->configurator->finalize());
+		$parser->parse('');
+
 		$config = $this->configurator->asConfig();
 		$tag    = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 
@@ -290,9 +294,10 @@ class FilterProcessingTest extends Test
 
 		$parser = $this->getMockBuilder('s9e\\TextFormatter\\Parser')
 		               ->disableOriginalConstructor()
-		               ->setMethods(['getLogger'])
+		               ->setMethods(['getLogger', 'getText'])
 		               ->getMock();
 		$parser->expects($this->once())->method('getLogger')->will($this->returnValue($logger));
+		$parser->expects($this->any())->method('getText')->will($this->returnValue(''));
 
 		FilterProcessing::filterTag($tag, $parser, $config['tags'], []);
 	}
@@ -312,6 +317,8 @@ class FilterProcessingTest extends Test
 		$filter->addParameterByName('parser');
 
 		extract($this->configurator->finalize());
+		$parser->parse('');
+
 		$config = $this->configurator->asConfig();
 		$tag    = new Tag(Tag::SELF_CLOSING_TAG, 'X', 0, 0);
 

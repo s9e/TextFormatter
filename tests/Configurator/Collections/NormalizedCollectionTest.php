@@ -237,7 +237,8 @@ class NormalizedCollectionTest extends Test
 
 		$mock->expects($this->once())
 		     ->method('exists')
-		     ->with($this->equalTo('foo'));
+		     ->with($this->equalTo('foo'))
+		     ->willReturn(false);
 
 		isset($mock['foo']);
 	}

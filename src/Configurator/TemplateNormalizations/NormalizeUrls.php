@@ -51,7 +51,7 @@ class NormalizeUrls extends AbstractNormalization
 		$attrValue = $this->unescapeBrackets($attrValue);
 
 		// Update the attribute's value
-		$attribute->value = htmlspecialchars($attrValue);
+		$attribute->value = htmlspecialchars($attrValue, ENT_COMPAT);
 	}
 
 	/**

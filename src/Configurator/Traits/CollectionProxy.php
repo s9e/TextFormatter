@@ -46,7 +46,7 @@ trait CollectionProxy
 	* @param  string|integer $offset
 	* @return bool
 	*/
-	public function offsetExists($offset)
+	public function offsetExists($offset): bool
 	{
 		return isset($this->collection[$offset]);
 	}
@@ -55,6 +55,7 @@ trait CollectionProxy
 	* @param  string|integer $offset
 	* @return mixed
 	*/
+	#[\ReturnTypeWillChange]
 	public function offsetGet($offset)
 	{
 		return $this->collection[$offset];
@@ -65,7 +66,7 @@ trait CollectionProxy
 	* @param  mixed          $value
 	* @return void
 	*/
-	public function offsetSet($offset, $value)
+	public function offsetSet($offset, $value): void
 	{
 		$this->collection[$offset] = $value;
 	}
@@ -74,7 +75,7 @@ trait CollectionProxy
 	* @param  string|integer $offset
 	* @return void
 	*/
-	public function offsetUnset($offset)
+	public function offsetUnset($offset): void
 	{
 		unset($this->collection[$offset]);
 	}
@@ -86,7 +87,7 @@ trait CollectionProxy
 	/**
 	* @return integer
 	*/
-	public function count()
+	public function count(): int
 	{
 		return count($this->collection);
 	}
@@ -98,6 +99,7 @@ trait CollectionProxy
 	/**
 	* @return mixed
 	*/
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		return $this->collection->current();
@@ -106,6 +108,7 @@ trait CollectionProxy
 	/**
 	* @return string|integer
 	*/
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		return $this->collection->key();
@@ -114,6 +117,7 @@ trait CollectionProxy
 	/**
 	* @return mixed
 	*/
+	#[\ReturnTypeWillChange]
 	public function next()
 	{
 		return $this->collection->next();
@@ -122,7 +126,7 @@ trait CollectionProxy
 	/**
 	* @return void
 	*/
-	public function rewind()
+	public function rewind(): void
 	{
 		$this->collection->rewind();
 	}
@@ -130,7 +134,7 @@ trait CollectionProxy
 	/**
 	* @return boolean
 	*/
-	public function valid()
+	public function valid(): bool
 	{
 		return $this->collection->valid();
 	}

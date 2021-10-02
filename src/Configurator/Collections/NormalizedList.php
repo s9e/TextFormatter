@@ -112,7 +112,7 @@ class NormalizedList extends NormalizedCollection
 	* @param  mixed $value
 	* @return void
 	*/
-	public function offsetSet($offset, $value)
+	public function offsetSet($offset, $value): void
 	{
 		if ($offset === null)
 		{

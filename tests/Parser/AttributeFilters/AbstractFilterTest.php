@@ -39,7 +39,7 @@ abstract class AbstractFilterTest extends Test
 
 		$text = '[x="' . addcslashes($originalValue, '\\\'"') . '"/]';
 
-		$expectedXml = '<r><X' . (($expectedValue === false) ? '' : ' x="' . htmlspecialchars($expectedValue) . '"') . '>' . htmlspecialchars($text, ENT_NOQUOTES) . '</X></r>';
+		$expectedXml = '<r><X' . (($expectedValue === false) ? '' : ' x="' . htmlspecialchars($expectedValue, ENT_COMPAT) . '"') . '>' . htmlspecialchars($text, ENT_NOQUOTES) . '</X></r>';
 
 		if ($js)
 		{

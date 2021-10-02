@@ -86,7 +86,7 @@ class Parser extends IRProcessor
 			return;
 		}
 
-		$this->appendElement($parentNode, 'output', htmlspecialchars($content))
+		$this->appendElement($parentNode, 'output', htmlspecialchars($content, ENT_COMPAT))
 		     ->setAttribute('type', 'literal');
 	}
 
@@ -125,7 +125,7 @@ class Parser extends IRProcessor
 	*/
 	protected function appendXPathOutput(DOMElement $parentNode, $expr)
 	{
-		$this->appendElement($parentNode, 'output', htmlspecialchars(trim($expr)))
+		$this->appendElement($parentNode, 'output', htmlspecialchars(trim($expr), ENT_COMPAT))
 		     ->setAttribute('type', 'xpath');
 	}
 

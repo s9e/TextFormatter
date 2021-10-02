@@ -42,7 +42,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	/**
 	* @return integer
 	*/
-	public function count()
+	public function count(): int
 	{
 		return count($this->items);
 	}
@@ -54,6 +54,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	/**
 	* @return mixed
 	*/
+	#[\ReturnTypeWillChange]
 	public function current()
 	{
 		return current($this->items);
@@ -62,6 +63,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	/**
 	* @return integer|string
 	*/
+	#[\ReturnTypeWillChange]
 	public function key()
 	{
 		return key($this->items);
@@ -70,6 +72,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	/**
 	* @return mixed
 	*/
+	#[\ReturnTypeWillChange]
 	public function next()
 	{
 		return next($this->items);
@@ -78,7 +81,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	/**
 	* @return void
 	*/
-	public function rewind()
+	public function rewind(): void
 	{
 		reset($this->items);
 	}
@@ -86,7 +89,7 @@ class Collection implements ConfigProvider, Countable, Iterator
 	/**
 	* @return bool
 	*/
-	public function valid()
+	public function valid(): bool
 	{
 		return (key($this->items) !== null);
 	}

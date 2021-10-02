@@ -436,7 +436,7 @@ class QuickTest extends Test
 				'<xsl:value-of select="@foo"/>',
 				[[
 					'php',
-					'$attributes+=[\'foo\'=>null];$html.=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'
+					'$attributes+=[\'foo\'=>null];$html.=str_replace(\'&quot;\',\'"\',$attributes[\'foo\']??\'\');'
 				]]
 			],
 			[
@@ -461,7 +461,7 @@ class QuickTest extends Test
 				[
 					[
 						'php',
-						"\$html.='<blockquote';if(!isset(\$attributes['author'])){\$html.=' class=\"uncited\"';}\$html.='><div>';if(isset(\$attributes['author'])){\$html.='<cite>'.str_replace('&quot;','\"',\$attributes['author']).' wrote:</cite>';}"
+						"\$html.='<blockquote';if(!isset(\$attributes['author'])){\$html.=' class=\"uncited\"';}\$html.='><div>';if(isset(\$attributes['author'])){\$html.='<cite>'.str_replace('&quot;','\"',\$attributes['author']??'').' wrote:</cite>';}"
 					],
 					['static', '</div></blockquote>']
 				]
@@ -547,7 +547,7 @@ class QuickTest extends Test
 			],
 			[
 				'<xsl:comment><xsl:value-of select="@content"/></xsl:comment>',
-				[['php', "\$attributes+=['content'=>null];\$html.='<!--'.str_replace('&quot;','\"',\$attributes['content']).'-->';"]]
+				[['php', "\$attributes+=['content'=>null];\$html.='<!--'.str_replace('&quot;','\"',\$attributes['content']??'').'-->';"]]
 			],
 			[
 				self::ws(
@@ -567,7 +567,7 @@ class QuickTest extends Test
 				[
 					[
 						'php',
-						'$attributes+=[\'foo\'=>null];$html.=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']);'
+						'$attributes+=[\'foo\'=>null];$html.=\'<div>\'.str_replace(\'&quot;\',\'"\',$attributes[\'foo\']??\'\');'
 					],
 					[
 						'static',
@@ -584,7 +584,7 @@ class QuickTest extends Test
 					],
 					[
 						'php',
-						"\$attributes=array_pop(\$this->attributes);\$html.=str_replace('&quot;','\"',\$attributes['foo']).'</div>';"
+						"\$attributes=array_pop(\$this->attributes);\$html.=str_replace('&quot;','\"',\$attributes['foo']??'').'</div>';"
 					]
 				]
 			],
@@ -597,7 +597,7 @@ class QuickTest extends Test
 					],
 					[
 						'php',
-						"\$attributes=array_pop(\$this->attributes);\$html.=str_replace('&quot;','\"',\$attributes['foo']);"
+						"\$attributes=array_pop(\$this->attributes);\$html.=str_replace('&quot;','\"',\$attributes['foo']??'');"
 					]
 				]
 			],
@@ -666,7 +666,7 @@ class QuickTest extends Test
 			],
 			[
 				['X' => '<xsl:value-of select="@x"/>'],
-				"\$html.=str_replace('&quot;','\"',\$attributes['x']);"
+				"\$html.=str_replace('&quot;','\"',\$attributes['x']??'');"
 			],
 			[
 				['X' => '<xsl:if test="@x"><hr title="{@x}"/></xsl:if>'],
@@ -709,8 +709,8 @@ class QuickTest extends Test
 				(function ()
 				{
 					return (version_compare(PHP_VERSION, '8.0', '>='))
-						? "(str_contains(\$attributes['x'],'&quot;'))"
-						: "(strpos(\$attributes['x'],'&quot;')!==false)";
+						? "(str_contains(\$attributes['x']??'','&quot;'))"
+						: "(strpos(\$attributes['x']??'','&quot;')!==false)";
 				})()
 			],
 			[
@@ -718,8 +718,8 @@ class QuickTest extends Test
 				(function ()
 				{
 					return (version_compare(PHP_VERSION, '8.0', '>='))
-						? "(str_contains('&quot;&lt;&gt;',\$attributes['x']))"
-						: "(strpos('&quot;&lt;&gt;',\$attributes['x'])!==false)";
+						? "(str_contains('&quot;&lt;&gt;',\$attributes['x']??''))"
+						: "(strpos('&quot;&lt;&gt;',\$attributes['x']??'')!==false)";
 				})()
 			],
 			[
@@ -727,8 +727,8 @@ class QuickTest extends Test
 				(function ()
 				{
 					return (version_compare(PHP_VERSION, '8.0', '>='))
-						? "(str_starts_with('&quot;&lt;&gt;',\$attributes['x']))"
-						: "(strpos('&quot;&lt;&gt;',\$attributes['x'])===0)";
+						? "(str_starts_with('&quot;&lt;&gt;',\$attributes['x']??''))"
+						: "(strpos('&quot;&lt;&gt;',\$attributes['x']??'')===0)";
 				})()
 			],
 			[
@@ -736,8 +736,8 @@ class QuickTest extends Test
 				(function ()
 				{
 					return (version_compare(PHP_VERSION, '8.0', '>='))
-						? "(str_starts_with(\$attributes['x'],'&quot;&lt;&gt;'))"
-						: "(strpos(\$attributes['x'],'&quot;&lt;&gt;')===0)";
+						? "(str_starts_with(\$attributes['x']??'','&quot;&lt;&gt;'))"
+						: "(strpos(\$attributes['x']??'','&quot;&lt;&gt;')===0)";
 				})()
 			],
 			[
@@ -745,8 +745,8 @@ class QuickTest extends Test
 				(function ()
 				{
 					return (version_compare(PHP_VERSION, '8.0', '>='))
-						? "(!str_contains(\$attributes['x'],'&quot;'))"
-						: "(strpos(\$attributes['x'],'&quot;')===false)";
+						? "(!str_contains(\$attributes['x']??'','&quot;'))"
+						: "(strpos(\$attributes['x']??'','&quot;')===false)";
 				})()
 			],
 			[
@@ -754,8 +754,8 @@ class QuickTest extends Test
 				(function ()
 				{
 					return (version_compare(PHP_VERSION, '8.0', '>='))
-						? "(!str_contains('&quot;&lt;&gt;',\$attributes['x']))"
-						: "(strpos('&quot;&lt;&gt;',\$attributes['x'])===false)";
+						? "(!str_contains('&quot;&lt;&gt;',\$attributes['x']??''))"
+						: "(strpos('&quot;&lt;&gt;',\$attributes['x']??'')===false)";
 				})()
 			],
 			[
@@ -763,22 +763,22 @@ class QuickTest extends Test
 				(function ()
 				{
 					return (version_compare(PHP_VERSION, '8.0', '>='))
-						? "(str_ends_with(\$attributes['x'],'&quot;&lt;&gt;'))"
-						: "(substr(htmlspecialchars_decode(\$attributes['x']),-3)==='\"<>')";
+						? "(str_ends_with(\$attributes['x']??'','&quot;&lt;&gt;'))"
+						: "(substr(htmlspecialchars_decode(\$attributes['x']??''),-3)==='\"<>')";
 				})()
 			],
 			[
 				['X' => "<hr title=\"{translate(@x,'_','-')}\"/>"],
-				"'<hr title=\"'.strtr(\$attributes['x'],'_','-').'\">'"
+				"'<hr title=\"'.strtr(\$attributes['x']??'','_','-').'\">'"
 			],
 			[
 				['X' => "<hr title=\"{translate(@x,'ABC','abc')}\"/>"],
-				"'<hr title=\"'.strtr(\$attributes['x'],'ABC','abc').'\">'"
+				"'<hr title=\"'.strtr(\$attributes['x']??'','ABC','abc').'\">'"
 			],
 			[
 				// Replacing "a" with "A" would mess up "&amp;"
 				['X' => "<hr title=\"{translate(@x,'abc','ABC')}\"/>"],
-				"'<hr title=\"'.htmlspecialchars(strtr(htmlspecialchars_decode(\$attributes['x']),'abc','ABC'),2).'\">'"
+				"'<hr title=\"'.htmlspecialchars(strtr(htmlspecialchars_decode(\$attributes['x']??''),'abc','ABC'),2).'\">'"
 			],
 			[
 				['X' => '<xsl:if test="@*">Y</xsl:if>'],

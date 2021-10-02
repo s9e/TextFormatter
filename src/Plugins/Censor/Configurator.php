@@ -115,7 +115,7 @@ class Configurator extends ConfiguratorBase implements ArrayAccess, Countable, I
 				<xsl:when test="@' . $this->attrName . '">
 					<xsl:value-of select="@' . htmlspecialchars($this->attrName) . '"/>
 				</xsl:when>
-				<xsl:otherwise>' . htmlspecialchars($this->defaultReplacement) . '</xsl:otherwise>
+				<xsl:otherwise>' . htmlspecialchars($this->defaultReplacement, ENT_COMPAT) . '</xsl:otherwise>
 			</xsl:choose>';
 	}
 

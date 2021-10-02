@@ -41,9 +41,9 @@ class RepositoryTest extends Test
 	public function testConstructorInvalidPath()
 	{
 		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage('NULL is not a valid BBCode repository file');
+		$this->expectExceptionMessage("'/does_not_exist' is not a valid BBCode repository file");
 
-		$repository = new Repository(null, new BBCodeMonkey(new Configurator));
+		$repository = new Repository('/does_not_exist', new BBCodeMonkey(new Configurator));
 	}
 
 	/**

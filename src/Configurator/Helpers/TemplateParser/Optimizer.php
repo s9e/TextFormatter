@@ -98,7 +98,7 @@ class Optimizer extends IRProcessor
 			$disableOutputEscaping = $output->getAttribute('disable-output-escaping');
 			while ($this->nextSiblingIsLiteralOutput($output, $disableOutputEscaping))
 			{
-				$output->nodeValue = htmlspecialchars($output->nodeValue . $output->nextSibling->nodeValue);
+				$output->nodeValue = htmlspecialchars($output->nodeValue . $output->nextSibling->nodeValue, ENT_COMPAT);
 				$output->parentNode->removeChild($output->nextSibling);
 			}
 		}
