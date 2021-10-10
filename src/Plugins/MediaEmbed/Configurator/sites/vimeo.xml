@@ -13,7 +13,7 @@
 	</attributes>
 
 	<host>vimeo.com</host>
-	<extract>!vimeo\.com/(?:channels/[^/]+/|video/)?(?'id'\d+)!</extract>
+	<extract>!vimeo\.com/(?:channels/[^/]+/|video/)?(?'id'\d+)\b!</extract>
 	<extract>!#t=(?'t'[\dhms]+)!</extract>
 	<iframe>
 		<src><![CDATA[

@@ -4033,6 +4033,17 @@ class ParserTest extends Test
 				}
 			],
 			[
+				// Vimeo usernames can start with a digit
+				// https://xenforo.com/community/threads/197454/
+				'https://vimeo.com/42video',
+				'<t>https://vimeo.com/42video</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
 				'https://vk.com/video121599878_165723901?hash=e06b0878046e1d32',
 				'<r><VK hash="e06b0878046e1d32" oid="121599878" vid="165723901">https://vk.com/video121599878_165723901?hash=e06b0878046e1d32</VK></r>',
 				[],
