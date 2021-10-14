@@ -504,8 +504,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://shows.acast.com/chaotic-normal/episodes/the-rising-tide',
-				'<r><ACAST episode_id="60f641a3fb28380014c4d8f0" show_id="60ef8f477fe7b1001343d9d6">https://shows.acast.com/chaotic-normal/episodes/the-rising-tide</ACAST></r>',
+				'https://shows.acast.com/thefightingcock/s11e09-gil',
+				'<r><ACAST episode_id="611fda6e1e62460013acb5fb" show_id="55daacdd-0c7e-4338-bbc9-57b60dcfd638">https://shows.acast.com/thefightingcock/s11e09-gil</ACAST></r>',
 				[],
 				function ($configurator)
 				{
