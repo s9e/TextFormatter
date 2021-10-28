@@ -4033,6 +4033,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://vimeo.com/637012981/c27a3b1fc3',
+				'<r><VIMEO h="c27a3b1fc3" id="637012981">https://vimeo.com/637012981/c27a3b1fc3</VIMEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('vimeo');
+				}
+			],
+			[
 				// Vimeo usernames can start with a digit
 				// https://xenforo.com/community/threads/197454/
 				'https://vimeo.com/42video',

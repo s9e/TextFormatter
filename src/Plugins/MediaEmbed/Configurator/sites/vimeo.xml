@@ -13,12 +13,13 @@
 	</attributes>
 
 	<host>vimeo.com</host>
-	<extract>!vimeo\.com/(?:channels/[^/]+/|video/)?(?'id'\d+)\b!</extract>
+	<extract>!vimeo\.com/(?:channels/[^/]+/|video/)?(?'id'\d+)(?:/(?'h'\w+))?\b!</extract>
 	<extract>!#t=(?'t'[\dhms]+)!</extract>
 	<iframe>
 		<src><![CDATA[
 			<xsl:text>//player.vimeo.com/video/</xsl:text>
 			<xsl:value-of select="@id"/>
+			<xsl:if test="@h">?h=<xsl:value-of select="@h"/></xsl:if>
 			<xsl:if test="@t">#t=<xsl:value-of select="@t"/></xsl:if>
 		]]></src>
 	</iframe>
