@@ -5362,6 +5362,7 @@ Xml File Definition Collection (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Confi
  [x] Properly reads CDATA
  [x] Iframe dimensions are cast to integer
  [x] Default attribute values are cast to integer if they are made of digits
+ [x] Default attribute values can be 0
  [x] Other default attribute values are left as strings
  [x] Attributes' "required" property is cast to bool
 

@@ -20,6 +20,7 @@ class XmlFileDefinitionCollectionTest extends Test
 					<attributes>
 						<playlist defaultValue='12x4' required='true'/>
 						<volume defaultValue='11' required='false'/>
+						<zero defaultValue='0'/>
 					</attributes>
 					<iframe width='560' height='315' src='//localhost/e/{@id}'>
 						<onload><![CDATA[alert(1)]]></onload>
@@ -174,6 +175,17 @@ class XmlFileDefinitionCollectionTest extends Test
 		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
 		$siteConfig = $collection->get($siteId);
 		$this->assertSame(11, $siteConfig['attributes']['volume']['defaultValue']);
+	}
+
+	/**
+	* @testdox Default attribute values can be 0
+	*/
+	public function testDefaultValueCastToZero()
+	{
+		$siteId     = $this->generateDefinition();
+		$collection = new XmlFileDefinitionCollection(sys_get_temp_dir());
+		$siteConfig = $collection->get($siteId);
+		$this->assertSame(0, $siteConfig['attributes']['zero']['defaultValue']);
 	}
 
 	/**

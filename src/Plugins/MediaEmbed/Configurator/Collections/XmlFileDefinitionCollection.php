@@ -17,9 +17,9 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 	* @var array Known config types [<name regexp>, <value regexp>, <type>]
 	*/
 	protected $configTypes = [
-		['(^defaultValue$)', '(^[1-9][0-9]*$)D',     'castToInt'],
-		['(height$|width$)', '(^[1-9][0-9]*$)D',     'castToInt'],
-		['(^required$)',     '(^(?:true|false)$)iD', 'castToBool']
+		['(^defaultValue$)', '(^(?:0|[1-9][0-9]+)$)D', 'castToInt'],
+		['(height$|width$)', '(^(?:0|[1-9][0-9]+)$)D', 'castToInt'],
+		['(^required$)',     '(^(?:fals|tru)e$)Di',    'castToBool']
 	];
 
 	/**
