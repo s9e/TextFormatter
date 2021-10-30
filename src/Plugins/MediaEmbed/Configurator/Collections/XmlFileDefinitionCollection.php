@@ -98,7 +98,7 @@ class XmlFileDefinitionCollection extends SiteDefinitionCollection
 			{
 				$config[$k] = $this->convertValueTypes($v);
 			}
-			else
+			elseif (is_string($v))
 			{
 				$config[$k] = $this->castConfigValue($k, $v);
 			}
