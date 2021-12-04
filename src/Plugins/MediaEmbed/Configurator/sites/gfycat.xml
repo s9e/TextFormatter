@@ -3,6 +3,9 @@
 	<example>https://gfycat.com/SereneIllfatedCapybara</example>
 	<example>https://giant.gfycat.com/SereneIllfatedCapybara.gif</example>
 
+	<oembed endpoint="https://api.gfycat.com/v1/oembed"
+	          scheme="https://gfycat.com/{@id}"/>
+
 	<tags><tag>images</tag></tags>
 
 	<attributes>
