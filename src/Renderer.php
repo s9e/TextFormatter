@@ -131,7 +131,7 @@ abstract class Renderer
 	/**
 	* Set the values of several parameters from the stylesheet
 	*
-	* @param  string $params Associative array of [parameter name => parameter value]
+	* @param  array $params Associative array of [parameter name => parameter value]
 	* @return void
 	*/
 	public function setParameters(array $params)
