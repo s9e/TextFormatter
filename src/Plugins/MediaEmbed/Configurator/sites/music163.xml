@@ -1,0 +1,22 @@
+<site name="music163" homepage="https://music.163.com">
+	<example>https://music.163.com/#/playlist?id=84595839</example>
+	<example>https://music.163.com/#/album?id=2094525</example>
+	<example>https://music.163.com/#/song?id=28874104</example>
+	
+	<tags><tag>music</tag><tag>.cn</tag></tags>
+
+	<host>music.163.com</host>
+	<extract>@music\.163\.com/#/(?<type>playlist|album|song)\?id=(?<id>\d+)@</extract>
+	<iframe width="350" height="300">
+		<src><![CDATA[
+			<xsl:text>https://music.163.com/outchain/player?type=</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@type = 'playlist'">0</xsl:when>
+				<xsl:when test="@type = 'album'">1</xsl:when>
+				<xsl:when test="@type = 'song'">2</xsl:when>
+			</xsl:choose>
+			<xsl:text>&amp;id=</xsl:text>
+			<xsl:value-of select="@id" />
+		]]></src>
+	</iframe>
+</site>
