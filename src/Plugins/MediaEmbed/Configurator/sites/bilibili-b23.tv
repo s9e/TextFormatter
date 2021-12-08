@@ -6,9 +6,9 @@
 	<tags><tag>video</tag><tag>.cn</tag></tags>
 
 	<host>b23.tv</host>
-	<extract>#b23\.tv/(?<url>.*?)(\?|$)#</extract>
+	<extract>#b23\.tv/(?<url>\w+?)(\?|$)#</extract>
 	<scrape url="http://b23.tv/{@url}">
 		<extract>/"bvid":"(?<bvid>BV.{10})","p":(?<pid>\d+)/</extract>
 	</scrape>
-	<iframe width="640" height="480" src="//player.bilibili.com/player.html?bvid={@bvid}&page={@pid}&high_quality=1" />
+	<iframe width="640" height="480" src="https://player.bilibili.com/player.html?bvid={@bvid}&amp;page={@pid}&amp;high_quality=1" />
 </site>

@@ -6,5 +6,5 @@
 
 	<host>bilibili.com</host>
 	<extract>#bilibili\.com/video/((av(?<avid>\d+))|(?<bvid>BV.{10}))(\?p=(?<pid>\d+))?#</extract>
-	<iframe width="640" height="480" src="https://player.bilibili.com/player.html?aid={@avid}&bvid={@bvid}&page={@pid}&high_quality=1" />
+	<iframe width="640" height="480" src="https://player.bilibili.com/player.html?aid={@avid}&amp;bvid={@bvid}&amp;page={@pid}&amp;high_quality=1" />
 </site>
