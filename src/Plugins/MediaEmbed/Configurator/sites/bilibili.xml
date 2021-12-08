@@ -1,0 +1,10 @@
+<site name="bilibili" homepage="https://www.bilibili.com">
+	<example>https://www.bilibili.com/video/av2</example>
+	<example>https://www.bilibili.com/video/BV1xx411c7mD</example>
+
+	<tags><tag>video</tag><tag>.cn</tag></tags>
+
+	<host>bilibili.com</host>
+	<extract>#bilibili\.com/video/((av(?<avid>\d+))|(?<bvid>BV.{10}))(\?p=(?<pid>\d+))?#</extract>
+	<iframe src="//player.bilibili.com/player.html?aid={@avid}&bvid={@bvid}&page={@pid}"/>
+</site>
