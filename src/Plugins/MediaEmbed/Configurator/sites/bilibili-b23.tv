@@ -1,0 +1,14 @@
+<site name="bilibilib23tv" homepage="https://b23.tv">
+	<example>https://b23.tv/v4f59Jx</example>
+	<!-- note b23.tv is a url shortener services operated by bilibili for convenience of sharing video, audio, article, user profile, timeline, etc. -->
+	<!-- so it might redirect to other sites rather than a video player page -->
+
+	<tags><tag>video</tag><tag>.cn</tag></tags>
+
+	<host>b23.tv</host>
+	<extract>#b23\.tv/(?<url>.*?)(\?|$)#</extract>
+	<scrape url="http://b23.tv/{@url}">
+		<extract>/"bvid":"(?<bvid>BV.{10})","p":(?<pid>\d+)/</extract>
+	</scrape>
+	<iframe width="640" height="480" src="//player.bilibili.com/player.html?bvid={@bvid}&page={@pid}&high_quality=1" />
+</site>
