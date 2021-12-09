@@ -1,0 +1,10 @@
+<site name="niconico" homepage="https://www.nicovideo.jp">
+	<example>https://www.nicovideo.jp/watch/sm15630734</example>
+	<example>https://www.nicovideo.jp/watch/so39705818</example>
+
+	<tags><tag>music</tag><tag>.jp</tag></tags>
+
+	<host>nicovideo.jp</host>
+	<extract>@nicovideo.jp/watch/(?<id>s(m|o)\d+)@</extract>
+	<iframe width="640" height="480" src="https://embed.nicovideo.jp/watch/{@id}" />
+</site>
