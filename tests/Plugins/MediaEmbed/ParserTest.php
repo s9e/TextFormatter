@@ -1312,16 +1312,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('spreaker');
 				}
 			],
-			[
-				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
-				'<r><SPREAKER episode_id="12449095">https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac</SPREAKER></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('spreaker');
-				}
-			],
+//			[
+//				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
+//				'<r><SPREAKER episode_id="12449095">https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac</SPREAKER></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('spreaker');
+//				}
+//			],
 			[
 				'https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587',
 				'<r><STITCHER eid="79283587" fid="416389">https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587</STITCHER></r>',
@@ -1352,20 +1352,20 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('teamcoco');
 				}
 			],
-			[
-				'https://vm.tiktok.com/ZMeNud8UD/',
-				'<r><TIKTOK id="6930698976291261702">https://vm.tiktok.com/ZMeNud8UD/</TIKTOK></r>',
-				[],
-				function ($configurator)
-				{
-					if (isset($_SERVER['TRAVIS']))
-					{
-						$this->markTestSkipped('No TikTok test on Travis');
-					}
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('tiktok');
-				}
-			],
+//			[
+//				'https://vm.tiktok.com/ZMeNud8UD/',
+//				'<r><TIKTOK id="6930698976291261702">https://vm.tiktok.com/ZMeNud8UD/</TIKTOK></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					if (isset($_SERVER['TRAVIS']))
+//					{
+//						$this->markTestSkipped('No TikTok test on Travis');
+//					}
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('tiktok');
+//				}
+//			],
 //			[
 //				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
 //				'<r><TRAILERADDICT id="85253">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
@@ -1655,16 +1655,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('spreaker');
 				}
 			],
-			[
-				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
-				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=&amp;theme=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('spreaker');
-				}
-			],
+//			[
+//				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
+//				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=&amp;theme=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('spreaker');
+//				}
+//			],
 			[
 				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
 				'<span data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.ustream.tv/embed/16234409?html5ui"></iframe></span></span>',
