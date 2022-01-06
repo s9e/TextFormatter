@@ -1,5 +1,9 @@
 <site name="Streamable" homepage="https://streamable.com/">
+	<source>https://support.streamable.com/article/46-streamable-api</source>
 	<example>https://streamable.com/e4d</example>
+
+	<oembed endpoint="https://api.streamable.com/oembed.json"
+	          scheme="https://streamable.com/{@id}"/>
 
 	<tags><tag>videos</tag></tags>
 
