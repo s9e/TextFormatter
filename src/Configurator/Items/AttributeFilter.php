@@ -16,7 +16,7 @@ class AttributeFilter extends Filter
 	/**
 	* Constructor
 	*
-	* @param  callable $callback
+	* @param callable $callback
 	*/
 	public function __construct($callback)
 	{

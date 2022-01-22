@@ -170,7 +170,7 @@ class Template
 	* Replace parts of this template that match given regexp
 	*
 	* @param  string   $regexp Regexp for matching parts that need replacement
-	* @param  callback $fn     Callback used to get the replacement
+	* @param  callable $fn     Callback used to get the replacement
 	* @return void
 	*/
 	public function replaceTokens($regexp, $fn)

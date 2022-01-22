@@ -105,7 +105,7 @@ abstract class Utils
 	*
 	* @param  string   $xml      Original XML
 	* @param  string   $tagName  Target tag's name
-	* @param  callback $callback Callback used to process attributes. Receives the old attributes
+	* @param  callable $callback Callback used to process attributes. Receives the old attributes
 	*                            as an array, should return the new attributes as an array
 	* @return string             Modified XML
 	*/

@@ -18,7 +18,7 @@ class BundleGenerator
 	protected $configurator;
 
 	/**
-	* @var callback Callback used to serialize the objects
+	* @var callable Callback used to serialize the objects
 	*/
 	public $serializer = 'serialize';
 

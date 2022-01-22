@@ -16,7 +16,7 @@ use s9e\TextFormatter\Configurator\JavaScript\FunctionProvider;
 class ProgrammableCallback implements ConfigProvider
 {
 	/**
-	* @var callback Callback
+	* @var callable Callback
 	*/
 	protected $callback;
 
@@ -85,7 +85,7 @@ class ProgrammableCallback implements ConfigProvider
 	/**
 	* Get this object's callback
 	*
-	* @return callback
+	* @return callable
 	*/
 	public function getCallback()
 	{

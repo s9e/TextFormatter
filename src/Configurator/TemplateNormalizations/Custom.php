@@ -12,14 +12,14 @@ use DOMElement;
 class Custom extends AbstractNormalization
 {
 	/**
-	* @var callback Normalization callback
+	* @var callable Normalization callback
 	*/
 	protected $callback;
 
 	/**
 	* Constructor
 	*
-	* @param  callback $callback Normalization callback
+	* @param callable $callback Normalization callback
 	*/
 	public function __construct(callable $callback)
 	{

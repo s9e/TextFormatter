@@ -950,7 +950,7 @@ class Parser
 	* existing plugin
 	*
 	* @param  string   $pluginName
-	* @param  callback $parser
+	* @param  callable $parser
 	* @param  string   $regexp
 	* @param  integer  $limit
 	* @return void

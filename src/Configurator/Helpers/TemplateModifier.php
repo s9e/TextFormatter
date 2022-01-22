@@ -39,7 +39,7 @@ abstract class TemplateModifier
 	*
 	* @param  string   $template Original template
 	* @param  string   $regexp   Regexp for matching parts that need replacement
-	* @param  callback $fn       Callback used to get the replacement
+	* @param  callable $fn       Callback used to get the replacement
 	* @return string             Processed template
 	*/
 	public static function replaceTokens($template, $regexp, $fn)
@@ -93,7 +93,7 @@ abstract class TemplateModifier
 	*
 	* @param  DOMAttr  $attribute Attribute
 	* @param  string   $regexp    Regexp for matching parts that need replacement
-	* @param  callback $fn        Callback used to get the replacement
+	* @param  callable $fn        Callback used to get the replacement
 	* @return void
 	*/
 	protected static function replaceTokensInAttribute(DOMAttr $attribute, $regexp, $fn)
@@ -125,7 +125,7 @@ abstract class TemplateModifier
 	*
 	* @param  DOMText  $node   Text node
 	* @param  string   $regexp Regexp for matching parts that need replacement
-	* @param  callback $fn     Callback used to get the replacement
+	* @param  callable $fn     Callback used to get the replacement
 	* @return void
 	*/
 	protected static function replaceTokensInText(DOMText $node, $regexp, $fn)
