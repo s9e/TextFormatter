@@ -1216,10 +1216,10 @@ Ip Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\IpFilter)
 Ipport Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\IpportFilter)
  [x] Callback is s9e\TextFormatter\Parser\AttributeFilters\NetworkFilter::filterIpport()
 
-Ipv4 Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv4Filter)
+Ipv4Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv4Filter)
  [x] Callback is s9e\TextFormatter\Parser\AttributeFilters\NetworkFilter::filterIpv4()
 
-Ipv6 Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv6Filter)
+Ipv6Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\Ipv6Filter)
  [x] Callback is s9e\TextFormatter\Parser\AttributeFilters\NetworkFilter::filterIpv6()
 
 Map Filter (s9e\TextFormatter\Tests\Configurator\Items\AttributeFilters\MapFilter)
@@ -6514,7 +6514,7 @@ Multi Byte String Manipulation (s9e\TextFormatter\Tests\Configurator\RendererGen
  [x]  with data set #8
  [x]  with data set #9
 
-PHP80 Functions (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\PHP80Functions)
+PHP80Functions (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\PHP80Functions)
  [x]  with data set #0
  [x]  with data set #1
  [x]  with data set #2

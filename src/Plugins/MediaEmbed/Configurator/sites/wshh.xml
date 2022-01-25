@@ -9,7 +9,7 @@
 	<extract>!worldstar(?:hiphop)?\.com/(?:emb|featur)ed/(?'id'\d+)!</extract>
 	<scrape>
 		<match>!worldstar(?:hiphop)?\.com/(?:\w+/)?video\.php\?v=\w+!</match>
-		<extract>!v: ?"?(?'id'\d+)!</extract>
+		<extract>!(?:v: ?"?|worldstar(?:hiphop)?\.com/embed/)(?'id'\d+)!</extract>
 	</scrape>
 	<iframe src="//worldstarhiphop.com/embed/{@id}"/>
 </site>
