@@ -1352,20 +1352,20 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('teamcoco');
 				}
 			],
-//			[
-//				'https://vm.tiktok.com/ZMeNud8UD/',
-//				'<r><TIKTOK id="6930698976291261702">https://vm.tiktok.com/ZMeNud8UD/</TIKTOK></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					if (isset($_SERVER['TRAVIS']))
-//					{
-//						$this->markTestSkipped('No TikTok test on Travis');
-//					}
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('tiktok');
-//				}
-//			],
+			[
+				'https://vm.tiktok.com/TTPdrc3YBJ/',
+				'<r><TIKTOK id="7050192414379691270">https://vm.tiktok.com/TTPdrc3YBJ/</TIKTOK></r>',
+				[],
+				function ($configurator)
+				{
+					if (isset($_SERVER['TRAVIS']))
+					{
+						$this->markTestSkipped('No TikTok test on Travis');
+					}
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('tiktok');
+				}
+			],
 //			[
 //				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
 //				'<r><TRAILERADDICT id="85253">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',

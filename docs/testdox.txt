@@ -5502,6 +5502,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #61
  [x] Scraping tests with data set #62
  [x] Scraping tests with data set #63
+ [x] Scraping tests with data set #64
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
