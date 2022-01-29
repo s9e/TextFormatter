@@ -7,7 +7,9 @@
 	<tags><tag>images</tag></tags>
 
 	<attributes>
+		<et     required="true"/>
 		<height defaultValue="360" filterChain="#uint"/>
+		<sig    required="true"/>
 		<width  defaultValue="640" filterChain="#uint"/>
 	</attributes>
 
@@ -27,14 +29,13 @@
 	<host>gettyimages.pt</host>
 	<host>gettyimages.se</host>
 	<host>gty.im</host>
-	<extract>!gty\.im/(?'id'\d+)!</extract>
-	<extract>!gettyimages\.[.\w]+/detail(?=/).*?/(?'id'\d+)!</extract>
-	<extract>!#[-\w]*picture-id(?'id'\d+)$!</extract>
 	<scrape url="https://embed.gettyimages.com/preview/{@id}">
+		<match>!(?:gty\.im|gettyimages\.[.\w]+/detail(?=/).*?)/(?'id'\d+)!</match>
+		<extract>!/embed/(?'id'\d+)!</extract>
 		<extract>!"height":[ "]*(?'height'\d+)!</extract>
 		<extract>!"width":[ "]*(?'width'\d+)!</extract>
-		<extract>!\bid[=:]['"]?(?'et'[-=\w]+)!</extract>
-		<extract>!\bsig[=:]['"]?(?'sig'[-=\w]+)!</extract>
+		<extract>!\?et=(?'et'[-=\w]+)!</extract>
+		<extract>!\\u0026sig=(?'sig'[-=\w]+)!</extract>
 	</scrape>
 	<iframe width="{@width}" height="{@height}" src="//embed.gettyimages.com/embed/{@id}?et={@et}&amp;tld=com&amp;sig={@sig}&amp;caption=false&amp;ver=1"/>
 </site>
