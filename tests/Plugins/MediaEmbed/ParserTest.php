@@ -5217,7 +5217,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744" style="border:0;height:250px;max-width:550px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744" style="border:0;height:273px;max-width:550px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -5226,7 +5226,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744dark" style="border:0;height:250px;max-width:550px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744dark" style="border:0;height:273px;max-width:550px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -5686,7 +5686,7 @@ class ParserTest extends Test
 			[
 				'twitter',
 				'https://twitter.com/IJasonAlexander/statuses/526635414338023424',
-				'<amp-twitter layout="responsive" width="550" height="250" data-tweetid="526635414338023424"><blockquote placeholder=""><a href="https://twitter.com/user/status/526635414338023424">Twitter</a></blockquote></amp-twitter>'
+				'<amp-twitter layout="responsive" width="550" height="273" data-tweetid="526635414338023424"><blockquote placeholder=""><a href="https://twitter.com/user/status/526635414338023424">Twitter</a></blockquote></amp-twitter>'
 			],
 			[
 				'vimeo',

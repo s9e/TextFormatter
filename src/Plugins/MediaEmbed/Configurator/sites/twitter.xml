@@ -7,11 +7,11 @@
 
 	<host>twitter.com</host>
 	<extract>@twitter\.com/(?:#!/|i/)?\w+/(?:status(?:es)?|tweet)/(?'id'\d+)@</extract>
-	<iframe allow="autoplay *" width="550" height="250" src="https://s9e.github.io/iframe/2/twitter.min.html#{@id}{$MEDIAEMBED_THEME}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe allow="autoplay *" width="550" height="273" src="https://s9e.github.io/iframe/2/twitter.min.html#{@id}{$MEDIAEMBED_THEME}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 
 	<amp custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js">
 		<template><![CDATA[
-			<amp-twitter layout="responsive" width="550" height="250" data-tweetid="{@id}">
+			<amp-twitter layout="responsive" width="550" height="273" data-tweetid="{@id}">
 				<blockquote placeholder="">
 					<a href="https://twitter.com/user/status/{@id}">Twitter</a>
 				</blockquote>
