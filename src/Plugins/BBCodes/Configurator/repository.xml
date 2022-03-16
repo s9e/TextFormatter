@@ -60,15 +60,15 @@
 							<var name='style'>github</var>
 						<![CDATA[</xsl:attribute>
 					</xsl:if>
-					<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.1.0/build/' != ']]><var name='url' description='highlight.js CDN URL'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.1.0/build/</var><![CDATA['">
+					<xsl:if test="'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.0/build/' != ']]><var name='url' description='highlight.js CDN URL'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.0/build/</var><![CDATA['">
 						<xsl:attribute name="data-hljs-url">]]>
-							<var name='url'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.1.0/build/</var>
+							<var name='url'>https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.0/build/</var>
 						<![CDATA[</xsl:attribute>
 					</xsl:if>
 					<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
-					<xsl:attribute name="integrity">sha384-oTqfbnKDrROJYNQZI1U//Vr36HEjwJafOewSUYYyb5OXhv0r2qRQcjAP3yXa4HCg</xsl:attribute>
+					<xsl:attribute name="integrity">sha384-fQc6882DqpMzcLWJbK07+Xnd8dceuG+q15iFvx+m/bAzjiBJeLnbNfaiXYzJBEn/</xsl:attribute>
 					<xsl:attribute name="onload">hljsLoader.highlightBlocks(this.parentNode)</xsl:attribute>
-					<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.24/loader.min.js</xsl:attribute>
+					<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.28/loader.min.js</xsl:attribute>
 				</script>
 			</pre>
 		]]></template>
