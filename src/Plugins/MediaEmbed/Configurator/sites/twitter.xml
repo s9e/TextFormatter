@@ -7,7 +7,13 @@
 
 	<host>twitter.com</host>
 	<extract>@twitter\.com/(?:#!/|i/)?\w+/(?:status(?:es)?|tweet)/(?'id'\d+)@</extract>
-	<iframe allow="autoplay *" width="550" height="273" src="https://s9e.github.io/iframe/2/twitter.min.html#{@id}{$MEDIAEMBED_THEME}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe allow="autoplay *" width="550" height="273" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
+		<src><![CDATA[
+			<xsl:text>https://s9e.github.io/iframe/2/twitter.min.html#</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:if test="$MEDIAEMBED_THEME = 'dark'">#theme=dark</xsl:if>
+		]]></src>
+	</iframe>
 
 	<amp custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js">
 		<template><![CDATA[
