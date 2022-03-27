@@ -5,5 +5,11 @@
 
 	<host>t.me</host>
 	<extract>@//t.me/(?!addstickers/|joinchat/)(?'id'\w+/\d+)@</extract>
-	<iframe width="500" height="96" src="https://s9e.github.io/iframe/2/telegram.min.html#{@id}" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe width="500" height="96" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
+		<src><![CDATA[
+			<xsl:text>https://s9e.github.io/iframe/2/telegram.min.html#</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:if test="$MEDIAEMBED_THEME = 'dark'">#theme=dark</xsl:if>
+		]]></src>
+	</iframe>
 </site>

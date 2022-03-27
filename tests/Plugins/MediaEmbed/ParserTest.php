@@ -5153,6 +5153,25 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://t.me/durov/68',
+				'<iframe data-s9e-mediaembed="telegram" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:96px;max-width:500px;width:100%" src="https://s9e.github.io/iframe/2/telegram.min.html#durov/68"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('telegram');
+				}
+			],
+			[
+				'https://t.me/durov/68',
+				'<iframe data-s9e-mediaembed="telegram" allowfullscreen="" loading="lazy" onload="var c=new MessageChannel;c.port1.onmessage=function(e){style.height=e.data+\'px\'};contentWindow.postMessage(\'s9e:init\',\'https://s9e.github.io\',[c.port2])" scrolling="no" style="border:0;height:96px;max-width:500px;width:100%" src="https://s9e.github.io/iframe/2/telegram.min.html#durov/68#theme=dark"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('telegram');
+					$configurator->rendering->parameters['MEDIAEMBED_THEME'] = 'dark';
+				}
+			],
+			[
 				'https://www.tradingview.com/symbols/NASDAQ-AAPL/',
 				'<iframe data-s9e-mediaembed="tradingview" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:400px;width:100%" src="https://s.tradingview.com/widgetembed/?interval=D&amp;symbol=NASDAQ:AAPL"></iframe>',
 				[],
