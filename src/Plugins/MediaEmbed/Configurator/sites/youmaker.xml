@@ -5,6 +5,6 @@
 	<tags><tag>videos</tag></tags>
 
 	<host>youmaker.com</host>
-	<extract>!youmaker\.com/(?:embed|v(?:ideo)?)/(?'id'[-\w]+)!</extract>
+	<extract>!youmaker\.com/(?:embed|v(?:ideo)?)/(?'id'[-a-z0-9]+)!i</extract>
 	<iframe src="https://www.youmaker.com/embed/{@id}"/>
 </site>

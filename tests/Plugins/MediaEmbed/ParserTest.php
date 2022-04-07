@@ -4323,6 +4323,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.youmaker.com/v/8oYNz8RVK9NE_5-Levels-of-Spider-Man-Music-Noob-to-Epic.html',
+				'<r><YOUMAKER id="8oYNz8RVK9NE">https://www.youmaker.com/v/8oYNz8RVK9NE_5-Levels-of-Spider-Man-Music-Noob-to-Epic.html</YOUMAKER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youmaker');
+				}
+			],
+			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
 				'<r><YOUTUBE id="-cEzsCAzTak"><s>[media]</s>http://www.youtube.com/watch?v=-cEzsCAzTak&amp;feature=channel<e>[/media]</e></YOUTUBE></r>',
 				[],
