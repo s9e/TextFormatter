@@ -4,12 +4,5 @@
 	<host>voca.ro</host>
 	<host>vocaroo.com</host>
 	<extract>!voca(?:\.ro|roo\.com)/(?:i/)?(?'id'\w+)!</extract>
-	<choose>
-		<when test="starts-with(@id, 's0') or starts-with(@id, 's1')">
-			<flash width="148" height="44" src="//vocaroo.com/player.swf?playMediaID={@id}&amp;autoplay=0"/>
-		</when>
-		<otherwise>
-			<iframe width="300" height="60" src="https://vocaroo.com/embed/{@id}"/>
-		</otherwise>
-	</choose>
+	<iframe width="100%" max-width="900" height="80" src="https://vocaroo.com/embed/{@id}"/>
 </site>

@@ -5290,24 +5290,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://old.vocaroo.com/i/s1HNgmYD4bIH',
-				'<span data-s9e-mediaembed="vocaroo" style="display:inline-block;width:100%;max-width:148px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:29.72973%"><object data="//vocaroo.com/player.swf?playMediaID=s1HNgmYD4bIH&amp;autoplay=0" style="height:100%;left:0;position:absolute;width:100%" type="application/x-shockwave-flash" typemustmatch=""><param name="allowfullscreen" value="true"></object></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('vocaroo');
-				}
-			],
-			[
-				'https://vocaroo.com/3OlvdB6eiiK',
-				'<span data-s9e-mediaembed="vocaroo" style="display:inline-block;width:100%;max-width:300px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:20%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://vocaroo.com/embed/3OlvdB6eiiK" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('vocaroo');
-				}
-			],
-			[
 				'[media]http://www.youtube.com/watch?v=-cEzsCAzTak&feature=channel[/media]',
 				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>',
 				[],
