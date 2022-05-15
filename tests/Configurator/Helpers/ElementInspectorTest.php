@@ -92,7 +92,7 @@ class ElementInspectorTest extends Test
 			[
 				'getDenyDescendantBitfield',
 				'<video src="{@src}"><xsl:apply-templates/></video>',
-				"\0\0\0\0\0\2"
+				"\0\0\0\0\0\1"
 			],
 			[
 				'getDenyDescendantBitfield',
