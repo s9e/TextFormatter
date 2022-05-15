@@ -1,3 +1,44 @@
+2.11.1 (2022-05-15)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/b9d9d7ac480301f0cf718345daf591ddf475d9f1...ae61443a7e1984f31f9c26e3a16d811c87b3e3e2)
+
+### Added
+
+ - `7cd2a60be` MediaEmbed: added Gfycat oEmbed data
+ - `16d598964` MediaEmbed: added support for dark theme in Instagram
+ - `66afa69e6` MediaEmbed: added support for dark theme in Reddit
+ - `6fca64d7e` MediaEmbed: added support for dark theme in Telegram
+
+### Removed
+
+ - `5e294db63` MediaEmbed: removed Vocaroo's old Flash player
+
+### Fixed
+
+ - `c199a448a` Fixed callable type annotations
+
+### Changed
+
+ - `840acf54c` ElementInspector: updated element definitions
+ - `0f6b6372a` MediaEmbed: updated Acast
+ - `2822347ca` MediaEmbed: updated Getty
+ - `6b6fc560c` MediaEmbed: updated Odysee
+ - `e0d2ecbb2` MediaEmbed: updated Rumble
+ - `683a50394` MediaEmbed: updated Spotify example URL
+ - `e3c00295b` MediaEmbed: updated Streamable
+ - `17904dd79` MediaEmbed: updated TikTok
+ - `2483eaf1b` MediaEmbed: updated Twitter
+ - `0cbd29fde` MediaEmbed: updated Twitter
+ - `bfd6323d0` MediaEmbed: updated Vimeo
+ - `3fcab01e0` MediaEmbed: updated Vimeo
+ - `53ce06e23` MediaEmbed: updated WSHH
+ - `9c8a36d2d` Updated external dependencies
+ - `d11508589` Use correct parameter type in setParameters docblock
+ - `4f02bf465` XmlFileDefinitionCollection: allow '0' to be cast to an integer
+ - `bc0d88317` XmlFileDefinitionCollection: do not convert non-string values
+
+
 2.11.0 (2021-10-02)
 ===================
 
