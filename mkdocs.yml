@@ -4,7 +4,6 @@ extra_css: ["extra.css"]
 repo_url: https://github.com/s9e/TextFormatter/
 markdown_extensions:
   - sane_lists
-requirements_file: docs/requirements.txt
 nav:
   - Home: index.md
   - Getting started:
