@@ -62,6 +62,7 @@ class Parser extends ParserBase
 	* Exceptions:
 	*  - dashes and underscores, (base64 IDs could end with one)
 	*  - equal signs, (because of "foo?bar=")
+    *  - plus signs, (used by some file share services to force download)
 	*  - trailing slashes,
 	*  - closing parentheses. (they are balanced separately)
 	*
@@ -70,6 +71,6 @@ class Parser extends ParserBase
 	*/
 	protected function trimUrl($url)
 	{
-		return preg_replace('#(?:(?![-=)/_])[\\s!-.:-@[-`{-~\\pP])+$#Du', '', $url);
+		return preg_replace('#(?:(?![-=+)/_])[\\s!-.:-@[-`{-~\\pP])+$#Du', '', $url);
 	}
 }

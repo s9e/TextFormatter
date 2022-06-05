@@ -42,6 +42,7 @@ function linkifyUrl(tagPos, url)
 * Exceptions:
 *  - dashes and underscores, (base64 IDs could end with one)
 *  - equal signs, (because of "foo?bar=")
+*  - plus signs, (used by some file share services to force download)
 *  - trailing slashes,
 *  - closing parentheses. (they are balanced separately)
 *
@@ -50,5 +51,5 @@ function linkifyUrl(tagPos, url)
 */
 function trimUrl(url)
 {
-	return url.replace(/(?:(?![-=)\/_])[\s!-.:-@[-`{-~])+$/, '');
+	return url.replace(/(?:(?![-=+)\/_])[\s!-.:-@[-`{-~])+$/, '');
 }

@@ -64,6 +64,10 @@ class ParserTest extends Test
 				'Go to http://www.example.com/?foo= for more info',
 				'<r>Go to <URL url="http://www.example.com/?foo=">http://www.example.com/?foo=</URL> for more info</r>'
 			],
+            [
+                'Download http://www.example.com/foo+ on your computer',
+                '<r>Download <URL url="http://www.example.com/foo+">http://www.example.com/foo+</URL> on your computer</r>'
+            ],
 			[
 				'Mars (http://en.wikipedia.org/wiki/Mars_(planet)) is the fourth planet from the Sun',
 				'<r>Mars (<URL url="http://en.wikipedia.org/wiki/Mars_%28planet%29">http://en.wikipedia.org/wiki/Mars_(planet)</URL>) is the fourth planet from the Sun</r>'
