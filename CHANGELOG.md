@@ -1,3 +1,18 @@
+2.11.2 (2022-06-05)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/db5ef4b093c00a187037030dac6fbea531aac3dc...ba4b7a84b981500e6e8ead80e208d9b800f0f723)
+
+### Fixed
+
+ - `ba4b7a84b` Fixed whitespace
+
+### Changed
+
+ - `c34737eb5` Allow trailing plus sign in Autolink
+ - `6d4c3e097` Updated MkDocs
+
+
 2.11.1 (2022-05-15)
 ===================
 
