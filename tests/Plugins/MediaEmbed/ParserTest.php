@@ -1094,26 +1094,6 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('mrctv');
 //				}
 //			],
-			[
-				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
-				'<r><MSNBC id="mmvo300512323725">http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725</MSNBC></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('msnbc');
-				}
-			],
-			[
-				'http://on.msnbc.com/1qkH62o',
-				'<r><MSNBC id="mmvo300512323725">http://on.msnbc.com/1qkH62o</MSNBC></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('msnbc');
-				}
-			],
 //			[
 //				'http://video.nationalgeographic.com/tv/changing-earth',
 //				'<r><NATGEOVIDEO id="ngc-4MlzV_K8XoTPdXPLx2NOWq2IH410IzpO">http://video.nationalgeographic.com/tv/changing-earth</NATGEOVIDEO></r>',
@@ -1343,16 +1323,6 @@ class ParserTest extends Test
 //				}
 //			],
 			[
-				'http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode',
-				'<r><TEAMCOCO id="73784">http://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode</TEAMCOCO></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('teamcoco');
-				}
-			],
-			[
 				'https://vm.tiktok.com/TTPdrc3YBJ/',
 				'<r><TIKTOK id="7050192414379691270">https://vm.tiktok.com/TTPdrc3YBJ/</TIKTOK></r>',
 				[],
@@ -1404,16 +1374,6 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('twentyfoursevensports');
-				}
-			],
-			[
-				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
-				'<r><USTREAM cid="16234409">http://www.ustream.tv/channel/ps4-ustream-gameplay</USTREAM></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('ustream');
 				}
 			],
 			[
@@ -1622,16 +1582,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725',
-				'<span data-s9e-mediaembed="msnbc" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://www.msnbc.com/msnbc/embedded-video/mmvo300512323725" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('msnbc');
-				}
-			],
-			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
 				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" loading="lazy" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				[],
@@ -1665,16 +1615,6 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('spreaker');
 //				}
 //			],
-			[
-				'http://www.ustream.tv/channel/ps4-ustream-gameplay',
-				'<span data-s9e-mediaembed="ustream" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//www.ustream.tv/embed/16234409?html5ui"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('ustream');
-				}
-			],
 		];
 	}
 
