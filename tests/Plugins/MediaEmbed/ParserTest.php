@@ -1127,8 +1127,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world',
-				'<r><NPR i="385396431" m="385396432">http://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world</NPR></r>',
+				'https://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world',
+				'<r><NPR i="385396431" m="385396432">https://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world</NPR></r>',
 				[],
 				function ($configurator)
 				{
