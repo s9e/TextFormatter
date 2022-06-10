@@ -1240,7 +1240,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/user-56185579/sets/deep-impact-for-u-he-zebra-2',
-				'<r><SOUNDCLOUD id="user-56185579/sets/deep-impact-for-u-he-zebra-2" playlist_id="1227667873" track_id="1009549597">https://soundcloud.com/user-56185579/sets/deep-impact-for-u-he-zebra-2</SOUNDCLOUD></r>',
+				'<r><SOUNDCLOUD id="user-56185579/sets/deep-impact-for-u-he-zebra-2" playlist_id="1227667873" track_id="1009554946">https://soundcloud.com/user-56185579/sets/deep-impact-for-u-he-zebra-2</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{
@@ -1248,6 +1248,16 @@ class ParserTest extends Test
 					{
 						$this->markTestSkipped('SoundCloud does not like requests from Travis containers');
 					}
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'https://soundcloud.com/subsineacademy/sets/aphelion-bora/s-ntU3imOJop1',
+				'<r><SOUNDCLOUD id="subsineacademy/sets/aphelion-bora/s-ntU3imOJop1" playlist_id="1391797690" secret_token="s-ntU3imOJop1" track_id="1211369659">https://soundcloud.com/subsineacademy/sets/aphelion-bora/s-ntU3imOJop1</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
 				}
@@ -1583,7 +1593,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
-				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" loading="lazy" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713&amp;secret_token=" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="soundcloud" allowfullscreen="" loading="lazy" scrolling="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/59509713%3Fsecret_token%3D" style="border:0;height:166px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{

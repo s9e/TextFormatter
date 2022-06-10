@@ -10,16 +10,16 @@
 	<extract>@https?://(?:api\.)?soundcloud\.com/(?!pages/)(?'id'[-/\w]+/[-/\w]+|^[^/]+/[^/]+$)@i</extract>
 	<extract>@api\.soundcloud\.com/playlists/(?'playlist_id'\d+)@</extract>
 	<extract>@api\.soundcloud\.com/tracks/(?'track_id'\d+)(?:\?secret_token=(?'secret_token'[-\w]+))?@</extract>
-	<extract>@soundcloud\.com/(?!playlists|tracks)[-\w]+/[-\w]+/(?=s-)(?'secret_token'[-\w]+)@</extract>
+	<extract>@soundcloud\.com/(?!playlists/|tracks/)[-\w]+/(?:sets/)?[-\w]+/(?=s-)(?'secret_token'[-\w]+)@</extract>
 	<scrape>
 		<header>User-agent: PHP (not Mozilla)</header>
 		<match>@soundcloud\.com/(?!playlists/\d|tracks/\d)[-\w]+/[-\w]@</match>
-		<extract>@soundcloud:tracks:(?'track_id'\d+)@</extract>
+		<extract>@soundcloud(?::/)?:tracks:(?'track_id'\d+)@</extract>
 	</scrape>
 	<scrape>
 		<header>User-agent: PHP (not Mozilla)</header>
 		<match>@soundcloud\.com/[-\w]+/sets/@</match>
-		<extract>@soundcloud://playlists:(?'playlist_id'\d+)@</extract>
+		<extract>@soundcloud(?::/)?/playlists:(?'playlist_id'\d+)@</extract>
 	</scrape>
 	<iframe width="100%" max-width="900">
 		<height><![CDATA[
@@ -34,11 +34,13 @@
 				<xsl:when test="@playlist_id">
 					<xsl:text>https%3A//api.soundcloud.com/playlists/</xsl:text>
 					<xsl:value-of select="@playlist_id"/>
+					<xsl:text>%3Fsecret_token%3D</xsl:text>
+					<xsl:value-of select="@secret_token"/>
 				</xsl:when>
 				<xsl:when test="@track_id">
 					<xsl:text>https%3A//api.soundcloud.com/tracks/</xsl:text>
 					<xsl:value-of select="@track_id"/>
-					<xsl:text>&amp;secret_token=</xsl:text>
+					<xsl:text>%3Fsecret_token%3D</xsl:text>
 					<xsl:value-of select="@secret_token"/>
 				</xsl:when>
 				<xsl:otherwise>
