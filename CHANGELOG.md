@@ -1,3 +1,13 @@
+2.11.3 (2022-06-13)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/34f49739a6cabd93579b94fe5380919af5404d18...e0fab7776211925ed5104b51b0ce41d86114a99c)
+
+### Added
+
+ - `e0fab7776` MediaEmbed: added support for private playlists in SoundCloud
+
+
 2.11.2 (2022-06-05)
 ===================
 
