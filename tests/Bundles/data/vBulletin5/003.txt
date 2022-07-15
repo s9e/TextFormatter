@@ -1,0 +1,1 @@
+[color=blue]This text is blue.[/color]

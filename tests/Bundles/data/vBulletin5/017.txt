@@ -1,0 +1,14 @@
+[list=1]
+[*]list item 1
+[*]list item 2
+[/list]
+
+[list=A]
+[*]list item 1
+[*]list item 2
+[/list]
+
+[list=a]
+[*]list item 1
+[*]list item 2
+[/list]

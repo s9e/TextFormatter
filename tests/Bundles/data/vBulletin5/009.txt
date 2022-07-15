@@ -1,0 +1,2 @@
+[url]http://www.example.com[/url]
+[url=http://www.example.com]Check out this link.[/url]

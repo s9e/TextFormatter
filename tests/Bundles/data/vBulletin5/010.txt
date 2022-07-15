@@ -1,0 +1,2 @@
+[email]address@example.com[/email]
+[email=address@example.com]John Smith[/email]

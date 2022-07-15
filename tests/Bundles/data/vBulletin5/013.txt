@@ -1,0 +1,2 @@
+[img]http://www.example.com/images/misc/vbulletin5_logo.png[/img] (Not linked)
+[url=http://www.example.com][img]http://www.example.com/images/misc/vbulletin5_logo.png[/img][/url] (Linked)

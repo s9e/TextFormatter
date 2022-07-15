@@ -1,0 +1,4 @@
+[html]
+<img src="image.gif" alt="image" />
+<a href="testing.html" target="_blank">Testing</a>
+[/html]

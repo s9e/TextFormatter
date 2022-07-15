@@ -1,0 +1,3 @@
+[b]This is bold text.[/b]
+[i]This is italic text[/i]
+[u]This is underlined text[/u]

@@ -1,0 +1,1 @@
+[attach]12345.txt[/attach]

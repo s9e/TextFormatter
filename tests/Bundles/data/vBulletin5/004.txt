@@ -1,0 +1,1 @@
+[size=18]This text is 18 pixels tall[/size]

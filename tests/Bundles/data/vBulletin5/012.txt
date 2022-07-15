@@ -1,0 +1,3 @@
+[quote]Lorem ipsum dolor sit amet[/quote]
+[quote=John Doe]Lorem ipsum dolor sit amet[/quote]
+[quote=John Doe;1]Lorem ipsum dolor sit amet[/quote]
