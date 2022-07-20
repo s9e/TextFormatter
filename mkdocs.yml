@@ -16,6 +16,7 @@ nav:
     - Fatdown: Bundles/Fatdown.md
     - Forum: Bundles/Forum.md
     - MediaPack: Bundles/MediaPack.md
+    - vBulletin5: Bundles/vBulletin5.md
     - Your own bundle: Bundles/Your_own_bundle.md
   - Templating:
     - Introduction: Templating/Introduction.md
