@@ -1584,7 +1584,6 @@ Closure Compiler Application (s9e\TextFormatter\Tests\Configurator\JavaScript\Mi
  [x] Replaces the default externs with custom externs if compilationLevel is ADVANCED_OPTIMIZATIONS and excludeDefaultExterns is true
 
 Closure Compiler Service (s9e\TextFormatter\Tests\Configurator\JavaScript\Minifiers\ClosureCompilerService)
- [x] Works
  [x] Compilation level is ADVANCED_OPTIMIZATIONS by default
  [x] Excludes default externs by default
  [x] Includes our custom externs by default

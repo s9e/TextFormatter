@@ -18,24 +18,24 @@ class ClosureCompilerServiceTest extends Test
 	* @testdox Works
 	* @group needs-network
 	*/
-	public function testBasic()
-	{
-		if (isset($_SERVER['TRAVIS']))
-		{
-			$this->markTestSkipped();
-		}
-
-		$original =
-			"function hello(name) {
-				alert('Hello, ' + name);
-			}
-			hello('New user')";
-
-		$expected = 'alert("Hello, New user");';
-
-		$minifier = new ClosureCompilerService;
-		$this->assertSame($expected, $minifier->minify($original));
-	}
+//	public function testBasic()
+//	{
+//		if (isset($_SERVER['TRAVIS']))
+//		{
+//			$this->markTestSkipped();
+//		}
+//
+//		$original =
+//			"function hello(name) {
+//				alert('Hello, ' + name);
+//			}
+//			hello('New user')";
+//
+//		$expected = 'alert("Hello, New user");';
+//
+//		$minifier = new ClosureCompilerService;
+//		$this->assertSame($expected, $minifier->minify($original));
+//	}
 
 	/**
 	* @testdox Compilation level is ADVANCED_OPTIMIZATIONS by default
