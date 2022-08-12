@@ -4138,6 +4138,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://play.wavekit.app/share/audio/zrT3OPuSYa',
+				'<r><WAVEKIT audio_id="zrT3OPuSYa">https://play.wavekit.app/share/audio/zrT3OPuSYa</WAVEKIT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wavekit');
+				}
+			],
+			[
+				'https://play.wavekit.app/share/playlist/myVR1J1kNs',
+				'<r><WAVEKIT playlist_id="myVR1J1kNs">https://play.wavekit.app/share/playlist/myVR1J1kNs</WAVEKIT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wavekit');
+				}
+			],
+			[
 				'http://www.worldstarhiphop.com/featured/71630',
 				'<r><WSHH id="71630">http://www.worldstarhiphop.com/featured/71630</WSHH></r>',
 				[],
@@ -5385,6 +5403,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
+				'https://play.wavekit.app/embed/audio/zrT3OPuSYa',
+				'<iframe data-s9e-mediaembed="wavekit" allowfullscreen="" loading="lazy" scrolling="no" src="https://play.wavekit.app/embed/audio/zrT3OPuSYa" style="border:0;height:170px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wavekit');
+				}
+			],
+			[
+				'https://play.wavekit.app/embed/playlist/myVR1J1kNs',
+				'<iframe data-s9e-mediaembed="wavekit" allowfullscreen="" loading="lazy" scrolling="no" src="https://play.wavekit.app/embed/playlist/myVR1J1kNs" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('wavekit');
 				}
 			],
 		];

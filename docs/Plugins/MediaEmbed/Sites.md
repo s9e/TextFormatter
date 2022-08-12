@@ -497,6 +497,10 @@
 		<td style="font-size:75%"><code>washingtonpost</code></td>
 		<td style="font-size:50%">https://www.washingtonpost.com/video/c/video/df229384-9216-11e6-bc00-1a9756d4111b<br/>https://www.washingtonpost.com/video/world/aurora-display-lights-up-the-night-sky-over-finland/2016/10/14/df229384-9216-11e6-bc00-1a9756d4111b_video.html</td>
 	</tr>
+	<tr title="Wavekit" id="wavekit">
+		<td style="font-size:75%"><code>wavekit</code></td>
+		<td style="font-size:50%">https://play.wavekit.app/share/audio/zrT3OPuSYa<br/>https://play.wavekit.app/share/playlist/myVR1J1kNs</td>
+	</tr>
 	<tr title="Wistia" id="wistia">
 		<td style="font-size:75%"><code>wistia</code></td>
 		<td style="font-size:50%">https://thoughtworks.wistia.com/medias/b6al55s35k<br/>https://fast.wistia.com/embed/iframe/od5qgyo2uy</td>

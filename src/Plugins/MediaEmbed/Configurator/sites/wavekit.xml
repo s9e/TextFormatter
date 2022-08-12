@@ -1,0 +1,31 @@
+<site name="Wavekit" homepage="https://wavekit.app/">
+	<example>https://play.wavekit.app/share/audio/zrT3OPuSYa</example>
+	<example>https://play.wavekit.app/share/playlist/myVR1J1kNs</example>
+
+	<tags><tag>music</tag></tags>
+
+	<host>play.wavekit.app</host>
+	<extract>#play\.wavekit\.app/(?:embed|share)/audio/(?'audio_id'\w+)#</extract>
+	<extract>#play\.wavekit\.app/(?:embed|share)/playlist/(?'playlist_id'\w+)#</extract>
+	<iframe width="100%" max-width="900">
+		<height><![CDATA[
+			<xsl:choose>
+				<xsl:when test="@playlist_id">400</xsl:when>
+				<xsl:otherwise>170</xsl:otherwise>
+			</xsl:choose>
+		]]></height>
+		<src><![CDATA[
+			<xsl:text>https://play.wavekit.app/embed/</xsl:text>
+			<xsl:choose>
+				<xsl:when test="@playlist_id">
+					<xsl:text>playlist/</xsl:text>
+					<xsl:value-of select="@playlist_id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>audio/</xsl:text>
+					<xsl:value-of select="@audio_id"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+	</iframe>
+</site>

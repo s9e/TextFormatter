@@ -5867,6 +5867,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #314
  [x] Parsing tests with data set #315
  [x] Parsing tests with data set #316
+ [x] Parsing tests with data set #317
+ [x] Parsing tests with data set #318
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -6184,6 +6186,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #314
  [x] Parsing tests (JavaScript) with data set #315
  [x] Parsing tests (JavaScript) with data set #316
+ [x] Parsing tests (JavaScript) with data set #317
+ [x] Parsing tests (JavaScript) with data set #318
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
@@ -6278,6 +6282,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing+rendering tests with data set #91
  [x] Parsing+rendering tests with data set #92
  [x] Parsing+rendering tests with data set #93
+ [x] Parsing+rendering tests with data set #94
+ [x] Parsing+rendering tests with data set #95
 
 Configurator (s9e\TextFormatter\Tests\Plugins\PipeTables\Configurator)
  [x] Creates TABLE, TBODY, TD, TH, THEAD and TR tags
@@ -7326,6 +7332,8 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins with data set #299
  [x] Tests from plugins with data set #300
  [x] Tests from plugins with data set #301
+ [x] Tests from plugins with data set #302
+ [x] Tests from plugins with data set #303
  [x] Tests from plugins (Quick renderer) with data set #0
  [x] Tests from plugins (Quick renderer) with data set #1
  [x] Tests from plugins (Quick renderer) with data set #2
@@ -7628,6 +7636,8 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins (Quick renderer) with data set #299
  [x] Tests from plugins (Quick renderer) with data set #300
  [x] Tests from plugins (Quick renderer) with data set #301
+ [x] Tests from plugins (Quick renderer) with data set #302
+ [x] Tests from plugins (Quick renderer) with data set #303
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
 
