@@ -16,8 +16,8 @@ $configurator = new s9e\TextFormatter\Configurator;
 foreach ($configurator->MediaEmbed->defaultSites as $siteId => $site)
 {
 	$html[] = '	<tr title="' . $site['name'] . '" id="' . $siteId . '">';
-	$html[] = '		<td style="font-size:75%"><code>' . $siteId . '</code></td>';
-	$html[] = '		<td style="font-size:50%">' . implode('<br/>', (array) $site['example']) . '</td>';
+	$html[] = '		<td><code>' . $siteId . '</code></td>';
+	$html[] = '		<td>' . implode('<br/>', (array) $site['example']) . '</td>';
 	$html[] = '	</tr>';
 
 	foreach ($site['parameters'] ?? [] as $name => $info)
