@@ -8,5 +8,12 @@
 
 	<host>mixcloud.com</host>
 	<extract>@mixcloud\.com/(?!categories|tag)(?'id'[-\w]+/[^/&amp;]+)/@</extract>
-	<iframe width="400" height="400" src="//www.mixcloud.com/widget/iframe/?feed=http%3A%2F%2Fwww.mixcloud.com%2F{@id}%2F&amp;embed_type=widget_standard"/>
+	<iframe width="100%" height="120" max-width="900">
+		<src><![CDATA[
+			<xsl:text>//www.mixcloud.com/widget/iframe/?feed=%2F</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:text>%2F&amp;light=</xsl:text>
+			<xsl:if test="$MEDIAEMBED_THEME != 'dark'">1</xsl:if>
+		]]></src>
+	</iframe>
 </site>
