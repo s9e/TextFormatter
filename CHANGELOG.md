@@ -1,3 +1,20 @@
+2.11.4 (2022-08-17)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/e94e1823714da475a9df50c5319e29c2bb91c591...e0dcd772b00c2f7b775f857990f99b6de88d74c1)
+
+### Added
+
+ - `87a284e38` MediaEmbed: added Wavekit
+
+### Changed
+
+ - `e0dcd772b` BBCodes: updated default CODE
+ - `4919d8bd3` MediaEmbed: updated MixCloud
+ - `b23054412` Updated dependencies
+ - `69de62652` Updated docs
+
+
 2.11.3 (2022-06-13)
 ===================
 
