@@ -90,8 +90,6 @@ var xslt = {
 };
 xslt.init(xsl);
 
-var functionCache = {};
-
 /**
 * Parse a given text and render it into given HTML element
 *

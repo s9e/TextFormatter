@@ -2541,6 +2541,8 @@ Java Script (s9e\TextFormatter\Tests\Configurator\JavaScript)
  [x] The public API is not created if nothing is exported
  [x] Exports' order is consistent
  [x] Preserves live preview attributes
+ [x] Prefills the function cache
+ [x] Does not prefill the function cache with dynamic code
 
 Bundle (s9e\TextFormatter\Tests\Configurator\Bundle)
  [x] getConfigurator() returns a configured instance of Configurator

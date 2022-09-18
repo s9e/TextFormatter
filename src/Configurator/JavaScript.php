@@ -9,6 +9,7 @@ namespace s9e\TextFormatter\Configurator;
 
 use ReflectionClass;
 use s9e\TextFormatter\Configurator;
+use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\ConfigHelper;
 use s9e\TextFormatter\Configurator\JavaScript\CallbackGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
@@ -221,6 +222,27 @@ class JavaScript
 	}
 
 	/**
+	* @return string Function cache serialized as a JavaScript object
+	*/
+	protected function getFunctionCache(): string
+	{
+		preg_match_all('(data-s9e-livepreview-on\\w+="([^">]++)(?=[^<>]++>))', $this->xsl, $m);
+
+		$cache = [];
+		foreach ($m[1] as $js)
+		{
+			$avt = AVTHelper::parse($js);
+			if (count($avt) === 1 && $avt[0][0] === 'literal')
+			{
+				$js = htmlspecialchars_decode($js);
+				$cache[] = json_encode($js) . ':/**@this {!Element}*/function(){' . trim($js, ';') . ';}';
+			}
+		}
+
+		return '{' . implode(',', $cache) . '}';
+	}
+
+	/**
 	* Generate a HINT object that contains informations about the configuration
 	*
 	* @return string JavaScript Code
@@ -372,6 +394,7 @@ class JavaScript
 		{
 			$files[] = $rootDir . '/render.js';
 			$src .= '/** @const */ var xsl=' . $this->getStylesheet() . ";\n";
+			$src .= 'var functionCache=' . $this->getFunctionCache() . ";\n";
 		}
 
 		$src .= implode("\n", array_map('file_get_contents', $files));

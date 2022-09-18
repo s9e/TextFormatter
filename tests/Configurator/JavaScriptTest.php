@@ -420,6 +420,28 @@ class JavaScriptTest extends Test
 
 		$this->assertStringContainsString('data-s9e-livepreview-ignore-attrs', $this->configurator->javascript->getParser());
 	}
+
+	/**
+	* @testdox Prefills the function cache
+	*/
+	public function testFunctionCache()
+	{
+		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-onupdate="alert(1)"/>';
+
+		$js = $this->configurator->javascript->getParser();
+		$this->assertStringContainsString('functionCache={"alert(1)":/**@this {!Element}*/function(){alert(1);}', $js);
+	}
+
+	/**
+	* @testdox Does not prefill the function cache with dynamic code
+	*/
+	public function testFunctionCacheDynamic()
+	{
+		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-onupdate="alert({@x})"/>';
+
+		$js = $this->configurator->javascript->getParser();
+		$this->assertStringContainsString('functionCache={}', $js);
+	}
 }
 
 class NonScalarConfigThing implements ConfigProvider
