@@ -104,7 +104,7 @@ array (
 ###### CODE
 ```[CODE lang={IDENTIFIER?}]{TEXT}[/CODE]```
 ```xsl
-<pre data-s9e-livepreview-hash="" data-s9e-livepreview-onupdate="if(typeof hljsLoader!=='undefined')hljsLoader.highlightBlocks(this)">
+<pre data-s9e-livepreview-hash="" data-s9e-livepreview-onupdate="if(window['hljsLoader'])window['hljsLoader']['highlightBlocks'](this)">
 	<code>
 		<xsl:if test="@lang">
 			<xsl:attribute name="class">language-<xsl:value-of select="@lang"/></xsl:attribute>
@@ -122,7 +122,7 @@ array (
 				https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.6.0/build/
 			</xsl:attribute>
 		</xsl:if>
-		<xsl:attribute name="data-s9e-livepreview-onrender">if(typeof hljsLoader!=='undefined')this.parentNode.removeChild(this)</xsl:attribute>
+		<xsl:attribute name="data-s9e-livepreview-onrender">if(window['hljsLoader'])this.parentNode.removeChild(this)</xsl:attribute>
 		<xsl:attribute name="integrity">sha384-rZ0ejZvSNKZ+8zPSIZ+HNyQ342JWo975f3niYoUApz9n/1/kQRwO8zS/BooFCO41</xsl:attribute>
 		<xsl:attribute name="onload">hljsLoader.highlightBlocks(this.parentNode)</xsl:attribute>
 		<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.30/loader.min.js</xsl:attribute>
