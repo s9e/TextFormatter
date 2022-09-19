@@ -123,8 +123,8 @@ array (
 			</xsl:attribute>
 		</xsl:if>
 		<xsl:attribute name="data-s9e-livepreview-onrender">if(window['hljsLoader'])this.parentNode.removeChild(this)</xsl:attribute>
-		<xsl:attribute name="integrity">sha384-rZ0ejZvSNKZ+8zPSIZ+HNyQ342JWo975f3niYoUApz9n/1/kQRwO8zS/BooFCO41</xsl:attribute>
-		<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.30/loader.min.js</xsl:attribute>
+		<xsl:attribute name="integrity">sha384-vbylffRV+sn4FL7ftwAw6eJ1uNcsQT3ETMpPJQZaOtzW+0d+jnlf1LJj9Jgf8Scp</xsl:attribute>
+		<xsl:attribute name="src">https://cdn.jsdelivr.net/gh/s9e/hljs-loader@1.0.31/loader.min.js</xsl:attribute>
 	</script>
 </pre>
 ```
