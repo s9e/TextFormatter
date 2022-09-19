@@ -1,3 +1,23 @@
+2.11.5 (2022-09-19)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/a7f31582f97abe17ae6b7c95a198dc0d48e7d1a1...02f0d41f2501610940636598cd56d3b044162ed4)
+
+### Removed
+
+ - `e3245de01` BBCodes: removed redundant higlighting in CODE
+
+### Fixed
+
+ - `c87eb3f35` BBCodes: fixed Closure Compiler warning in CODE
+
+### Changed
+
+ - `02f0d41f2` BBCodes: updated hljs-loader in CODE
+ - `cdd9d190e` ElementInspector: updated to latest specs
+ - `df8440c2b` JavaScript: prefill the function cache with static code
+
+
 2.11.4 (2022-08-17)
 ===================
 
