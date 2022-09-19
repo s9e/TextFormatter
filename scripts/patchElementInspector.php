@@ -326,14 +326,16 @@ function getContentModel($dl, $elName)
 		{
 			$model['allowChildElement']['track']['@src']             = 1;
 			$model['allowChildCategory']['transparent']['@src']      = 1;
-			$model['denyDescendantElement']['media element']['@src'] = 1;
+			$model['denyDescendantElement']['audio']['@src']         = 1;
+			$model['denyDescendantElement']['video']['@src']         = 1;
 		}
 		elseif ($text === 'if the element does not have a src attribute: source elements, then track elements, then transparent, but with no media element descendants')
 		{
 			$model['allowChildElement']['source']['not(@src)']       = 1;
 			$model['allowChildElement']['track']['not(@src)']        = 1;
 			$model['allowChildCategory']['transparent']['not(@src)'] = 1;
-			$model['denyDescendantElement']['media element']['@src'] = 1;
+			$model['denyDescendantElement']['audio']['not(@src)']    = 1;
+			$model['denyDescendantElement']['video']['not(@src)']    = 1;
 		}
 		elseif ($text === 'in this order: optionally a caption element, followed by colgroup elements, followed optionally by a thead element, followed by either tbody elements or tr elements, followed optionally by a tfoot element, script-supporting elements')
 		{
@@ -345,8 +347,9 @@ function getContentModel($dl, $elName)
 			$model['allowChildElement']['tfoot']['']                      = 1;
 			$model['allowChildCategory']['script-supporting element'][''] = 1;
 		}
-		elseif ($text === 'h1, h2, h3, h4, h5, h6 elements, script-supporting elements')
+		elseif ($text === 'p elements, followed by one h1, h2, h3, h4, h5, or h6 element, followed by p elements, script-supporting elements')
 		{
+			$model['allowChildElement']['p']['']                          = 1;
 			$model['allowChildElement']['h1']['']                         = 1;
 			$model['allowChildElement']['h2']['']                         = 1;
 			$model['allowChildElement']['h3']['']                         = 1;

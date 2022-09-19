@@ -544,7 +544,6 @@ Element Inspector (s9e\TextFormatter\Tests\Configurator\Helpers\ElementInspector
  [x] Test cases with data set #25
  [x] Test cases with data set #26
  [x] Test cases with data set #27
- [x] Test cases with data set #28
 
 Node Locator (s9e\TextFormatter\Tests\Configurator\Helpers\NodeLocator)
  [x] getObjectParamsByRegexp() tests with data set #0
@@ -894,6 +893,8 @@ Template Inspector (s9e\TextFormatter\Tests\Configurator\Helpers\TemplateInspect
  [x] Test cases with data set #93
  [x] Test cases with data set #94
  [x] Test cases with data set #95
+ [x] Test cases with data set #96
+ [x] Test cases with data set #97
 
 Template Loader (s9e\TextFormatter\Tests\Configurator\Helpers\TemplateLoader)
  [x] load() can load 'foo'

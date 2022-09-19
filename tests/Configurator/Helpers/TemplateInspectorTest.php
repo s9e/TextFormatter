@@ -168,6 +168,18 @@ class TemplateInspectorTest extends Test
 				'<source/>'
 			],
 			[
+				'<audio> denies <audio> as child',
+				'<audio><xsl:apply-templates/></audio>',
+				'!allowsChild',
+				'<audio/>'
+			],
+			[
+				'<video> denies <video> as child',
+				'<video><xsl:apply-templates/></video>',
+				'!allowsChild',
+				'<video/>'
+			],
+			[
 				'<a> is considered transparent',
 				'<a><xsl:apply-templates/></a>',
 				'isTransparent'
