@@ -59,3 +59,37 @@ echo $html;
 ```html
 <img src="https://example.org/img.png" loading="lazy">
 ```
+
+
+### Set nonce="{$NONCE}" on scripts
+
+In the following example, we use the `SetAttributeOnElements` normalizer to add a `nonce` attribute to all `script` elements.
+
+```php
+use s9e\TextFormatter\Configurator\TemplateNormalizations\SetAttributeOnElements;
+
+// Create a new configurator
+$configurator = new s9e\TextFormatter\Configurator;
+
+// Add our custom normalizer before plugins are configured and templates are set
+$configurator->templateNormalizer->add(
+	new SetAttributeOnElements('//script', 'nonce', '{$NONCE}')
+);
+
+// Add a BBCode that creates a script element
+$configurator->BBCodes->addCustom('[x]', '<script>alert(1)</script>');
+
+extract($configurator->finalize());
+
+$text = '[x]';
+$xml  = $parser->parse($text);
+
+// Set the value for $NONCE before rendering
+$renderer->setParameter('NONCE', 'xxxx');
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<script nonce="xxxx">alert(1)</script>
+```
