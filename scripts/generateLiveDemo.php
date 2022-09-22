@@ -93,7 +93,7 @@ The following plugins have been enabled:
     [*][color=#f05]co[/color][color=#2f2]lo[/color][color=#02f]r,[/color]
     [*][C][URL][/C], [C:123][C][/C:123], [C][FLOAT][/C], and [C][LIST][/C]
     [*][C][CODE][/C] with real-time syntax highlighting via [url=https://highlightjs.org/]highlight.js[/url]
-	[code]$who = "world";
+	[code=php]$who = "world";
 printf("Hello %s\n", $who);[/code]
   [/list]
   [*][b]Censor[/b] --- the word "apple" is censored and automatically replaced with "banana"
