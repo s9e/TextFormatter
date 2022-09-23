@@ -5,22 +5,31 @@
 
 	<attributes>
 		<name required="false" filterChain="#url"/>
+		<path required="false" filterChain="#url"/>
 	</attributes>
 
 	<host>odysee.com</host>
 	<extract>#odysee\.com/(?:\$/\w+/)?(?'name'[^:/]+)[:/](?'id'\w{40})#</extract>
+	<extract>#odysee\.com/(?'path'@[^:/]+:\w/[^:/]+:\w)#</extract>
 	<scrape>
 		<match>#odysee\.com/@[^/:]+:\w+/.#</match>
-		<extract>#odysee\.com/\$/embed/(?'name'[^:/]+)/(?'id'\w{40})#</extract>
+		<extract>#"contentUrl".*api/\w+/streams/\w+/(?'name'[^/]+)/(?'id'\w{40})#</extract>
 	</scrape>
 	<iframe>
 		<src><![CDATA[
 			<xsl:text>https://odysee.com/$/embed/</xsl:text>
 			<xsl:choose>
-				<xsl:when test="@name"><xsl:value-of select="@name"/>/</xsl:when>
-				<xsl:otherwise>-/</xsl:otherwise>
+				<xsl:when test="@id">
+					<xsl:choose>
+						<xsl:when test="@name"><xsl:value-of select="@name"/>/</xsl:when>
+						<xsl:otherwise>-/</xsl:otherwise>
+					</xsl:choose>
+					<xsl:value-of select="@id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="@path"/>
+				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:value-of select="@id"/>
 		]]></src>
 	</iframe>
 </site>

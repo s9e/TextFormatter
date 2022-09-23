@@ -1148,7 +1148,7 @@ class ParserTest extends Test
 //			],
 			[
 				'https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8',
-				'<r><ODYSEE id="8726b01100463c4e254a38c3108ef3e05791aeda" name="Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21">https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8</ODYSEE></r>',
+				'<r><ODYSEE id="8726b01100463c4e254a38c3108ef3e05791aeda" name="Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21" path="@ozgoals%3Aa/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8">https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8</ODYSEE></r>',
 				[],
 				function ($configurator)
 				{
