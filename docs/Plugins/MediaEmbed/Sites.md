@@ -419,7 +419,7 @@
 	</tr>
 	<tr title="TikTok" id="tiktok">
 		<td><code>tiktok</code></td>
-		<td>https://www.tiktok.com/@lauren.feagans/video/6789430799839104261<br/>https://vm.tiktok.com/TTPdrc3YBJ/</td>
+		<td>https://www.tiktok.com/@lauren.feagans/video/6789430799839104261</td>
 	</tr>
 	<tr title="TMZ" id="tmz">
 		<td><code>tmz</code></td>

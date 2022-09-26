@@ -1,6 +1,5 @@
 <site name="TikTok" homepage="https://www.tiktok.com">
 	<example>https://www.tiktok.com/@lauren.feagans/video/6789430799839104261</example>
-	<example>https://vm.tiktok.com/TTPdrc3YBJ/</example>
 
 	<oembed endpoint="https://www.tiktok.com/oembed?url="
 	          scheme="https://www.tiktok.com/video/{@id}"/>
@@ -8,10 +7,14 @@
 	<tags><tag>videos</tag></tags>
 
 	<host>tiktok.com</host>
-	<extract>#tiktok\.com/(?:@[.\w]+/video|v|i18n/share/video)/(?'id'\d+)#</extract>
+	<extract>#tiktok\.com/(?:@[.\w]+/video|v|(?:i18n/)?share/video)/(?'id'\d+)#</extract>
 	<scrape>
 		<match>#//vm\.tiktok\.com/.#</match>
-		<extract>#tiktok\.com/(?:@[.\w]+/video|v|i18n/share/video)/(?'id'\d+)#</extract>
+		<extract>#tiktok\.com/(?:@[.\w]+/video|v|(?:i18n/)?/share/video)/(?'id'\d+)#</extract>
 	</scrape>
-	<iframe width="340" height="700" src="//www.tiktok.com/embed/{@id}"/>
+	<iframe width="325" height="740"
+		src="https://s9e.github.io/iframe/2/tiktok.min.html#{@id}"
+		onload="let c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])"
+		data-s9e-livepreview-ignore-attrs="style"
+	/>
 </site>
