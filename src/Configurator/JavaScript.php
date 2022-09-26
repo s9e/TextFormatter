@@ -78,6 +78,11 @@ class JavaScript
 	protected $minifier;
 
 	/**
+	* @var XSLT Renderer generator used to generate the live preview's stylesheet
+	*/
+	public XSLT $rendererGenerator;
+
+	/**
 	* @var StylesheetCompressor
 	*/
 	protected $stylesheetCompressor;
@@ -99,7 +104,10 @@ class JavaScript
 		$this->configOptimizer      = new ConfigOptimizer($this->encoder);
 		$this->configurator         = $configurator;
 		$this->hintGenerator        = new HintGenerator;
+		$this->rendererGenerator    = new XSLT;
 		$this->stylesheetCompressor = new StylesheetCompressor;
+
+		$this->rendererGenerator->normalizer->remove('RemoveLivePreviewAttributes');
 	}
 
 	/**
@@ -128,9 +136,7 @@ class JavaScript
 		$this->configOptimizer->reset();
 
 		// Get the stylesheet used for rendering
-		$xslt      = new XSLT;
-		$xslt->normalizer->remove('RemoveLivePreviewAttributes');
-		$this->xsl = $xslt->getXSL($this->configurator->rendering);
+		$this->xsl = $this->rendererGenerator->getXSL($this->configurator->rendering);
 
 		// Prepare the parser's config
 		$this->config = $config ?? $this->configurator->asConfig();
