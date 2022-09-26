@@ -11,7 +11,7 @@
 
 	<host>plus.google.com</host>
 	<extract>!//plus\.google\.com/(?:u/\d+/)?(?:\+(?'name'[^/]+)|(?'oid'\d+))/posts/(?'pid'\w+)!</extract>
-	<iframe width="450" height="240" onload="var c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
+	<iframe width="450" height="240" onload="let c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/2/googleplus.min.html#</xsl:text>
 			<xsl:choose>
