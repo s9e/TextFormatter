@@ -81,6 +81,7 @@ function parseInt(num, base) {}
  * @constructor
  * @implements {IArrayLike<T>}
  * @implements {Iterable<T>}
+ * @implements {ReadonlyArray<T>}
  * @param {...*} var_args
  * @return {!Array}
  * @nosideeffects
@@ -90,9 +91,10 @@ function Array(var_args) {}
 /**
  * @param {?function(this:S, T, number, !Array<T>): ?} callback
  * @param {S=} opt_thisobj
+ * @return {undefined}
  * @this {IArrayLike<T>|string}
  * @template T,S
- * @return {undefined}
+ * @override
  */
 Array.prototype.forEach = function(callback, opt_thisobj) {};
 /**
@@ -102,6 +104,7 @@ Array.prototype.forEach = function(callback, opt_thisobj) {};
  * @this {IArrayLike<T>|string}
  * @nosideeffects
  * @template T
+ * @override
  */
 Array.prototype.indexOf = function(obj, opt_fromIndex) {};
 /**
@@ -109,6 +112,7 @@ Array.prototype.indexOf = function(obj, opt_fromIndex) {};
  * @return {string}
  * @this {IArrayLike<?>|string}
  * @nosideeffects
+ * @override
  */
 Array.prototype.join = function(opt_separator) {};
 /**
@@ -151,6 +155,7 @@ Array.prototype.shift = function() {};
  * @this {IArrayLike<T>|string}
  * @template T
  * @nosideeffects
+ * @override
  */
 Array.prototype.slice = function(begin, end) {};
 /**
@@ -369,7 +374,7 @@ function DOMParser() {}
 /**
  * @param {!TrustedHTML|string} src The UTF16 string to be parsed.
  * @param {string} type The content type of the string.
- * @return {Document}
+ * @return {!Document}
  */
 DOMParser.prototype.parseFromString = function(src, type) {};
 /**
