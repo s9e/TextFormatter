@@ -1466,6 +1466,13 @@ Function Provider (s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvi
  [x] get() will return the source from the filesystem if applicable
  [x] get() will throw an exception if the function can't be sourced
 
+Hasher (s9e\TextFormatter\Tests\Configurator\JavaScript\Hasher)
+ [x] quickHash() matches hash() output with data set #0
+ [x] quickHash() matches hash() output with data set #1
+ [x] quickHash() matches hash() output with data set #2
+ [x] quickHash() matches hash() output with data set #3
+ [x] quickHash() throws an exception on invalid UTF-8
+
 Hint Generator (s9e\TextFormatter\Tests\Configurator\HintGenerator)
  [x] HINT.attributeDefaultValue=0 by default
  [x] HINT.attributeDefaultValue=1 if any attribute has a defaultValue

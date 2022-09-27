@@ -161,14 +161,14 @@ function preview(text, target)
 	*/
 	function executeEvent(node, eventName)
 	{
-		/** @type {string} */
-		var code = node.getAttribute('data-s9e-livepreview-on' + eventName);
-		if (!functionCache[code])
+		let code     = node.getAttribute('data-s9e-livepreview-on' + eventName),
+			codeHash = hash(code);
+		if (!functionCache[codeHash])
 		{
-			functionCache[code] = new Function(code);
+			functionCache[codeHash] = new Function(code);
 		}
 
-		functionCache[code]['call'](node);
+		functionCache[codeHash]['call'](node);
 	}
 
 	/**

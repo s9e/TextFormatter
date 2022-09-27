@@ -429,7 +429,7 @@ class JavaScriptTest extends Test
 		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-onupdate="alert(1)"/>';
 
 		$js = $this->configurator->javascript->getParser();
-		$this->assertStringContainsString('functionCache={"alert(1)":/**@this {!Element}*/function(){alert(1);}', $js);
+		$this->assertStringContainsString('functionCache={"167969434":/**@this {!Element}*/function(){alert(1);}', $js);
 	}
 
 	/**

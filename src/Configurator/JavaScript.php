@@ -16,6 +16,7 @@ use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\ConfigOptimizer;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
+use s9e\TextFormatter\Configurator\JavaScript\Hasher;
 use s9e\TextFormatter\Configurator\JavaScript\HintGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
 use s9e\TextFormatter\Configurator\JavaScript\Minifiers\Noop;
@@ -240,8 +241,10 @@ class JavaScript
 			$avt = AVTHelper::parse($js);
 			if (count($avt) === 1 && $avt[0][0] === 'literal')
 			{
-				$js = htmlspecialchars_decode($js);
-				$cache[] = json_encode($js) . ':/**@this {!Element}*/function(){' . trim($js, ';') . ';}';
+				$js  = htmlspecialchars_decode($js);
+				$key = (string) Hasher::quickHash($js);
+
+				$cache[] = json_encode($key) . ':/**@this {!Element}*/function(){' . trim($js, ';') . ';}';
 			}
 		}
 
@@ -400,7 +403,7 @@ class JavaScript
 		{
 			$files[] = $rootDir . '/render.js';
 			$src .= '/** @const */ var xsl=' . $this->getStylesheet() . ";\n";
-			$src .= 'var functionCache=' . $this->getFunctionCache() . ";\n";
+			$src .= 'let functionCache=' . $this->getFunctionCache() . ";\n";
 		}
 
 		$src .= implode("\n", array_map('file_get_contents', $files));
