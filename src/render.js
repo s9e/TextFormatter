@@ -1,22 +1,11 @@
-let MSXML = (typeof DOMParser === 'undefined' || typeof XSLTProcessor === 'undefined');
 let xslt = {
 	/**
 	* @param {string} xsl
 	*/
 	init: function(xsl)
 	{
-		let stylesheet = xslt.loadXML(xsl);
-		if (MSXML)
-		{
-			let generator = new ActiveXObject('MSXML2.XSLTemplate.6.0');
-			generator['stylesheet'] = stylesheet;
-			xslt.proc = generator['createProcessor']();
-		}
-		else
-		{
-			xslt.proc = new XSLTProcessor;
-			xslt.proc['importStylesheet'](stylesheet);
-		}
+		xslt.proc = new XSLTProcessor;
+		xslt.proc['importStylesheet'](xslt.loadXML(xsl));
 	},
 
 	/**
@@ -25,19 +14,7 @@ let xslt = {
 	*/
 	loadXML: function(xml)
 	{
-		let dom;
-		if (MSXML)
-		{
-			dom = new ActiveXObject('MSXML2.FreeThreadedDOMDocument.6.0');
-			dom['async'] = false;
-			dom['validateOnParse'] = false;
-			dom['loadXML'](xml);
-		}
-		else
-		{
-			dom = (new DOMParser).parseFromString(xml, 'text/xml');
-		}
-
+		const dom = (new DOMParser).parseFromString(xml, 'text/xml');
 		if (!dom)
 		{
 			throw 'Cannot parse ' + xml;
@@ -52,14 +29,7 @@ let xslt = {
 	*/
 	setParameter: function(paramName, paramValue)
 	{
-		if (MSXML)
-		{
-			xslt.proc['addParameter'](paramName, paramValue, '');
-		}
-		else
-		{
-			xslt.proc['setParameter'](null, paramName, paramValue);
-		}
+		xslt.proc['setParameter'](null, paramName, paramValue);
 	},
 
 	/**
@@ -69,22 +39,6 @@ let xslt = {
 	*/
 	transformToFragment: function(xml, targetDoc)
 	{
-		if (MSXML)
-		{
-			let div = targetDoc.createElement('div'),
-				fragment = targetDoc.createDocumentFragment();
-
-			xslt.proc['input'] = xslt.loadXML(xml);
-			xslt.proc['transform']();
-			div.innerHTML = xslt.proc['output'];
-			while (div.firstChild)
-			{
-				fragment.appendChild(div.firstChild);
-			}
-
-			return fragment;
-		}
-
 		return xslt.proc['transformToFragment'](xslt.loadXML(xml), targetDoc);
 	}
 };
