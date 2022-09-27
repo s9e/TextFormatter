@@ -100,7 +100,7 @@ function addTableHead()
 function addTableRow(tagName, row)
 {
 	pos = row.pos;
-	row.line.split('|').forEach(function(str, i)
+	row.line.split('|').forEach((str, i) =>
 	{
 		if (i > 0)
 		{
@@ -124,7 +124,7 @@ function captureTables()
 	tables = [];
 
 	pos = 0;
-	_text.split("\n").forEach(function(line)
+	_text.split("\n").forEach((line) =>
 	{
 		if (line.indexOf('|') < 0)
 		{

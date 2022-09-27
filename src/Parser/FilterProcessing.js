@@ -13,7 +13,7 @@ function executeAttributePreprocessors(tag, tagConfig)
 		return;
 	}
 
-	tagConfig.attributePreprocessors.forEach(function(ap)
+	tagConfig.attributePreprocessors.forEach((ap) =>
 	{
 		let attrName = ap[0], regexp = ap[1], map = ap[2];
 		if (tag.hasAttribute(attrName))
@@ -156,7 +156,7 @@ function getNamedCaptures(attrValue, regexp, map)
 	}
 
 	let values = {};
-	map.forEach(function(k, i)
+	map.forEach((k, i) =>
 	{
 		if (typeof m[i] === 'string' && m[i] !== '')
 		{

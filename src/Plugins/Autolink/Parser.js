@@ -1,4 +1,4 @@
-matches.forEach(function(m)
+matches.forEach((m) =>
 {
 	// Linkify the trimmed URL
 	linkifyUrl(m[0][1], trimUrl(m[0][0]));

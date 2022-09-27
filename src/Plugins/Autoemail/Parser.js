@@ -1,7 +1,7 @@
 let tagName  = config.tagName,
 	attrName = config.attrName;
 
-matches.forEach(function(m)
+matches.forEach((m) =>
 {
 	// Create a zero-width start tag right before the address
 	let startTag = addStartTag(tagName, m[0][1], 0);

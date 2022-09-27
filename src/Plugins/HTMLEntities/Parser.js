@@ -1,7 +1,7 @@
 let tagName  = config.tagName,
 	attrName = config.attrName;
 
-matches.forEach(function(m)
+matches.forEach((m) =>
 {
 	let entity = m[0][0],
 		chr    = html_entity_decode(entity);

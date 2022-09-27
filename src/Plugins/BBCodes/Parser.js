@@ -38,7 +38,7 @@ let textLen = text.length;
 */
 let uppercaseText = '';
 
-matches.forEach(function(m)
+matches.forEach((m) =>
 {
 	bbcodeName = m[1][0].toUpperCase();
 	if (!(bbcodeName in config.bbcodes))
@@ -270,7 +270,7 @@ function parseBBCode()
 	let contentAttributes = [];
 	if (bbcodeConfig.contentAttributes)
 	{
-		bbcodeConfig.contentAttributes.forEach(function(attrName)
+		bbcodeConfig.contentAttributes.forEach((attrName) =>
 		{
 			if (!(attrName in attributes))
 			{
@@ -284,7 +284,7 @@ function parseBBCode()
 		endTag = (requireEndTag || contentAttributes.length) ? captureEndTag() : null;
 	if (endTag)
 	{
-		contentAttributes.forEach(function(attrName)
+		contentAttributes.forEach((attrName) =>
 		{
 			attributes[attrName] = text.substring(pos, endTag.getPos());
 		});

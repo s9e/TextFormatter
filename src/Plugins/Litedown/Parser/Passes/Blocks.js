@@ -43,7 +43,7 @@ function parse()
 		}
 	}
 
-	matches.forEach(function(m)
+	matches.forEach((m) =>
 	{
 		let blockMarks = [],
 			matchPos   = m.index,
@@ -163,7 +163,7 @@ function parse()
 			}
 
 			// Close all the lists
-			lists.forEach(function(list)
+			lists.forEach((list) =>
 			{
 				closeList(list, textBoundary);
 			});
@@ -311,7 +311,7 @@ function parse()
 				if (lists[0].itemTags.length > 1 || !hasListItem)
 				{
 					// ...every list that is currently open becomes loose
-					lists.forEach(function(list)
+					lists.forEach((list) =>
 					{
 						list.tight = false;
 					});
@@ -432,7 +432,7 @@ function closeList(list, textBoundary)
 
 	if (list.tight)
 	{
-		list.itemTags.forEach(function(itemTag)
+		list.itemTags.forEach((itemTag) =>
 		{
 			itemTag.removeFlags(RULE_CREATE_PARAGRAPHS);
 		});

@@ -196,7 +196,7 @@ function processEmphasisBlock(block)
 	emPos     = -1,
 	strongPos = -1;
 
-	block.forEach(function(pair)
+	block.forEach((pair) =>
 	{
 		processEmphasisMatch(pair[0], pair[1]);
 	});

@@ -1,4 +1,4 @@
-config.generics.forEach(function(entry)
+config.generics.forEach((entry) =>
 {
 	let tagName        = entry[0],
 		regexp         = entry[1],
@@ -34,7 +34,7 @@ config.generics.forEach(function(entry)
 			tag = addSelfClosingTag(tagName, startTagPos, matchLen, -100);
 		}
 
-		map.forEach(function(attrName, i)
+		map.forEach((attrName, i) =>
 		{
 			// NOTE: subpatterns with no name have an empty entry to preserve the array indices
 			if (attrName && typeof m[i] !== 'undefined')

@@ -47,7 +47,7 @@ function (tag, hosts, sites, cacheDir)
 	function addNamedCaptures(attributes, string, regexps)
 	{
 		let matched = false;
-		regexps.forEach(function(pair)
+		regexps.forEach((pair) =>
 		{
 			let regexp = pair[0],
 				map    = pair[1],
@@ -58,7 +58,7 @@ function (tag, hosts, sites, cacheDir)
 			}
 
 			matched = true;
-			map.forEach(function(name, i)
+			map.forEach((name, i) =>
 			{
 				if (m[i] > '' && name > '')
 				{

@@ -5,7 +5,7 @@ const regexps  = config.regexps,
 let onlyFirst = typeof config.onlyFirst !== 'undefined',
 	keywords  = {};
 
-regexps.forEach(function(regexp)
+regexps.forEach((regexp) =>
 {
 	let m;
 

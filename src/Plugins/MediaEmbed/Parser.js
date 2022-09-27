@@ -1,4 +1,4 @@
-matches.forEach(function(m)
+matches.forEach((m) =>
 {
 	let tagName = config.tagName,
 		url     = m[0][0],

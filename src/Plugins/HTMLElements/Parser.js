@@ -1,4 +1,4 @@
-matches.forEach(function(m)
+matches.forEach((m) =>
 {
 	// Test whether this is an end tag
 	let isEnd = (text[m[0][1] + 1] === '/');

@@ -1,4 +1,4 @@
-matches.forEach(function(m)
+matches.forEach((m) =>
 {
 	if (HINT.EMOTICONS_NOT_AFTER && config.notAfter && m[0][1] && config.notAfter.test(text[m[0][1] - 1]))
 	{

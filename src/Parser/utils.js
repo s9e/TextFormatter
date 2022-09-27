@@ -23,20 +23,20 @@ function html_entity_decode(str)
 */
 function htmlspecialchars_compat(str)
 {
-	let t = {
-		'<' : '&lt;',
-		'>' : '&gt;',
-		'&' : '&amp;',
-		'"' : '&quot;'
-	};
 	return str.replace(
 		/[<>&"]/g,
 		/**
 		* @param  {string} c
 		* @return {string}
 		*/
-		function(c)
+		(c) =>
 		{
+			const t = {
+				'<' : '&lt;',
+				'>' : '&gt;',
+				'&' : '&amp;',
+				'"' : '&quot;'
+			};
 			return t[c];
 		}
 	);
@@ -48,19 +48,19 @@ function htmlspecialchars_compat(str)
 */
 function htmlspecialchars_noquotes(str)
 {
-	let t = {
-		'<' : '&lt;',
-		'>' : '&gt;',
-		'&' : '&amp;'
-	};
 	return str.replace(
 		/[<>&]/g,
 		/**
 		* @param  {string} c
 		* @return {string}
 		*/
-		function(c)
+		(c) =>
 		{
+			const t = {
+				'<' : '&lt;',
+				'>' : '&gt;',
+				'&' : '&amp;'
+			};
 			return t[c];
 		}
 	);
@@ -78,7 +78,7 @@ function rawurlencode(str)
 		* @param  {string} c
 		* @return {string}
 		*/
-		function(c)
+		(c) =>
 		{
 			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
 		}

@@ -442,14 +442,9 @@ function outputTag(tag)
 		{
 			attributeNames.push(attrName);
 		}
-		attributeNames.sort(
-			function(a, b)
-			{
-				return (a > b) ? 1 : -1;
-			}
-		);
+		attributeNames.sort((a, b) => (a > b) ? 1 : -1);
 		attributeNames.forEach(
-			function(attrName)
+			(attrName) =>
 			{
 				output += ' ' + attrName + '="' + htmlspecialchars_compat(attributes[attrName].toString()).replace(/\n/g, '&#10;') + '"';
 			}
@@ -1015,7 +1010,7 @@ function createChild(tag)
 		let priority = -1000,
 			_text    = text.substring(pos),
 			tagPos   = pos + _text.length - _text.replace(/^[ \n\r\t]+/, '').length;
-		tagConfig.rules.createChild.forEach(function(tagName)
+		tagConfig.rules.createChild.forEach((tagName) =>
 		{
 			addStartTag(tagName, tagPos, 0, ++priority);
 		});
@@ -1257,7 +1252,7 @@ function processTags()
 		}
 
 		// Close tags that were left open
-		openTags.forEach(function (startTag)
+		openTags.forEach((startTag) =>
 		{
 			// NOTE: we add tags in hierarchical order (ancestors to descendants) but since
 			//       the stack is processed in LIFO order, it means that tags get closed in
@@ -1524,7 +1519,7 @@ function processEndTag(tag)
 
 	// Accumulate flags to determine whether whitespace should be trimmed
 	let flags = tag.getFlags();
-	closeTags.forEach(function(openTag)
+	closeTags.forEach((openTag) =>
 	{
 		flags |= openTag.getFlags();
 	});
@@ -1533,7 +1528,7 @@ function processEndTag(tag)
 	// Only reopen tags if we haven't exceeded our "fixing" budget
 	let keepReopening = HINT.RULE_AUTO_REOPEN && (currentFixingCost < maxFixingCost),
 		reopenTags    = [];
-	closeTags.forEach(function(openTag)
+	closeTags.forEach((openTag) =>
 	{
 		let openTagName = openTag.getName();
 
@@ -1627,7 +1622,7 @@ function processEndTag(tag)
 	}
 
 	// Re-add tags that need to be reopened, at current cursor position
-	reopenTags.forEach(function(startTag)
+	reopenTags.forEach((startTag) =>
 	{
 		let newTag = addCopyTag(startTag, pos, 0);
 
@@ -1673,7 +1668,7 @@ function pushContext(tag)
 
 	// Recompute the allowed tags
 	let allowed = [];
-	context.allowed.forEach(function(v, k)
+	context.allowed.forEach((v, k) =>
 	{
 		// If the current tag is not transparent, override the low bits (allowed children) of
 		// current context with its high bits (allowed descendants)

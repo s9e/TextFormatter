@@ -1,7 +1,7 @@
 let tagName  = config.tagName,
 	attrName = config.attrName;
 
-matches.forEach(function(m)
+matches.forEach((m) =>
 {
 	if (isAllowed(m[0][0]))
 	{
