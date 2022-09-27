@@ -1,4 +1,4 @@
-var pos, table = null, tableTag, tables, _text = text;
+let pos, table = null, tableTag, tables, _text = text;
 
 if (config.overwriteMarkdown)
 {
@@ -19,7 +19,7 @@ processTables();
 */
 function addLine(line)
 {
-	var ignoreLen = 0;
+	let ignoreLen = 0;
 
 	if (!table)
 	{
@@ -41,7 +41,7 @@ function addLine(line)
 */
 function addTableBody()
 {
-	var i   = 1,
+	let i   = 1,
 		cnt = table.rows.length;
 	while (++i < cnt)
 	{
@@ -60,12 +60,12 @@ function addTableBody()
 */
 function addTableCell(tagName, align, content)
 {
-	var startPos  = pos,
+	let startPos  = pos,
 		endPos    = startPos + content.length,
 		ignoreLen;
 	pos = endPos;
 
-	var m = /^( *).*?( *)$/.exec(content);
+	let m = /^( *).*?( *)$/.exec(content);
 	if (m[1])
 	{
 		ignoreLen = m[1].length;
@@ -108,7 +108,7 @@ function addTableRow(tagName, row)
 			++pos;
 		}
 
-		var align = (!table.cols[i]) ? '' : table.cols[i];
+		let align = (!table.cols[i]) ? '' : table.cols[i];
 		addTableCell(tagName, align, str);
 	});
 
@@ -160,7 +160,7 @@ function createBodyTags(startPos, endPos)
 */
 function createCellTags(tagName, startPos, endPos, align)
 {
-	var tag;
+	let tag;
 	if (startPos === endPos)
 	{
 		tag = addSelfClosingTag(tagName, startPos, 0, -101);
@@ -323,7 +323,7 @@ function overwriteMarkdown()
 function parseColumnAlignments(line)
 {
 	// Use a bitfield to represent the colons' presence and map it to the CSS value
-	var align = [
+	let align = [
 			'',
 			'right',
 			'left',
@@ -335,7 +335,7 @@ function parseColumnAlignments(line)
 
 	while (m = regexp.exec(line))
 	{
-		var key = (m[1] ? 2 : 0) + (m[2] ? 1 : 0);
+		let key = (m[1] ? 2 : 0) + (m[2] ? 1 : 0);
 		cols.push(align[key]);
 	}
 
@@ -347,7 +347,7 @@ function parseColumnAlignments(line)
 */
 function processCurrentTable()
 {
-	var firstRow = table.rows[0],
+	let firstRow = table.rows[0],
 		lastRow  = table.rows[table.rows.length - 1];
 	createTableTags(firstRow.pos, lastRow.pos + lastRow.line.length);
 
@@ -361,7 +361,7 @@ function processCurrentTable()
 */
 function processTables()
 {
-	var i = -1, cnt = tables.length;
+	let i = -1, cnt = tables.length;
 	while (++i < cnt)
 	{
 		table = tables[i];

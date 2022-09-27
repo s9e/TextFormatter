@@ -1,5 +1,4 @@
-/** @const */
-var FalseFilter =
+const FalseFilter =
 {
 	/**
 	* @param  {*} attrValue

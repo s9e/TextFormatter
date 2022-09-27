@@ -21,7 +21,7 @@
 /**
  * @const
  */
-var punycode = {};
+let punycode = {};
 /**
  * @param {string} domain
  * @return {string}
@@ -254,8 +254,8 @@ function TrustedHTML() {}
 /**
  * @const {!HTMLDocument}
  */
-var document;
+let document;
 /**
  * @type {!Window}
  */
-var window;
+let window;

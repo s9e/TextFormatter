@@ -1,37 +1,37 @@
 /**
 * @type {boolean} Whether current EM span is being closed by current emphasis mark
 */
-var closeEm;
+let closeEm;
 
 /**
 * @type {boolean} Whether current EM span is being closed by current emphasis mark
 */
-var closeStrong;
+let closeStrong;
 
 /**
 * @type {number} Starting position of the current EM span in the text
 */
-var emPos;
+let emPos;
 
 /**
 * @type {number} Ending position of the current EM span in the text
 */
-var emEndPos;
+let emEndPos;
 
 /**
 * @type {number} Number of emphasis characters unused in current span
 */
-var remaining;
+let remaining;
 
 /**
 * @type {number} Starting position of the current STRONG span in the text
 */
-var strongPos;
+let strongPos;
 
 /**
 * @type {number} Ending position of the current STRONG span in the text
 */
-var strongEndPos;
+let strongEndPos;
 
 function parse()
 {
@@ -107,7 +107,7 @@ function closeSpans()
 */
 function getEmphasisByBlock(regexp, pos)
 {
-	var block    = [],
+	let block    = [],
 		blocks   = [],
 		breakPos = text.indexOf("\x17", pos),
 		m;
@@ -115,7 +115,7 @@ function getEmphasisByBlock(regexp, pos)
 	regexp.lastIndex = pos;
 	while (m = regexp.exec(text))
 	{
-		var matchPos = m.index,
+		let matchPos = m.index,
 			matchLen = m[0].length;
 
 		// Test whether we've just passed the limits of a block
@@ -176,7 +176,7 @@ function openSpans(pos)
 */
 function parseEmphasisByCharacter(character, regexp)
 {
-	var pos = text.indexOf(character);
+	let pos = text.indexOf(character);
 	if (pos === -1)
 	{
 		return;
@@ -210,7 +210,7 @@ function processEmphasisBlock(block)
 */
 function processEmphasisMatch(matchPos, matchLen)
 {
-	var canOpen  = !isBeforeWhitespace(matchPos + matchLen - 1),
+	let canOpen  = !isBeforeWhitespace(matchPos + matchLen - 1),
 		canClose = !isAfterWhitespace(matchPos),
 		closeLen = (canClose) ? Math.min(matchLen, 3) : 0;
 

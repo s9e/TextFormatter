@@ -1,14 +1,14 @@
-var MSXML = (typeof DOMParser === 'undefined' || typeof XSLTProcessor === 'undefined');
-var xslt = {
+let MSXML = (typeof DOMParser === 'undefined' || typeof XSLTProcessor === 'undefined');
+let xslt = {
 	/**
 	* @param {string} xsl
 	*/
 	init: function(xsl)
 	{
-		var stylesheet = xslt.loadXML(xsl);
+		let stylesheet = xslt.loadXML(xsl);
 		if (MSXML)
 		{
-			var generator = new ActiveXObject('MSXML2.XSLTemplate.6.0');
+			let generator = new ActiveXObject('MSXML2.XSLTemplate.6.0');
 			generator['stylesheet'] = stylesheet;
 			xslt.proc = generator['createProcessor']();
 		}
@@ -25,7 +25,7 @@ var xslt = {
 	*/
 	loadXML: function(xml)
 	{
-		var dom;
+		let dom;
 		if (MSXML)
 		{
 			dom = new ActiveXObject('MSXML2.FreeThreadedDOMDocument.6.0');
@@ -71,7 +71,7 @@ var xslt = {
 	{
 		if (MSXML)
 		{
-			var div = targetDoc.createElement('div'),
+			let div = targetDoc.createElement('div'),
 				fragment = targetDoc.createDocumentFragment();
 
 			xslt.proc['input'] = xslt.loadXML(xml);
@@ -99,13 +99,13 @@ xslt.init(xsl);
 */
 function preview(text, target)
 {
-	var targetDoc = target.ownerDocument;
+	let targetDoc = target.ownerDocument;
 	if (!targetDoc)
 	{
 		throw 'Target does not have a ownerDocument';
 	}
 
-	var resultFragment = xslt.transformToFragment(parse(text).replace(/<[eis]>[^<]*<\/[eis]>/g, ''), targetDoc),
+	let resultFragment = xslt.transformToFragment(parse(text).replace(/<[eis]>[^<]*<\/[eis]>/g, ''), targetDoc),
 		lastUpdated    = target;
 
 	// https://bugs.chromium.org/p/chromium/issues/detail?id=266305
@@ -145,7 +145,7 @@ function preview(text, target)
 	*/
 	function computeHashes(fragment)
 	{
-		var nodes = fragment.querySelectorAll('[data-s9e-livepreview-hash]'),
+		let nodes = fragment.querySelectorAll('[data-s9e-livepreview-hash]'),
 			i     = nodes.length;
 		while (--i >= 0)
 		{
@@ -185,7 +185,7 @@ function preview(text, target)
 			executeEvent(root, eventName);
 		}
 
-		var nodes = root.querySelectorAll('[data-s9e-livepreview-on' + eventName + ']'),
+		let nodes = root.querySelectorAll('[data-s9e-livepreview-on' + eventName + ']'),
 			i     = nodes.length;
 		while (--i >= 0)
 		{
@@ -201,7 +201,7 @@ function preview(text, target)
 	*/
 	function refreshElementContent(oldParent, newParent)
 	{
-		var oldNodes = oldParent.childNodes,
+		let oldNodes = oldParent.childNodes,
 			newNodes = newParent.childNodes,
 			oldCnt   = oldNodes.length,
 			newCnt   = newNodes.length,
@@ -224,7 +224,7 @@ function preview(text, target)
 		}
 
 		// Skip the rightmost matching nodes
-		var maxRight = Math.min(oldCnt - left, newCnt - left);
+		let maxRight = Math.min(oldCnt - left, newCnt - left);
 		while (right < maxRight)
 		{
 			oldNode = oldNodes[oldCnt - (right + 1)];
@@ -238,7 +238,7 @@ function preview(text, target)
 		}
 
 		// Remove the old dirty nodes in the middle of the tree
-		var i = oldCnt - right;
+		let i = oldCnt - right;
 		while (--i >= left)
 		{
 			oldParent.removeChild(oldNodes[i]);
@@ -247,14 +247,14 @@ function preview(text, target)
 
 		// Test whether there are any nodes in the new tree between the matching nodes at the left
 		// and the matching nodes at the right
-		var rightBoundary = newCnt - right;
+		let rightBoundary = newCnt - right;
 		if (left >= rightBoundary)
 		{
 			return;
 		}
 
 		// Clone the new nodes
-		var newNodesFragment = targetDoc.createDocumentFragment();
+		let newNodesFragment = targetDoc.createDocumentFragment();
 		i = left;
 		do
 		{
@@ -344,7 +344,7 @@ function preview(text, target)
 	*/
 	function hash(text)
 	{
-		var pos = text.length, s1 = 0, s2 = 0;
+		let pos = text.length, s1 = 0, s2 = 0;
 		while (--pos >= 0)
 		{
 			s1 = (s1 + text.charCodeAt(pos)) % 0xFFFF;
@@ -362,7 +362,7 @@ function preview(text, target)
 	*/
 	function syncElementAttributes(oldEl, newEl)
 	{
-		var oldAttributes = oldEl['attributes'],
+		let oldAttributes = oldEl['attributes'],
 			newAttributes = newEl['attributes'],
 			oldCnt        = oldAttributes.length,
 			newCnt        = newAttributes.length,
@@ -371,7 +371,7 @@ function preview(text, target)
 
 		while (--i >= 0)
 		{
-			var oldAttr      = oldAttributes[i],
+			let oldAttr      = oldAttributes[i],
 				namespaceURI = oldAttr['namespaceURI'],
 				attrName     = oldAttr['name'];
 
@@ -389,7 +389,7 @@ function preview(text, target)
 		i = newCnt;
 		while (--i >= 0)
 		{
-			var newAttr      = newAttributes[i],
+			let newAttr      = newAttributes[i],
 				namespaceURI = newAttr['namespaceURI'],
 				attrName     = newAttr['name'],
 				attrValue    = newAttr['value'];

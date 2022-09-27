@@ -30,7 +30,7 @@ class ClosureCompilerApplication extends Minifier
 	/**
 	* @var string Extra options to be passed to the Closure Compiler application
 	*/
-	public $options = '--use_types_for_optimization';
+	public $options = '';
 
 	/**
 	* Constructor

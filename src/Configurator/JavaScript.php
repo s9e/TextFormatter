@@ -339,8 +339,7 @@ class JavaScript
 				*/
 				function(text, matches)
 				{
-					/** @const */
-					var config=' . $this->encode($localConfig) . ';
+					const config=' . $this->encode($localConfig) . ';
 					' . $js . '
 				}'
 			);
@@ -402,7 +401,7 @@ class JavaScript
 		if (in_array('preview', $this->exports, true))
 		{
 			$files[] = $rootDir . '/render.js';
-			$src .= '/** @const */ var xsl=' . $this->getStylesheet() . ";\n";
+			$src .= 'const xsl=' . $this->getStylesheet() . ";\n";
 			$src .= 'let functionCache=' . $this->getFunctionCache() . ";\n";
 		}
 
@@ -465,7 +464,7 @@ class JavaScript
 		);
 
 		$src = preg_replace_callback(
-			'/(\\nvar (' . implode('|', array_keys($config)) . '))(;)/',
+			'/(\\n(?:cons|le)t (' . implode('|', array_keys($config)) . '))(;)/',
 			function ($m) use ($config)
 			{
 				return $m[1] . '=' . $config[$m[2]] . $m[3];

@@ -1,5 +1,5 @@
-window = {};
-document = {
+let window = {};
+let document = {
 	createElement: function()
 	{
 		return new function()
@@ -12,7 +12,7 @@ document = {
 						/&[^;]+;/g,
 						function (entity)
 						{
-							var table = {
+							let table = {
 								'&Hat;'    : '^',
 								'&lt;'     : '<',
 								'&gt;'     : '>',
@@ -35,10 +35,10 @@ document = {
 };
 
 // Emulate punycode.js from https://github.com/bestiejs/punycode.js/
-punycode = {
+let punycode = {
 	toASCII: function(host)
 	{
-		var table= {
+		let table = {
 			'älypää.com':     'xn--lyp-plada.com',
 			'www.älypää.com': 'www.xn--lyp-plada.com'
 		}

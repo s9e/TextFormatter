@@ -203,7 +203,7 @@ class ParserTest extends Test
 						->setJS("
 							function (tag)
 							{
-								var tagPos = tag.getPos(),
+								let tagPos = tag.getPos(),
 									tagLen = tag.getEndTag().getPos() - tagPos;
 								addSelfClosingTag('X', tagPos, tagLen, tag.getSortPriority());
 							}

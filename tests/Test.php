@@ -159,9 +159,9 @@ abstract class Test extends TestCase
 		if (!isset($exec))
 		{
 			$interpreters = [
-				'duk'  => ['print', ''],
-				'js78' => ['print', ''],
-				'd8'   => ['print', ''],
+				// duktape 2.7.0 does not support ES6
+				//'duk'  => ['print', ''],
+				'qjs'  => ['print', ''],
 				'node' => ['console.log', '']
 			];
 

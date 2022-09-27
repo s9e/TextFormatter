@@ -1,11 +1,11 @@
 function parse()
 {
-	var markers = getInlineCodeMarkers(),
+	let markers = getInlineCodeMarkers(),
 		i       = -1,
 		cnt     = markers.length;
 	while (++i < (cnt - 1))
 	{
-		var pos = markers[i].next,
+		let pos = markers[i].next,
 			j   = i;
 		if (text[markers[i].pos] !== '`')
 		{
@@ -34,7 +34,7 @@ function parse()
 */
 function addInlineCodeTags(left, right)
 {
-	var startPos = left.pos,
+	let startPos = left.pos,
 		startLen = left.len + left.trimAfter,
 		endPos   = right.pos - right.trimBefore,
 		endLen   = right.len + right.trimBefore;
@@ -50,13 +50,13 @@ function addInlineCodeTags(left, right)
 */
 function getInlineCodeMarkers()
 {
-	var pos = text.indexOf('`');
+	let pos = text.indexOf('`');
 	if (pos < 0)
 	{
 		return [];
 	}
 
-	var regexp   = /(`+)(\s*)[^\x17`]*/g,
+	let regexp   = /(`+)(\s*)[^\x17`]*/g,
 		trimNext = 0,
 		markers  = [],
 		_text    = text.replace(/\x1BD/g, '\\`'),

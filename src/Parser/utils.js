@@ -4,7 +4,7 @@
 */
 function html_entity_decode(str)
 {
-	var b = document.createElement('b');
+	let b = document.createElement('b');
 	html_entity_decode = function (str)
 	{
 		// We escape left brackets so that we don't inadvertently evaluate some nasty HTML such as
@@ -23,7 +23,7 @@ function html_entity_decode(str)
 */
 function htmlspecialchars_compat(str)
 {
-	var t = {
+	let t = {
 		'<' : '&lt;',
 		'>' : '&gt;',
 		'&' : '&amp;',
@@ -48,7 +48,7 @@ function htmlspecialchars_compat(str)
 */
 function htmlspecialchars_noquotes(str)
 {
-	var t = {
+	let t = {
 		'<' : '&lt;',
 		'>' : '&gt;',
 		'&' : '&amp;'

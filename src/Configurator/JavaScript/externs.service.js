@@ -21,7 +21,7 @@
 /**
  * @const
  */
-var punycode = {};
+let punycode = {};
 /**
  * @param {string} domain
  * @return {string}
@@ -33,12 +33,12 @@ function XSLTProcessor() {}
  * @type {number}
  * @const
  */
-var Infinity;
+let Infinity;
 /**
  * @type {undefined}
  * @const
  */
-var undefined;
+let undefined;
 /**
  * @constructor
  * @param {*=} opt_description
@@ -211,7 +211,7 @@ function Function(var_args) {}
 /**
  * @const
  */
-var Math = {};
+let Math = {};
 /**
  * @param {?} x
  * @return {number}
@@ -289,7 +289,7 @@ RegExp.prototype.test = function(str) {};
  * @constructor
  * @extends {Array<string>}
  */
-var RegExpResult = function() {};
+let RegExpResult = function() {};
 /** @type {number} */
 RegExpResult.prototype.index;
 /**
@@ -592,8 +592,8 @@ function TrustedHTML() {}
 /**
  * @const {!HTMLDocument}
  */
-var document;
+let document;
 /**
  * @type {!Window}
  */
-var window;
+let window;

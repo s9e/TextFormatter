@@ -1,18 +1,18 @@
-var regexps  = config.regexps,
-	tagName  = config.tagName,
-	attrName = config.attrName;
+const regexps  = config.regexps,
+      tagName  = config.tagName,
+      attrName = config.attrName;
 
-var onlyFirst = typeof config.onlyFirst !== 'undefined',
+let onlyFirst = typeof config.onlyFirst !== 'undefined',
 	keywords  = {};
 
 regexps.forEach(function(regexp)
 {
-	var m;
+	let m;
 
 	regexp.lastIndex = 0;
 	while (m = regexp.exec(text))
 	{
-		var value = m[0],
+		let value = m[0],
 			pos   = m.index;
 
 		if (onlyFirst)

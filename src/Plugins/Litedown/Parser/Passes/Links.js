@@ -27,9 +27,9 @@ function addLinkTag(startPos, endPos, endLen, linkInfo)
 	// Give the link a slightly worse priority if this is a implicit reference and a slightly
 	// better priority if it's an explicit reference or an inline link or to give it precedence
 	// over possible BBCodes such as [b](https://en.wikipedia.org/wiki/B)
-	var priority = (endLen === 1) ? 1 : -1;
+	let priority = (endLen === 1) ? 1 : -1;
 
-	var tag = addTagPair('URL', startPos, 1, endPos, endLen, priority);
+	let tag = addTagPair('URL', startPos, 1, endPos, endLen, priority);
 	setLinkAttributes(tag, linkInfo, 'url');
 
 	// Overwrite the markup without touching the link's text
@@ -44,7 +44,7 @@ function addLinkTag(startPos, endPos, endLen, linkInfo)
 */
 function getLabels()
 {
-	var labels = {}, m, regexp = /\[((?:[^\x17[\]]|\[[^\x17[\]]*\])*)\]/g;
+	let labels = {}, m, regexp = /\[((?:[^\x17[\]]|\[[^\x17[\]]*\])*)\]/g;
 	while (m = regexp.exec(text))
 	{
 		labels[m.index] = m[1].toLowerCase();
@@ -58,11 +58,11 @@ function getLabels()
 */
 function parseAutomaticLinks()
 {
-	var m, regexp = /<[-+.\w]+([:@])[^\x17\s>]+?(?:>|\x1B7)/g;
+	let m, regexp = /<[-+.\w]+([:@])[^\x17\s>]+?(?:>|\x1B7)/g;
 	while (m = regexp.exec(text))
 	{
 		// Re-escape escape sequences in automatic links
-		var content  = decode(m[0].replace(/\x1B/g, "\\\x1B")).replace(/^<(.+)>$/, '$1'),
+		let content  = decode(m[0].replace(/\x1B/g, "\\\x1B")).replace(/^<(.+)>$/, '$1'),
 			startPos = m.index,
 			endPos   = startPos + m[0].length - 1,
 
@@ -78,10 +78,10 @@ function parseAutomaticLinks()
 */
 function parseInlineLinks()
 {
-	var m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(( *(?:\([^\x17\s()]*\)|[^\x17\s)])*(?=[ )]) *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))? *)\)/g;
+	let m, regexp = /\[(?:[^\x17[\]]|\[[^\x17[\]]*\])*\]\(( *(?:\([^\x17\s()]*\)|[^\x17\s)])*(?=[ )]) *(?:"[^\x17]*?"|'[^\x17]*?'|\([^\x17)]*\))? *)\)/g;
 	while (m = regexp.exec(text))
 	{
-		var linkInfo = m[1],
+		let linkInfo = m[1],
 			startPos = m.index,
 			endLen   = 3 + linkInfo.length,
 			endPos   = startPos + m[0].length - endLen;
@@ -95,10 +95,10 @@ function parseInlineLinks()
 */
 function parseReferenceLinks()
 {
-	var labels = getLabels(), startPos;
+	let labels = getLabels(), startPos;
 	for (startPos in labels)
 	{
-		var id       = labels[startPos],
+		let id       = labels[startPos],
 			labelPos = +startPos + 2 + id.length,
 			endPos   = labelPos - 1,
 			endLen   = 1;

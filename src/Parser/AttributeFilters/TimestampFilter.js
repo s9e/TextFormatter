@@ -1,5 +1,4 @@
-/** @const */
-var TimestampFilter =
+const TimestampFilter =
 {
 	/**
 	* @param  {*} attrValue
@@ -7,7 +6,7 @@ var TimestampFilter =
 	*/
 	filter: function(attrValue)
 	{
-		var m = /^(?=\d)(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(attrValue);
+		let m = /^(?=\d)(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(attrValue);
 		if (m)
 		{
 			return 3600 * (m[1] || 0) + 60 * (m[2] || 0) + (+m[3] || 0);

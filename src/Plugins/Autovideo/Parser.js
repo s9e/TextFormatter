@@ -1,4 +1,4 @@
-var tagName  = config.tagName,
+let tagName  = config.tagName,
 	attrName = config.attrName;
 
 matches.forEach(function(m)

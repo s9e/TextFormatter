@@ -13,7 +13,7 @@ matches.forEach(function(m)
 function linkifyUrl(tagPos, url)
 {
 	// Create a zero-width end tag right after the URL
-	var endPos = tagPos + url.length,
+	let endPos = tagPos + url.length,
 		endTag = addEndTag(config.tagName, endPos, 0);
 
 	// If the URL starts with "www." we prepend "http://"
@@ -24,14 +24,14 @@ function linkifyUrl(tagPos, url)
 
 	// Create a zero-width start tag right before the URL, with a slightly worse priority to
 	// allow specialized plugins to use the URL instead
-	var startTag = addStartTag(config.tagName, tagPos, 0, 1);
+	let startTag = addStartTag(config.tagName, tagPos, 0, 1);
 	startTag.setAttribute(config.attrName, url);
 
 	// Pair the tags together
 	startTag.pairWith(endTag);
 
 	// Protect the tag's content from partial replacements with a low priority tag
-	var contentTag = addVerbatim(tagPos, endPos - tagPos, 1000);
+	let contentTag = addVerbatim(tagPos, endPos - tagPos, 1000);
 	startTag.cascadeInvalidationTo(contentTag);
 }
 

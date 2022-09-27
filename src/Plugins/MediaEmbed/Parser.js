@@ -1,6 +1,6 @@
 matches.forEach(function(m)
 {
-	var tagName = config.tagName,
+	let tagName = config.tagName,
 		url     = m[0][0],
 		pos     = m[0][1],
 		len     = url.length;

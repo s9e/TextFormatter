@@ -1,6 +1,6 @@
 config.generics.forEach(function(entry)
 {
-	var tagName        = entry[0],
+	let tagName        = entry[0],
 		regexp         = entry[1],
 		passthroughIdx = entry[2],
 		map            = entry[3],
@@ -11,7 +11,7 @@ config.generics.forEach(function(entry)
 
 	while (m = regexp.exec(text))
 	{
-		var startTagPos = m.index,
+		let startTagPos = m.index,
 			matchLen    = m[0].length,
 			tag;
 
@@ -21,7 +21,7 @@ config.generics.forEach(function(entry)
 			// between. m.index gives us the position of the start tag but we don't know its length.
 			// We use indexOf() to locate the content part so that we know how long the start tag
 			// is. It is an imperfect solution but it should work well enough in most cases.
-			var contentPos  = text.indexOf(m[passthroughIdx], startTagPos),
+			let contentPos  = text.indexOf(m[passthroughIdx], startTagPos),
 				contentLen  = m[passthroughIdx].length,
 				startTagLen = contentPos - startTagPos,
 				endTagPos   = contentPos + contentLen,

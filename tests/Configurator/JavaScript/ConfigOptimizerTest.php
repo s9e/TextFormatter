@@ -49,7 +49,7 @@ class ConfigOptimizerTest extends Test
 				],
 				'{bar:o3D7424E0,foo:o3D7424E0}',
 				[
-					'/** @const */ var o3D7424E0=[12345,54321];'
+					'const o3D7424E0=[12345,54321];'
 				]
 			],
 			[
@@ -59,7 +59,7 @@ class ConfigOptimizerTest extends Test
 				]),
 				'{"bar":o3D7424E0,"foo":o3D7424E0}',
 				[
-					'/** @const */ var o3D7424E0=[12345,54321];'
+					'const o3D7424E0=[12345,54321];'
 				]
 			],
 			[
@@ -77,7 +77,7 @@ class ConfigOptimizerTest extends Test
 				],
 				'{bar:oBDF6D802,foo:oBDF6D802}',
 				[
-					'/** @const */ var oBDF6D802=[function(){return false;}];'
+					'const oBDF6D802=[function(){return false;}];'
 				]
 			],
 			[

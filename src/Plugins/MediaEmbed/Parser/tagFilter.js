@@ -23,11 +23,11 @@ function (tag, hosts, sites, cacheDir)
 
 		if (tag.hasAttribute('url'))
 		{
-			var url    = tag.getAttribute('url'),
+			let url    = tag.getAttribute('url'),
 				siteId = getSiteIdFromUrl(url, hosts);
 			if (sites[siteId])
 			{
-				var attributes = getAttributes(url, sites[siteId]);
+				let attributes = getAttributes(url, sites[siteId]);
 				if (!empty(attributes))
 				{
 					createTag(siteId.toUpperCase(), tag).setAttributes(attributes);
@@ -46,10 +46,10 @@ function (tag, hosts, sites, cacheDir)
 	*/
 	function addNamedCaptures(attributes, string, regexps)
 	{
-		var matched = false;
+		let matched = false;
 		regexps.forEach(function(pair)
 		{
-			var regexp = pair[0],
+			let regexp = pair[0],
 				map    = pair[1],
 				m      = regexp.exec(string);
 			if (!m)
@@ -79,7 +79,7 @@ function (tag, hosts, sites, cacheDir)
 	*/
 	function createTag(tagName, tag)
 	{
-		var startPos = tag.getPos(),
+		let startPos = tag.getPos(),
 			endTag   = tag.getEndTag(),
 			startLen,
 			endPos,
@@ -106,7 +106,7 @@ function (tag, hosts, sites, cacheDir)
 	*/
 	function empty(attributes)
 	{
-		for (var attrName in attributes)
+		for (let attrName in attributes)
 		{
 			return false;
 		}
@@ -123,7 +123,7 @@ function (tag, hosts, sites, cacheDir)
 	*/
 	function getAttributes(url, config)
 	{
-		var attributes = {};
+		let attributes = {};
 		addNamedCaptures(attributes, url, config[0]);
 
 		return attributes;
@@ -138,7 +138,7 @@ function (tag, hosts, sites, cacheDir)
 	*/
 	function getSiteIdFromUrl(url, hosts)
 	{
-		var m    = /^https?:\/\/([^\/]+)/.exec(url.toLowerCase()),
+		let m    = /^https?:\/\/([^\/]+)/.exec(url.toLowerCase()),
 			host = m[1] || '';
 		while (host > '')
 		{

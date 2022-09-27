@@ -1,5 +1,4 @@
-/** @const */
-var NumericFilter =
+const NumericFilter =
 {
 	/**
 	* @param  {*} attrValue

@@ -1,147 +1,146 @@
 /**#@+
 * Boolean rules bitfield
 */
-/** @const */ var RULE_AUTO_CLOSE        = 1 << 0;
-/** @const */ var RULE_AUTO_REOPEN       = 1 << 1;
-/** @const */ var RULE_BREAK_PARAGRAPH   = 1 << 2;
-/** @const */ var RULE_CREATE_PARAGRAPHS = 1 << 3;
-/** @const */ var RULE_DISABLE_AUTO_BR   = 1 << 4;
-/** @const */ var RULE_ENABLE_AUTO_BR    = 1 << 5;
-/** @const */ var RULE_IGNORE_TAGS       = 1 << 6;
-/** @const */ var RULE_IGNORE_TEXT       = 1 << 7;
-/** @const */ var RULE_IGNORE_WHITESPACE = 1 << 8;
-/** @const */ var RULE_IS_TRANSPARENT    = 1 << 9;
-/** @const */ var RULE_PREVENT_BR        = 1 << 10;
-/** @const */ var RULE_SUSPEND_AUTO_BR   = 1 << 11;
-/** @const */ var RULE_TRIM_FIRST_LINE   = 1 << 12;
+const RULE_AUTO_CLOSE        = 1 << 0;
+const RULE_AUTO_REOPEN       = 1 << 1;
+const RULE_BREAK_PARAGRAPH   = 1 << 2;
+const RULE_CREATE_PARAGRAPHS = 1 << 3;
+const RULE_DISABLE_AUTO_BR   = 1 << 4;
+const RULE_ENABLE_AUTO_BR    = 1 << 5;
+const RULE_IGNORE_TAGS       = 1 << 6;
+const RULE_IGNORE_TEXT       = 1 << 7;
+const RULE_IGNORE_WHITESPACE = 1 << 8;
+const RULE_IS_TRANSPARENT    = 1 << 9;
+const RULE_PREVENT_BR        = 1 << 10;
+const RULE_SUSPEND_AUTO_BR   = 1 << 11;
+const RULE_TRIM_FIRST_LINE   = 1 << 12;
 /**#@-*/
 
 /**
 * @const Bitwise disjunction of rules related to automatic line breaks
 */
-var RULES_AUTO_LINEBREAKS = RULE_DISABLE_AUTO_BR | RULE_ENABLE_AUTO_BR | RULE_SUSPEND_AUTO_BR;
+const RULES_AUTO_LINEBREAKS = RULE_DISABLE_AUTO_BR | RULE_ENABLE_AUTO_BR | RULE_SUSPEND_AUTO_BR;
 
 /**
 * @const Bitwise disjunction of rules that are inherited by subcontexts
 */
-var RULES_INHERITANCE = RULE_ENABLE_AUTO_BR;
+const RULES_INHERITANCE = RULE_ENABLE_AUTO_BR;
 
 /**
 * @const All the characters that are considered whitespace
 */
-var WHITESPACE = " \n\t";
+const WHITESPACE = " \n\t";
 
 /**
 * @type {!Object.<string,number>} Number of open tags for each tag name
 */
-var cntOpen;
+let cntOpen;
 
 /**
 * @type {!Object.<string,number>} Number of times each tag has been used
 */
-var cntTotal;
+let cntTotal;
 
 /**
 * @type {!Object} Current context
 */
-var context;
+let context;
 
 /**
 * @type {number} How hard the parser has worked on fixing bad markup so far
 */
-var currentFixingCost;
+let currentFixingCost;
 
 /**
 * @type {?Tag} Current tag being processed
 */
-var currentTag;
+let currentTag;
 
 /**
 * @type {boolean} Whether the output contains "rich" tags, IOW any tag that is not <p> or <br/>
 */
-var isRich;
+let isRich;
 
 /**
 * @type {!Logger} This parser's logger
 */
-var logger = new Logger;
+let logger = new Logger;
 
 /**
 * @type {number} How hard the parser should work on fixing bad markup
 */
-var maxFixingCost = 10000;
+let maxFixingCost = 10000;
 
 /**
 * @type {!Object} Associative array of namespace prefixes in use in document (prefixes used as key)
 */
-var namespaces;
+let namespaces;
 
 /**
 * @type {!Array.<!Tag>} Stack of open tags (instances of Tag)
 */
-var openTags;
+let openTags;
 
 /**
 * @type {string} This parser's output
 */
-var output;
+let output;
 
 /**
 * @type {!Object.<!Object>}
 */
-var plugins;
+const plugins;
 
 /**
 * @type {number} Position of the cursor in the original text
 */
-var pos;
+let pos;
 
 /**
 * @type {!Object} Variables registered for use in filters
 */
-var registeredVars;
+const registeredVars;
 
 /**
 * @type {!Object} Root context, used at the root of the document
 */
-var rootContext;
+const rootContext;
 
 /**
 * @type {!Object} Tags' config
-* @const
 */
-var tagsConfig;
+const tagsConfig;
 
 /**
 * @type {!Array.<!Tag>} Tag storage
 */
-var tagStack;
+let tagStack;
 
 /**
 * @type {boolean} Whether the tags in the stack are sorted
 */
-var tagStackIsSorted;
+let tagStackIsSorted;
 
 /**
 * @type {string} Text being parsed
 */
-var text;
+let text;
 
 /**
 * @type {number} Length of the text being parsed
 */
-var textLen;
+let textLen;
 
 /**
 * @type {number} Counter incremented everytime the parser is reset. Used to as a canary to detect
 *                 whether the parser was reset during execution
 */
-var uid = 0;
+let uid = 0;
 
 /**
 * @type {number} Position before which we output text verbatim, without paragraphs or linebreaks
 */
-var wsPos;
+let wsPos;
 
 //==========================================================================
 // Public API
@@ -193,7 +192,7 @@ function parse(_text)
 {
 	// Reset the parser and save the uid
 	reset(_text);
-	var _uid = uid;
+	let _uid = uid;
 
 	// Do the heavy lifting
 	executePluginParsers();
@@ -298,7 +297,7 @@ function setNestingLimit(tagName, nestingLimit)
 */
 function copyTagConfig(tagName)
 {
-	var tagConfig = {}, k;
+	let tagConfig = {}, k;
 	for (k in tagsConfig[tagName])
 	{
 		tagConfig[k] = tagsConfig[tagName][k];
@@ -330,7 +329,7 @@ function encodeUnicodeSupplementaryCharacters()
 */
 function encodeUnicodeSupplementaryCharactersCallback(pair)
 {
-	var cp = (pair.charCodeAt(0) << 10) + pair.charCodeAt(1) - 56613888;
+	let cp = (pair.charCodeAt(0) << 10) + pair.charCodeAt(1) - 56613888;
 
 	return '&#' + cp + ';';
 }
@@ -340,7 +339,7 @@ function encodeUnicodeSupplementaryCharactersCallback(pair)
 */
 function finalizeOutput()
 {
-	var tmp;
+	let tmp;
 
 	// Output the rest of the text and close the last paragraph
 	outputText(textLen, 0, true);
@@ -363,13 +362,13 @@ function finalizeOutput()
 	encodeUnicodeSupplementaryCharacters();
 
 	// Use a <r> root if the text is rich, or <t> for plain text (including <p></p> and <br/>)
-	var tagName = (isRich) ? 'r' : 't';
+	let tagName = (isRich) ? 'r' : 't';
 
 	// Prepare the root node with all the namespace declarations
 	tmp = '<' + tagName;
 	if (HINT.namespaces)
 	{
-		for (var prefix in namespaces)
+		for (let prefix in namespaces)
 		{
 			tmp += ' xmlns:' + prefix + '="urn:s9e:TextFormatter:' + prefix + '"';
 		}
@@ -387,7 +386,7 @@ function outputTag(tag)
 {
 	isRich = true;
 
-	var tagName    = tag.getName(),
+	let tagName    = tag.getName(),
 		tagPos     = tag.getPos(),
 		tagLen     = tag.getLen(),
 		tagFlags   = tag.getFlags(),
@@ -403,13 +402,13 @@ function outputTag(tag)
 	// Current paragraph must end before the tag if:
 	//  - the tag is a start (or self-closing) tag and it breaks paragraphs, or
 	//  - the tag is an end tag (but not self-closing)
-	var closeParagraph = !!(!tag.isStartTag() || (HINT.RULE_BREAK_PARAGRAPH && (tagFlags & RULE_BREAK_PARAGRAPH)));
+	let closeParagraph = !!(!tag.isStartTag() || (HINT.RULE_BREAK_PARAGRAPH && (tagFlags & RULE_BREAK_PARAGRAPH)));
 
 	// Let the cursor catch up with this tag's position
 	outputText(tagPos, skipBefore, closeParagraph);
 
 	// Capture the text consumed by the tag
-	var tagText = (tagLen)
+	let tagText = (tagLen)
 				? htmlspecialchars_noquotes(text.substring(tagPos, tagPos + tagLen))
 				: '';
 
@@ -425,7 +424,7 @@ function outputTag(tag)
 		// Record this tag's namespace, if applicable
 		if (HINT.namespaces)
 		{
-			var colonPos = tagName.indexOf(':');
+			let colonPos = tagName.indexOf(':');
 			if (colonPos > 0)
 			{
 				namespaces[tagName.substring(0, colonPos)] = 0;
@@ -437,9 +436,9 @@ function outputTag(tag)
 
 		// We output the attributes in lexical order. Helps canonicalizing the output and could
 		// prove useful someday
-		var attributes = tag.getAttributes(),
+		let attributes = tag.getAttributes(),
 			attributeNames = [];
-		for (var attrName in attributes)
+		for (let attrName in attributes)
 		{
 			attributeNames.push(attrName);
 		}
@@ -535,7 +534,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	// Skip over previously identified whitespace if applicable
 	if (wsPos > pos)
 	{
-		var skipPos = Math.min(catchupPos, wsPos);
+		let skipPos = Math.min(catchupPos, wsPos);
 		output += text.substring(pos, skipPos);
 		pos = skipPos;
 
@@ -549,7 +548,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		}
 	}
 
-	var catchupText;
+	let catchupText;
 
 	// Test whether we're even supposed to output anything
 	if (HINT.RULE_IGNORE_TEXT && context.flags & RULE_IGNORE_TEXT)
@@ -574,13 +573,13 @@ function outputText(catchupPos, maxLines, closeParagraph)
 	}
 
 	// Compute the amount of text to ignore at the end of the output
-	var ignorePos = catchupPos,
+	let ignorePos = catchupPos,
 		ignoreLen = 0;
 
 	// Ignore as many lines (including whitespace) as specified
 	while (maxLines && --ignorePos >= pos)
 	{
-		var c = text[ignorePos];
+		let c = text[ignorePos];
 		if (c !== ' ' && c !== "\n" && c !== "\t")
 		{
 			break;
@@ -611,7 +610,7 @@ function outputText(catchupPos, maxLines, closeParagraph)
 		}
 
 		// Look for a paragraph break in this text
-		var pbPos = text.indexOf("\n\n", pos);
+		let pbPos = text.indexOf("\n\n", pos);
 
 		while (pbPos > -1 && pbPos < catchupPos)
 		{
@@ -672,11 +671,11 @@ function outputBrTag(tag)
 */
 function outputIgnoreTag(tag)
 {
-	var tagPos = tag.getPos(),
+	let tagPos = tag.getPos(),
 		tagLen = tag.getLen();
 
 	// Capture the text to ignore
-	var ignoreText = text.substring(tagPos, tagPos + tagLen);
+	let ignoreText = text.substring(tagPos, tagPos + tagLen);
 
 	// Catch up with the tag's position then output the tag
 	outputText(tagPos, 0, false);
@@ -739,7 +738,7 @@ function outputParagraphEnd()
 */
 function outputVerbatim(tag)
 {
-	var flags = context.flags;
+	let flags = context.flags;
 	context.flags = tag.getFlags();
 	outputText(currentTag.getPos() + currentTag.getLen(), 0, false);
 	context.flags = flags;
@@ -796,13 +795,13 @@ function enablePlugin(pluginName)
 */
 function executePluginParser(pluginName)
 {
-	var pluginConfig = plugins[pluginName];
+	let pluginConfig = plugins[pluginName];
 	if (pluginConfig.quickMatch && text.indexOf(pluginConfig.quickMatch) < 0)
 	{
 		return;
 	}
 
-	var matches = [];
+	let matches = [];
 	if (HINT.regexp && HINT.regexpLimit && typeof pluginConfig.regexp !== 'undefined' && typeof pluginConfig.regexpLimit !== 'undefined')
 	{
 		matches = getMatches(pluginConfig.regexp, pluginConfig.regexpLimit);
@@ -821,7 +820,7 @@ function executePluginParser(pluginName)
 */
 function executePluginParsers()
 {
-	for (var pluginName in plugins)
+	for (let pluginName in plugins)
 	{
 		if (!plugins[pluginName].isDisabled)
 		{
@@ -841,16 +840,16 @@ function getMatches(regexp, limit)
 {
 	// Reset the regexp
 	regexp.lastIndex = 0;
-	var matches = [], cnt = 0, m;
+	let matches = [], cnt = 0, m;
 	while (++cnt <= limit && (m = regexp.exec(text)))
 	{
 		// NOTE: coercing m.index to a number because Closure Compiler thinks pos is a string otherwise
-		var pos   = m.index,
+		let pos   = m.index,
 			match = [[m[0], pos]],
 			i = 0;
 		while (++i < m.length)
 		{
-			var str = m[i];
+			let str = m[i];
 
 			// Sub-expressions that were not evaluated return undefined
 			if (str === undefined)
@@ -926,16 +925,16 @@ function closeAncestor(tag)
 
 	if (openTags.length)
 	{
-		var tagName   = tag.getName(),
+		let tagName   = tag.getName(),
 			tagConfig = tagsConfig[tagName];
 
 		if (tagConfig.rules.closeAncestor)
 		{
-			var i = openTags.length;
+			let i = openTags.length;
 
 			while (--i >= 0)
 			{
-				var ancestor     = openTags[i],
+				let ancestor     = openTags[i],
 					ancestorName = ancestor.getName();
 
 				if (tagConfig.rules.closeAncestor[ancestorName])
@@ -972,12 +971,12 @@ function closeParent(tag)
 
 	if (openTags.length)
 	{
-		var tagName   = tag.getName(),
+		let tagName   = tag.getName(),
 			tagConfig = tagsConfig[tagName];
 
 		if (tagConfig.rules.closeParent)
 		{
-			var parent     = openTags[openTags.length - 1],
+			let parent     = openTags[openTags.length - 1],
 				parentName = parent.getName();
 
 			if (tagConfig.rules.closeParent[parentName])
@@ -1010,10 +1009,10 @@ function createChild(tag)
 		return;
 	}
 
-	var tagConfig = tagsConfig[tag.getName()];
+	let tagConfig = tagsConfig[tag.getName()];
 	if (tagConfig.rules.createChild)
 	{
-		var priority = -1000,
+		let priority = -1000,
 			_text    = text.substring(pos),
 			tagPos   = pos + _text.length - _text.replace(/^[ \n\r\t]+/, '').length;
 		tagConfig.rules.createChild.forEach(function(tagName)
@@ -1045,12 +1044,12 @@ function fosterParent(tag)
 
 	if (openTags.length)
 	{
-		var tagName   = tag.getName(),
+		let tagName   = tag.getName(),
 			tagConfig = tagsConfig[tagName];
 
 		if (tagConfig.rules.fosterParent)
 		{
-			var parent     = openTags[openTags.length - 1],
+			let parent     = openTags[openTags.length - 1],
 				parentName = parent.getName();
 
 			if (tagConfig.rules.fosterParent[parentName])
@@ -1091,15 +1090,15 @@ function requireAncestor(tag)
 		return false;
 	}
 
-	var tagName   = tag.getName(),
+	let tagName   = tag.getName(),
 		tagConfig = tagsConfig[tagName];
 
 	if (tagConfig.rules.requireAncestor)
 	{
-		var i = tagConfig.rules.requireAncestor.length;
+		let i = tagConfig.rules.requireAncestor.length;
 		while (--i >= 0)
 		{
-			var ancestorName = tagConfig.rules.requireAncestor[i];
+			let ancestorName = tagConfig.rules.requireAncestor[i];
 			if (cntOpen[ancestorName])
 			{
 				return false;
@@ -1129,12 +1128,12 @@ function requireAncestor(tag)
 */
 function addFosterTag(tag, fosterTag)
 {
-	var coords    = getMagicStartCoords(tag.getPos() + tag.getLen()),
+	let coords    = getMagicStartCoords(tag.getPos() + tag.getLen()),
 		childPos  = coords[0],
 		childPrio = coords[1];
 
 	// Add a 0-width copy of the parent tag after this tag and make it depend on this tag
-	var childTag = addCopyTag(fosterTag, childPos, 0, childPrio);
+	let childTag = addCopyTag(fosterTag, childPos, 0, childPrio);
 	tag.cascadeInvalidationTo(childTag);
 }
 
@@ -1148,7 +1147,7 @@ function addFosterTag(tag, fosterTag)
 */
 function addMagicEndTag(startTag, tagPos, prio)
 {
-	var tagName = startTag.getName();
+	let tagName = startTag.getName();
 
 	// Adjust the end tag's position if whitespace is to be minimized
 	if (HINT.RULE_IGNORE_WHITESPACE && ((currentTag.getFlags() | startTag.getFlags()) & RULE_IGNORE_WHITESPACE))
@@ -1157,7 +1156,7 @@ function addMagicEndTag(startTag, tagPos, prio)
 	}
 
 	// Add a 0-width end tag that is paired with the given start tag
-	var endTag = addEndTag(tagName, tagPos, 0, prio || 0);
+	let endTag = addEndTag(tagName, tagPos, 0, prio || 0);
 	endTag.pairWith(startTag);
 
 	return endTag;
@@ -1189,7 +1188,7 @@ function getMagicEndPos(tagPos)
 */
 function getMagicStartCoords(tagPos)
 {
-	var nextPos, nextPrio, nextTag, prio;
+	let nextPos, nextPrio, nextTag, prio;
 	if (!tagStack.length)
 	{
 		// Set the next position outside the text boundaries
@@ -1237,7 +1236,7 @@ function processTags()
 	}
 
 	// Initialize the count tables
-	for (var tagName in tagsConfig)
+	for (let tagName in tagsConfig)
 	{
 		cntOpen[tagName]  = 0;
 		cntTotal[tagName] = 0;
@@ -1283,14 +1282,14 @@ function processCurrentTag()
 		currentTag.invalidate();
 	}
 
-	var tagPos = currentTag.getPos(),
+	let tagPos = currentTag.getPos(),
 		tagLen = currentTag.getLen();
 
 	// Test whether the cursor passed this tag's position already
 	if (pos > tagPos && !currentTag.isInvalid())
 	{
 		// Test whether this tag is paired with a start tag and this tag is still open
-		var startTag = currentTag.getStartTag();
+		let startTag = currentTag.getStartTag();
 
 		if (startTag && openTags.indexOf(startTag) >= 0)
 		{
@@ -1309,7 +1308,7 @@ function processCurrentTag()
 		// If this is an ignore tag, try to ignore as much as the remaining text as possible
 		if (currentTag.isIgnoreTag())
 		{
-			var ignoreLen = tagPos + tagLen - pos;
+			let ignoreLen = tagPos + tagLen - pos;
 
 			if (ignoreLen > 0)
 			{
@@ -1366,7 +1365,7 @@ function processCurrentTag()
 */
 function processStartTag(tag)
 {
-	var tagName   = tag.getName(),
+	let tagName   = tag.getName(),
 		tagConfig = tagsConfig[tagName];
 
 	// 1. Check that this tag has not reached its global limit tagLimit
@@ -1427,7 +1426,7 @@ function processStartTag(tag)
 
 	if (!tagIsAllowed(tagName))
 	{
-		var msg     = 'Tag is not allowed in this context',
+		let msg     = 'Tag is not allowed in this context',
 			context = {'tag': tag, 'tagName': tagName};
 		if (tag.getLen() > 0)
 		{
@@ -1458,7 +1457,7 @@ function processStartTag(tag)
 	 && !tag.getEndTag()
 	 && !isFollowedByClosingTag(tag))
 	{
-		var newTag = new Tag(Tag.SELF_CLOSING_TAG, tagName, tag.getPos(), tag.getLen());
+		let newTag = new Tag(Tag.SELF_CLOSING_TAG, tagName, tag.getPos(), tag.getLen());
 		newTag.setAttributes(tag.getAttributes());
 		newTag.setFlags(tag.getFlags());
 
@@ -1487,7 +1486,7 @@ function processStartTag(tag)
 */
 function processEndTag(tag)
 {
-	var tagName = tag.getName();
+	let tagName = tag.getName();
 
 	if (!cntOpen[tagName])
 	{
@@ -1498,13 +1497,13 @@ function processEndTag(tag)
 	/**
 	* @type {!Array.<!Tag>} List of tags need to be closed before given tag
 	*/
-	var closeTags = [];
+	let closeTags = [];
 
 	// Iterate through all open tags from last to first to find a match for our tag
-	var i = openTags.length;
+	let i = openTags.length;
 	while (--i >= 0)
 	{
-		var openTag = openTags[i];
+		let openTag = openTags[i];
 
 		if (tag.canClose(openTag))
 		{
@@ -1524,19 +1523,19 @@ function processEndTag(tag)
 	}
 
 	// Accumulate flags to determine whether whitespace should be trimmed
-	var flags = tag.getFlags();
+	let flags = tag.getFlags();
 	closeTags.forEach(function(openTag)
 	{
 		flags |= openTag.getFlags();
 	});
-	var ignoreWhitespace = (HINT.RULE_IGNORE_WHITESPACE && (flags & RULE_IGNORE_WHITESPACE));
+	let ignoreWhitespace = (HINT.RULE_IGNORE_WHITESPACE && (flags & RULE_IGNORE_WHITESPACE));
 
 	// Only reopen tags if we haven't exceeded our "fixing" budget
-	var keepReopening = HINT.RULE_AUTO_REOPEN && (currentFixingCost < maxFixingCost),
+	let keepReopening = HINT.RULE_AUTO_REOPEN && (currentFixingCost < maxFixingCost),
 		reopenTags    = [];
 	closeTags.forEach(function(openTag)
 	{
-		var openTagName = openTag.getName();
+		let openTagName = openTag.getName();
 
 		// Test whether this tag should be reopened automatically
 		if (keepReopening)
@@ -1552,14 +1551,14 @@ function processEndTag(tag)
 		}
 
 		// Find the earliest position we can close this open tag
-		var tagPos = tag.getPos();
+		let tagPos = tag.getPos();
 		if (ignoreWhitespace)
 		{
 			tagPos = getMagicEndPos(tagPos);
 		}
 
 		// Output an end tag to close this start tag, then update the context
-		var endTag = new Tag(Tag.END_TAG, openTagName, tagPos, 0);
+		let endTag = new Tag(Tag.END_TAG, openTagName, tagPos, 0);
 		endTag.setFlags(openTag.getFlags());
 		outputTag(endTag);
 		popContext();
@@ -1577,12 +1576,12 @@ function processEndTag(tag)
 		/**
 		* @type {number} Rightmost position of the portion of text to ignore
 		*/
-		var ignorePos = pos;
+		let ignorePos = pos;
 
 		i = tagStack.length;
 		while (--i >= 0 && ++currentFixingCost < maxFixingCost)
 		{
-			var upcomingTag = tagStack[i];
+			let upcomingTag = tagStack[i];
 
 			// Test whether the upcoming tag is positioned at current "ignore" position and it's
 			// strictly an end tag (not a start tag or a self-closing tag)
@@ -1593,7 +1592,7 @@ function processEndTag(tag)
 			}
 
 			// Test whether this tag would close any of the tags we're about to reopen
-			var j = closeTags.length;
+			let j = closeTags.length;
 
 			while (--j >= 0 && ++currentFixingCost < maxFixingCost)
 			{
@@ -1630,10 +1629,10 @@ function processEndTag(tag)
 	// Re-add tags that need to be reopened, at current cursor position
 	reopenTags.forEach(function(startTag)
 	{
-		var newTag = addCopyTag(startTag, pos, 0);
+		let newTag = addCopyTag(startTag, pos, 0);
 
 		// Re-pair the new tag
-		var endTag = startTag.getEndTag();
+		let endTag = startTag.getEndTag();
 		if (endTag)
 		{
 			newTag.pairWith(endTag);
@@ -1646,7 +1645,7 @@ function processEndTag(tag)
 */
 function popContext()
 {
-	var tag = openTags.pop();
+	let tag = openTags.pop();
 	--cntOpen[tag.getName()];
 	context = context.parentContext;
 }
@@ -1660,7 +1659,7 @@ function popContext()
 */
 function pushContext(tag)
 {
-	var tagName   = tag.getName(),
+	let tagName   = tag.getName(),
 		tagFlags  = tag.getFlags(),
 		tagConfig = tagsConfig[tagName];
 
@@ -1673,7 +1672,7 @@ function pushContext(tag)
 	}
 
 	// Recompute the allowed tags
-	var allowed = [];
+	let allowed = [];
 	context.allowed.forEach(function(v, k)
 	{
 		// If the current tag is not transparent, override the low bits (allowed children) of
@@ -1686,7 +1685,7 @@ function pushContext(tag)
 	});
 
 	// Use this tag's flags as a base for this context and add inherited rules
-	var flags = tagFlags | (context.flags & RULES_INHERITANCE);
+	let flags = tagFlags | (context.flags & RULES_INHERITANCE);
 
 	// RULE_DISABLE_AUTO_BR turns off RULE_ENABLE_AUTO_BR
 	if (flags & RULE_DISABLE_AUTO_BR)
@@ -1709,7 +1708,7 @@ function pushContext(tag)
 */
 function tagIsAllowed(tagName)
 {
-	var n = tagsConfig[tagName].bitNumber;
+	let n = tagsConfig[tagName].bitNumber;
 
 	return !!(context.allowed[n >> 3] & (1 << (n & 7)));
 }
@@ -1810,7 +1809,7 @@ function addParagraphBreak(pos, prio)
 */
 function addCopyTag(tag, pos, len, prio)
 {
-	var copy = addTag(tag.getType(), tag.getName(), pos, len, tag.getSortPriority());
+	let copy = addTag(tag.getType(), tag.getName(), pos, len, tag.getSortPriority());
 	copy.setAttributes(tag.getAttributes());
 
 	return copy;
@@ -1829,7 +1828,7 @@ function addCopyTag(tag, pos, len, prio)
 function addTag(type, name, pos, len, prio)
 {
 	// Create the tag
-	var tag = new Tag(type, name, pos, len, prio || 0);
+	let tag = new Tag(type, name, pos, len, prio || 0);
 
 	// Set this tag's rules bitfield
 	if (tagsConfig[name])
@@ -1888,7 +1887,7 @@ function insertTag(tag)
 	else
 	{
 		// Scan the stack and copy every tag to the next slot until we find the correct index
-		var i   = tagStack.length,
+		let i   = tagStack.length,
 			key = getSortKey(tag);
 		while (i > 0 && key > getSortKey(tagStack[i - 1]))
 		{
@@ -1913,7 +1912,7 @@ function insertTag(tag)
 function addTagPair(name, startPos, startLen, endPos, endLen, prio)
 {
 	// NOTE: the end tag is added first to try to keep the stack in the correct order
-	var endTag   = addEndTag(name, endPos, endLen, -prio || 0),
+	let endTag   = addEndTag(name, endPos, endLen, -prio || 0),
 		startTag = addStartTag(name, startPos, startLen, prio || 0);
 	startTag.pairWith(endTag);
 
@@ -1938,12 +1937,12 @@ function addVerbatim(pos, len, prio)
 */
 function sortTags()
 {
-	var arr  = {},
+	let arr  = {},
 		keys = [],
 		i    = tagStack.length;
 	while (--i >= 0)
 	{
-		var tag = tagStack[i],
+		let tag = tagStack[i],
 			key = getSortKey(tag, i);
 		keys.push(key);
 		arr[key] = tag;
@@ -1976,7 +1975,7 @@ function sortTags()
 function getSortKey(tag, tagIndex)
 {
 	// Ensure that negative values are sorted correctly by flagging them and making them positive
-	var prioFlag = (tag.getSortPriority() >= 0),
+	let prioFlag = (tag.getSortPriority() >= 0),
 		prio     = tag.getSortPriority();
 	if (!prioFlag)
 	{
@@ -1984,7 +1983,7 @@ function getSortKey(tag, tagIndex)
 	}
 
 	// Sort 0-width tags separately from the rest
-	var lenFlag = (tag.getLen() > 0),
+	let lenFlag = (tag.getLen() > 0),
 		lenOrder;
 	if (lenFlag)
 	{
@@ -1995,7 +1994,7 @@ function getSortKey(tag, tagIndex)
 	{
 		// Sort self-closing tags in-between start tags and end tags to keep them outside of tag
 		// pairs
-		var order = {};
+		let order = {};
 		order[Tag.END_TAG]          = 0;
 		order[Tag.SELF_CLOSING_TAG] = 1;
 		order[Tag.START_TAG]        = 2;
@@ -2013,7 +2012,7 @@ function getSortKey(tag, tagIndex)
 */
 function hex32(number)
 {
-	var hex = number.toString(16);
+	let hex = number.toString(16);
 
 	return "        ".substring(hex.length) + hex;
 }

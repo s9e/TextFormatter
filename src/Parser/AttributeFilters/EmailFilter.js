@@ -1,5 +1,4 @@
-/** @const */
-var EmailFilter =
+const EmailFilter =
 {
 	/**
 	* @param  {*} attrValue

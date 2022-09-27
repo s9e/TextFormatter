@@ -53,7 +53,7 @@ class ConfigOptimizer
 			$configValue = $this->configValues[$varName];
 			if ($configValue->isDeduplicated())
 			{
-				$src .= '/** @const */ var ' . $varName . '=' . $this->encoder->encode($configValue->getValue()) . ";\n";
+				$src .= 'const ' . $varName . '=' . $this->encoder->encode($configValue->getValue()) . ";\n";
 			}
 		}
 

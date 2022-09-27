@@ -15,7 +15,7 @@ function executeAttributePreprocessors(tag, tagConfig)
 
 	tagConfig.attributePreprocessors.forEach(function(ap)
 	{
-		var attrName = ap[0], regexp = ap[1], map = ap[2];
+		let attrName = ap[0], regexp = ap[1], map = ap[2];
 		if (tag.hasAttribute(attrName))
 		{
 			executeAttributePreprocessor(tag, attrName, regexp, map);
@@ -35,10 +35,10 @@ function executeAttributePreprocessors(tag, tagConfig)
 */
 function filterAttributes(tag, tagConfig, registeredVars, logger)
 {
-	var attributes = {}, attrName;
+	let attributes = {}, attrName;
 	for (attrName in tagConfig.attributes)
 	{
-		var attrConfig = tagConfig.attributes[attrName],
+		let attrConfig = tagConfig.attributes[attrName],
 			attrValue  = false;
 		if (tag.hasAttribute(attrName))
 		{
@@ -70,14 +70,14 @@ function filterAttributes(tag, tagConfig, registeredVars, logger)
 */
 function filterTag(tag)
 {
-	var tagName   = tag.getName(),
+	let tagName   = tag.getName(),
 		tagConfig = tagsConfig[tagName];
 
 	// Record the tag being processed into the logger it can be added to the context of
 	// messages logged during the execution
 	logger.setTag(tag);
 
-	for (var i = 0; i < tagConfig.filterChain.length; ++i)
+	for (let i = 0; i < tagConfig.filterChain.length; ++i)
 	{
 		if (tag.isInvalid())
 		{
@@ -101,7 +101,7 @@ function filterTag(tag)
 function executeAttributeFilterChain(filterChain, attrName, attrValue)
 {
 	logger.setAttribute(attrName);
-	for (var i = 0; i < filterChain.length; ++i)
+	for (let i = 0; i < filterChain.length; ++i)
 	{
 		// NOTE: attrValue is intentionally set as the first argument to facilitate inlining
 		attrValue = filterChain[i](attrValue, attrName);
@@ -125,7 +125,7 @@ function executeAttributeFilterChain(filterChain, attrName, attrValue)
 */
 function executeAttributePreprocessor(tag, attrName, regexp, map)
 {
-	var attrValue = tag.getAttribute(attrName),
+	let attrValue = tag.getAttribute(attrName),
 		captures  = getNamedCaptures(attrValue, regexp, map),
 		k;
 	for (k in captures)
@@ -149,13 +149,13 @@ function executeAttributePreprocessor(tag, attrName, regexp, map)
 */
 function getNamedCaptures(attrValue, regexp, map)
 {
-	var m = regexp.exec(attrValue);
+	let m = regexp.exec(attrValue);
 	if (!m)
 	{
 		return [];
 	}
 
-	var values = {};
+	let values = {};
 	map.forEach(function(k, i)
 	{
 		if (typeof m[i] === 'string' && m[i] !== '')

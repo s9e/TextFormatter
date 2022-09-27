@@ -47,7 +47,7 @@ class HintGenerator
 
 		// Build the source. Note that Closure Compiler seems to require that each of HINT's
 		// properties be declared as a const
-		$js = "/** @const */ var HINT={};\n";
+		$js = "const HINT={};\n";
 		ksort($this->hints);
 		foreach ($this->hints as $hintName => $hintValue)
 		{

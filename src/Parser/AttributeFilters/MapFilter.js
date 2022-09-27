@@ -1,5 +1,4 @@
-/** @const */
-var MapFilter =
+const MapFilter =
 {
 	/**
 	* @param  {*} attrValue
@@ -8,7 +7,7 @@ var MapFilter =
 	*/
 	filter: function(attrValue, map)
 	{
-		var i = -1, cnt = map.length;
+		let i = -1, cnt = map.length;
 		while (++i < cnt)
 		{
 			if (map[i][0].test(attrValue))

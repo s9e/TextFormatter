@@ -1,10 +1,10 @@
-var setextLines = {};
+let setextLines = {};
 
 function parse()
 {
 	matchSetextLines();
 
-	var blocks       = [],
+	let blocks       = [],
 		blocksCnt    = 0,
 		codeFence,
 		codeIndent   = 4,
@@ -29,7 +29,7 @@ function parse()
 
 	// Capture all the lines at once so that we can overwrite newlines safely, without preventing
 	// further matches
-	var matches = [],
+	let matches = [],
 		m,
 		regexp = /^(?:(?=[-*+\d \t>`~#_])((?: {0,3}>(?:(?!!)|!(?![^\n>]*?!<)) ?)+)?([ \t]+)?(\* *\* *\*[* ]*$|- *- *-[- ]*$|_ *_ *_[_ ]*$)?((?:[-*+]|\d+\.)[ \t]+(?=\S))?[ \t]*(#{1,6}[ \t]+|```+[^`\n]*$|~~~+[^~\n]*$)?)?/gm;
 	while (m = regexp.exec(text))
@@ -45,7 +45,7 @@ function parse()
 
 	matches.forEach(function(m)
 	{
-		var blockMarks = [],
+		let blockMarks = [],
 			matchPos   = m.index,
 			matchLen   = m[0].length,
 			startPos,
@@ -94,7 +94,7 @@ function parse()
 			newContext = true;
 			do
 			{
-				var startTag = blocks.pop();
+				let startTag = blocks.pop();
 				addEndTag(startTag.getName(), textBoundary, 0).pairWith(startTag);
 			}
 			while (blockDepth < --blocksCnt);
@@ -106,14 +106,14 @@ function parse()
 			newContext = true;
 			do
 			{
-				var tagName = (blockMarks[blocksCnt] === '>!') ? 'SPOILER' : 'QUOTE';
+				let tagName = (blockMarks[blocksCnt] === '>!') ? 'SPOILER' : 'QUOTE';
 				blocks.push(addStartTag(tagName, matchPos, 0, -999));
 			}
 			while (blockDepth > ++blocksCnt);
 		}
 
 		// Compute the width of the indentation
-		var indentWidth = 0,
+		let indentWidth = 0,
 			indentPos   = 0;
 		if (m[2] && !codeFence)
 		{
@@ -196,7 +196,7 @@ function parse()
 		}
 		else if (!codeTag)
 		{
-			var hasListItem = !!m[4];
+			let hasListItem = !!m[4];
 
 			if (!indentWidth && !continuation && !hasListItem)
 			{
@@ -246,7 +246,7 @@ function parse()
 				tagLen = m[4].length;
 
 				// Create a LI tag that consumes its markup
-				var itemTag = addStartTag('LI', tagPos, tagLen);
+				let itemTag = addStartTag('LI', tagPos, tagLen);
 
 				// Overwrite the markup
 				overwrite(tagPos, tagLen);
@@ -278,14 +278,14 @@ function parse()
 					}
 
 					// Create a 0-width LIST tag right before the item tag LI
-					var listTag = addStartTag('LIST', tagPos, 0);
+					let listTag = addStartTag('LIST', tagPos, 0);
 
 					// Test whether the list item ends with a dot, as in "1."
 					if (m[4].indexOf('.') > -1)
 					{
 						listTag.setAttribute('type', 'decimal');
 
-						var start = +m[4];
+						let start = +m[4];
 						if (start !== 1)
 						{
 							listTag.setAttribute('start', start);
@@ -369,7 +369,7 @@ function parse()
 					addIgnoreTag(tagPos + tagLen, 1);
 
 					// Add the language if present, e.g. ```php
-					var lang = m[5].replace(/^[`~\s]*/, '').replace(/\s+$/, '');
+					let lang = m[5].replace(/^[`~\s]*/, '').replace(/\s+$/, '');
 					if (lang !== '')
 					{
 						codeTag.setAttribute('lang', lang);
@@ -448,7 +448,7 @@ function closeList(list, textBoundary)
 */
 function computeBlockIgnoreLen(str, maxBlockDepth)
 {
-	var remaining = str;
+	let remaining = str;
 	while (--maxBlockDepth >= 0)
 	{
 		remaining = remaining.replace(/^ *>!? ?/, '');
@@ -466,7 +466,7 @@ function computeBlockIgnoreLen(str, maxBlockDepth)
 */
 function getAtxHeaderEndTagLen(startPos, endPos)
 {
-	var content = text.substring(startPos, endPos),
+	let content = text.substring(startPos, endPos),
 		m = /[ \t]*#*[ \t]*$/.exec(content);
 
 	return m[0].length;
@@ -480,7 +480,7 @@ function getAtxHeaderEndTagLen(startPos, endPos)
 */
 function getBlockMarks(str)
 {
-	var blockMarks = [],
+	let blockMarks = [],
 		regexp     = />!?/g,
 		m;
 	while (m = regexp.exec(str))
@@ -504,16 +504,16 @@ function matchSetextLines()
 
 	// Capture the any series of - or = alone on a line, optionally preceded with the
 	// angle brackets notation used in block markup
-	var m, regexp = /^(?=[-=>])(?:>!? ?)*(?=[-=])(?:-+|=+) *$/gm;
+	let m, regexp = /^(?=[-=>])(?:>!? ?)*(?=[-=])(?:-+|=+) *$/gm;
 
 	while (m = regexp.exec(text))
 	{
-		var match    = m[0],
+		let match    = m[0],
 			matchPos = m.index;
 
 		// Compute the position of the end tag. We start on the LF character before the
 		// match and keep rewinding until we find a non-space character
-		var endPos = matchPos - 1;
+		let endPos = matchPos - 1;
 		while (endPos > 0 && text[endPos - 1] === ' ')
 		{
 			--endPos;

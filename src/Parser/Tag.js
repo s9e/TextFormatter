@@ -196,8 +196,8 @@ Tag.prototype.setFlags = function(flags)
 */
 Tag.prototype.getAttributes = function()
 {
-	var attributes = {};
-	for (var attrName in this.attributes)
+	let attributes = {};
+	for (let attrName in this.attributes)
 	{
 		attributes[attrName] = this.attributes[attrName];
 	}
@@ -453,7 +453,7 @@ Tag.prototype.setAttribute = function(attrName, attrValue)
 Tag.prototype.setAttributes = function(attributes)
 {
 	this.attributes = {};
-	for (var attrName in attributes)
+	for (let attrName in attributes)
 	{
 		this.attributes[attrName] = attributes[attrName];
 	}

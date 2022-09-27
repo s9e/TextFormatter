@@ -4,7 +4,7 @@
 */
 function filterTag(tag, innerText)
 {
-	var slug = innerText.toLowerCase();
+	let slug = innerText.toLowerCase();
 	slug = slug.replace(/[^a-z0-9]+/g, '-');
 	slug = slug.replace(/^-/, '').replace(/-$/, '');
 	if (slug !== '')
