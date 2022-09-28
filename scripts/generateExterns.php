@@ -76,6 +76,11 @@ $externs = [
 		'DOMParser',
 		'DOMParser.prototype.parseFromString'
 	],
+	'externs/browser/html5.js' => [
+		'MessageChannel',
+		'MessageChannel.prototype.port1',
+		'MessageChannel.prototype.port2',
+	],
 	'externs/browser/w3c_dom1.js' => [
 		'Document',
 		'Document.prototype.createDocumentFragment',

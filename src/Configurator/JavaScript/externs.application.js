@@ -21,7 +21,7 @@
 /**
  * @const
  */
-let punycode = {};
+var punycode = {};
 /**
  * @param {string} domain
  * @return {string}
@@ -39,6 +39,18 @@ function DOMParser() {}
  * @return {!Document}
  */
 DOMParser.prototype.parseFromString = function(src, type) {};
+/**
+ * @constructor
+ */
+function MessageChannel() {}
+/**
+ * @type {!MessagePort}
+ */
+MessageChannel.prototype.port1;
+/**
+ * @type {!MessagePort}
+ */
+MessageChannel.prototype.port2;
 /**
  * @constructor
  * @extends {Node}
@@ -254,8 +266,8 @@ function TrustedHTML() {}
 /**
  * @const {!HTMLDocument}
  */
-let document;
+var document;
 /**
  * @type {!Window}
  */
-let window;
+var window;
