@@ -241,10 +241,15 @@ class JavaScript
 			$avt = AVTHelper::parse($js);
 			if (count($avt) === 1 && $avt[0][0] === 'literal')
 			{
-				$js  = htmlspecialchars_decode($js);
+				$js  = htmlspecialchars_decode($avt[0][1]);
 				$key = (string) Hasher::quickHash($js);
 
-				$cache[] = json_encode($key) . ':/**@this {!Element}*/function(){' . trim($js, ';') . ';}';
+				if (!preg_match('([;}]$)', $js))
+				{
+					$js .= ';';
+				}
+
+				$cache[] = json_encode($key) . ':/**@this {!Element}*/function(){' . $js . '}';
 			}
 		}
 

@@ -426,10 +426,10 @@ class JavaScriptTest extends Test
 	*/
 	public function testFunctionCache()
 	{
-		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-onupdate="alert(1)"/>';
+		$this->configurator->tags->add('X')->template = '<hr data-s9e-livepreview-onupdate="alert(1)" data-s9e-livepreview-onrender="if(1){{alert(1);}}"/>';
 
 		$js = $this->configurator->javascript->getParser();
-		$this->assertStringContainsString('functionCache={"167969434":/**@this {!Element}*/function(){alert(1);}', $js);
+		$this->assertStringContainsString('functionCache={"167969434":/**@this {!Element}*/function(){alert(1);},"721683742":/**@this {!Element}*/function(){if(1){alert(1);}}}', $js);
 	}
 
 	/**
