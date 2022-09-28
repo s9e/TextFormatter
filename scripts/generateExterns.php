@@ -77,9 +77,32 @@ $externs = [
 		'DOMParser.prototype.parseFromString'
 	],
 	'externs/browser/html5.js' => [
+		'HTMLIFrameElement.prototype.contentWindow',
+
 		'MessageChannel',
 		'MessageChannel.prototype.port1',
 		'MessageChannel.prototype.port2',
+
+		'MessagePort',
+		'MessagePort.prototype.onmessage',
+		'MessagePort.prototype.postMessage',
+
+		'MessageEvent',
+		'MessageEvent.prototype.data',
+		'MessageEvent.prototype.origin',
+		'MessageEvent.prototype.ports',
+		'MessageEvent.prototype.source',
+
+		'MessageEventInit',
+
+		'StructuredSerializeOptions',
+
+		'Window.prototype.postMessage',
+		'WindowPostMessageOptions'
+	],
+	'externs/browser/w3c_css.js' => [
+		'CSSStyleDeclaration',
+		'CSSProperties'
 	],
 	'externs/browser/w3c_dom1.js' => [
 		'Document',
@@ -122,6 +145,8 @@ $externs = [
 		'Element.prototype.outerHTML',
 		'HTMLDocument',
 		'HTMLElement',
+		'HTMLElement.prototype.style',
+		'HTMLIFrameElement',
 	],
 	'externs/browser/w3c_dom3.js' => [
 		'Element.prototype.getAttributeNS',
@@ -133,6 +158,15 @@ $externs = [
 		'Node.prototype.querySelectorAll',
 		'Node.prototype.namespaceURI',
 		'Node.prototype.textContent'
+	],
+	'externs/browser/w3c_event.js' => [
+		'AddEventListenerOptions',
+		'Event',
+		'EventInit',
+		'EventListener',
+		'EventListenerOptions',
+		'EventTarget',
+		'EventTarget.prototype.addEventListener'
 	],
 	'externs/browser/w3c_trusted_types.js' => [
 		'TrustedHTML'
@@ -163,10 +197,15 @@ function getExterns($externs)
 	$out  = '';
 	foreach ($externs as $filename => $names)
 	{
-		$url = 'https://raw.githubusercontent.com/google/closure-compiler/master/' . $filename;
+		$url  = 'https://raw.githubusercontent.com/google/closure-compiler/master/' . $filename;
+		$file = wget($url);
+
+		// Remove indents
+		$file = preg_replace('(\\n\\K +)', '', $file);
 
 		// Concat multiline definitions
-		$file = preg_replace('#, *\n#', ', ', wget($url));
+		$file = preg_replace('(, *\n)', ', ', $file);
+		$file = preg_replace('([\\{\\(]\\K\\n(.*))', '$1', $file);
 
 		// Remove the file header
 		$file = preg_replace('(/\\*\\*.*?@fileoverview.*?\\*/)s', '', $file);
@@ -193,7 +232,7 @@ function getExterns($externs)
 	}
 
 	// Remove superfluous doc such as comments and @see links
-	$out = preg_replace('#^ \\*(?!/| @(?!see)).*\\n#m', '', $out);
+	$out = preg_replace('#^ *\\*(?!/| @(?!see)).*\\n#m', '', $out);
 
 	// Remove unnecessary annotations
 	$annotations = [
