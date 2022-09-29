@@ -12,7 +12,7 @@ $html = TextFormatter::render($xml);
 echo $html;
 ```
 ```html
-<blockquote><div><cite>John Doe wrote:</cite>Star Wars spoiler: <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Snapes kills Dumbledore</div></div></div></blockquote>
+<blockquote><div><cite>John Doe wrote:</cite>Star Wars spoiler: <details class="spoiler"><summary class="spoiler-header" data-hide="Hide" data-show="Show">Spoiler </summary><div class="spoiler-content">Snapes kills Dumbledore</div></details></div></blockquote>
 ```
 
 ### Plugins
@@ -53,5 +53,5 @@ $html = TextFormatter::render($xml, [
 echo $html;
 ```
 ```html
-<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img alt=":)" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/1f642.svg"> <div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>Mostrar</span><span style="display:none">Ocultar</span></button><span class="spoiler-title">Spoiler </span></div><div class="spoiler-content" style="display:none">Spocks kills Dumbledore</div></div></div></blockquote>
+<blockquote><div><cite>John Doe escribió:</cite>Star Wars spoiler <img alt=":)" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/1f642.svg"> <details class="spoiler"><summary class="spoiler-header" data-hide="Ocultar" data-show="Mostrar">Spoiler </summary><div class="spoiler-content">Spocks kills Dumbledore</div></details></div></blockquote>
 ```

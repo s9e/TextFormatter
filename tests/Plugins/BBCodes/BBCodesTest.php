@@ -607,25 +607,25 @@ class BBCodesTest extends Test
 				"Spoiler ahead!\n" .
 				"[spoiler]Now you're spoiled[/spoiler]",
 				"Spoiler ahead!\n" .
-				'<div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?\'\':\'none\';return!1"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>',
+				'<details class="spoiler"><summary class="spoiler-header" data-hide="Hide" data-show="Show">Spoiler: </summary><div class="spoiler-content">Now you\'re spoiled</div></details>',
 			],
 			[
 				"Spoiler ahead!\n" .
 				'[spoiler="your spoilage status"]Now you\'re spoiled[/spoiler]',
 				"Spoiler ahead!\n" .
-				'<div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?\'\':\'none\';return!1"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler: your spoilage status</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>'
+				'<details class="spoiler"><summary class="spoiler-header" data-hide="Hide" data-show="Show">Spoiler: your spoilage status</summary><div class="spoiler-content">Now you\'re spoiled</div></details>'
 			],
 			[
 				"Spoiler ahead!\n" .
 				"[spoiler][spoiler='Last chance']Now you're spoiled[/spoiler][/spoiler]",
 				"Spoiler ahead!\n" .
-				'<div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?\'\':\'none\';return!1"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler: </span></div><div class="spoiler-content" style="display:none"><div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?\'\':\'none\';return!1"><span>Show</span><span style="display:none">Hide</span></button><span class="spoiler-title">Spoiler: Last chance</span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div></div></div>'
+				'<details class="spoiler"><summary class="spoiler-header" data-hide="Hide" data-show="Show">Spoiler: </summary><div class="spoiler-content"><details class="spoiler"><summary class="spoiler-header" data-hide="Hide" data-show="Show">Spoiler: Last chance</summary><div class="spoiler-content">Now you\'re spoiled</div></details></div></details>'
 			],
 			[
 				"Spoiler ahead!\n" .
 				"[spoiler]Now you're spoiled[/spoiler]",
 				"Spoiler ahead!\n" .
-				'<div class="spoiler"><div class="spoiler-header"><button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?\'\':\'none\';return!1"><span>Montrer</span><span style="display:none">Cacher</span></button><span class="spoiler-title">Spoiler : </span></div><div class="spoiler-content" style="display:none">Now you\'re spoiled</div></div>',
+				'<details class="spoiler"><summary class="spoiler-header" data-hide="Cacher" data-show="Montrer">Spoiler : </summary><div class="spoiler-content">Now you\'re spoiled</div></details>',
 				function ($configurator)
 				{
 					$configurator->BBCodes->addFromRepository('SPOILER', 'default', [

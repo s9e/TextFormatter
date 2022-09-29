@@ -328,24 +328,25 @@
 	<bbcode name="SPOILER">
 		<usage>[SPOILER title={TEXT1?}]{TEXT2}[/SPOILER]</usage>
 		<!--
-			var nextSiblingStyle = parentNode.nextSibling.style,
-				firstChildStyle  = firstChild.style,
-				lastChildStyle   = lastChild.style;
-
-			firstChildStyle.display  = nextSiblingStyle.display;
-			nextSiblingStyle.display = lastChildStyle.display = (firstChildStyle.display) ? '' : 'none';
-
-			// Don't submit if inside a form
-			return false;
+			/* Suggested CSS to replace the details marker with a string */
+			.spoiler-header
+			{
+				list-style-type: none;
+			}
+			.spoiler-header::before
+			{
+				content: attr(data-show);
+			}
+			.spoiler[open] > .spoiler-header::before
+			{
+				content: attr(data-hide);
+			}
 		-->
 		<template><![CDATA[
-			<div class="spoiler">
-				<div class="spoiler-header">
-					<button onclick="var a=parentNode.nextSibling.style,b=firstChild.style,c=lastChild.style;b.display=a.display;a.display=c.display=(b.display)?'':'none';return!1"><span>]]><var name="showStr" description="String used for the Show button">Show</var><![CDATA[</span><span style="display:none">]]><var name="hideStr" description="String used for the Hide button">Hide</var><![CDATA[</span></button>
-					<span class="spoiler-title">]]><var name="spoilerStr" description="String used for the spoiler label">Spoiler:</var><![CDATA[ {TEXT1}</span>
-				</div>
-				<div class="spoiler-content" style="display:none">{TEXT2}</div>
-			</div>
+			<details class="spoiler" data-s9e-livepreview-ignore-attrs="open">
+				<summary class="spoiler-header" data-hide="]]><var name="hideStr" description="String used for the Hide button">Hide</var><![CDATA[" data-show="]]><var name="showStr" description="String used for the Show button">Show</var><![CDATA[">]]><var name="spoilerStr" description="String used for the spoiler label">Spoiler:</var><![CDATA[ {TEXT1}</summary>
+				<div class="spoiler-content">{TEXT2}</div>
+			</details>
 		]]></template>
 	</bbcode>
 
