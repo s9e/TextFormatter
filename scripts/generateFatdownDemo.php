@@ -20,7 +20,7 @@ ob_start();
 <html>
 <head>
 	<meta charset="utf-8" />
-	<meta http-equiv="Content-Security-Policy" content="script-src 'self' '$integrity' cdn.jsdelivr.net">
+	<meta http-equiv="Content-Security-Policy" content="script-src '$integrity' cdn.jsdelivr.net">
 	<title>s9e\TextFormatter &bull; Fatdown/JS Demo</title>
 	<base href="https://s9e.github.io/TextFormatter/fatdown.html" />
 	<style type="text/css">
