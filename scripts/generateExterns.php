@@ -147,6 +147,7 @@ $externs = [
 		'HTMLElement',
 		'HTMLElement.prototype.style',
 		'HTMLIFrameElement',
+		'HTMLScriptElement'
 	],
 	'externs/browser/w3c_dom3.js' => [
 		'Element.prototype.getAttributeNS',

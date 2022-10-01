@@ -16,6 +16,7 @@ use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\ConfigOptimizer;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Configurator\JavaScript\Encoder;
+use s9e\TextFormatter\Configurator\JavaScript\FunctionCache;
 use s9e\TextFormatter\Configurator\JavaScript\Hasher;
 use s9e\TextFormatter\Configurator\JavaScript\HintGenerator;
 use s9e\TextFormatter\Configurator\JavaScript\Minifier;
@@ -68,6 +69,8 @@ class JavaScript
 		'setTagLimit'
 	];
 
+	public FunctionCache $functionCache;
+
 	/**
 	* @var HintGenerator
 	*/
@@ -104,6 +107,7 @@ class JavaScript
 		$this->callbackGenerator    = new CallbackGenerator;
 		$this->configOptimizer      = new ConfigOptimizer($this->encoder);
 		$this->configurator         = $configurator;
+		$this->functionCache        = new FunctionCache;
 		$this->hintGenerator        = new HintGenerator;
 		$this->rendererGenerator    = new XSLT;
 		$this->stylesheetCompressor = new StylesheetCompressor;
@@ -233,27 +237,9 @@ class JavaScript
 	*/
 	protected function getFunctionCache(): string
 	{
-		preg_match_all('(data-s9e-livepreview-on\\w+="([^">]++)(?=[^<>]++>))', $this->xsl, $m);
+		$this->functionCache->addFromXSL($this->xsl);
 
-		$cache = [];
-		foreach ($m[1] as $js)
-		{
-			$avt = AVTHelper::parse($js);
-			if (count($avt) === 1 && $avt[0][0] === 'literal')
-			{
-				$js  = htmlspecialchars_decode($avt[0][1]);
-				$key = (string) Hasher::quickHash($js);
-
-				if (!preg_match('([;}]$)', $js))
-				{
-					$js .= ';';
-				}
-
-				$cache[] = json_encode($key) . ':/**@this {!Element}*/function(){' . $js . '}';
-			}
-		}
-
-		return '{' . implode(',', $cache) . '}';
+		return $this->functionCache->getJSON();
 	}
 
 	/**

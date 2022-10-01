@@ -303,6 +303,11 @@ HTMLElement.prototype.style;
 */
 function HTMLIFrameElement() {}
 /**
+* @constructor
+* @extends {HTMLElement}
+*/
+function HTMLScriptElement() {}
+/**
 * @param {?string} namespaceURI
 * @param {string} localName
 * @return {string}
