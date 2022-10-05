@@ -1553,6 +1553,7 @@ Function Cache (s9e\TextFormatter\Tests\Configurator\FunctionCache)
  [x] Add from x s l with data set #3
  [x] Add from x s l with data set #4
  [x] Add from x s l with data set #5
+ [x] Add from x s l with data set #6
 
 Function Provider (s9e\TextFormatter\Tests\Configurator\JavaScript\FunctionProvider)
  [x] get() will return the source from cache if available

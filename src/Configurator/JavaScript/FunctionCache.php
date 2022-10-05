@@ -43,7 +43,7 @@ class FunctionCache
 			$key = (string) Hasher::quickHash($js);
 
 			// Make sure the code ends with a semicolon or a brace
-			if (!preg_match('([;}]$)', $js))
+			if (!preg_match('([;}]\\s*$)', $js, $m))
 			{
 				$js .= ';';
 			}

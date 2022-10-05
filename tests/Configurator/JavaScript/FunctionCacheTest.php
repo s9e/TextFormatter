@@ -52,6 +52,11 @@ class FunctionCacheTest extends Test
 				'<hr data-s9e-livepreview-onupdate="alert({@x})"/>',
 				'{}'
 			],
+			[
+				// Don't add a semicolon if there's aleady one followed by whitespace
+				'<hr data-s9e-livepreview-onupdate="alert(1); "/>',
+				'{"223740661":/**@this {!Element}*/function(){alert(1); }}'
+			],
 		];
 	}
 }
