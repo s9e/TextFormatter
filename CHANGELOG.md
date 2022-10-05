@@ -1,3 +1,38 @@
+2.12.0 (2022-10-05)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/186b633ee825a93e0060368bfdf8bd46311e3163...266f84b50e5c08cd876711089506e2ce97c36ef6)
+
+### Added
+
+ - `71e5bbe78` Added CSP headers to live preview demos
+ - `6ceca4fff` Added doc
+ - `5ce43ed08` JavaScript: added messaging-related externs
+
+### Removed
+
+ - `440817eb0` JavaScript: removed support for Internet Explorer
+
+### Changed
+
+ - `20a3c1333` BBCodes: updated default SPOILER
+ - `87223f85e` Bumped requirements to PHP >= 7.4
+ - `266f84b50` FunctionCache: don't add a semicolon if there's aleady one followed by whitespace
+ - `babb3f094` JavaScript: hash function content as key in function cache
+ - `ac7984af4` JavaScript: made the XSLT generator public
+ - `c4f347bc2` JavaScript: moved function cache generator to its own class
+ - `dd4553f4f` JavaScript: unescape braces before generating the function cache key
+ - `6404747b1` JavaScript: updated externs
+ - `ff36ac05d` JavaScript: updated externs
+ - `47cba5e05` JavaScript: use ES6 syntax for variable declarations
+ - `8f58dcb9f` JavaScript: use arrow functions where appropriate
+ - `cf678e15b` MediaEmbed: replaced var with let in onload handlers
+ - `a9ac9d364` MediaEmbed: updated Odysee
+ - `b4f8a86df` MediaEmbed: updated TikTok
+ - `c3e1c382b` Updated live preview demo
+ - `d55692342` Updated live preview demos
+
+
 2.11.5 (2022-09-19)
 ===================
 

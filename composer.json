@@ -42,6 +42,6 @@
 		"post-update-cmd": "php scripts/patchReadme.php"
 	},
 	"extra": {
-		"version": "2.12.0-dev"
+		"version": "2.12.0"
 	}
 }
