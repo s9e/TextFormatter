@@ -7925,7 +7925,7 @@ Cached (s9e\TextFormatter\Tests\Utils\Http\Clients\Cached)
 Curl (s9e\TextFormatter\Tests\Utils\Http\Clients\Curl)
  [x] Uses gzip by default if ext/zlib is availble
  [x] Sends custom headers
- [x] Resets custom headers between requests
+ [ ] Resets custom headers between requests
  [x] post() sends the request body if set
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set

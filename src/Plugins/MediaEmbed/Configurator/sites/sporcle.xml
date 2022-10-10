@@ -9,5 +9,5 @@
 		<match>#sporcle\.com/games/(?!\w*category/)[-\w]+/[-\w]#</match>
 		<extract>#encodedGameID\W+(?'id'\w+)#</extract>
 	</scrape>
-	<iframe width="820" height="535" src="https://s9e.github.io/iframe/2/sporcle.min.html#{@id}" onload="let c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe width="820" height="535" src="https://s9e.github.io/iframe/2/sporcle.min.html#{@id}" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>

@@ -14,7 +14,7 @@
 	</scrape>
 	<iframe width="325" height="740"
 		src="https://s9e.github.io/iframe/2/tiktok.min.html#{@id}"
-		onload="let c=new MessageChannel;c.port1.onmessage=function(e){{style.height=e.data+'px'}};contentWindow.postMessage('s9e:init','https://s9e.github.io',[c.port2])"
+		onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])"
 		data-s9e-livepreview-ignore-attrs="style"
 	/>
 </site>
