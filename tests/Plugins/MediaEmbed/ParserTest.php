@@ -644,6 +644,18 @@ class ParserTest extends Test
 //				}
 //			],
 			[
+				// https://about.fb.com/news/2022/09/deterring-scraping-by-protecting-facebook-identifiers/
+				// https://news.ycombinator.com/item?id=32117489
+				'https://www.facebook.com/VICE/posts/pfbid02XdVziPTwhmPU9XzBqkRvU5o7NPXUicAJgVy8kf1a1W51hU7EmgMmCigo9rZWxCjDl',
+				'<r><FACEBOOK id="6037626766270531" pfbid="02XdVziPTwhmPU9XzBqkRvU5o7NPXUicAJgVy8kf1a1W51hU7EmgMmCigo9rZWxCjDl" type="p" user="VICE">https://www.facebook.com/VICE/posts/pfbid02XdVziPTwhmPU9XzBqkRvU5o7NPXUicAJgVy8kf1a1W51hU7EmgMmCigo9rZWxCjDl</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://flic.kr/p/5wBgXo',
 				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',
 				[],
@@ -4768,7 +4780,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/video/video.php?v=10100658170103643',
-				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/facebook.min.html#v10100658170103643" style="border:0;height:360px;max-width:640px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#v10100658170103643"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -4777,7 +4789,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/facebook.min.html#p10151471074398553" style="border:0;height:360px;max-width:640px;width:100%"></iframe>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#p10151471074398553"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -5485,6 +5497,14 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('cbsnews');
+				}
+			],
+			[
+				'<FACEBOOK pfbid="02XdVziPTwhmPU9XzBqkRvU5o7NPXUicAJgVy8kf1a1W51hU7EmgMmCigo9rZWxCjDl"/>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#pfbid02XdVziPTwhmPU9XzBqkRvU5o7NPXUicAJgVy8kf1a1W51hU7EmgMmCigo9rZWxCjDl"></iframe>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
 				}
 			],
 			[

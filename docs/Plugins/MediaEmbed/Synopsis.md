@@ -43,7 +43,7 @@ foreach ($examples as $text)
 ```
 ```html
 <span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/-cEzsCAzTak/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/-cEzsCAzTak"></iframe></span></span>
-<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" scrolling="no" src="https://s9e.github.io/iframe/2/facebook.min.html#v10100658170103643" style="border:0;height:360px;max-width:640px;width:100%"></iframe>
+<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#v10100658170103643"></iframe>
 ```
 
 ### Configure a site manually
