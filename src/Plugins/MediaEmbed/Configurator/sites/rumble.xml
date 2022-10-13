@@ -1,6 +1,9 @@
 <site name="Rumble" homepage="https://rumble.com/">
 	<example>https://rumble.com/vaxo02-i-cant-climb-.html</example>
 
+	<oembed endpoint="https://rumble.com/api/Media/oembed.json"
+	          scheme="https://rumble.com/embed/{@id}/"/>
+
 	<tags><tag>videos</tag></tags>
 
 	<host>rumble.com</host>
