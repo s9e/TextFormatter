@@ -2,6 +2,9 @@
 	<example>https://rutube.ru/play/embed/4782775</example>
 	<example>https://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</example>
 
+	<oembed endpoint="https://rutube.ru/api/oembed/"
+	          scheme="https://rutube.ru/video/{@vid}/"/>
+
 	<tags><tag>.ru</tag></tags>
 
 	<host>rutube.ru</host>
