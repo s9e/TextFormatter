@@ -13,6 +13,8 @@
 	<extract>@facebook\.com/watch/\?(?'type'[pv])=@</extract>
 	<extract>@facebook.com/groups/[^/]*/(?'type'p)osts/(?'id'\d+)@</extract>
 	<extract>@facebook\.com/(?'user'[.\w]+)/posts/pfbid(?'pfbid'\w+)@</extract>
+	<extract>@facebook\.com/permalink\.php\?story_fbid=(?'id'\d+)&amp;id=(?'page_id'\d+)@</extract>
+
 	<scrape url="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2F{@user}%2Fposts%2Fpfbid{@pfbid}">
 		<!-- https://about.fb.com/news/2022/09/deterring-scraping-by-protecting-facebook-identifiers/ -->
 		<header>User-agent: PHP (not Mozilla)</header>

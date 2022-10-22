@@ -2278,7 +2278,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/permalink.php?story_fbid=10152253595081467&id=58617016466',
-				'<r><FACEBOOK id="10152253595081467">https://www.facebook.com/permalink.php?story_fbid=10152253595081467&amp;id=58617016466</FACEBOOK></r>',
+				'<r><FACEBOOK id="10152253595081467" page_id="58617016466">https://www.facebook.com/permalink.php?story_fbid=10152253595081467&amp;id=58617016466</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
