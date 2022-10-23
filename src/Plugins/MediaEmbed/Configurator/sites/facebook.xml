@@ -13,13 +13,18 @@
 	<extract>@facebook\.com/watch/\?(?'type'[pv])=@</extract>
 	<extract>@facebook.com/groups/[^/]*/(?'type'p)osts/(?'id'\d+)@</extract>
 	<extract>@facebook\.com/(?'user'[.\w]+)/posts/pfbid(?'pfbid'\w+)@</extract>
-	<extract>@facebook\.com/permalink\.php\?story_fbid=(?'id'\d+)&amp;id=(?'page_id'\d+)@</extract>
+	<extract>@facebook\.com/permalink\.php\?story_fbid=(?:(?'id'\d+)|pfbid(?'pfbid'\w+))&amp;id=(?'page_id'\d+)@</extract>
 
 	<scrape url="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2F{@user}%2Fposts%2Fpfbid{@pfbid}">
 		<!-- https://about.fb.com/news/2022/09/deterring-scraping-by-protecting-facebook-identifiers/ -->
 		<header>User-agent: PHP (not Mozilla)</header>
 		<match>@facebook\.com/[.\w]+/posts/pfbid@</match>
 		<extract>@facebook\.com/(?'user'[.\w]+)/(?'type'[pv])\w+/(?'id'\d+)(?!\w)@</extract>
+	</scrape>
+	<scrape url="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fpermalink.php%3Fstory_fbid%3Dpfbid{@pfbid}%26id%3D{@page_id}">
+		<header>User-agent: PHP (not Mozilla)</header>
+		<match>@facebook\.com/permalink\.php\?story_fbid=pfbid(?'pfbid'\w+)&amp;id=(?'page_id'\d+)@</match>
+		<extract>@story_fbid=(?'id'\d+)@</extract>
 	</scrape>
 	<scrape>
 		<header>User-agent: PHP (not Mozilla)</header>

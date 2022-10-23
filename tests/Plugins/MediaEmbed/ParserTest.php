@@ -656,6 +656,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/permalink.php?story_fbid=pfbid0WuqdxKi9geNcB72QT8L97G4z7jBfxA6aFuRRjPxcFa8upRNXc6JSbdgUCWmh6g8fl&id=100083036365627',
+				'<r><FACEBOOK id="140217155422829" page_id="100083036365627" pfbid="0WuqdxKi9geNcB72QT8L97G4z7jBfxA6aFuRRjPxcFa8upRNXc6JSbdgUCWmh6g8fl">https://www.facebook.com/permalink.php?story_fbid=pfbid0WuqdxKi9geNcB72QT8L97G4z7jBfxA6aFuRRjPxcFa8upRNXc6JSbdgUCWmh6g8fl&amp;id=100083036365627</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://flic.kr/p/5wBgXo',
 				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',
 				[],
