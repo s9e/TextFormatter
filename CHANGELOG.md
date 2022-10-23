@@ -1,3 +1,25 @@
+2.12.1 (2022-10-23)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/968377c94941d8dbf29d43cf32f71169aaae7802...3b117c891096685a35e71b015ae69b59382a89f7)
+
+### Added
+
+ - `4460ef815` MediaEmbed: added Rumble oEmbed endpoint
+ - `02eefa9cf` MediaEmbed: added Rutube oEmbed endpoint
+
+### Removed
+
+ - `d3d27b7bd` MediaEmbed: removed bad header from Rutube
+
+### Changed
+
+ - `3b117c891` MediaEmbed: updated Facebook
+ - `8b3919d87` MediaEmbed: updated Facebook
+ - `9fb6cd493` MediaEmbed: updated Facebook
+ - `f0879ef04` MediaEmbed: updated dynamic iframes
+
+
 2.12.0 (2022-10-05)
 ===================
 
