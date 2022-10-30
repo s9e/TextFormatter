@@ -1,8 +1,8 @@
 #!/usr/bin/php
 <?php
 
-$emojiVersion = '14.0';
-$ucdVersion   = '14.0.0';
+$emojiVersion = '15.0';
+$ucdVersion   = '15.0.0';
 
 $emoji   = [];
 $file    = wget('http://unicode.org/Public/' . $ucdVersion . '/ucd/emoji/emoji-data.txt');
@@ -91,7 +91,7 @@ $filepath = realpath(__DIR__ . '/../src/Plugins/Emoji/Parser.js');
 file_put_contents(
 	$filepath,
 	preg_replace_callback(
-		'((var unicodeRegexp = ).*;)',
+		'((const unicodeRegexp = ).*;)',
 		function ($m) use ($emoji)
 		{
 			$builder = new s9e\RegexpBuilder\Builder([
