@@ -1,0 +1,12 @@
+<site name="Mastodon" homepage="https://mastodon.social/">
+	<example>https://mastodon.social/@HackerNewsBot/100181134752056592</example>
+
+	<oembed endpoint="https://mastodon.social/api/oembed"
+	          scheme="https://mastodon.social/@{@name}/{@id}"/>
+
+	<tags><tag>social</tag></tags>
+
+	<host>mastodon.social</host>
+	<extract>#/@(?'name'\w+)/(?'id'\d+)#</extract>
+	<iframe width="550" height="300" src="https://s9e.github.io/iframe/2/mastodon.min.html#{@name}/{@id}" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+</site>

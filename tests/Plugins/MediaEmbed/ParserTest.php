@@ -2919,6 +2919,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://mastodon.social/@HackerNewsBot/100181134752056592',
+				'<r><MASTODON id="100181134752056592" name="HackerNewsBot">https://mastodon.social/@HackerNewsBot/100181134752056592</MASTODON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mastodon');
+				}
+			],
+			[
 				'https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95',
 				'<r><MEDIUM id="e7e2cf9b8a95">https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95</MEDIUM></r>',
 				[],

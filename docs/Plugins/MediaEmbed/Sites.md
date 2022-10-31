@@ -249,6 +249,10 @@
 		<td><code>mailru</code></td>
 		<td>https://my.mail.ru/corp/auto/video/testdrive/34.html<br/>https://my.mail.ru/mail/alenka1957/video/1/7.html</td>
 	</tr>
+	<tr title="Mastodon" id="mastodon">
+		<td><code>mastodon</code></td>
+		<td>https://mastodon.social/@HackerNewsBot/100181134752056592</td>
+	</tr>
 	<tr title="Medium" id="medium">
 		<td><code>medium</code></td>
 		<td>https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95</td>
