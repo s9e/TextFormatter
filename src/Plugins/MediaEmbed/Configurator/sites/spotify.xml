@@ -15,12 +15,13 @@
 		<match>!link\.tospotify\.com/.!</match>
 		<extract>!(?:open|play)\.spotify\.com/(?:user/[-.\w]+/)?(?'id'(?:album|artist|episode|playlist|show|track)(?:[:/][-.\w]+)+)!</extract>
 	</scrape>
-	<choose>
-		<when test="starts-with(@id, 'episode/') or starts-with(@id, 'show/')">
-			<iframe width="100%" height="152" max-width="900" src="https://open.spotify.com/embed/{@id}" allow="encrypted-media"/>
-		</when>
-		<otherwise>
-			<iframe width="320" height="320" padding-height="80" src="https://open.spotify.com/embed/{translate(@id,':','/')}{@path}" allow="encrypted-media"/>
-		</otherwise>
-	</choose>
+	<iframe width="100%" max-width="900" allow="encrypted-media" src="https://open.spotify.com/embed/{translate(@id,':','/')}{@path}">
+		<height><![CDATA[
+			<xsl:choose>
+				<xsl:when test="starts-with(@id, 'episode') or starts-with(@id, 'show') or starts-with(@id, 'track')">152</xsl:when>
+				<xsl:otherwise>380</xsl:otherwise>
+			</xsl:choose>
+		]]></height>
+		<style border-radius="12px"/>
+	</iframe>
 </site>
