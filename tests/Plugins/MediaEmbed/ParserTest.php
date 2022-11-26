@@ -503,16 +503,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('acast');
 				}
 			],
-			[
-				'https://shows.acast.com/thefightingcock/s11e09-gil',
-				'<r><ACAST episode_id="611fda6e1e62460013acb5fb" show_id="55daacdd-0c7e-4338-bbc9-57b60dcfd638">https://shows.acast.com/thefightingcock/s11e09-gil</ACAST></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('acast');
-				}
-			],
+//			[
+//				'https://shows.acast.com/thefightingcock/s11e09-gil',
+//				'<r><ACAST episode_id="611fda6e1e62460013acb5fb" show_id="55daacdd-0c7e-4338-bbc9-57b60dcfd638">https://shows.acast.com/thefightingcock/s11e09-gil</ACAST></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('acast');
+//				}
+//			],
 			[
 				'https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125',
 				'<r><ACAST episode_id="f38da59a-9eb9-42f7-a0bf-a633ef813202" show_id="e3178447-8d7d-556e-bece-5d8f7c4dd539" t="125">https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125</ACAST></r>',
@@ -1188,16 +1188,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('podbean');
 				}
 			],
-			[
-				'https://rumble.com/vaxo02-i-cant-climb-.html',
-				'<r><RUMBLE id="v8bhte">https://rumble.com/vaxo02-i-cant-climb-.html</RUMBLE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('rumble');
-				}
-			],
+//			[
+//				'https://rumble.com/vaxo02-i-cant-climb-.html',
+//				'<r><RUMBLE id="v8bhte">https://rumble.com/vaxo02-i-cant-climb-.html</RUMBLE></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('rumble');
+//				}
+//			],
 //			[
 //				'https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/',
 //				'<r><RUTUBE id="4782775">https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</RUTUBE></r>',
@@ -1388,26 +1388,26 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tumblr');
 				}
 			],
-			[
-				'https://247sports.com/Player/LeSean-McCoy-25234/',
-				'<r><TWENTYFOURSEVENSPORTS player_id="149349">https://247sports.com/Player/LeSean-McCoy-25234/</TWENTYFOURSEVENSPORTS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('twentyfoursevensports');
-				}
-			],
-			[
-				'https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/',
-				'<r><TWENTYFOURSEVENSPORTS video_id="1378030659860">https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</TWENTYFOURSEVENSPORTS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('twentyfoursevensports');
-				}
-			],
+//			[
+//				'https://247sports.com/Player/LeSean-McCoy-25234/',
+//				'<r><TWENTYFOURSEVENSPORTS player_id="149349">https://247sports.com/Player/LeSean-McCoy-25234/</TWENTYFOURSEVENSPORTS></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('twentyfoursevensports');
+//				}
+//			],
+//			[
+//				'https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/',
+//				'<r><TWENTYFOURSEVENSPORTS video_id="1378030659860">https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</TWENTYFOURSEVENSPORTS></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('twentyfoursevensports');
+//				}
+//			],
 			[
 				'https://vk.com/video121599878_165723901',
 				'<r><VK hash="e06b0878046e1d32" oid="121599878" vid="165723901">https://vk.com/video121599878_165723901</VK></r>',
@@ -1452,16 +1452,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('wshh');
 				}
 			],
-			[
-				'https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
-				'<r><WSHH id="63175">https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('wshh');
-				}
-			],
+//			[
+//				'https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
+//				'<r><WSHH id="63175">https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('wshh');
+//				}
+//			],
 			[
 				'https://worldstar.com/video.php?v=wshhn7nmk3033k8m66ZG',
 				'<r><WSHH id="164634">https://worldstar.com/video.php?v=wshhn7nmk3033k8m66ZG</WSHH></r>',
