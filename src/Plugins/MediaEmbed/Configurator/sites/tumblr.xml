@@ -3,13 +3,19 @@
 
 	<tags><tag>social</tag></tags>
 
+	<attributes>
+		<did  required="true"/>
+		<key  required="true"/>
+		<name required="true"/>
+	</attributes>
+
 	<host>tumblr.com</host>
 	<extract>!(?'name'[-\w]+)\.tumblr\.com/post/(?'id'\d+)!</extract>
 	<scrape url="https://www.tumblr.com/oembed/1.0?url=https://{@name}.tumblr.com/post/{@id}">
 		<header>User-agent: curl</header>
 		<match>!\w\.tumblr\.com/post/\d!</match>
-		<extract>!did=\\u0022(?'did'[-\w]+)!</extract>
-		<extract>!embed\\/post\\/(?'key'[-\w]+)!</extract>
+		<extract>!did=(?:\\"|\\u0022)(?'did'[-\w]+)!</extract>
+		<extract>!embed\\?/post\\?/(?'key'[-\w]+)!</extract>
 	</scrape>
 	<iframe width="520" height="300" src="https://s9e.github.io/iframe/2/tumblr.min.html#{@key}/{@id}" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>
