@@ -245,8 +245,8 @@ This is a Reddit-style >!spoiler!<.
 This is a Discord-style ||spoiler||.
 ```
 ```html
-<p>This is a Reddit-style <span class="spoiler" onclick="removeAttribute('style')" style="background:#444;color:transparent">spoiler</span>.
-This is a Discord-style <span class="spoiler" onclick="removeAttribute('style')" style="background:#444;color:transparent">spoiler</span>.</p>
+<p>This is a Reddit-style <span class="spoiler" onclick="this.removeAttribute('style')" style="background:#444;color:transparent">spoiler</span>.
+This is a Discord-style <span class="spoiler" onclick="this.removeAttribute('style')" style="background:#444;color:transparent">spoiler</span>.</p>
 ```
 
 ### Strikethrough

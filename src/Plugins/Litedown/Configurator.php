@@ -64,7 +64,7 @@ class Configurator extends ConfiguratorBase
 			],
 			'template' => '<img src="{@src}"><xsl:copy-of select="@alt"/><xsl:copy-of select="@title"/></img>'
 		],
-		'ISPOILER' => '<span class="spoiler" data-s9e-livepreview-ignore-attrs="style" onclick="removeAttribute(\'style\')" style="background:#444;color:transparent"><xsl:apply-templates/></span>',
+		'ISPOILER' => '<span class="spoiler" data-s9e-livepreview-ignore-attrs="style" onclick="this.removeAttribute(\'style\')" style="background:#444;color:transparent"><xsl:apply-templates/></span>',
 		'LI'     => '<li><xsl:apply-templates/></li>',
 		'LIST'   => [
 			'attributes' => [

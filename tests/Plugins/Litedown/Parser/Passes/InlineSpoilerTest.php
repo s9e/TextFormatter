@@ -66,7 +66,7 @@ class InlineSpoilerTest extends AbstractTest
 		return self::fixTests([
 			[
 				'.. >! spoiler !< ..',
-				'<p>.. <span class="spoiler" onclick="removeAttribute(\'style\')" style="background:#444;color:transparent"> spoiler </span> ..</p>'
+				'<p>.. <span class="spoiler" onclick="this.removeAttribute(\'style\')" style="background:#444;color:transparent"> spoiler </span> ..</p>'
 			],
 		]);
 	}
