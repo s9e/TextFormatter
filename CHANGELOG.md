@@ -1,3 +1,21 @@
+2.12.2 (2022-11-30)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/7f07e259b626d8c8910eb15ff4ed6d78af951de1...8d4df61d361c18329149d17e0a7f70f3bfc3d696)
+
+### Added
+
+ - `ece847b93` MediaEmbed: added Mastodon
+
+### Changed
+
+ - `af7a4ddcb` BBCodes: updated default CODE
+ - `0989028dc` Emoji: updated to Unicode 15.0
+ - `bb5aadcbb` Litedown: updated inline spoilers' onclick handler
+ - `62d23f557` MediaEmbed: updated Spotify
+ - `ce3edbd40` MediaEmbed: updated Tumblr
+
+
 2.12.1 (2022-10-23)
 ===================
 
