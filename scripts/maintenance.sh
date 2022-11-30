@@ -8,4 +8,6 @@ do
 	./$file;
 done
 
+./generateBundles.php
+
 echo "All done."
