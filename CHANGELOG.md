@@ -1,3 +1,14 @@
+2.12.3 (2022-12-26)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/fa2af8572410744cae391f29e7d821d4fd296df9...c0ce8f0997ddf8aaca944637653868b176e713d4)
+
+### Changed
+
+ - `c0ce8f099` ElementInspector: updated HTML specs
+ - `41b342149` Emoji: replaced the default assets URL
+
+
 2.12.2 (2022-11-30)
 ===================
 
