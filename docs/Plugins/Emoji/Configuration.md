@@ -16,7 +16,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-Hello world <img alt=":D" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/1f600.svg">
+Hello world <img alt=":D" class="emoji" draggable="false" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f600.svg">
 ```
 
 ### Configure aliases at parsing time
@@ -44,7 +44,7 @@ echo $html;
 ```
 ```html
 Hi :smiling_face:
-Hi <img alt=":smiling_face:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/1f600.svg">
+Hi <img alt=":smiling_face:" class="emoji" draggable="false" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f600.svg">
 ```
 
 ### Using Twemoji assets with text parsed on an older release

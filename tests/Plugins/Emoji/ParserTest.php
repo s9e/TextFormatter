@@ -179,16 +179,16 @@ class ParserTest extends Test
 		return [
 			[
 				'😀',
-				'<img alt="😀" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/1f600.svg">'
+				'<img alt="😀" class="emoji" draggable="false" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f600.svg">'
 			],
 			[
 				'😀',
-				'<img alt="😀" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/1f600.svg">',
+				'<img alt="😀" class="emoji" draggable="false" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f600.svg">',
 				['tagName' => 'EMOTE']
 			],
 			[
 				':copyright::registered:#️⃣',
-				'<img alt=":copyright:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/a9.svg"><img alt=":registered:" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/ae.svg"><img alt="#️⃣" class="emoji" draggable="false" src="https://twemoji.maxcdn.com/v/latest/svg/23-20e3.svg">'
+				'<img alt=":copyright:" class="emoji" draggable="false" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/a9.svg"><img alt=":registered:" class="emoji" draggable="false" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/ae.svg"><img alt="#️⃣" class="emoji" draggable="false" src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/23-20e3.svg">'
 			],
 		];
 	}
