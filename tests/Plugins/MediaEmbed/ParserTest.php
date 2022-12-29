@@ -1096,48 +1096,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('livestream');
 				}
 			],
-//			[
-//				'http://my.mail.ru/corp/auto/video/testdrive/34.html',
-//				'<r><MAILRU id="corp/auto/testdrive/34">http://my.mail.ru/corp/auto/video/testdrive/34.html</MAILRU></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('mailru');
-//				}
-//			],
-//			[
-//				'http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks',
-//				'<r><MRCTV id="55537">http://dev.mrctv.org/videos/cnn-frets-about-tobacco-companies-color-coding-tricks</MRCTV></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('mrctv');
-//				}
-//			],
-//			[
-//				'http://video.nationalgeographic.com/tv/changing-earth',
-//				'<r><NATGEOVIDEO id="ngc-4MlzV_K8XoTPdXPLx2NOWq2IH410IzpO">http://video.nationalgeographic.com/tv/changing-earth</NATGEOVIDEO></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('natgeochannel');
-//					$configurator->MediaEmbed->add('natgeovideo');
-//				}
-//			],
-//			[
-//				'http://video.nationalgeographic.com/video/weirdest-superb-lyrebird',
-//				'<r><NATGEOVIDEO id="df825c71-a912-476b-be6a-a3fbffed1ae4">http://video.nationalgeographic.com/video/weirdest-superb-lyrebird</NATGEOVIDEO></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('natgeochannel');
-//					$configurator->MediaEmbed->add('natgeovideo');
-//				}
-//			],
 			[
 				'http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance',
 				'<r><NBCSPORTS id="fTQA2MMyx9YO">http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</NBCSPORTS></r>',
