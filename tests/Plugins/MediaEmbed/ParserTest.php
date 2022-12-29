@@ -3443,8 +3443,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
-				'<r><RUTUBE id="4118278">http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</RUTUBE></r>',
+				'https://rutube.ru/play/embed/4782775',
+				'<r><RUTUBE id="4782775">https://rutube.ru/play/embed/4782775</RUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3452,8 +3452,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://rutube.ru/play/embed/4782775',
-				'<r><RUTUBE id="4782775">https://rutube.ru/play/embed/4782775</RUTUBE></r>',
+				'https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/',
+				'<r><RUTUBE id="0771e73d1d10eee9c43ce31decc1dfce">https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</RUTUBE></r>',
 				[],
 				function ($configurator)
 				{
@@ -5071,7 +5071,7 @@ class ParserTest extends Test
 			],
 			[
 				'http://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd',
-				'<span data-s9e-mediaembed="rutube" style="display:inline-block;width:100%;max-width:720px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//rutube.ru/play/embed/4118278" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="rutube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//rutube.ru/play/embed/8b490a46447720d4ad74616f5de2affd" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{

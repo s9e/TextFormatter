@@ -343,7 +343,7 @@
 	</tr>
 	<tr title="Rutube" id="rutube">
 		<td><code>rutube</code></td>
-		<td>https://rutube.ru/play/embed/4782775<br/>https://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</td>
+		<td>https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</td>
 	</tr>
 	<tr title="Scribd" id="scribd">
 		<td><code>scribd</code></td>

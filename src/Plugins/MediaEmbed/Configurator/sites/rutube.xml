@@ -1,17 +1,12 @@
 <site name="Rutube" homepage="https://rutube.ru/">
-	<example>https://rutube.ru/play/embed/4782775</example>
-	<example>https://rutube.ru/tracks/4118278.html?v=8b490a46447720d4ad74616f5de2affd</example>
+	<example>https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</example>
 
 	<oembed endpoint="https://rutube.ru/api/oembed/"
-	          scheme="https://rutube.ru/video/{@vid}/"/>
+	          scheme="https://rutube.ru/video/{@id}/"/>
 
 	<tags><tag>.ru</tag></tags>
 
 	<host>rutube.ru</host>
-	<extract>!rutube\.ru/(?:play/embed|tracks)/(?'id'\d+)!</extract>
-	<scrape url="https://rutube.ru/api/oembed/?url=https://rutube.ru/video/{@vid}/">
-		<match>!rutube\.ru/video/(?'vid'[0-9a-f]{32})!</match>
-		<extract>!rutube\.ru/play/embed/(?'id'\d+)!</extract>
-	</scrape>
-	<iframe width="720" height="405" src="//rutube.ru/play/embed/{@id}"/>
+	<extract>!rutube\.ru/(?:play/embed/|tracks/.*?v=|video/)(?'id'\w+)!</extract>
+	<iframe src="//rutube.ru/play/embed/{@id}"/>
 </site>
