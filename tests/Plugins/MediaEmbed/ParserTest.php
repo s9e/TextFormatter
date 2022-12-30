@@ -1097,6 +1097,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://mastodon.social/@SwiftOnSecurity@infosec.exchange/109579438826193099',
+				'<r><MASTODON host="infosec.exchange" id="109579438603578302" name="SwiftOnSecurity">https://mastodon.social/@SwiftOnSecurity@infosec.exchange/109579438826193099</MASTODON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('mastodon');
+				}
+			],
+			[
 				'http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance',
 				'<r><NBCSPORTS id="fTQA2MMyx9YO">http://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</NBCSPORTS></r>',
 				[],
@@ -2878,11 +2888,41 @@ class ParserTest extends Test
 			],
 			[
 				'https://mastodon.social/@HackerNewsBot/100181134752056592',
-				'<r><MASTODON id="100181134752056592" name="HackerNewsBot">https://mastodon.social/@HackerNewsBot/100181134752056592</MASTODON></r>',
+				'<r><MASTODON host="mastodon.social" id="100181134752056592" name="HackerNewsBot">https://mastodon.social/@HackerNewsBot/100181134752056592</MASTODON></r>',
 				[],
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('mastodon');
+				}
+			],
+			[
+				'https://infosec.exchange/@SwiftOnSecurity/109579438603578302',
+				'<t>https://infosec.exchange/@SwiftOnSecurity/109579438603578302</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mastodon');
+				}
+			],
+			[
+				'https://infosec.exchange/@SwiftOnSecurity/109579438603578302',
+				'<r><MASTODON host="infosec.exchange" id="109579438603578302" name="SwiftOnSecurity">https://infosec.exchange/@SwiftOnSecurity/109579438603578302</MASTODON></r>',
+				[],
+				function ($configurator)
+				{
+					$siteConfig = $configurator->MediaEmbed->defaultSites['mastodon'];
+					$siteConfig['host'][] = 'infosec.exchange';
+					$configurator->MediaEmbed->add('mastodon', $siteConfig);
+				}
+			],
+			[
+				'https://infosec.exchange/@SwiftOnSecurity/109579438603578302',
+				'<r><MASTODON host="infosec.exchange" id="109579438603578302" name="SwiftOnSecurity">https://infosec.exchange/@SwiftOnSecurity/109579438603578302</MASTODON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mastodon');
+					$configurator->registeredVars['MediaEmbed.hosts']['infosec.exchange'] = 'mastodon';
 				}
 			],
 			[
@@ -4924,6 +4964,26 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('kickstarter');
+				}
+			],
+			[
+				'https://mastodon.social/@HackerNewsBot/100181134752056592',
+				'<iframe data-s9e-mediaembed="mastodon" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:300px;max-width:550px;width:100%" src="https://s9e.github.io/iframe/2/mastodon.min.html#HackerNewsBot/100181134752056592"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mastodon');
+				}
+			],
+			[
+				'https://infosec.exchange/@SwiftOnSecurity/109579438603578302',
+				'<iframe data-s9e-mediaembed="mastodon" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:300px;max-width:550px;width:100%" src="https://s9e.github.io/iframe/2/mastodon.min.html#SwiftOnSecurity@infosec.exchange/109579438603578302"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$siteConfig = $configurator->MediaEmbed->defaultSites['mastodon'];
+					$siteConfig['host'][] = 'infosec.exchange';
+					$configurator->MediaEmbed->add('mastodon', $siteConfig);
 				}
 			],
 			[

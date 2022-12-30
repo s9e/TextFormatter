@@ -7,6 +7,18 @@
 	<tags><tag>social</tag></tags>
 
 	<host>mastodon.social</host>
-	<extract>#/@(?'name'\w+)/(?'id'\d+)#</extract>
-	<iframe width="550" height="300" src="https://s9e.github.io/iframe/2/mastodon.min.html#{@name}/{@id}" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+	<extract>#//(?'host'[-.\w]+)/@(?'name'\w+)/(?'id'\d+)#</extract>
+	<scrape url="{@origin}/api/v1/statuses/{@id}">
+		<match>#^(?'origin'https://[^/]+)/@\w+@[-.\w]+/(?'id'\d+)#</match>
+		<extract>#"url":"https://(?'host'[-.\w]+)/@(?'name'\w+)/(?'id'\d+)"#</extract>
+	</scrape>
+	<iframe width="550" height="300" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
+		<src><![CDATA[
+			<xsl:text>https://s9e.github.io/iframe/2/mastodon.min.html#</xsl:text>
+			<xsl:value-of select="@name"/>
+			<xsl:if test="@host and @host != 'mastodon.social'">@<xsl:value-of select="@host"/></xsl:if>
+			<xsl:text>/</xsl:text>
+			<xsl:value-of select="@id"/>
+		]]></src>
+	</iframe>
 </site>
