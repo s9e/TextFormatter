@@ -2,7 +2,7 @@
 
 ### Mastodon
 
-The default Mastodon media site can be customized with additional hosts. This can be done using the `MastodonHelper` class. In the example below, we declare that the host `infosec.exchange` should be mapped to the `mastodon` site.
+The default Mastodon media site can be customized with additional hosts. This can be done using the `MastodonHelper` class. In the example below, we add support for toots published by the `infosec.exchange` instance.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;

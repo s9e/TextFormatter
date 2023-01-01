@@ -91,6 +91,7 @@ nav:
       - Synopsis: Plugins/MediaEmbed/Synopsis.md
       - Using default sites: Plugins/MediaEmbed/Using_default_sites.md
       - Supported sites: Plugins/MediaEmbed/Sites.md
+      - Federated sites: Plugins/MediaEmbed/Federated_sites.md
       - Add a custom site: Plugins/MediaEmbed/Add_custom.md
       - Add a link to the original URL: Plugins/MediaEmbed/Append_template.md
       - Change a template: Plugins/MediaEmbed/Change_template.md
