@@ -2,15 +2,17 @@
 
 ### Mastodon
 
-The default Mastodon media site can be customized with additional hosts. This can be done by modifying the original configuration in `$configurator->MediaEmbed->defaultSites['mastodon']`, or by assigning `mastodon` to the desired hostname in `$configurator->registeredVars['MediaEmbed.hosts']`. In the example below, we declare that the host `infosec.exchange` should be mapped to the `mastodon` site.
+The default Mastodon media site can be customized with additional hosts. This can be done using the `MastodonHelper` class. In the example below, we declare that the host `infosec.exchange` should be mapped to the `mastodon` site.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
-// Add Mastodon, then create an entry that maps the hostname 'infosec.exchange'
-// to the 'mastodon' site
+// Add the Mastodon media site
 $configurator->MediaEmbed->add('mastodon');
-$configurator->registeredVars['MediaEmbed.hosts']['infosec.exchange'] = 'mastodon';
+
+// Use MastodonHelper to add 'infosec.exchange' as a supported instance
+$mastodonHelper = new s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MastodonHelper($configurator);
+$mastodonHelper->addHost('infosec.exchange');
 
 // Get an instance of the parser and the renderer
 extract($configurator->finalize());

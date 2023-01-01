@@ -6746,6 +6746,10 @@ Xml File Definition Collection (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Confi
  [x] Other default attribute values are left as strings
  [x] Attributes' "required" property is cast to bool
 
+Mastodon Helper (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\MastodonHelper)
+ [x] addHost() normalizes the host
+ [x] addHost() adds the Mastodon media site if it's not enabled yet
+
 Template Builder (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateBuilder)
  [x] getTemplate() returns an empty string by default
  [x] Supports Flash objects
