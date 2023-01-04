@@ -9,7 +9,7 @@
 	<host>tiktok.com</host>
 	<extract>#tiktok\.com/(?:@[.\w]+/video|v|(?:i18n/)?share/video)/(?'id'\d+)#</extract>
 	<scrape>
-		<match>#//vm\.tiktok\.com/.#</match>
+		<match>#//v[mt]\.tiktok\.com/.#</match>
 		<extract>#tiktok\.com/(?:@[.\w]+/video|v|(?:i18n/)?/share/video)/(?'id'\d+)#</extract>
 	</scrape>
 	<iframe width="325" height="740"

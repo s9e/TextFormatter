@@ -1328,10 +1328,16 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					if (isset($_SERVER['TRAVIS']))
-					{
-						$this->markTestSkipped('No TikTok test on Travis');
-					}
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('tiktok');
+				}
+			],
+			[
+				'https://vt.tiktok.com/ZS8M7By99/',
+				'<r><TIKTOK id="7177575712717557034">https://vt.tiktok.com/ZS8M7By99/</TIKTOK></r>',
+				[],
+				function ($configurator)
+				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('tiktok');
 				}
