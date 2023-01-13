@@ -962,29 +962,9 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('imgur');
 				}
 			],
-//			[
-//				'https://imgur.com/t/current_events/0I30l',
-//				'<r><IMGUR id="a/0I30l">https://imgur.com/t/current_events/0I30l</IMGUR></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('imgur');
-//				}
-//			],
-//			[
-//				'https://imgur.com/r/animals/dgetQ',
-//				'<r><IMGUR id="a/dgetQ">https://imgur.com/r/animals/dgetQ</IMGUR></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('imgur');
-//				}
-//			],
 			[
 				'https://archive.org/details/BillGate99',
-				'<r><INTERNETARCHIVE height="240" id="BillGate99" width="320">https://archive.org/details/BillGate99</INTERNETARCHIVE></r>',
+				'<r><INTERNETARCHIVE height="480" id="BillGate99" width="640">https://archive.org/details/BillGate99</INTERNETARCHIVE></r>',
 				[],
 				function ($configurator)
 				{
@@ -992,6 +972,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('internetarchive');
 				}
 			],
+
 			[
 				'https://archive.org/details/DFTS2014-05-30',
 				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1&amp;twitterv=01" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',
@@ -1012,50 +993,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('internetarchive');
 				}
 			],
-//			[
-//				'https://www.kaltura.com/tiny/b5tib',
-//				'<r><KALTURA entry_id="0_ekjebl7h" partner_id="1581781" sp="158178100" uiconf_id="20490561">https://www.kaltura.com/tiny/b5tib</KALTURA></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('kaltura');
-//				}
-//			],
-//			[
-//				'https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a',
-//				'<r><KALTURA entry_id="1_hu0rc15a" partner_id="1888231" sp="188823100" uiconf_id="28242311">https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a</KALTURA></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('kaltura');
-//				}
-//			],
-			[
-				'http://video.khl.ru/events/233677',
-				'(<r><KHL id="free_\\w+_hd/2_5297335363/\\w+/\\d+">http://video.khl.ru/events/233677</KHL></r>)',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('khl');
-				},
-				null,
-				'assertMatchesRegularExpression'
-			],
-//			[
-//				'http://video.khl.ru/quotes/251237',
-//				'(<r><KHL id="free_\\w+_hd/q251237/\\w+/\\d+">http://video.khl.ru/quotes/251237</KHL></r>)',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('khl');
-//				},
-//				null,
-//				'assertMatchesRegularExpression'
-//			],
 			[
 				'http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack',
 				'<r><LIBSYN id="8994194">http://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack</LIBSYN></r>',
@@ -1066,26 +1003,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('libsyn');
 				}
 			],
-//			[
-//				'https://www.liveleak.com/view?t=sby0J_1571998103',
-//				'<r><LIVELEAK id="Szpn_1571998103">https://www.liveleak.com/view?t=sby0J_1571998103</LIVELEAK></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('liveleak');
-//				}
-//			],
-//			[
-//				'http://livestre.am/1aHRU',
-//				'<r><LIVESTREAM channel="maps_cp" clip_id="pla_d1501f90-438c-401d-98ae-e96ab34a09ae">http://livestre.am/1aHRU</LIVESTREAM></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('livestream');
-//				}
-//			],
 			[
 				'https://livestream.com/internetsociety/wsis/videos/107058039',
 				'<r><LIVESTREAM account_id="686369" event_id="4588746" video_id="107058039">https://livestream.com/internetsociety/wsis/videos/107058039</LIVESTREAM></r>',
@@ -1417,36 +1334,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0',
-				'<r><WSHH id="63133">https://www.worldstarhiphop.com/videos/video.php?v=wshhZ8F22UtJ8sLHdja0</WSHH></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('wshh');
-				}
-			],
-//			[
-//				'https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61',
-//				'<r><WSHH id="63175">https://m.worldstarhiphop.com/video.php?v=wshh2SXFFe7W14DqQx61</WSHH></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('wshh');
-//				}
-//			],
-			[
-				'https://worldstar.com/video.php?v=wshhn7nmk3033k8m66ZG',
-				'<r><WSHH id="164634">https://worldstar.com/video.php?v=wshhn7nmk3033k8m66ZG</WSHH></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('wshh');
-				}
-			],
-			[
 				'http://on.wsj.com/1MJvx06',
 				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6">http://on.wsj.com/1MJvx06</WSJ></r>',
 				[],
@@ -1569,7 +1456,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://archive.org/details/BillGate99',
-				'<span data-s9e-mediaembed="internetarchive" style="display:inline-block;width:100%;max-width:320px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:75%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://archive.org/embed/BillGate99" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
+				'<span data-s9e-mediaembed="internetarchive" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:75%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="https://archive.org/embed/BillGate99" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{
