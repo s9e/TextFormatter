@@ -6,6 +6,10 @@
 
 	<tags><tag>social</tag></tags>
 
+	<attributes>
+		<host required="true"/>
+	</attributes>
+
 	<host>mastodon.social</host>
 	<extract>#//(?'host'[-.\w]+)/@(?'name'\w+)/(?'id'\d+)#</extract>
 	<scrape url="{@origin}/api/v1/statuses/{@id}">
