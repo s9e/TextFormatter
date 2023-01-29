@@ -18,3 +18,23 @@ echo $html;
 ```html
 <video controls="" src="http://example.org/video.mp4"></video>
 ```
+
+
+### Replace the list of file extensions
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+$configurator->Autovideo->fileExtensions = ['mp4', 'mkv'];
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = 'http://example.org/video.mkv';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<video controls="" src="http://example.org/video.mkv"></video>
+```

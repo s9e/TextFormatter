@@ -110,4 +110,24 @@ class ConfiguratorTest extends Test
 			$plugin->getTag()
 		);
 	}
+
+	/**
+	* @testdox File extensions are configurable
+	*/
+	public function testFileExtensions()
+	{
+		$this->configurator->Autovideo->fileExtensions = ['blorpv', 'navi'];
+		$this->configurator->Autovideo->finalize();
+
+		$config = $this->configurator->Autovideo->asConfig();
+
+		$this->assertMatchesRegularExpression(
+			$config['regexp'],
+			'https://example.org/video.blorpv'
+		);
+		$this->assertDoesNotMatchRegularExpression(
+			$config['regexp'],
+			'https://example.org/video.mp5'
+		);
+	}
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
 * @package   s9e\TextFormatter
@@ -13,6 +13,11 @@ use s9e\TextFormatter\Plugins\ConfiguratorBase;
 class Configurator extends ConfiguratorBase
 {
 	/**
+	* @var string[] File extensions allowed in URLs
+	*/
+	public array $fileExtensions = ['mov', 'mp4', 'ogg', 'webm'];
+
+	/**
 	* @var string Name of attribute that stores the video's URL
 	*/
 	protected $attrName = 'src';
@@ -25,12 +30,17 @@ class Configurator extends ConfiguratorBase
 	/**
 	* @var string
 	*/
-	protected $regexp = '#\\bhttps?://[-.\\w]+/(?:[-+.:/\\w]|%[0-9a-f]{2}|\\(\\w+\\))+\\.(?:mp4|ogg|webm)(?!\\S)#i';
+	protected $regexp;
 
 	/**
 	* @var string Name of the tag used to represent videos
 	*/
 	protected $tagName = 'VIDEO';
+
+	public function finalize(): void
+	{
+		$this->updateRegexp();
+	}
 
 	/**
 	* Creates the tag used by this plugin
@@ -39,6 +49,8 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function setUp()
 	{
+		$this->updateRegexp();
+
 		if (isset($this->configurator->tags[$this->tagName]))
 		{
 			return;
@@ -56,5 +68,10 @@ class Configurator extends ConfiguratorBase
 
 		// Allow URL tags to be used as fallback
 		$tag->rules->allowChild('URL');
+	}
+
+	protected function updateRegexp(): void
+	{
+		$this->regexp = '#\\bhttps?://[-.\\w]+/(?:[-+.:/\\w]|%[0-9a-f]{2}|\\(\\w+\\))+\\.' . RegexpBuilder::fromList($this->fileExtensions, ['caseInsensitive' => true, 'delimiter' => '#', 'unicode' => false]) . '(?!\\S)#i';
 	}
 }

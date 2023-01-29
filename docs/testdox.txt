@@ -4869,6 +4869,7 @@ Configurator (s9e\TextFormatter\Tests\Plugins\Autovideo\Configurator)
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
  [x] getTag() returns the tag that is associated with this plugin
+ [x] File extensions are configurable
 
 Parser (s9e\TextFormatter\Tests\Plugins\Autovideo\Parser)
  [x] Parsing tests with data set #0
