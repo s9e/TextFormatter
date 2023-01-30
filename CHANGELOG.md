@@ -1,3 +1,22 @@
+2.13.0 (2023-01-30)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/ed31bbffd1801b78c3a27d84163c3146ba249d65...217b0f87c9241386af557f93ddff60846e502542)
+
+### Added
+
+ - `536cbdf1f` Autoimage: added support for custom file extensions
+ - `eb8a5c487` Autovideo: added support for custom file extensions
+ - `d4750cdbb` MediaEmbed: added MastodonHelper
+ - `9ad74ecac` MediaEmbed: added support for custom Mastodon instances
+
+### Changed
+
+ - `7f7481ab9` MediaEmbed: updated Mastodon
+ - `ba76ce0b0` MediaEmbed: updated Rutube
+ - `9724b7906` MediaEmbed: updated TikTok
+
+
 2.12.3 (2022-12-26)
 ===================
 
