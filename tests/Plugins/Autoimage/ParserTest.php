@@ -10,6 +10,7 @@ use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Plugins\AbstractStaticUrlReplacer\AbstractParser
 * @covers s9e\TextFormatter\Plugins\Autoimage\Parser
 */
 class ParserTest extends Test

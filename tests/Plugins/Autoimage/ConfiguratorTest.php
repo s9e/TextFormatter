@@ -6,6 +6,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Plugins\AbstractStaticUrlReplacer\AbstractConfigurator
 * @covers s9e\TextFormatter\Plugins\Autoimage\Configurator
 */
 class ConfiguratorTest extends Test
@@ -109,5 +110,19 @@ class ConfiguratorTest extends Test
 			$this->configurator->tags['IMG'],
 			$plugin->getTag()
 		);
+	}
+
+	/**
+	* @testdox The JS parser contains both parser files
+	*/
+	public function testJSParser()
+	{
+		$js = $this->configurator->Autoimage->getJSParser();
+
+		foreach (['AbstractStaticUrlReplacer', 'Autoimage'] as $pluginName)
+		{
+			$filepath = __DIR__ . '/../../../src/Plugins/' . $pluginName . '/Parser.js';
+			$this->assertStringContainsString(file_get_contents($filepath), $js);
+		}
 	}
 }

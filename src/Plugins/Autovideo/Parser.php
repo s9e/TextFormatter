@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /**
 * @package   s9e\TextFormatter
@@ -7,21 +7,9 @@
 */
 namespace s9e\TextFormatter\Plugins\Autovideo;
 
-use s9e\TextFormatter\Plugins\ParserBase;
+use s9e\TextFormatter\Plugins\AbstractStaticUrlReplacer\AbstractParser;
 
-class Parser extends ParserBase
+class Parser extends AbstractParser
 {
-	/**
-	* {@inheritdoc}
-	*/
-	public function parse($text, array $matches)
-	{
-		$tagName  = $this->config['tagName'];
-		$attrName = $this->config['attrName'];
-		foreach ($matches as $m)
-		{
-			$this->parser->addTagPair($tagName, $m[0][1], 0, $m[0][1] + strlen($m[0][0]), 0, -1)
-			             ->setAttribute($attrName, $m[0][0]);
-		}
-	}
+	protected int $tagPriority = -1;
 }

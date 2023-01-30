@@ -6,6 +6,7 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\UrlFilter;
 use s9e\TextFormatter\Tests\Test;
 
 /**
+* @covers s9e\TextFormatter\Plugins\AbstractStaticUrlReplacer\AbstractConfigurator
 * @covers s9e\TextFormatter\Plugins\Autovideo\Configurator
 */
 class ConfiguratorTest extends Test

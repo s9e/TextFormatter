@@ -4734,6 +4734,7 @@ Configurator (s9e\TextFormatter\Tests\Plugins\Autoimage\Configurator)
  [x] The config array contains the name of the tag
  [x] The config array contains the name of the attribute
  [x] getTag() returns the tag that is associated with this plugin
+ [x] The JS parser contains both parser files
 
 Parser (s9e\TextFormatter\Tests\Plugins\Autoimage\Parser)
  [x] Parsing tests with data set #0
