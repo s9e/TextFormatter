@@ -57,6 +57,10 @@
 		<td><code>brightcove</code></td>
 		<td>https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001<br/>https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</td>
 	</tr>
+	<tr title="Bunny Stream" id="bunny">
+		<td><code>bunny</code></td>
+		<td>https://video.bunnycdn.com/play/759/eb1c4f77-0cda-46be-b47d-1118ad7c2ffe</td>
+	</tr>
 	<tr title="Castos" id="castos">
 		<td><code>castos</code></td>
 		<td>https://on-the-cuff.castos.com/podcasts/10156/episodes/frequently-asked-questions-on-mens-style</td>

@@ -1,0 +1,10 @@
+<site name="Bunny Stream" homepage="https://bunny.net/stream/">
+	<example>https://video.bunnycdn.com/play/759/eb1c4f77-0cda-46be-b47d-1118ad7c2ffe</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>iframe.mediadelivery.net</host>
+	<host>video.bunnycdn.com</host>
+	<extract>@/(?:embed|play)/(?'video_library_id'\d+)/(?'video_id'[-\w]+)@</extract>
+	<iframe src="https://iframe.mediadelivery.net/embed/{@video_library_id}/{@video_id}?autoplay=false"/>
+</site>

@@ -1794,6 +1794,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://iframe.mediadelivery.net/embed/759/eb1c4f77-0cda-46be-b47d-1118ad7c2ffe',
+				'<r><BUNNY video_id="eb1c4f77-0cda-46be-b47d-1118ad7c2ffe" video_library_id="759">https://iframe.mediadelivery.net/embed/759/eb1c4f77-0cda-46be-b47d-1118ad7c2ffe</BUNNY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bunny');
+				}
+			],
+			[
+				'https://video.bunnycdn.com/play/759/eb1c4f77-0cda-46be-b47d-1118ad7c2ffe',
+				'<r><BUNNY video_id="eb1c4f77-0cda-46be-b47d-1118ad7c2ffe" video_library_id="759">https://video.bunnycdn.com/play/759/eb1c4f77-0cda-46be-b47d-1118ad7c2ffe</BUNNY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bunny');
+				}
+			],
+			[
 				'https://on-the-cuff.castos.com/player/215060',
 				'<r><CASTOS host="on-the-cuff" id="215060">https://on-the-cuff.castos.com/player/215060</CASTOS></r>',
 				[],
