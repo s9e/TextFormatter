@@ -223,9 +223,9 @@ function parse(_text)
 */
 function reset(_text)
 {
-	// Normalize CR/CRLF to LF, remove control characters that aren't allowed in XML
+	// Normalize CR/CRLF to LF, remove characters that aren't allowed in XML
 	_text = _text.replace(/\r\n?/g, "\n");
-	_text = _text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]+/g, '');
+	_text = _text.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\uFFFE\uFFFF]/g, '');
 
 	// Clear the logs
 	logger.clear();
@@ -355,8 +355,8 @@ function finalizeOutput()
 	// Merge consecutive <i> tags
 	output = output.replace(/<\/i><i>/g, '');
 
-	// Remove control characters from the output to ensure it's valid XML
-	output = output.replace(/[\x00-\x08\x0B-\x1F]/g, '');
+	// Remove illegal characters from the output to ensure it's valid XML
+	output = output.replace(/[\x00-\x08\x0B-\x1F\uFFFE\uFFFF]/g, '');
 
 	// Encode Unicode characters that are outside of the BMP
 	encodeUnicodeSupplementaryCharacters();

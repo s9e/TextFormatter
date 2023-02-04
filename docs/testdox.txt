@@ -4685,7 +4685,9 @@ Parser (s9e\TextFormatter\Tests\Parser)
  [x] parse() normalizes \r to \n
  [x] parse() normalizes \r\n to \n
  [x] parse() removes control characters that aren't allowed in XML from the input
+ [x] parse() removes U+FFFE and U+FFFF from the input
  [x] parse() removes control characters that aren't allowed in XML from attribute values
+ [x] parse() removes U+FFFE and U+FFFF from the attribute values
  [x] parse() throws an exception if the input isn't valid UTF-8
  [x] disableTag('FOO') disables tag 'FOO'
  [x] disableTag() does not have side-effects due to references
@@ -7948,7 +7950,7 @@ Cached (s9e\TextFormatter\Tests\Utils\Http\Clients\Cached)
 
 Curl (s9e\TextFormatter\Tests\Utils\Http\Clients\Curl)
  [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
+ [ ] Sends custom headers
  [x] Resets custom headers between requests
  [x] post() sends the request body if set
  [x] post() sends no request body if not set

@@ -155,6 +155,19 @@ class ParserTest extends Test
 	}
 
 	/**
+	* @testdox parse() removes U+FFFE and U+FFFF from the input
+	*/
+	public function testParseFiltersNonCharacters()
+	{
+		$parser = $this->getParser();
+
+		$this->assertSame(
+			"<t>Plain  text</t>",
+			$parser->parse("Plain \u{FFFE}\u{FFFF} text")
+		);
+	}
+
+	/**
 	* @testdox parse() removes control characters that aren't allowed in XML from attribute values
 	*/
 	public function testParseFiltersLowAsciiAttributes()
@@ -171,6 +184,27 @@ class ParserTest extends Test
 
 		$this->assertSame(
 			"<r><X x=\"\t&#10;\"/></r>",
+			$parser->parse('')
+		);
+	}
+
+	/**
+	* @testdox parse() removes U+FFFE and U+FFFF from the attribute values
+	*/
+	public function testParseFiltersNonCharactersAttributes()
+	{
+		$this->configurator->tags->add('X')->attributes->add('x');
+		$parser = $this->getParser();
+		$parser->registerParser(
+			'foo',
+			function () use ($parser)
+			{
+				$parser->addSelfClosingTag('X', 0, 0)->setAttribute('x', "x\u{FFFE}\u{FFFF}x");
+			}
+		);
+
+		$this->assertSame(
+			'<r><X x="xx"/></r>',
 			$parser->parse('')
 		);
 	}
