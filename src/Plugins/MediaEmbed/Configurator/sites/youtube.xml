@@ -17,7 +17,7 @@
 
 	<host>youtube.com</host>
 	<host>youtu.be</host>
-	<extract>!youtube\.com/(?:watch.*?v=|shorts/|v/|attribution_link.*?v%3D)(?'id'[-\w]+)!</extract>
+	<extract>!youtube\.com/(?:watch.*?v=|live/|shorts/|v/|attribution_link.*?v%3D)(?'id'[-\w]+)!</extract>
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
 	<extract>@[#&amp;?]t=(?'t'\d[\dhms]*)@</extract>
 	<extract>![&amp;?]list=(?'list'[-\w]+)!</extract>

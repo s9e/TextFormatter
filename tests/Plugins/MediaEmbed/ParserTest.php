@@ -4470,6 +4470,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
+			[
+				// https://xenforo.com/community/threads/support-for-youtube-live-url-embedding.212069/
+				'https://www.youtube.com/live/gUM2wYKdxDA',
+				'<r><YOUTUBE id="gUM2wYKdxDA">https://www.youtube.com/live/gUM2wYKdxDA</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
 		];
 	}
 
