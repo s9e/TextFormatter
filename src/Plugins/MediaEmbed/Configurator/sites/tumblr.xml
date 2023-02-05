@@ -15,7 +15,7 @@
 		<header>User-agent: curl</header>
 		<match>!\w\.tumblr\.com/post/\d!</match>
 		<extract>!did=(?:\\"|\\u0022)(?'did'[-\w]+)!</extract>
-		<extract>!embed\\?/post\\?/(?'key'[-\w]+)!</extract>
+		<extract>!embed/post/t:(?'key'[-\w]+)!</extract>
 	</scrape>
-	<iframe width="520" height="300" src="https://s9e.github.io/iframe/2/tumblr.min.html#{@key}/{@id}" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe width="542" height="300" src="https://s9e.github.io/iframe/2/tumblr.min.html#{@key}/{@id}" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>

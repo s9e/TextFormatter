@@ -6883,7 +6883,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #54
  [x] Scraping tests with data set #55
  [x] Scraping tests with data set #56
- [x] Scraping tests with data set #57
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
@@ -7950,7 +7949,7 @@ Cached (s9e\TextFormatter\Tests\Utils\Http\Clients\Cached)
 
 Curl (s9e\TextFormatter\Tests\Utils\Http\Clients\Curl)
  [x] Uses gzip by default if ext/zlib is availble
- [ ] Sends custom headers
+ [x] Sends custom headers
  [x] Resets custom headers between requests
  [x] post() sends the request body if set
  [x] post() sends no request body if not set
