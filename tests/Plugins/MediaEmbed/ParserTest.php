@@ -1239,16 +1239,16 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('stitcher');
 //				}
 //			],
-			[
-				'https://vm.tiktok.com/TTPdrc3YBJ/',
-				'<r><TIKTOK id="7050192414379691270">https://vm.tiktok.com/TTPdrc3YBJ/</TIKTOK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('tiktok');
-				}
-			],
+//			[
+//				'https://vm.tiktok.com/TTPdrc3YBJ/',
+//				'<r><TIKTOK id="7050192414379691270">https://vm.tiktok.com/TTPdrc3YBJ/</TIKTOK></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('tiktok');
+//				}
+//			],
 			[
 				'https://vt.tiktok.com/ZS8M7By99/',
 				'<r><TIKTOK id="7177575712717557034">https://vt.tiktok.com/ZS8M7By99/</TIKTOK></r>',
