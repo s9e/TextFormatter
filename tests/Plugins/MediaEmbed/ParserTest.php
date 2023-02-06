@@ -1279,6 +1279,28 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tumblr');
 				}
 			],
+			[
+				// https://xenforo.com/community/threads/s9e-media-sites.139274/post-1613244
+				'https://www.tumblr.com/scianvih/691082761549856768',
+				'<r><TUMBLR did="dfe9ed28e5229337c290c7225a088e26159c38e3" id="691082761549856768" key="NPcOc6_o0jT7-kZ6bG37OA" name="scianvih">https://www.tumblr.com/scianvih/691082761549856768</TUMBLR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('tumblr');
+				}
+			],
+			[
+				// https://www.tumblr.com/explore/today
+				'https://at.tumblr.com/todayontumblr/708511052002918400/96rnpjfqvlk3',
+				'<r><TUMBLR did="9b840bfc83db006ce34726ccc0453d3e26668118" id="708511052002918400" key="ESngpOfjmW_v0r0ewZfGEQ" name="todayontumblr">https://at.tumblr.com/todayontumblr/708511052002918400/96rnpjfqvlk3</TUMBLR></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('tumblr');
+				}
+			],
 //			[
 //				'https://247sports.com/Player/LeSean-McCoy-25234/',
 //				'<r><TWENTYFOURSEVENSPORTS player_id="149349">https://247sports.com/Player/LeSean-McCoy-25234/</TWENTYFOURSEVENSPORTS></r>',
