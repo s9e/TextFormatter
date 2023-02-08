@@ -153,7 +153,7 @@ class RecursiveParser
 				$matchersConfig[$matchName] = $matchConfig;
 			}
 		}
-		uasort($matchersConfig, 'static::sortMatcherConfig');
+		uasort($matchersConfig, [static::class, 'sortMatcherConfig']);
 
 		return $matchersConfig;
 	}
