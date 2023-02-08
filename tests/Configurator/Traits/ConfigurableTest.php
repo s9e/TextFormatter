@@ -66,6 +66,7 @@ class ConfigurableTest extends Test
 
 	/**
 	* @testdox __set() can create new properties
+	* @requires PHP < 8.2
 	*/
 	public function testMagicSetNew()
 	{
@@ -307,6 +308,7 @@ class ConfigurableTestDummy
 	protected $fooObject;
 	protected $unsettable = true;
 	protected $notUnsettable = true;
+	protected $foo;
 
 	public function __construct()
 	{

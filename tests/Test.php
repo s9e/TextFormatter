@@ -10,6 +10,13 @@ use s9e\TextFormatter\Configurator;
 
 abstract class Test extends TestCase
 {
+	protected Configurator $configurator;
+
+	protected function setUp(): void
+	{
+		$this->configurator = new Configurator;
+	}
+
 	public function __call($methodName, $args)
 	{
 		// Compatibility map for PHPUnit <9
@@ -34,18 +41,6 @@ abstract class Test extends TestCase
 			{
 				unlink($filepath);
 			}
-		}
-	}
-
-	public function __get($k)
-	{
-		switch ($k)
-		{
-			case 'configurator':
-				return $this->configurator = new Configurator;
-
-			default:
-				throw new RuntimeException("Bad __get('$k')");
 		}
 	}
 

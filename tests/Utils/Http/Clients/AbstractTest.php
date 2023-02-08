@@ -12,6 +12,7 @@ abstract class AbstractTest extends Test
 
 	protected function setUp(): void
 	{
+		parent::setUp();
 		if (!empty($_SERVER['TRAVIS']))
 		{
 			$this->url = str_replace('localhost', 'localhost:8000', $this->url);

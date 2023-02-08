@@ -252,6 +252,6 @@ abstract class RulesHelper
 			));
 		}
 
-		return $allowed;
+		return $allowed ?: [0];
 	}
 }

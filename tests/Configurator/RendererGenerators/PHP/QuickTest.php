@@ -20,6 +20,7 @@ class QuickTest extends Test
 
 	protected function setUp(): void
 	{
+		parent::setUp();
 		$this->configurator->rendering->engine = 'PHP';
 		$this->configurator->rendering->engine->enableQuickRenderer = true;
 	}

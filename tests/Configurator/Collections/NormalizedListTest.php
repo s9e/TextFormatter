@@ -14,6 +14,7 @@ class NormalizedListTest extends Test
 
 	protected function setUp(): void
 	{
+		parent::setUp();
 		$this->normalizedList = new NormalizedList;
 	}
 

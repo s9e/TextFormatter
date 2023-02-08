@@ -47,7 +47,7 @@ abstract class RegexpConvertor
 				$dotAll
 			);
 
-			$callback = get_called_class() . '::serialize' . ucfirst($tok['type']);
+			$callback = static::class . '::serialize' . ucfirst($tok['type']);
 			if (!is_callable($callback))
 			{
 				throw new RuntimeException("Unsupported token type '" . $tok['type'] . "'");

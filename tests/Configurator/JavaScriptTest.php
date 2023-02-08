@@ -23,6 +23,7 @@ class JavaScriptTest extends Test
 {
 	protected function setUp(): void
 	{
+		parent::setUp();
 		$this->configurator->enableJavaScript();
 	}
 

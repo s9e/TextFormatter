@@ -44,6 +44,7 @@ class XSLTTest extends Test
 
 	/**
 	* @testdox Preserves other properties during serialization
+	* @requires PHP < 8.2
 	*/
 	public function testSerializableCustomProps()
 	{

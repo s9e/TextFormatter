@@ -11,7 +11,7 @@ abstract class AbstractTest extends Test
 {
 	protected static function getBundleName()
 	{
-		$className = get_called_class();
+		$className = static::class;
 
 		return substr($className, 1 + strrpos($className, '\\'), -4);
 	}

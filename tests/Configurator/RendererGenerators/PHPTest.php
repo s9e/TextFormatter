@@ -19,6 +19,7 @@ class PHPTest extends Test
 {
 	protected function setUp(): void
 	{
+		parent::setUp();
 		$this->configurator->rendering->engine = 'PHP';
 		$this->configurator->templateChecker->append('DisallowUncompilableXSL');
 	}

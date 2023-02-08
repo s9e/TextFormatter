@@ -19,7 +19,7 @@ abstract class XPath
 	*/
 	public static function export($value)
 	{
-		$callback = get_called_class() . '::export' . ucfirst(gettype($value));
+		$callback = static::class . '::export' . ucfirst(gettype($value));
 		if (!is_callable($callback))
 		{
 			throw new InvalidArgumentException(__METHOD__ . '() cannot export non-scalar values');
