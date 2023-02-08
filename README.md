@@ -38,6 +38,6 @@ You can try the JavaScript version in this [BBCodes + other stuff demo](https://
 
 The following tools are used during development.
 
- - [phpunit/phpunit](https://phpunit.de/) 9.5.27 runs a full suite of tests before every commit.
+ - [phpunit/phpunit](https://phpunit.de/) 9.6.3 runs a full suite of tests before every commit.
  - [code-lts/doctum](https://github.com/code-lts/doctum) 5.5.1 generates the [API docs](https://s9e.github.io/TextFormatter/api/).
  - Scrutinizer is used for code tracking.

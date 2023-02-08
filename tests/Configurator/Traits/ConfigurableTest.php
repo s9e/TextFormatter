@@ -235,7 +235,7 @@ class ConfigurableTest extends Test
 
 		unset($dummy->unsettable);
 
-		$this->assertObjectHasAttribute('unsettable', $dummy);
+		$this->assertSame(['unsetUnsettable'], $dummy->called);
 	}
 
 	/**
@@ -247,7 +247,7 @@ class ConfigurableTest extends Test
 
 		unset($dummy->unknown);
 
-		$this->assertObjectHasAttribute('unknownWasUnset', $dummy);
+		$this->assertSame(['unsetUnknown'], $dummy->called);
 	}
 
 	/**
@@ -261,7 +261,7 @@ class ConfigurableTest extends Test
 		$this->assertSame(1, count($dummy->collection));
 
 		unset($dummy->collection);
-		$this->assertObjectHasAttribute('collection', $dummy);
+		$this->assertTrue(isset($dummy->collection));
 		$this->assertSame(0, count($dummy->collection));
 	}
 
@@ -297,6 +297,8 @@ class Bar {}
 class ConfigurableTestDummy
 {
 	use Configurable;
+
+	public array $called = [];
 
 	protected $int = 42;
 	protected $bool = false;
@@ -334,11 +336,12 @@ class ConfigurableTestDummy
 
 	protected function unsetUnsettable()
 	{
+		$this->called[] = __FUNCTION__;
 		unset($this->unsettable);
 	}
 
 	protected function unsetUnknown()
 	{
-		$this->unknownWasUnset = 1;
+		$this->called[] = __FUNCTION__;
 	}
 }

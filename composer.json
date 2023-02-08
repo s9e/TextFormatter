@@ -17,7 +17,7 @@
 	"require-dev": {
 		"code-lts/doctum":       "*",
 		"matthiasmullie/minify": "*",
-		"phpunit/phpunit":       "*"
+		"phpunit/phpunit":       "^9.5"
 	},
 	"suggest": {
 		"ext-curl":      "Improves the performance of the MediaEmbed plugin and some JavaScript minifiers",
