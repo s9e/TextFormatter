@@ -10,8 +10,11 @@ use s9e\TextFormatter\Tests\Test;
 */
 class UrlConfigTest extends Test
 {
+	protected UrlConfig $urlConfig;
+
 	protected function setUp(): void
 	{
+		parent::setUp();
 		$this->urlConfig = new UrlConfig;
 	}
 

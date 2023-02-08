@@ -13,6 +13,7 @@ class MinifierTest extends Test
 {
 	protected function setUp(): void
 	{
+		parent::setUp();
 		array_map('unlink', self::getCacheFiles());
 	}
 

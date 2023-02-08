@@ -236,7 +236,7 @@ class BundleGeneratorTest extends Test
 			[
 				__NAMESPACE__,
 				new DummyCallable,
-				'call_user_func(' . __NAMESPACE__ . "\\DummyCallable::__set_state(array(\n)), \$foo)"
+				'call_user_func(' . (version_compare(PHP_VERSION, '8.2', '<') ? '' : '\\') . __NAMESPACE__ . "\\DummyCallable::__set_state(array(\n)), \$foo)"
 			],
 			[
 				'',

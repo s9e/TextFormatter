@@ -12,6 +12,7 @@ class MatthiasMullieMinifyTest extends Test
 {
 	protected function setUp(): void
 	{
+		parent::setUp();
 		if (!class_exists('MatthiasMullie\\Minify\\JS'))
 		{
 			$this->markTestSkipped('Requires MatthiasMullie\\Minify\\JS');

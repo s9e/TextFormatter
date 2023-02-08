@@ -362,6 +362,6 @@ class PluginsHandlingDummy extends Parser
 
 	public function executePluginParsers()
 	{
-		return call_user_func_array('parent::executePluginParsers', func_get_args());
+		return call_user_func_array(Parser::class . '::executePluginParsers', func_get_args());
 	}
 }

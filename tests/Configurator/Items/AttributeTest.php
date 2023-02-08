@@ -21,11 +21,11 @@ class AttributeTest extends Test
 	*/
 	public function testConstructorOptions()
 	{
-		$attr = new Attribute(['isRequired' => false]);
-		$this->assertFalse($attr->isRequired);
+		$attr = new Attribute(['required' => false]);
+		$this->assertFalse($attr->required);
 
-		$attr = new Attribute(['isRequired' => true]);
-		$this->assertTrue($attr->isRequired);
+		$attr = new Attribute(['required' => true]);
+		$this->assertTrue($attr->required);
 	}
 
 	/**

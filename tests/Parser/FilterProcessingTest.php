@@ -641,6 +641,6 @@ class FilterProcessingDummy extends FilterProcessing
 
 	public static function __executeFilter()
 	{
-		return call_user_func_array('parent::executeFilter', func_get_args());
+		return call_user_func_array(parent::class . '::executeFilter', func_get_args());
 	}
 }

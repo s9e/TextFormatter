@@ -52,6 +52,6 @@ class DummyRenderer extends Renderer
 	public function setParameter($paramName, $paramValue) {}
 	public function __call($methodName, $args)
 	{
-		return call_user_func_array('parent::' . $methodName, $args);
+		return call_user_func_array(parent::class . '::' . $methodName, $args);
 	}
 }
