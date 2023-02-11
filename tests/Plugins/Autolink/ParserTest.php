@@ -18,7 +18,7 @@ class ParserTest extends Test
 	use ParsingTestsJavaScriptRunner;
 	use RenderingTestsRunner;
 
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return [
 			[
@@ -242,7 +242,7 @@ class ParserTest extends Test
 		$parser->addSelfClosingTag('X', $tagPos, $tagLen, $tag->getSortPriority());
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return [
 			[

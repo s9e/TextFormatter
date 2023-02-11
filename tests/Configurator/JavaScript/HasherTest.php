@@ -19,7 +19,7 @@ class HasherTest extends Test
 		$this->assertSame($expected, Hasher::quickHash($text));
 	}
 
-	public function getQuickHashTests()
+	public static function getQuickHashTests()
 	{
 		// These values were computed manually in node.js hash() from render.js
 		//

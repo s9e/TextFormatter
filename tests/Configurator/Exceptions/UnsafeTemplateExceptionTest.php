@@ -63,7 +63,7 @@ class UnsafeTemplateExceptionTest extends Test
 		$this->assertSame($expected, $e->highlightNode());
 	}
 
-	public function getHighlights()
+	public static function getHighlights()
 	{
 		return [
 			[

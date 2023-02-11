@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 use s9e\TextFormatter\Configurator\Helpers\TemplateInspector;
 use s9e\TextFormatter\Tests\Test;
 
-abstract class AbstractTest extends Test
+abstract class AbstractTestClass extends Test
 {
 	public function assertBooleanRules($template, $expected)
 	{

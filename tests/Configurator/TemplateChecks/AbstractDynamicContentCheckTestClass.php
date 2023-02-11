@@ -12,7 +12,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\AbstractDynamicContentCheck;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractDynamicContentCheck
 */
-class AbstractDynamicContentCheckTest extends AbstractTemplateCheckTest
+class AbstractDynamicContentCheckTestClass extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Stylesheet parameters are considered safe

@@ -114,7 +114,7 @@ class QuickTest extends Test
 		$this->assertSame($expected, $renderer->render($xml));
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return [
 			[
@@ -320,7 +320,7 @@ class QuickTest extends Test
 		$this->assertEquals($expected, Quick::getRenderingStrategy($php));
 	}
 
-	public function getRenderingStrategyTests()
+	public static function getRenderingStrategyTests()
 	{
 		return [
 			[
@@ -632,7 +632,7 @@ class QuickTest extends Test
 		$this->assertStringContainsString($contains, Quick::getSource($compiledTemplates));
 	}
 
-	public function getSourceTests()
+	public static function getSourceTests()
 	{
 		return [
 			[

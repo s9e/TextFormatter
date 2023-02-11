@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowDynamicElementNames;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowDynamicElementNames
 */
-class DisallowDynamicElementNamesTest extends AbstractTemplateCheckTest
+class DisallowDynamicElementNamesTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Disallowed: <xsl:element name="{s}"/>

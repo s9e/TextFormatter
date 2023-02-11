@@ -10,7 +10,7 @@ use s9e\TextFormatter\Tests\Test;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization
 */
-class AbstractNormalizationTest extends Test
+class AbstractNormalizationTestClass extends Test
 {
 	protected function getNormalization($query = null)
 	{
@@ -21,7 +21,7 @@ class AbstractNormalizationTest extends Test
 	{
 		return $this->getMockBuilder(__NAMESPACE__ . '\\TestNormalization')
 			->setConstructorArgs([$this, $query])
-			->setMethods(['normalizeAttribute', 'normalizeElement'])
+			->onlyMethods(['normalizeAttribute', 'normalizeElement'])
 			->getMock();
 	}
 

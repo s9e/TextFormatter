@@ -5,9 +5,9 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveComments
 */
-class RemoveCommentsTest extends AbstractTest
+class RemoveCommentsTest extends AbstractTestClass
 {
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

@@ -26,7 +26,7 @@ class TagProcessingTest extends Test
 		$this->assertParsing($original, $expected, $setup, $callback, $expectedLogs);
 	}
 
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[
@@ -335,7 +335,7 @@ class TagProcessingTest extends Test
 						'err',
 						'Nesting limit exceeded',
 						[
-							'tag'          => $this->runClosure(
+							'tag'          => (
 								function ()
 								{
 									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 2, 1);
@@ -343,7 +343,7 @@ class TagProcessingTest extends Test
 
 									return $tag;
 								}
-							),
+							)(),
 							'tagName'      => 'X',
 							'nestingLimit' => 2
 						]
@@ -368,7 +368,7 @@ class TagProcessingTest extends Test
 						'err',
 						'Tag limit exceeded',
 						[
-							'tag'      => $this->runClosure(
+							'tag'      => (
 								function ()
 								{
 									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'X', 2, 1);
@@ -376,7 +376,7 @@ class TagProcessingTest extends Test
 
 									return $tag;
 								}
-							),
+							)(),
 							'tagName'  => 'X',
 							'tagLimit' => 2
 						]
@@ -990,7 +990,7 @@ class TagProcessingTest extends Test
 						'Tag is not allowed in this context',
 						[
 							'tagName' => 'Y',
-							'tag'     => $this->runClosure(
+							'tag'     => (
 								function ()
 								{
 									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'Y', 1, 1);
@@ -998,7 +998,7 @@ class TagProcessingTest extends Test
 
 									return $tag;
 								}
-							),
+							)(),
 						]
 					]
 				]
@@ -1023,7 +1023,7 @@ class TagProcessingTest extends Test
 						'Tag is not allowed in this context',
 						[
 							'tagName' => 'Y',
-							'tag'     => $this->runClosure(
+							'tag'     => (
 								function ()
 								{
 									$tag = new Tag(Tag::SELF_CLOSING_TAG, 'Y', 1, 0);
@@ -1031,7 +1031,7 @@ class TagProcessingTest extends Test
 
 									return $tag;
 								}
-							),
+							)(),
 						]
 					]
 				]
@@ -1454,7 +1454,7 @@ class TagProcessingTest extends Test
 		$this->assertJSParsing($original, $expected);
 	}
 
-	public function getJSData()
+	public static function getJSData()
 	{
 		return [
 			[

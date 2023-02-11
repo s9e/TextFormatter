@@ -6,7 +6,7 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\FoldConstantXPathExpressions
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractConstantFolding
 */
-class FoldConstantXPathExpressionsTest extends AbstractTest
+class FoldConstantXPathExpressionsTest extends AbstractTestClass
 {
 	public function tearDown(): void
 	{
@@ -29,7 +29,7 @@ class FoldConstantXPathExpressionsTest extends AbstractTest
 		);
 	}
 
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

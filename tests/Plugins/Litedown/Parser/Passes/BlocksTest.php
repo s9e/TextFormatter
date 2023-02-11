@@ -9,9 +9,9 @@ namespace s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes;
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Blocks
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Slugger
 */
-class BlocksTest extends AbstractTest
+class BlocksTest extends AbstractTestClass
 {
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return self::fixTests([
 			[
@@ -1469,7 +1469,7 @@ class BlocksTest extends AbstractTest
 		]);
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return self::fixTests([
 			[

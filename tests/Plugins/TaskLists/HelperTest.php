@@ -27,7 +27,7 @@ class HelperTest extends Test
 		$this->assertEquals($expected, Helper::getStats($xml));
 	}
 
-	public function getGetStatsTests()
+	public static function getGetStatsTests()
 	{
 		return [
 			[
@@ -75,7 +75,7 @@ class HelperTest extends Test
 		$this->assertEquals($expected, Helper::$methodName($xml, $id));
 	}
 
-	public function getMarkTaskStateTests()
+	public static function getMarkTaskStateTests()
 	{
 		return [
 			[

@@ -8,9 +8,9 @@ namespace s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes;
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\AbstractPass
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\ForcedLineBreaks
 */
-class ForcedLineBreaksTest extends AbstractTest
+class ForcedLineBreaksTest extends AbstractTestClass
 {
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return self::fixTests([
 			[
@@ -142,7 +142,7 @@ class ForcedLineBreaksTest extends AbstractTest
 		]);
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return self::fixTests([
 			[

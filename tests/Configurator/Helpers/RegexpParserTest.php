@@ -760,7 +760,7 @@ class RegexpParserTest extends Test
 		}
 	}
 
-	public function getAllowedCharacterRegexpData()
+	public static function getAllowedCharacterRegexpData()
 	{
 		return [
 			[
@@ -1145,7 +1145,7 @@ class RegexpParserTest extends Test
 		$this->assertSame($expected, RegexpParser::getCaptureNames($regexp));
 	}
 
-	public function getGetCaptureNamesTests()
+	public static function getGetCaptureNamesTests()
 	{
 		return [
 			[

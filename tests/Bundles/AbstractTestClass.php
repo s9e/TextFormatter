@@ -7,7 +7,7 @@ use s9e\TextFormatter\Tests\Test;
 /**
 * @covers s9e\TextFormatter\Bundle
 */
-abstract class AbstractTest extends Test
+abstract class AbstractTestClass extends Test
 {
 	protected static function getBundleName()
 	{
@@ -194,7 +194,7 @@ abstract class AbstractTest extends Test
 		$this->runRenderingTest($text, $expected, $params, false);
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		$bundleName = static::getBundleName();
 

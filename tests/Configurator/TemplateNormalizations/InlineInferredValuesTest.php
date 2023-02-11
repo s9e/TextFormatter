@@ -8,9 +8,9 @@ use s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
 */
-class InlineInferredValuesTest extends AbstractTest
+class InlineInferredValuesTest extends AbstractTestClass
 {
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

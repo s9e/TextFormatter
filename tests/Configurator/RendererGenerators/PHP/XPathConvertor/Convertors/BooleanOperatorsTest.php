@@ -6,9 +6,9 @@ namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConve
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\AbstractConvertor
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\BooleanOperators
 */
-class BooleanOperatorsTest extends AbstractConvertorTest
+class BooleanOperatorsTest extends AbstractConvertorTestClass
 {
-	public function getConvertorTests()
+	public static function getConvertorTests()
 	{
 		return [
 			// And

@@ -11,7 +11,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicCSS;
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractDynamicContentCheck
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicCSS
 */
-class DisallowUnsafeDynamicCSSTest extends AbstractTemplateCheckTest
+class DisallowUnsafeDynamicCSSTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Allowed: <style>.important { color:red }</style>

@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\AutoCloseIfVoid
 */
-class AutoCloseIfVoidTest extends AbstractTest
+class AutoCloseIfVoidTest extends AbstractTestClass
 {
 	/**
 	* @testdox Generates an autoClose rule for <hr/>

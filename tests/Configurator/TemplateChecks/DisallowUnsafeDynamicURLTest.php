@@ -11,7 +11,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicURL;
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractDynamicContentCheck
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicURL
 */
-class DisallowUnsafeDynamicURLTest extends AbstractTemplateCheckTest
+class DisallowUnsafeDynamicURLTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Allowed: <a href="http://example.org">...</a>

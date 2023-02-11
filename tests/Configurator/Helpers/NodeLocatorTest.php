@@ -85,7 +85,7 @@ class NodeLocatorTest extends Test
 		$this->runTestGetNodes('getURLNodes', [], $template, $query);
 	}
 
-	public function getObjectParamsByRegexpTests()
+	public static function getObjectParamsByRegexpTests()
 	{
 		return [
 			[
@@ -131,7 +131,7 @@ class NodeLocatorTest extends Test
 		];
 	}
 
-	public function getCSSNodesTests()
+	public static function getCSSNodesTests()
 	{
 		return [
 			[
@@ -176,7 +176,7 @@ class NodeLocatorTest extends Test
 		];
 	}
 
-	public function getJSNodesTests()
+	public static function getJSNodesTests()
 	{
 		return [
 			[
@@ -225,7 +225,7 @@ class NodeLocatorTest extends Test
 		];
 	}
 
-	public function getURLNodesTests()
+	public static function getURLNodesTests()
 	{
 		return [
 			[

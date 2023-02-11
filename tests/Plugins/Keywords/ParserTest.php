@@ -18,7 +18,7 @@ class ParserTest extends Test
 	use ParsingTestsJavaScriptRunner;
 //	use RenderingTestsRunner;
 
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return [
 			[

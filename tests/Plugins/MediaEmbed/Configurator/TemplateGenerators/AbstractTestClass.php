@@ -4,9 +4,9 @@ namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\TemplateGenera
 
 use s9e\TextFormatter\Tests\Test;
 
-abstract class AbstractTest extends Test
+abstract class AbstractTestClass extends Test
 {
-	abstract public function getGetTemplateTests();
+	abstract public static function getGetTemplateTests();
 	abstract protected function getTemplateGenerator();
 
 	/**

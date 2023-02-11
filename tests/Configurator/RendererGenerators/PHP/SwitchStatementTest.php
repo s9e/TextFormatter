@@ -19,7 +19,7 @@ class SwitchStatementTest extends Test
 		$this->assertSame($expected, SwitchStatement::generate($expr, $branchesCode, $defaultCode));
 	}
 
-	public function getGenerateTests()
+	public static function getGenerateTests()
 	{
 		return [
 			[

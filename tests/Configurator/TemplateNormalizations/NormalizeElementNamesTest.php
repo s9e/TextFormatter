@@ -5,9 +5,9 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeElementNames
 */
-class NormalizeElementNamesTest extends AbstractTest
+class NormalizeElementNamesTest extends AbstractTestClass
 {
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

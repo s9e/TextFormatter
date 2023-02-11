@@ -8,9 +8,9 @@ namespace s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes;
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\AbstractPass
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\InlineCode
 */
-class InlineCodeTest extends AbstractTest
+class InlineCodeTest extends AbstractTestClass
 {
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return self::fixTests([
 			[
@@ -116,7 +116,7 @@ class InlineCodeTest extends AbstractTest
 		]);
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return self::fixTests([
 			[

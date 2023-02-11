@@ -10,7 +10,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowFlashFullScreen;
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractFlashRestriction
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowFlashFullScreen
 */
-class DisallowFlashFullScreenTest extends AbstractTemplateCheckTest
+class DisallowFlashFullScreenTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Disallows <embed allowFullScreen="true"/>

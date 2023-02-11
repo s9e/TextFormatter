@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\ManageParagraphs
 */
-class ManageParagraphsTest extends AbstractTest
+class ManageParagraphsTest extends AbstractTestClass
 {
 	/**
 	* @testdox Generates a breakParagraph rule for <ol>

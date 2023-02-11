@@ -10,7 +10,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess;
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractFlashRestriction
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashScriptAccess
 */
-class RestrictFlashScriptAccessTest extends AbstractTemplateCheckTest
+class RestrictFlashScriptAccessTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox 'sameDomain' disallows <embed allowScriptAccess="always"/>

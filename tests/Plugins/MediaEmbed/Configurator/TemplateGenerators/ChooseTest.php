@@ -18,7 +18,7 @@ class ChooseTest extends Test
 	public function testGetTemplateOneWhen()
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\TemplateBuilder')
-		             ->setMethods(['getTemplate'])
+		             ->onlyMethods(['getTemplate'])
 		             ->getMock();
 		$mock->expects($this->exactly(2))
 		     ->method('getTemplate')
@@ -48,7 +48,7 @@ class ChooseTest extends Test
 	public function testGetTemplateTwoWhen()
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Plugins\\MediaEmbed\\Configurator\\TemplateBuilder')
-		             ->setMethods(['getTemplate'])
+		             ->onlyMethods(['getTemplate'])
 		             ->getMock();
 		$mock->expects($this->exactly(3))
 		     ->method('getTemplate')

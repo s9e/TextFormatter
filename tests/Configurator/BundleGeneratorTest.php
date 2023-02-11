@@ -72,7 +72,7 @@ class BundleGeneratorTest extends Test
 	public function testCustomSerializer()
 	{
 		$mock = $this->getMockBuilder('stdClass')
-		             ->setMethods(['serialize'])
+		             ->addMethods(['serialize'])
 		             ->getMock();
 		$mock->expects($this->any())
 		     ->method('serialize')
@@ -210,7 +210,7 @@ class BundleGeneratorTest extends Test
 		$this->assertSame($expected, $actual);
 	}
 
-	public function getExportCallbackTests()
+	public static function getExportCallbackTests()
 	{
 		return [
 			[
@@ -274,7 +274,7 @@ class BundleGeneratorTest extends Test
 		$this->assertEquals($original, eval('return ' . $actual . ';'), 'Not reversible');
 	}
 
-	public function getExportObjectTests()
+	public static function getExportObjectTests()
 	{
 		return [
 			[

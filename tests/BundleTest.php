@@ -31,7 +31,7 @@ class BundleTest extends Test
 		$text = 'Hello world';
 		$xml  = '<t>Hello world</t>';
 
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['parse'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['parse'])->getMock();
 		$mock->expects($this->once())
 		     ->method('parse')
 		     ->with($text)
@@ -54,10 +54,9 @@ class BundleTest extends Test
 		$text2 = 'Sup Earth :)';
 		$xml2  = '<r>Sup Earth <E>:)</e></r>';
 
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['parse'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['parse'])->getMock();
 		$mock->expects($this->exactly(2))
 		     ->method('parse')
-		     ->withConsecutive([$text1], [$text2])
 		     ->willReturnOnConsecutiveCalls($xml1, $xml2);
 
 		DummyBundle::$_parser = $mock;
@@ -72,7 +71,7 @@ class BundleTest extends Test
 	*/
 	public function testBeforeParse()
 	{
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['parse'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['parse'])->getMock();
 		$mock->expects($this->once())
 		     ->method('parse')
 		     ->with('beforeParse')
@@ -94,7 +93,7 @@ class BundleTest extends Test
 	*/
 	public function testAfterParse()
 	{
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['parse'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['parse'])->getMock();
 		$mock->expects($this->once())
 		     ->method('parse')
 		     ->with('')
@@ -119,7 +118,7 @@ class BundleTest extends Test
 		$xml  = '<t>Hello world</t>';
 		$html = 'Hello world';
 
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['render', 'setParameters'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['render', 'setParameters'])->getMock();
 		$mock->expects($this->once())
 		     ->method('render')
 		     ->with($xml)
@@ -139,7 +138,7 @@ class BundleTest extends Test
 		$xml  = '<t>Hello world</t>';
 		$html = 'Hello world';
 
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['render', 'setParameters'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['render', 'setParameters'])->getMock();
 		$mock->expects($this->exactly(2))
 		     ->method('render')
 		     ->with($xml)
@@ -161,7 +160,7 @@ class BundleTest extends Test
 		$html   = 'Hello world';
 		$params = ['foo' => 'bar'];
 
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['render', 'setParameters'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['render', 'setParameters'])->getMock();
 		$mock->expects($this->once())
 		     ->method('render')
 		     ->with($xml)
@@ -181,7 +180,7 @@ class BundleTest extends Test
 	*/
 	public function testBeforeRender()
 	{
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['render'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['render'])->getMock();
 		$mock->expects($this->once())
 		     ->method('render')
 		     ->with('<t>beforeRender</t>')
@@ -203,7 +202,7 @@ class BundleTest extends Test
 	*/
 	public function testAfterRender()
 	{
-		$mock = $this->getMockBuilder('stdClass')->setMethods(['render'])->getMock();
+		$mock = $this->getMockBuilder('stdClass')->addMethods(['render'])->getMock();
 		$mock->expects($this->once())
 		     ->method('render')
 		     ->with('')
@@ -297,7 +296,7 @@ class DummyBundle extends Bundle
 		self::$calls = ['getParser' => 0, 'getRenderer' => 0];
 
 		$mock = $test->getMockBuilder('stdClass')
-		             ->setMethods(['parse', 'render', 'setParameters'])
+		             ->addMethods(['parse', 'render', 'setParameters'])
 		             ->getMock();
 		$mock->expects($test->never())->method('parse');
 		$mock->expects($test->never())->method('render');

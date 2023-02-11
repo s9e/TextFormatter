@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\DisableAutoLineBreaksIfNewLinesArePreserved
 */
-class DisableAutoLineBreaksIfNewLinesArePreservedTest extends AbstractTest
+class DisableAutoLineBreaksIfNewLinesArePreservedTest extends AbstractTestClass
 {
 	/**
 	* @testdox Does not generate a disableAutoLineBreaks rule for <ol>

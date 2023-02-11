@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateChecks;
 use DOMDocument;
 use s9e\TextFormatter\Tests\Test;
 
-abstract class AbstractTemplateCheckTest extends Test
+abstract class AbstractTemplateCheckTestClass extends Test
 {
 	protected function loadTemplate($template)
 	{

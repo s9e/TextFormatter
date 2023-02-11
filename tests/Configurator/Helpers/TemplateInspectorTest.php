@@ -36,7 +36,7 @@ class TemplateInspectorTest extends Test
 		$this->$assert($src->$method($trg), $title);
 	}
 
-	public function getTemplateInspectorTests()
+	public static function getTemplateInspectorTests()
 	{
 		return [
 			[

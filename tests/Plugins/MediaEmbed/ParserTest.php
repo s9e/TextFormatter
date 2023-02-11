@@ -105,7 +105,7 @@ class ParserTest extends Test
 		call_user_func_array([$this, 'testParsing'], func_get_args());
 	}
 
-	public function getAbstractTests()
+	public static function getAbstractTests()
 	{
 		return [
 			[
@@ -490,7 +490,7 @@ class ParserTest extends Test
 		$this->runScrapingTest('testParsing', func_get_args());
 	}
 
-	public function getScrapingTests()
+	public static function getScrapingTests()
 	{
 		return [
 			[
@@ -1378,7 +1378,7 @@ class ParserTest extends Test
 		$this->runScrapingTest('testRendering', func_get_args());
 	}
 
-	public function getScrapingRenderingTests()
+	public static function getScrapingRenderingTests()
 	{
 		return [
 //			[
@@ -1533,7 +1533,7 @@ class ParserTest extends Test
 		];
 	}
 
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return [
 			[
@@ -4505,7 +4505,7 @@ class ParserTest extends Test
 		];
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return [
 			[
@@ -5428,7 +5428,7 @@ class ParserTest extends Test
 		$this->assertSame($html, $this->configurator->rendering->getRenderer()->render($xml));
 	}
 
-	public function getLegacyRenderingTests()
+	public static function getLegacyRenderingTests()
 	{
 		return [
 			[
@@ -5590,7 +5590,7 @@ class ParserTest extends Test
 		$this->assertSame($html, $renderer->render($parser->parse($text)));
 	}
 
-	public function getAmpRenderingTests()
+	public static function getAmpRenderingTests()
 	{
 		return [
 			[

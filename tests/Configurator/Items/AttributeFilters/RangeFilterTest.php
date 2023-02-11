@@ -58,7 +58,7 @@ class RangeFilterTest extends Test
 		$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\RangeFilter';
  		$filter = $this->getMockBuilder($className)
 		               ->disableOriginalConstructor()
-		               ->setMethods(['setRange'])
+		               ->onlyMethods(['setRange'])
 		               ->getMock();
 
 		$filter->expects($this->once())

@@ -21,7 +21,7 @@ class FilterHelperTest extends Test
 		$this->assertEquals($expected, FilterHelper::isAllowed($filter, $allowed));
 	}
 
-	public function getIsAllowedTests()
+	public static function getIsAllowedTests()
 	{
 		return [
 			[
@@ -73,7 +73,7 @@ class FilterHelperTest extends Test
 		$this->assertEquals($expected, FilterHelper::parse($filterString));
 	}
 
-	public function getParseTests()
+	public static function getParseTests()
 	{
 		return [
 			[

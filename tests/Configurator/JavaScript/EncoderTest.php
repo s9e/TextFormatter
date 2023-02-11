@@ -25,7 +25,7 @@ class EncoderTest extends Test
 		$this->assertSame($expected, $encoder->encode($original));
 	}
 
-	public function getEncodeTests()
+	public static function getEncodeTests()
 	{
 		return [
 			[

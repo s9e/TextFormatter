@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\TrimFirstLineInCodeBlocks
 */
-class TrimFirstLineInCodeBlocksTest extends AbstractTest
+class TrimFirstLineInCodeBlocksTest extends AbstractTestClass
 {
 	/**
 	* @testdox Generates a trimFirstLine rule for <pre><code><xsl:apply-templates/></code></pre>

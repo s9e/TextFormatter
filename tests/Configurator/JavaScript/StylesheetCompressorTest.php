@@ -21,7 +21,7 @@ class StylesheetCompressorTest extends Test
 		$this->assertSame($expected, $stylesheetCompressor->encode($original));
 	}
 
-	public function getEncodeTests()
+	public static function getEncodeTests()
 	{
 		$tests = [];
 		$dir   = __DIR__ . '/data/StylesheetCompressor/';

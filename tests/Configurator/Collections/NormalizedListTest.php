@@ -36,7 +36,7 @@ class NormalizedListTest extends Test
 	public function testArrayAccessAppend()
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Collections\\NormalizedList')
-		             ->setMethods(['append'])
+		             ->onlyMethods(['append'])
 		             ->getMock();
 
 		$mock->expects($this->once())

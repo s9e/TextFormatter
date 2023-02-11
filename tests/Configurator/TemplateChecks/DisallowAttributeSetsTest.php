@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowAttributeSets;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowAttributeSets
 */
-class DisallowAttributeSetsTest extends AbstractTemplateCheckTest
+class DisallowAttributeSetsTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Disallowed: <b use-attribute-sets="foo"/>

@@ -37,7 +37,7 @@ class FunctionalTest extends Test
 		$this->runFunctionalTest('assertJSParsing', $original, $expected, $setup);
 	}
 
-	public function getFunctionalTests()
+	public static function getFunctionalTests()
 	{
 		return [
 			[

@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTextIfDisallowed
 */
-class IgnoreTextIfDisallowedTest extends AbstractTest
+class IgnoreTextIfDisallowedTest extends AbstractTestClass
 {
 	/**
 	* @testdox Generates an ignoreText rule for <ul>

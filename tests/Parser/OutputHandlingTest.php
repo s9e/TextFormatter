@@ -21,7 +21,7 @@ class OutputHandlingTest extends Test
 		$this->assertParsing($original, $expected, $setup, $callback);
 	}
 
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

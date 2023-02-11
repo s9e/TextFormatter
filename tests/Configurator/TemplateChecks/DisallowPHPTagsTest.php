@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowPHPTags;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowPHPTags
 */
-class DisallowPHPTagsTest extends AbstractTemplateCheckTest
+class DisallowPHPTagsTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Disallowed: <b><?php ?></b>

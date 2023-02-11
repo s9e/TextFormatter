@@ -4,7 +4,7 @@ namespace s9e\TextFormatter\Tests\Utils\Http\Clients;
 
 use s9e\TextFormatter\Tests\Test;
 
-abstract class AbstractTest extends Test
+abstract class AbstractTestClass extends Test
 {
 	abstract protected function getInstance();
 

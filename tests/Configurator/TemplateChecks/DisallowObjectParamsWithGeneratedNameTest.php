@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowObjectParamsWithGenera
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowObjectParamsWithGeneratedName
 */
-class DisallowObjectParamsWithGeneratedNameTest extends AbstractTemplateCheckTest
+class DisallowObjectParamsWithGeneratedNameTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Allowed: <object><param name="foo"/></object>

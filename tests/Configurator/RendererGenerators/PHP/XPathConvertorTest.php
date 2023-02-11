@@ -21,7 +21,7 @@ class XPathConvertorTest extends Test
 	public function testParserConstructor()
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\RecursiveParser')
-		             ->setMethods(['parse'])
+		             ->onlyMethods(['parse'])
 		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('parse')
@@ -45,7 +45,7 @@ class XPathConvertorTest extends Test
 		$this->assertSame($expected, $convertor->convertXPath($original));
 	}
 
-	public function getFeaturesTests()
+	public static function getFeaturesTests()
 	{
 		return [
 			[
@@ -101,7 +101,7 @@ class XPathConvertorTest extends Test
 		$this->assertSame($expected, $convertor->$methodName($original));
 	}
 
-	public function getConvertXPathTests()
+	public static function getConvertXPathTests()
 	{
 		return [
 			[
@@ -253,7 +253,7 @@ class XPathConvertorTest extends Test
 		];
 	}
 
-	public function getConvertConditionTests()
+	public static function getConvertConditionTests()
 	{
 		return [
 			[

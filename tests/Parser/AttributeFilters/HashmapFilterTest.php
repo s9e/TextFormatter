@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\HashmapFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\HashmapFilter
 */
-class HashmapFilterTest extends AbstractFilterTest
+class HashmapFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new HashmapFilter(['foo' => 'bar']), 'foo', 'bar'],

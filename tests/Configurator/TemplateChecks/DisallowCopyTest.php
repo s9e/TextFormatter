@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowCopy;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowCopy
 */
-class DisallowCopyTest extends AbstractTemplateCheckTest
+class DisallowCopyTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Disallowed: <b><xsl:copy/></b>

@@ -3092,25 +3092,6 @@ Template Checker (s9e\TextFormatter\Tests\Configurator\TemplateChecker)
  [x] disable() disables all checks
  [x] enable() re-enables all checks
 
-Abstract Dynamic Content Check (s9e\TextFormatter\Tests\Configurator\TemplateChecks\AbstractDynamicContentCheck)
- [x] Stylesheet parameters are considered safe
- [x] Variables pointing to an unknown attribute are unsafe
- [x] Variables pointing to an unknown attribute are ignored if ignoreUnknownAttributes() is called
- [x] Variables pointing to an unknown attribute are detected if detectUnknownAttributes() is called after ignoreUnknownAttributes()
- [x] Variables pointing to a safe attribute are safe
- [x] Variables pointing to an unsafe attribute are unsafe
- [x] Variables pointing to a safe variable are safe
- [x] Variables pointing to an unsafe variable are unsafe
- [x] Variables pointing to a stylesheet parameter are safe
- [x] Variables pointing to a stylesheet parameter of the same name are safe
- [x] Local parameters pointing to an unknown attribute are unsafe
- [x] Local parameters pointing to a safe attribute are safe
- [x] Attributes are not safe if the tag's filterChain is cleared
- [x] Attributes are not safe if the tag's filterChain does not contain the default attribute filter
- [x] Attributes can be safe with the tag's default filterChain
- [x] Multiple attributes can be safe
- [x] Multiple attributes can be unsafe
-
 Disallow Attribute Sets (s9e\TextFormatter\Tests\Configurator\TemplateChecks\DisallowAttributeSets)
  [x] Disallowed: <b use-attribute-sets="foo"/>
  [x] Allowed: <b>...</b>
@@ -3378,17 +3359,6 @@ Restrict Flash Script Access (s9e\TextFormatter\Tests\Configurator\TemplateCheck
  [x] 'never',false disallows <object><param name="movie" value="http://example.com/example.swf"/></object>
  [x] 'never',true disallows <object><param name="movie" value="{@url}"/></object>
  [x] 'never',true disallows <embed><xsl:apply-templates/></embed>
-
-Abstract Normalization (s9e\TextFormatter\Tests\Configurator\AbstractNormalization)
- [x] Nothing happens if the normalization doesn't override any method or set any query
- [x] Nothing happens if the normalization doesn't override any method but set an element query
- [x] Nothing happens if the normalization doesn't override any method but set an attribute query
- [x] Calls normalizeAttribute() if an XPath query returns a DOMElement
- [x] Calls normalizeElement() if an XPath query returns a DOMElement
- [x] Nodes removed during normalization are not processed further
- [x] Can create elements and text nodes
- [x] isXsl() differentiates between XSL elements and others
- [x] lowercase() works
 
 Add Attribute Value To Elements (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\AddAttributeValueToElements)
  [x] Works with data set #0

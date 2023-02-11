@@ -5,9 +5,9 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\RemoveLivePreviewAttributes
 */
-class RemoveLivePreviewAttributesTest extends AbstractTest
+class RemoveLivePreviewAttributesTest extends AbstractTestClass
 {
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

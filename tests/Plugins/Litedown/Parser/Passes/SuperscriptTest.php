@@ -9,9 +9,9 @@ namespace s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes;
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\AbstractScript
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Superscript
 */
-class SuperscriptTest extends AbstractTest
+class SuperscriptTest extends AbstractTestClass
 {
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return self::fixTests([
 			[
@@ -81,7 +81,7 @@ class SuperscriptTest extends AbstractTest
 		]);
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return self::fixTests([
 			[

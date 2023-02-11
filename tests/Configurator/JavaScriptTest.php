@@ -102,7 +102,7 @@ class JavaScriptTest extends Test
 	public function testMinifierReturn()
 	{
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\JavaScript\\Minifier')
-		             ->setMethods(['minify'])
+		             ->onlyMethods(['minify'])
 		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('minify')

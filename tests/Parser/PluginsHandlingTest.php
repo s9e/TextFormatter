@@ -80,7 +80,7 @@ class PluginsHandlingTest extends Test
 	protected function getMockPlugin(Parser $parser)
 	{
 		return $this->getMockBuilder('s9e\\TextFormatter\\Plugins\\ParserBase')
-		            ->setMethods(['parse'])
+		            ->onlyMethods(['parse'])
 		            ->setConstructorArgs([$parser, []])
 		            ->getMock();
 	}
@@ -255,7 +255,7 @@ class PluginsHandlingTest extends Test
 	{
 		$dummy  = new PluginsHandlingDummy;
 		$parser = $this->getMockBuilder('stdClass')
-		               ->setMethods(['foo'])
+		               ->addMethods(['foo'])
 		               ->getMock();
 		$parser->expects($this->once())
 		       ->method('foo');
@@ -274,7 +274,7 @@ class PluginsHandlingTest extends Test
 		$dummy->pluginsConfig = [];
 
 		$parser = $this->getMockBuilder('stdClass')
-		               ->setMethods(['foo'])
+		               ->addMethods(['foo'])
 		               ->getMock();
 		$parser->expects($this->once())
 		       ->method('foo');

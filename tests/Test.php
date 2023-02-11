@@ -17,22 +17,6 @@ abstract class Test extends TestCase
 		$this->configurator = new Configurator;
 	}
 
-	public function __call($methodName, $args)
-	{
-		// Compatibility map for PHPUnit <9
-		$map = [
-			'assertDoesNotMatchRegularExpression' => 'assertNotRegExp',
-			'assertFileDoesNotExist'              => 'assertFileNotExists',
-			'assertMatchesRegularExpression'      => 'assertRegExp'
-		];
-		if (!isset($map[$methodName]))
-		{
-			throw new RuntimeException("Unknown method '$methodName'");
-		}
-
-		return call_user_func_array([$this, $map[$methodName]], $args);
-	}
-
 	public static function tearDownAfterClass(): void
 	{
 		foreach (self::$tmpFiles as $filepath)
@@ -197,11 +181,6 @@ abstract class Test extends TestCase
 		self::$tmpFiles[] = $filepath;
 
 		return $filepath;
-	}
-
-	protected function runClosure($closure)
-	{
-		return $closure();
 	}
 
 	protected static function ws($template)

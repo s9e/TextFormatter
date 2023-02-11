@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\SimpletextFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter
 */
-class SimpletextFilterTest extends AbstractFilterTest
+class SimpletextFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[

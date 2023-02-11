@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\EmailFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\EmailFilter
 */
-class EmailFilterTest extends AbstractFilterTest
+class EmailFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new EmailFilter, 'example@example.com', 'example@example.com'],

@@ -27,7 +27,7 @@ class TemplateParserTest extends Test
 		$this->assertXmlStringEqualsXmlFile($expectedFile, $ir->saveXML());
 	}
 
-	public function getParseTests()
+	public static function getParseTests()
 	{
 		$tests = [];
 		foreach (glob(__DIR__ . '/data/TemplateParser/*.template') as $filepath)

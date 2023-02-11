@@ -15,7 +15,7 @@ class NormalizedCollectionTest extends Test
 {
 	protected function getMockCollection()
 	{
-		return $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Collections\\NormalizedCollection')->setMethods(func_get_args())->getMock();
+		return $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Collections\\NormalizedCollection')->onlyMethods(func_get_args())->getMock();
 	}
 
 	/**

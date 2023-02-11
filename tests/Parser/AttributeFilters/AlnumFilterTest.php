@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\AlnumFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter
 */
-class AlnumFilterTest extends AbstractFilterTest
+class AlnumFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new AlnumFilter, '', false],

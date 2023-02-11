@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\AutoReopenFormattingElements
 */
-class AutoReopenFormattingElementsTest extends AbstractTest
+class AutoReopenFormattingElementsTest extends AbstractTestClass
 {
 	/**
 	* @testdox Generates an autoReopen rule for <b>

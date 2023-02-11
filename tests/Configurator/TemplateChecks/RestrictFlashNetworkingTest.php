@@ -10,7 +10,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashNetworking;
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractFlashRestriction
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\RestrictFlashNetworking
 */
-class RestrictFlashNetworkingTest extends AbstractTemplateCheckTest
+class RestrictFlashNetworkingTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox 'internal' disallows <embed allowNetworking="all"/>

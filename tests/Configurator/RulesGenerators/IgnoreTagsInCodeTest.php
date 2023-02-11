@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\IgnoreTagsInCode
 */
-class IgnoreTagsInCodeTest extends AbstractTest
+class IgnoreTagsInCodeTest extends AbstractTestClass
 {
 	/**
 	* @testdox Generates an ignoreTags rule for <code><xsl:apply-templates/></code>

@@ -5,9 +5,9 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalAttributes
 */
-class OptimizeConditionalAttributesTest extends AbstractTest
+class OptimizeConditionalAttributesTest extends AbstractTestClass
 {
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\RegexpFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter
 */
-class RegexpFilterTest extends AbstractFilterTest
+class RegexpFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new RegexpFilter('/^[A-Z]+$/D'), 'ABC', 'ABC'],

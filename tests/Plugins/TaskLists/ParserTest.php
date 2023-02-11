@@ -24,7 +24,7 @@ class ParserTest extends Test
 		$this->configurator->Litedown;
 	}
 
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return self::fixTests([
 			[
@@ -85,7 +85,7 @@ class ParserTest extends Test
 		]);
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return self::fixTests([
 			[

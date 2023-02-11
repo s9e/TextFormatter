@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\BlockElementsCloseFormattingElements
 */
-class BlockElementsCloseFormattingElementsTest extends AbstractTest
+class BlockElementsCloseFormattingElementsTest extends AbstractTestClass
 {
 	/**
 	* @testdox <div> has a closeParent rule for <b>

@@ -31,7 +31,7 @@ class ChoiceFilterTest extends Test
 		$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter';
  		$filter = $this->getMockBuilder($className)
 		               ->disableOriginalConstructor()
-		               ->setMethods(['setValues'])
+		               ->onlyMethods(['setValues'])
 		               ->getMock();
 
 		$filter->expects($this->once())
@@ -47,7 +47,7 @@ class ChoiceFilterTest extends Test
 	public function testSetValues()
 	{
 		$filter = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter')
-		             ->setMethods(['setRegexp'])
+		             ->onlyMethods(['setRegexp'])
 		             ->getMock();
 
 		$filter->expects($this->once())
@@ -65,7 +65,7 @@ class ChoiceFilterTest extends Test
 		$className = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter';
 		$filter = $this->getMockBuilder($className)
 		               ->disableOriginalConstructor()
-		               ->setMethods(['setRegexp'])
+		               ->onlyMethods(['setRegexp'])
 		               ->getMock();
 
 		$filter->expects($this->once())
@@ -81,7 +81,7 @@ class ChoiceFilterTest extends Test
 	public function testSetValuesUnicode()
 	{
 		$filter = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\ChoiceFilter')
-		             ->setMethods(['setRegexp'])
+		             ->onlyMethods(['setRegexp'])
 		             ->getMock();
 
 		$filter->expects($this->once())

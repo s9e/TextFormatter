@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\TimestampFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\TimestampFilter
 */
-class TimestampFilterTest extends AbstractFilterTest
+class TimestampFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new TimestampFilter, '123',      123],

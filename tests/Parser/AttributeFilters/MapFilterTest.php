@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\MapFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\MapFilter
 */
-class MapFilterTest extends AbstractFilterTest
+class MapFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new MapFilter(['uno' => 'one', 'dos' => 'two']), 'dos', 'two'],

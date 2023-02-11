@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\RangeFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\NumericFilter
 */
-class RangeFilterTest extends AbstractFilterTest
+class RangeFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new RangeFilter(2, 5), '2', 2],

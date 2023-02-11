@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowXPathFunction
 */
-class DisallowXPathFunctionTest extends AbstractTemplateCheckTest
+class DisallowXPathFunctionTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Disallowed: <xsl:value-of select="document(@foo)"/>

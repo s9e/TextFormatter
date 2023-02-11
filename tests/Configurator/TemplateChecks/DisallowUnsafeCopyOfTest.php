@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeCopyOf;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeCopyOf
 */
-class DisallowUnsafeCopyOfTest extends AbstractTemplateCheckTest
+class DisallowUnsafeCopyOfTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Allowed: <b><xsl:copy-of select="@title"/></b>

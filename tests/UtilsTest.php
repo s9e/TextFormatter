@@ -19,7 +19,7 @@ class UtilsTest extends Test
 		$this->assertSame($expected, Utils::encodeUnicodeSupplementaryCharacters($original));
 	}
 
-	public function getEncodeUnicodeSupplementaryCharactersTests()
+	public static function getEncodeUnicodeSupplementaryCharactersTests()
 	{
 		return [
 			[
@@ -39,7 +39,7 @@ class UtilsTest extends Test
 		$this->assertSame($expected, Utils::getAttributeValues($xml, $tagName, $attrName));
 	}
 
-	public function getGetAttributeValuesTests()
+	public static function getGetAttributeValuesTests()
 	{
 		return [
 			[
@@ -102,7 +102,7 @@ class UtilsTest extends Test
 		$this->assertSame($expected, Utils::removeFormatting($original));
 	}
 
-	public function getRemoveFormattingTests()
+	public static function getRemoveFormattingTests()
 	{
 		return [
 			[
@@ -145,7 +145,7 @@ class UtilsTest extends Test
 		);
 	}
 
-	public function getRemoveTagTests()
+	public static function getRemoveTagTests()
 	{
 		return [
 			[
@@ -210,7 +210,7 @@ class UtilsTest extends Test
 		$this->assertSame($expected, Utils::replaceAttributes($original, $tagName, $callback));
 	}
 
-	public function getReplaceAttributesTests()
+	public static function getReplaceAttributesTests()
 	{
 		return [
 			[

@@ -25,7 +25,7 @@ class BranchOutputOptimizerTest extends Test
 		$this->assertSame($expected, $optimizer->optimize(token_get_all('<?php ' . $php)));
 	}
 
-	public function getBranchOutputOptimizationTests()
+	public static function getBranchOutputOptimizationTests()
 	{
 		return [
 			[

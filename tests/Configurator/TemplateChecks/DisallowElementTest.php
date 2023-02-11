@@ -10,7 +10,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElement;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowElement
 */
-class DisallowElementTest extends AbstractTemplateCheckTest
+class DisallowElementTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox DisallowElement('script') disallows <b><script/></b>

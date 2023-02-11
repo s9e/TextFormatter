@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\FalseFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\FalseFilter
 */
-class FalseFilterTest extends AbstractFilterTest
+class FalseFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new FalseFilter, 'bar', false],

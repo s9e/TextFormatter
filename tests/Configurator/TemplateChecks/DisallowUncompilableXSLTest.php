@@ -10,7 +10,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUncompilableXSL;
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractXSLSupportCheck
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowUncompilableXSL
 */
-class DisallowUncompilableXSLTest extends AbstractTemplateCheckTest
+class DisallowUncompilableXSLTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Allowed: <b>...</b>

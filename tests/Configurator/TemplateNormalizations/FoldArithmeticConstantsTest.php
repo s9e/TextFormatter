@@ -6,7 +6,7 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\FoldArithmeticConstants
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractConstantFolding
 */
-class FoldArithmeticConstantsTest extends AbstractTest
+class FoldArithmeticConstantsTest extends AbstractTestClass
 {
 	public function tearDown(): void
 	{
@@ -29,7 +29,7 @@ class FoldArithmeticConstantsTest extends AbstractTest
 		);
 	}
 
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

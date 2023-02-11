@@ -8,7 +8,7 @@ use s9e\TextFormatter\Utils\Http\Clients\Native;
 /**
 * @covers s9e\TextFormatter\Utils\Http\Clients\Cached
 */
-class CachedTest extends AbstractTest
+class CachedTest extends AbstractTestClass
 {
 	public static function tearDownAfterClass(): void
 	{

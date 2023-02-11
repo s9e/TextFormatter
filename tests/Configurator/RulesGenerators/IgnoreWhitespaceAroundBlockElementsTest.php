@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\IgnoreWhitespaceAroundBlockElements
 */
-class IgnoreWhitespaceAroundBlockElementsTest extends AbstractTest
+class IgnoreWhitespaceAroundBlockElementsTest extends AbstractTestClass
 {
 	/**
 	* @testdox Generates a ignoreSurroundingWhitespace rule for <div>

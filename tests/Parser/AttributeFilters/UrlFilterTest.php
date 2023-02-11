@@ -8,7 +8,7 @@ use s9e\TextFormatter\Parser\AttributeFilters\UrlFilter as FilterClass;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\UrlFilter
 */
-class UrlFilterTest extends AbstractFilterTest
+class UrlFilterTest extends AbstractFilterTestClass
 {
 	/**
 	* @testdox filterUrl() can be called without a logger
@@ -41,7 +41,7 @@ class UrlFilterTest extends AbstractFilterTest
 		$this->assertSame($expected, FilterClass::sanitizeUrl($url));
 	}
 
-	public function getSanitizeUrlTests()
+	public static function getSanitizeUrlTests()
 	{
 		return [
 			[
@@ -115,7 +115,7 @@ class UrlFilterTest extends AbstractFilterTest
 		];
 	}
 
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[

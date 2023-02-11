@@ -11,7 +11,7 @@ use s9e\TextFormatter\Parser\AttributeFilters\NumericFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\NumericFilter
 */
-class NumericFilterTest extends AbstractFilterTest
+class NumericFilterTest extends AbstractFilterTestClass
 {
 	/**
 	* @dataProvider getRegressionsData
@@ -30,7 +30,7 @@ class NumericFilterTest extends AbstractFilterTest
 	* NOTE: this test is not normative. Some cases exist solely to track regressions or changes in
 	*       behaviour in ext/filter
 	*/
-	public function getRegressionsData()
+	public static function getRegressionsData()
 	{
 		return [
 			['123',    ['int' => 123,   'uint' => 123,   'float' => 123.0]],
@@ -47,7 +47,7 @@ class NumericFilterTest extends AbstractFilterTest
 		];
 	}
 
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new FloatFilter,  '123',     123  ],

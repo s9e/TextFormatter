@@ -7,9 +7,9 @@ use DOMException;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
 */
-class InlineAttributesTest extends AbstractTest
+class InlineAttributesTest extends AbstractTestClass
 {
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

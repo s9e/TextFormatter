@@ -22,7 +22,7 @@ class CallbackGeneratorTest extends Test
 		$this->assertEquals($expected, $generator->replaceCallbacks($original));
 	}
 
-	public function getReplaceCallbacksTests()
+	public static function getReplaceCallbacksTests()
 	{
 		return [
 			[

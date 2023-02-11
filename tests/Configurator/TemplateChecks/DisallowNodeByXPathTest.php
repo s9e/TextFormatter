@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowNodeByXPath;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowNodeByXPath
 */
-class DisallowNodeByXPathTest extends AbstractTemplateCheckTest
+class DisallowNodeByXPathTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox '//script[@src]' disallows <div><script src=""/></div>

@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowDynamicAttributeNames;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowDynamicAttributeNames
 */
-class DisallowDynamicAttributeNamesTest extends AbstractTemplateCheckTest
+class DisallowDynamicAttributeNamesTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Disallowed: <b><xsl:attribute name="{@foo}"/></b>

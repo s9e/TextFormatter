@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\ColorFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter
 */
-class ColorFilterTest extends AbstractFilterTest
+class ColorFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new ColorFilter, '#123abc', '#123abc'],

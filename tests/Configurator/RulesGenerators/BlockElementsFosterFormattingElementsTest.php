@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\BlockElementsFosterFormattingElements
 */
-class BlockElementsFosterFormattingElementsTest extends AbstractTest
+class BlockElementsFosterFormattingElementsTest extends AbstractTestClass
 {
 	/**
 	* @testdox <div> has a fosterParent rule for <b>

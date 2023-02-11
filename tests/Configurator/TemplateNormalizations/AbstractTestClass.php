@@ -8,7 +8,7 @@ use ReflectionClass;
 use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Tests\Test;
 
-abstract class AbstractTest extends Test
+abstract class AbstractTestClass extends Test
 {
 	protected function getNormalizer(array $args = [])
 	{
@@ -52,5 +52,5 @@ abstract class AbstractTest extends Test
 		);
 	}
 
-	abstract public function getData();
+	abstract public static function getData();
 }

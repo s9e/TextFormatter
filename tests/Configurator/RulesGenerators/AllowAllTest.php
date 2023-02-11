@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\AllowAll
 */
-class AllowAllTest extends AbstractTest
+class AllowAllTest extends AbstractTestClass
 {
 	/**
 	* @testdox <b> has a allowChild rule and a allowDescendant rule for <div>

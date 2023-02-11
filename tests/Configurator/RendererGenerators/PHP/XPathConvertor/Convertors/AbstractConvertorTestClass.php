@@ -16,7 +16,7 @@ use s9e\TextFormatter\Tests\Test;
 /**
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\AbstractConvertor
 */
-abstract class AbstractConvertorTest extends Test
+abstract class AbstractConvertorTestClass extends Test
 {
 	/**
 	* @dataProvider getConvertorTests
@@ -49,5 +49,5 @@ abstract class AbstractConvertorTest extends Test
 		return $matchers;
 	}
 
-	abstract public function getConvertorTests();
+	abstract public static function getConvertorTests();
 }

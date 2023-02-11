@@ -20,7 +20,7 @@ class CustomTest extends Test
 		$dom->loadXML('<x/>');
 
 		$mock = $this->getMockBuilder('stdClass')
-		             ->setMethods(['foo'])
+		             ->addMethods(['foo'])
 		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('foo')

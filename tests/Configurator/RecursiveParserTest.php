@@ -37,7 +37,7 @@ class RecursiveParserTest extends Test
 		$this->assertEquals($expected, $parser->parse($str, $restrict));
 	}
 
-	public function getParseTests()
+	public static function getParseTests()
 	{
 		return [
 			[

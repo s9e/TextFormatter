@@ -49,7 +49,7 @@ class RulesGeneratorTest extends Test
 		$this->assertEquals($expected, $rulesGenerator->getRules($tagCollection));
 	}
 
-	public function getDefault()
+	public static function getDefault()
 	{
 		return [
 			[

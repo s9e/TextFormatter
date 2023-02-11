@@ -26,7 +26,7 @@ class ElementInspectorTest extends Test
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function getElementInspectorTests()
+	public static function getElementInspectorTests()
 	{
 		return [
 			[

@@ -30,7 +30,7 @@ class XPathHelperTest extends Test
 		$this->assertSame($expected, XPathHelper::getVariables($expr));
 	}
 
-	public function getGetVariablesTests()
+	public static function getGetVariablesTests()
 	{
 		return [
 			[
@@ -61,7 +61,7 @@ class XPathHelperTest extends Test
 		$this->assertSame($expected, XPathHelper::isExpressionNumeric($expr));
 	}
 
-	public function getIsExpressionNumericTests()
+	public static function getIsExpressionNumericTests()
 	{
 		return [
 			[false, '@foo'],
@@ -111,7 +111,7 @@ class XPathHelperTest extends Test
 		}
 	}
 
-	public function getMinifyTests()
+	public static function getMinifyTests()
 	{
 		return [
 			[
@@ -246,7 +246,7 @@ class XPathHelperTest extends Test
 		$this->assertSame($expected, XPathHelper::parseEqualityExpr($expr));
 	}
 
-	public function getParseEqualityExprTests()
+	public static function getParseEqualityExprTests()
 	{
 		return [
 			[

@@ -8,14 +8,14 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe;
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerator
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Iframe
 */
-class IframeTest extends AbstractTest
+class IframeTest extends AbstractTestClass
 {
 	protected function getTemplateGenerator()
 	{
 		return new Iframe;
 	}
 
-	public function getGetTemplateTests()
+	public static function getGetTemplateTests()
 	{
 		return [
 			[

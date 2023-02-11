@@ -11,7 +11,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicJS;
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\AbstractDynamicContentCheck
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowUnsafeDynamicJS
 */
-class DisallowUnsafeDynamicJSTest extends AbstractTemplateCheckTest
+class DisallowUnsafeDynamicJSTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Allowed: <script>.important { alert(1) }</script>

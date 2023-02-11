@@ -6,9 +6,9 @@ namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConve
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\AbstractConvertor
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\SingleByteStringFunctions
 */
-class SingleByteStringFunctionsTest extends AbstractConvertorTest
+class SingleByteStringFunctionsTest extends AbstractConvertorTestClass
 {
-	public function getConvertorTests()
+	public static function getConvertorTests()
 	{
 		return [
 			// Contains

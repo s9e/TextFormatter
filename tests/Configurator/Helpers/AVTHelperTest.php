@@ -22,7 +22,7 @@ class AVTHelperTest extends Test
 		$this->assertSame($expected, AVTHelper::parse($attrValue));
 	}
 
-	public function getParseTests()
+	public static function getParseTests()
 	{
 		return [
 			[
@@ -131,7 +131,7 @@ class AVTHelperTest extends Test
 		$this->assertSame($expected, AVTHelper::serialize($tokens));
 	}
 
-	public function getSerializeTests()
+	public static function getSerializeTests()
 	{
 		return [
 			[
@@ -199,7 +199,7 @@ class AVTHelperTest extends Test
 		$this->assertSame($expected, $dom->saveXML($dom->documentElement));
 	}
 
-	public function getReplaceTests()
+	public static function getReplaceTests()
 	{
 		return [
 			[
@@ -238,7 +238,7 @@ class AVTHelperTest extends Test
 		$this->assertSame($expected, AVTHelper::toXSL($attrValue));
 	}
 
-	public function getToXSLTests()
+	public static function getToXSLTests()
 	{
 		return [
 			[

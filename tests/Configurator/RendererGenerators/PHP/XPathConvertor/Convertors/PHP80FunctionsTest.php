@@ -8,7 +8,7 @@ use s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convert
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\AbstractConvertor
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\PHP80Functions
 */
-class PHP80FunctionsTest extends AbstractConvertorTest
+class PHP80FunctionsTest extends AbstractConvertorTestClass
 {
 	protected function getMatchers($parser)
 	{
@@ -18,7 +18,7 @@ class PHP80FunctionsTest extends AbstractConvertorTest
 		return $matchers;
 	}
 
-	public function getConvertorTests()
+	public static function getConvertorTests()
 	{
 		return [
 			// Contains

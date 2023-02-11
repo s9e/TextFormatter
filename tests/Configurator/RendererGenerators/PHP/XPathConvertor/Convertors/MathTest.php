@@ -6,9 +6,9 @@ namespace s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\XPathConve
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\AbstractConvertor
 * @covers s9e\TextFormatter\Configurator\RendererGenerators\PHP\XPathConvertor\Convertors\Math
 */
-class MathTest extends AbstractConvertorTest
+class MathTest extends AbstractConvertorTestClass
 {
-	public function getConvertorTests()
+	public static function getConvertorTests()
 	{
 		return [
 			// Addition

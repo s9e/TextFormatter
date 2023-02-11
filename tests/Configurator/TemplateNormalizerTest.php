@@ -58,7 +58,7 @@ class TemplateNormalizerTest extends Test
 
 		$mock = $this->getMockBuilder('s9e\\TextFormatter\\Configurator\\Items\\Template')
 		             ->disableOriginalConstructor()
-		             ->setMethods(['__toString', 'isNormalized', 'normalize'])
+		             ->onlyMethods(['__toString', 'isNormalized', 'normalize'])
 		             ->getMock();
 
 		$mock->expects($this->any())
@@ -118,7 +118,7 @@ class TemplateNormalizerTest extends Test
 		$this->assertSame($expected, $templateNormalizer->normalizeTemplate($template));
 	}
 
-	public function getDefault()
+	public static function getDefault()
 	{
 		return [
 			[

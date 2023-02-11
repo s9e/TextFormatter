@@ -4,9 +4,9 @@ namespace s9e\TextFormatter\Tests\Parser\AttributeFilters;
 
 use s9e\TextFormatter\Tests\Test;
 
-abstract class AbstractFilterTest extends Test
+abstract class AbstractFilterTestClass extends Test
 {
-	abstract public function getFilterTests();
+	abstract public static function getFilterTests();
 
 	/**
 	* @dataProvider getFilterTests

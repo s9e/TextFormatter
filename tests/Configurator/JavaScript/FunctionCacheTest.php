@@ -24,7 +24,7 @@ class FunctionCacheTest extends Test
 		$this->assertEquals($expected, $functionCache->getJSON());
 	}
 
-	public function getAddFromXSLTests()
+	public static function getAddFromXSLTests()
 	{
 		return [
 			[

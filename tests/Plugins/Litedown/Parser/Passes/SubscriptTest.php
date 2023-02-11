@@ -9,9 +9,9 @@ namespace s9e\TextFormatter\Tests\Plugins\Litedown\Parser\Passes;
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\AbstractScript
 * @covers s9e\TextFormatter\Plugins\Litedown\Parser\Passes\Subscript
 */
-class SubscriptTest extends AbstractTest
+class SubscriptTest extends AbstractTestClass
 {
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return self::fixTests([
 			[
@@ -85,7 +85,7 @@ class SubscriptTest extends AbstractTest
 		]);
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return self::fixTests([
 			[

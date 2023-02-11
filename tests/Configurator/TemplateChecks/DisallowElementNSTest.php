@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowElementNS
 */
-class DisallowElementNSTest extends AbstractTemplateCheckTest
+class DisallowElementNSTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox DisallowElementNS('http://www.w3.org/2000/svg', 'svg') disallows <svg:svg xmlns:svg="http://www.w3.org/2000/svg"/>

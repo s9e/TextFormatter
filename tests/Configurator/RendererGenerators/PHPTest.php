@@ -319,7 +319,7 @@ class PHPTest extends Test
 		);
 	}
 
-	public function getEdgeCases()
+	public static function getEdgeCases()
 	{
 		return [
 			[
@@ -901,7 +901,7 @@ class PHPTest extends Test
 		$this->runCodeTest($template, $contains, $notContains, $setup);
 	}
 
-	public function getXPathTests()
+	public static function getXPathTests()
 	{
 		return [
 			// XPath in values
@@ -967,7 +967,7 @@ class PHPTest extends Test
 	public function testCallsOptimizer()
 	{
 		$mock = $this->getMockBuilder('stdClass')
-		             ->setMethods(['optimize'])
+		             ->addMethods(['optimize'])
 		             ->getMock();
 		$mock->expects($this->atLeastOnce())
 		     ->method('optimize')
@@ -993,7 +993,7 @@ class PHPTest extends Test
 	public function testCallsControlStructuresOptimizer()
 	{
 		$mock = $this->getMockBuilder('stdClass')
-		             ->setMethods(['optimize'])
+		             ->addMethods(['optimize'])
 		             ->getMock();
 		$mock->expects($this->once())
 		     ->method('optimize')
@@ -1023,7 +1023,7 @@ class PHPTest extends Test
 		$this->runCodeTest($xsl, $contains, $notContains, $setup);
 	}
 
-	public function getOptimizationTests()
+	public static function getOptimizationTests()
 	{
 		return [
 			[
@@ -1128,7 +1128,7 @@ class PHPTest extends Test
 		$this->assertSame($html, $renderer->render($xml));
 	}
 
-	public function getConformanceTests()
+	public static function getConformanceTests()
 	{
 		return [
 			[
@@ -1462,7 +1462,7 @@ class PHPTest extends Test
 		$this->assertSame($html, $renderer->render($xml));
 	}
 
-	public function getVoidTests($type)
+	public static function getVoidTests()
 	{
 		return [
 			[
@@ -1608,7 +1608,7 @@ class PHPTest extends Test
 		);
 	}
 
-	public function getPluginsTests()
+	public static function getPluginsTests()
 	{
 		$pluginsDir = __DIR__ . '/../../Plugins';
 
@@ -1618,10 +1618,9 @@ class PHPTest extends Test
 			$pluginName = basename($dirpath);
 			$className  = 's9e\\TextFormatter\\Tests\\Plugins\\' . $pluginName . '\\ParserTest';
 
-			$obj = new $className;
-			if (method_exists($obj, 'getRenderingTests'))
+			if (method_exists($className, 'getRenderingTests'))
 			{
-				foreach ($obj->getRenderingTests() as $test)
+				foreach ($className::getRenderingTests() as $test)
 				{
 					array_unshift($test, $pluginName);
 					$tests[] = $test;
@@ -1629,8 +1628,7 @@ class PHPTest extends Test
 			}
 		}
 
-		$obj = new BBCodesTest;
-		foreach ($obj->getPredefinedBBCodesTests() as $test)
+		foreach (BBCodesTest::getPredefinedBBCodesTests() as $test)
 		{
 			// Insert an empty array for pluginOptions
 			if (isset($test[2]))

@@ -8,14 +8,14 @@ use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash;
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerator
 * @covers s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateGenerators\Flash
 */
-class FlashTest extends AbstractTest
+class FlashTest extends AbstractTestClass
 {
 	protected function getTemplateGenerator()
 	{
 		return new Flash;
 	}
 
-	public function getGetTemplateTests()
+	public static function getGetTemplateTests()
 	{
 		return [
 			[

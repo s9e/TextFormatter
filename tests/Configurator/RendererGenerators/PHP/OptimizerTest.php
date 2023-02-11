@@ -22,7 +22,7 @@ class OptimizerTest extends Test
 		$this->assertSame($expected, $optimizer->optimize($original));
 	}
 
-	public function getOptimizationTests()
+	public static function getOptimizationTests()
 	{
 		return [
 			[

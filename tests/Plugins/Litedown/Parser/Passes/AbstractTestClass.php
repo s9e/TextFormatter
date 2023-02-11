@@ -8,14 +8,14 @@ use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavaScriptRunner;
 use s9e\TextFormatter\Tests\Plugins\RenderingTestsRunner;
 use s9e\TextFormatter\Tests\Test;
 
-abstract class AbstractTest extends Test
+abstract class AbstractTestClass extends Test
 {
 	use ParsingTestsRunner;
 	use ParsingTestsJavaScriptRunner;
 	use RenderingTestsRunner;
 
-	abstract public function getParsingTests();
-	abstract public function getRenderingTests();
+	abstract public static function getParsingTests();
+	abstract public static function getRenderingTests();
 
 	protected static function fixTests($tests)
 	{

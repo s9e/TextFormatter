@@ -29,7 +29,7 @@ class ParserTest extends Test
 		return $tests;
 	}
 
-	public function getParsingTests()
+	public static function getParsingTests()
 	{
 		return self::fixTests([
 			[
@@ -387,7 +387,7 @@ class ParserTest extends Test
 		]);
 	}
 
-	public function getRenderingTests()
+	public static function getRenderingTests()
 	{
 		return self::fixTests([
 			[

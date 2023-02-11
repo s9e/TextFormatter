@@ -10,9 +10,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\Ipv6Filter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\NetworkFilter
 */
-class NetworkFilterTest extends AbstractFilterTest
+class NetworkFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new IpFilter, '8.8.8.8', '8.8.8.8'],

@@ -9,7 +9,7 @@ use s9e\TextFormatter\Configurator\TemplateChecks\DisallowDisableOutputEscaping;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateChecks\DisallowDisableOutputEscaping
 */
-class DisallowDisableOutputEscapingTest extends AbstractTemplateCheckTest
+class DisallowDisableOutputEscapingTest extends AbstractTemplateCheckTestClass
 {
 	/**
 	* @testdox Disallowed: <b disable-output-escaping="1"/>

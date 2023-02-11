@@ -23,7 +23,7 @@ class ControlStructuresOptimizerTest extends Test
 		$this->assertSame($expected, $optimizer->optimize($original));
 	}
 
-	public function getControlStructureOptimizationTests()
+	public static function getControlStructureOptimizationTests()
 	{
 		return [
 			[

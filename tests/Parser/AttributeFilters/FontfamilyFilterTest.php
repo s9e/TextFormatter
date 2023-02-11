@@ -7,9 +7,9 @@ use s9e\TextFormatter\Configurator\Items\AttributeFilters\FontfamilyFilter;
 /**
 * @covers s9e\TextFormatter\Parser\AttributeFilters\RegexpFilter
 */
-class FontfamilyFilterTest extends AbstractFilterTest
+class FontfamilyFilterTest extends AbstractFilterTestClass
 {
-	public function getFilterTests()
+	public static function getFilterTests()
 	{
 		return [
 			[new FontfamilyFilter, 'Arial', 'Arial'],

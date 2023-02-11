@@ -31,7 +31,7 @@ class FilterSyntaxMatcherTest extends Test
 		$this->assertEquals($expected, $parser->parse($filterString)['value']);
 	}
 
-	public function getParseTests()
+	public static function getParseTests()
 	{
 		return [
 			[

@@ -5,9 +5,9 @@ namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\MergeConsecutiveCopyOf
 */
-class MergeConsecutiveCopyOfTest extends AbstractTest
+class MergeConsecutiveCopyOfTest extends AbstractTestClass
 {
-	public function getData()
+	public static function getData()
 	{
 		return [
 			[

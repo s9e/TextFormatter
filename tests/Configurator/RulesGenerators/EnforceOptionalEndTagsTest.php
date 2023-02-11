@@ -5,7 +5,7 @@ namespace s9e\TextFormatter\Tests\Configurator\RulesGenerators;
 /**
 * @covers s9e\TextFormatter\Configurator\RulesGenerators\EnforceOptionalEndTags
 */
-class EnforceOptionalEndTagsTest extends AbstractTest
+class EnforceOptionalEndTagsTest extends AbstractTestClass
 {
 	/**
 	* @testdox <li> closes parent <li>

@@ -38,7 +38,7 @@ class SerializerTest extends Test
 		$this->assertSame($expected, $serializer->serialize($ir->documentElement));
 	}
 
-	public function getSerializeTests()
+	public static function getSerializeTests()
 	{
 		return [
 			[

@@ -30,7 +30,7 @@ class TemplateModifierTest extends Test
 		);
 	}
 
-	public function replaceTokensTests()
+	public static function replaceTokensTests()
 	{
 		return [
 			[

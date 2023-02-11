@@ -39,7 +39,7 @@ class ConfigOptimizerTest extends Test
 		$this->assertSame(implode("\n", $objects), rtrim($optimizer->getVarDeclarations()));
 	}
 
-	public function getOptimizeObjectTests()
+	public static function getOptimizeObjectTests()
 	{
 		return [
 			[

@@ -32,7 +32,7 @@ class TemplateHelperTest extends Test
 		);
 	}
 
-	public function getParametersTests()
+	public static function getParametersTests()
 	{
 		return [
 			[
@@ -120,7 +120,7 @@ class TemplateHelperTest extends Test
 		);
 	}
 
-	public function getHighlights()
+	public static function getHighlights()
 	{
 		return [
 			[
@@ -212,7 +212,7 @@ class TemplateHelperTest extends Test
 		$this->assertSame($expected, $templates);
 	}
 
-	public function getReplaceHomogeneousTemplatesTests()
+	public static function getReplaceHomogeneousTemplatesTests()
 	{
 		return [
 			[

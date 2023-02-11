@@ -27,7 +27,7 @@ class BBCodesTest extends Test
 		);
 	}
 
-	public function getExamplesTests()
+	public static function getExamplesTests()
 	{
 		return [
 			[
@@ -117,7 +117,7 @@ class BBCodesTest extends Test
 		$this->assertJSParsing($original, $this->getParser()->parse($original));
 	}
 
-	public function getPredefinedBBCodesTests()
+	public static function getPredefinedBBCodesTests()
 	{
 		return [
 			[

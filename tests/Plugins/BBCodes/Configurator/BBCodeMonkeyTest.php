@@ -100,7 +100,7 @@ class BBCodeMonkeyTest extends Test
 		}
 	}
 
-	public function getCreateTests()
+	public static function getCreateTests()
 	{
 		return [
 			[
