@@ -1,3 +1,22 @@
+2.13.1 (2023-02-11)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/eb608586bef442a91a009bff6f0a685a0be9f1a3...8b473fee905a5e7719a48b576c12686427433d47)
+
+### Added
+
+ - `f84dbded0` MediaEmbed: added Bunny Stream
+ - `922025f00` MediaEmbed: added support for YouTube Live URLs
+
+### Changed
+
+ - `8b473fee9` Improved PHP 8.2 support
+ - `285322ab8` MediaEmbed: updated Tumblr
+ - `d1441d7ae` MediaEmbed: updated Tumblr
+ - `961b39811` Parser: remove U+FFFE and U+FFFF from input and output
+ - `889296b3b` Updated PHPUnit to 9.6
+
+
 2.13.0 (2023-01-30)
 ===================
 
