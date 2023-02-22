@@ -4,7 +4,7 @@
 	<tags><tag>social</tag></tags>
 
 	<host>t.me</host>
-	<extract>@//t.me/(?!addstickers/|joinchat/)(?'id'\w+/\d+)@</extract>
+	<extract>@//t.me/(?!addstickers/|joinchat/)(?:s/)?(?'id'\w+/\d+)@</extract>
 	<iframe width="500" height="96" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/2/telegram.min.html#</xsl:text>

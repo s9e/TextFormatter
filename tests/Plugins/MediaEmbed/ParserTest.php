@@ -3603,6 +3603,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://t.me/s/telegram/83',
+				'<r><TELEGRAM id="telegram/83">https://t.me/s/telegram/83</TELEGRAM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('telegram');
+				}
+			],
+			[
 				'https://t.me/durov',
 				'<t>https://t.me/durov</t>',
 				[],
