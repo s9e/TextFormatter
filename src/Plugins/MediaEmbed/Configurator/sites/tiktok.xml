@@ -8,8 +8,9 @@
 
 	<host>tiktok.com</host>
 	<extract>#tiktok\.com/(?:@[.\w]+/video|v|(?:i18n/)?share/video)/(?'id'\d+)#</extract>
-	<scrape>
-		<match>#//v[mt]\.tiktok\.com/.#</match>
+	<scrape url="https://www.tiktok.com/t/{@short_id}">
+		<match>#//v[mt]\.tiktok\.com/(?'short_id'\w+)#</match>
+		<match>#tiktok\.com/t/(?'short_id'\w+)#</match>
 		<extract>#tiktok\.com/(?:@[.\w]+/video|v|(?:i18n/)?/share/video)/(?'id'\d+)#</extract>
 	</scrape>
 	<iframe width="325" height="740"

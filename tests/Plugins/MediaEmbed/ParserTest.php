@@ -1259,6 +1259,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tiktok');
 				}
 			],
+			[
+				'https://www.tiktok.com/t/ZS8M7By99/',
+				'<r><TIKTOK id="7177575712717557034">https://www.tiktok.com/t/ZS8M7By99/</TIKTOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('tiktok');
+				}
+			],
 //			[
 //				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
 //				'<r><TRAILERADDICT id="85253">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
