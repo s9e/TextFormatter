@@ -1,4 +1,4 @@
-<site name="GitHub Gist" homepage="https://gist.github.com/">
+<site name="GitHub Gist" homepage="https://gist.github.com/" tracking_policy="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement#cookies-and-tracking-technologies">
 	<example>https://gist.github.com/JoshyPHP/0ee8433f5a9a779d08ef</example>
 	<example>https://gist.github.com/6806305</example>
 	<example>https://gist.github.com/JoshyPHP/6806305/ad88d904b082c8211afa040162402015aacb8599</example>

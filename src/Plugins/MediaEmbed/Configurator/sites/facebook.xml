@@ -1,4 +1,4 @@
-<site name="Facebook" homepage="https://www.facebook.com/">
+<site name="Facebook" homepage="https://www.facebook.com/" tracking_policy="https://www.facebook.com/help/1896641480634370">
 	<example>https://www.facebook.com/MetaforDevelopers/posts/451016937058647</example>
 	<example>https://www.facebook.com/watch/?v=224353158889229</example>
 	<example>https://fb.watch/3zYsXdnxjf/</example>
