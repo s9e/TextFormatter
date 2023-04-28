@@ -112,6 +112,8 @@ nav:
     - Introduction: JavaScript/Introduction.md
     - Live preview attributes: JavaScript/Live_preview_attributes.md
     - Minifiers: JavaScript/Minifiers.md
+  - Utilities:
+    - ParsedDOM: Utils/ParsedDOM.md
   - Internals:
     - API docs: Internals/API_docs.md
     - API changes: Internals/API_changes.md
