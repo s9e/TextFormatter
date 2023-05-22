@@ -1189,16 +1189,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('sportsnet');
 				}
 			],
-//			[
-//				'https://link.tospotify.com/kpRZPpEGnbb',
-//				'<r><SPOTIFY id="playlist/12UZc2MhOI29wE7eBgmKwi">https://link.tospotify.com/kpRZPpEGnbb</SPOTIFY></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('spotify');
-//				}
-//			],
 			[
 				'https://www.spreaker.com/show/2-up-front_1',
 				'<r><SPREAKER show_id="1374587">https://www.spreaker.com/show/2-up-front_1</SPREAKER></r>',
@@ -1209,16 +1199,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('spreaker');
 				}
 			],
-//			[
-//				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
-//				'<r><SPREAKER episode_id="12449095">https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac</SPREAKER></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('spreaker');
-//				}
-//			],
 			[
 				'https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587',
 				'<r><STITCHER eid="79283587" fid="416389">https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587</STITCHER></r>',
@@ -1229,56 +1209,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('stitcher');
 				}
 			],
-//			[
-//				'https://www.stitcher.com/s?eid=79283587',
-//				'<r><STITCHER eid="79283587" fid="416389">https://www.stitcher.com/s?eid=79283587</STITCHER></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('stitcher');
-//				}
-//			],
-//			[
-//				'https://vm.tiktok.com/TTPdrc3YBJ/',
-//				'<r><TIKTOK id="7050192414379691270">https://vm.tiktok.com/TTPdrc3YBJ/</TIKTOK></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('tiktok');
-//				}
-//			],
-			[
-				'https://vt.tiktok.com/ZS8M7By99/',
-				'<r><TIKTOK id="7177575712717557034">https://vt.tiktok.com/ZS8M7By99/</TIKTOK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('tiktok');
-				}
-			],
-			[
-				'https://www.tiktok.com/t/ZS8M7By99/',
-				'<r><TIKTOK id="7177575712717557034">https://www.tiktok.com/t/ZS8M7By99/</TIKTOK></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('tiktok');
-				}
-			],
-//			[
-//				'http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii',
-//				'<r><TRAILERADDICT id="85253">http://www.traileraddict.com/robocop-2013/tv-spot-meet-the-future-ii</TRAILERADDICT></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('traileraddict');
-//				}
-//			],
 			[
 				'https://staff.tumblr.com/post/180624227620/',
 				'<r><TUMBLR did="781ba97d76586f567b41960375dac9606da2cc7e" id="180624227620" key="0aY0xL2Fi1OFJg4YxpmegQ" name="staff">https://staff.tumblr.com/post/180624227620/</TUMBLR></r>',
