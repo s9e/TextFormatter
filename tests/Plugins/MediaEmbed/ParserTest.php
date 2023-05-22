@@ -5380,10 +5380,10 @@ class ParserTest extends Test
 	* @testdox Legacy rendering tests
 	* @dataProvider getLegacyRenderingTests
 	*/
-	public function testLegacyRendering($xml, $html, $setup = null)
+	public function testLegacyRendering($xml, $html, $setup = null, $methodName = 'assertSame')
 	{
 		$setup($this->configurator);
-		$this->assertSame($html, $this->configurator->rendering->getRenderer()->render($xml));
+		$this->$methodName($html, $this->configurator->rendering->getRenderer()->render($xml));
 	}
 
 	public static function getLegacyRenderingTests()
@@ -5479,11 +5479,12 @@ class ParserTest extends Test
 			],
 			[
 				'<r><ODYSEE id="8726b01100463c4e254a38c3108ef3e05791aeda">https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8</ODYSEE></r>',
-				'<span data-s9e-mediaembed="odysee" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://odysee.com/$/embed/-/8726b01100463c4e254a38c3108ef3e05791aeda"></iframe></span></span>',
+				'(<span data-s9e-mediaembed="odysee" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://odysee.com/(?:\\$|%24)/embed/-/8726b01100463c4e254a38c3108ef3e05791aeda"></iframe></span></span>)',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('odysee');
-				}
+				},
+				'assertMatchesRegularExpression'
 			],
 			[
 				'<r><REDDIT path="/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl">http://www.reddit.com/r/pics/comments/304rms/cats_reaction_to_seeing_the_ceiling_fan_move_for/cpp2kkl</REDDIT></r>',
