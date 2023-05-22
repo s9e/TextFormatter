@@ -1222,7 +1222,7 @@ class ParserTest extends Test
 			[
 				// https://xenforo.com/community/threads/s9e-media-sites.139274/post-1613244
 				'https://www.tumblr.com/scianvih/691082761549856768',
-				'<r><TUMBLR did="dfe9ed28e5229337c290c7225a088e26159c38e3" id="691082761549856768" key="NPcOc6_o0jT7-kZ6bG37OA" name="scianvih">https://www.tumblr.com/scianvih/691082761549856768</TUMBLR></r>',
+				'<r><TUMBLR did="8ca2b4097aaddc4c745e23a6395c3fd7e29edc51" id="691082761549856768" key="NPcOc6_o0jT7-kZ6bG37OA" name="scianvih">https://www.tumblr.com/scianvih/691082761549856768</TUMBLR></r>',
 				[],
 				function ($configurator)
 				{
@@ -1233,7 +1233,7 @@ class ParserTest extends Test
 			[
 				// https://www.tumblr.com/explore/today
 				'https://at.tumblr.com/todayontumblr/708511052002918400/96rnpjfqvlk3',
-				'<r><TUMBLR did="9b840bfc83db006ce34726ccc0453d3e26668118" id="708511052002918400" key="ESngpOfjmW_v0r0ewZfGEQ" name="todayontumblr">https://at.tumblr.com/todayontumblr/708511052002918400/96rnpjfqvlk3</TUMBLR></r>',
+				'<r><TUMBLR did="25a6eee2649c35ad5722f15d2fac2ce73212cd44" id="708511052002918400" key="ESngpOfjmW_v0r0ewZfGEQ" name="todayontumblr">https://at.tumblr.com/todayontumblr/708511052002918400/96rnpjfqvlk3</TUMBLR></r>',
 				[],
 				function ($configurator)
 				{
