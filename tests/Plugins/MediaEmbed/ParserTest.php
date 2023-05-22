@@ -5471,7 +5471,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><ODYSEE id="8726b01100463c4e254a38c3108ef3e05791aeda" name="Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21">https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8</ODYSEE></r>',
-				'<span data-s9e-mediaembed="odysee" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://odysee.com/%24/embed/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21/8726b01100463c4e254a38c3108ef3e05791aeda"></iframe></span></span>',
+				'<span data-s9e-mediaembed="odysee" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://odysee.com/$/embed/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21/8726b01100463c4e254a38c3108ef3e05791aeda"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('odysee');
@@ -5479,7 +5479,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><ODYSEE id="8726b01100463c4e254a38c3108ef3e05791aeda">https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8</ODYSEE></r>',
-				'<span data-s9e-mediaembed="odysee" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://odysee.com/%24/embed/-/8726b01100463c4e254a38c3108ef3e05791aeda"></iframe></span></span>',
+				'<span data-s9e-mediaembed="odysee" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://odysee.com/$/embed/-/8726b01100463c4e254a38c3108ef3e05791aeda"></iframe></span></span>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('odysee');
