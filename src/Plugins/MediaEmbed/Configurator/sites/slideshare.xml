@@ -8,7 +8,7 @@
 	<extract>!slideshare\.net/[^/]+/[-\w]+-(?'id'\d{6,})$!</extract>
 	<scrape>
 		<match>@slideshare\.net/[^/]+/\w(?![-\w]+-\d{6,}$)@</match>
-		<extract>!"presentationId":(?'id'\d+)!</extract>
+		<extract>!data-slideshow-id="(?'id'\d+)!</extract>
 	</scrape>
 	<iframe width="427" height="356" src="//www.slideshare.net/slideshow/embed_code/{@id}"/>
 </site>
