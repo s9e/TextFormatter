@@ -1095,7 +1095,7 @@ class ParserTest extends Test
 //			],
 			[
 				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
-				'<r><SLIDESHARE id="21112125">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></r>',
+				'<r><SLIDESHARE id="21112125" key="bP5rZdZymdBjp0">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></r>',
 				[],
 				function ($configurator)
 				{
@@ -3377,15 +3377,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://www.slideshare.net/Slideshare/how-23431564',
-				'<r><SLIDESHARE id="23431564">http://www.slideshare.net/Slideshare/how-23431564</SLIDESHARE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('slideshare');
-				}
-			],
-			[
 				'https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd',
 				'<r><SOUNDCLOUD id="tracks/168988860" secret_token="s-GT9Cd" track_id="168988860">https://api.soundcloud.com/tracks/168988860?secret_token=s-GT9Cd</SOUNDCLOUD></r>',
 				[],
@@ -4995,15 +4986,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('rutube');
-				}
-			],
-			[
-				'http://www.slideshare.net/Slideshare/how-23431564',
-				'<span data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:83.372365%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//www.slideshare.net/slideshow/embed_code/23431564" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('slideshare');
 				}
 			],
 			[

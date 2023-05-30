@@ -359,7 +359,7 @@
 	</tr>
 	<tr title="SlideShare" id="slideshare">
 		<td><code>slideshare</code></td>
-		<td>https://www.slideshare.net/Slideshare/how-23431564</td>
+		<td>https://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</td>
 	</tr>
 	<tr title="SoundCloud" id="soundcloud">
 		<td><code>soundcloud</code></td>

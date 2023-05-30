@@ -36,5 +36,5 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<a href="http://gatherer.wizards.com/Pages/Search/Default.aspx?name=+%5Bm/%5EArmageddon%24/%5D">Armageddon</a> and <a href="http://gatherer.wizards.com/Pages/Search/Default.aspx?name=+%5Bm/%5EZuran%20Orb%24/%5D">Zuran Orb</a>
+<a href="http://gatherer.wizards.com/Pages/Search/Default.aspx?name=+%5Bm/%5EArmageddon$/%5D">Armageddon</a> and <a href="http://gatherer.wizards.com/Pages/Search/Default.aspx?name=+%5Bm/%5EZuran%20Orb$/%5D">Zuran Orb</a>
 ```

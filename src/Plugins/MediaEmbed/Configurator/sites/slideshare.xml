@@ -1,14 +1,19 @@
 <site name="SlideShare" homepage="https://www.slideshare.net/">
-	<source>http://help.slideshare.com/forums/67665-Embedding-Sharing</source>
-	<example>https://www.slideshare.net/Slideshare/how-23431564</example>
+	<example>https://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</example>
 
 	<tags><tag>presentations</tag></tags>
 
+	<attributes>
+		<id  required="false"/>
+		<key required="true"/>
+	</attributes>
+
 	<host>slideshare.net</host>
-	<extract>!slideshare\.net/[^/]+/[-\w]+-(?'id'\d{6,})$!</extract>
+	<extract>!slideshare.net/slideshow/embed_code/key/(?'key'\w+)$!</extract>
 	<scrape>
 		<match>@slideshare\.net/[^/]+/\w(?![-\w]+-\d{6,}$)@</match>
-		<extract>!data-slideshow-id="(?'id'\d+)!</extract>
+		<extract>!embed_code/key/(?'key'\w+)!</extract>
+		<extract>!data-slideshow-id="(?'id'\d+)"!</extract>
 	</scrape>
-	<iframe width="427" height="356" src="//www.slideshare.net/slideshow/embed_code/{@id}"/>
+	<iframe width="597" height="486" src="https://www.slideshare.net/slideshow/embed_code/key/{@key}"/>
 </site>

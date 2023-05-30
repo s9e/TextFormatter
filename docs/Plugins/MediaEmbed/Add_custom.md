@@ -173,7 +173,7 @@ $html = $renderer->render($xml);
 echo $html;
 ```
 ```html
-<span data-s9e-mediaembed="slideshare" style="display:inline-block;width:100%;max-width:427px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:83.372365%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="http://www.slideshare.net/slideshow/embed_code/21112125" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>
+http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites
 ```
 
 ### Specify a different URL for scraping
