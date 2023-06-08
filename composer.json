@@ -6,7 +6,7 @@
 	"keywords": ["bbcode","bbcodes","blog","censor","embed","emoji","emoticons","engine","forum","html","markdown","markup","media","parser","shortcodes"],
 	"license": "MIT",
 	"require": {
-		"php":        ">=7.4",
+		"php":        "^8.0",
 		"ext-dom":    "*",
 		"ext-filter": "*",
 		"lib-pcre":   ">=8.13",

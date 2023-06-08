@@ -3780,7 +3780,7 @@ Configurable (s9e\TextFormatter\Tests\Configurator\Traits\Configurable)
  [x] __get() throws a RuntimeException if the property does not exist
  [x] __get($k) returns null if the property is null
  [x] __set('foo', 'bar') calls setFoo('bar') if it exists
- [ ] __set() can create new properties
+ [x] __set() can create new properties
  [x] __set() can replace an instance of Foo with another instance of Foo
  [x] __set() can replace an instance of Foo with an instance of FooPlus, which extends Foo
  [x] __set() throws an exception if an instance of Foo would be replaced by an instance of Bar
@@ -7866,7 +7866,7 @@ Unformatted (s9e\TextFormatter\Tests\Renderers\Unformatted)
 XSLT (s9e\TextFormatter\Tests\Renderers\XSLT)
  [x] Is serializable
  [x] Does not serialize the XSLTProcessor instance
- [ ] Preserves other properties during serialization
+ [x] Preserves other properties during serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
  [x] Does not output </embed> end tags
  [x] Does not improperly replace single quotes inside attribute values
@@ -7941,6 +7941,40 @@ Native (s9e\TextFormatter\Tests\Utils\Http\Clients\Native)
 Http (s9e\TextFormatter\Tests\Utils\Http)
  [x] getClient() returns an instance of s9e\TextFormatter\Utils\Http\Client
  [x] getCachingClient() returns an instance of s9e\TextFormatter\Utils\Http\Clients\Cached that implements s9e\TextFormatter\Utils\Http\Client
+
+Document (s9e\TextFormatter\Tests\Utils\ParsedDOM\Document)
+ [x] createTagElement('b') normalizes tag name to 'B'
+ [x] createTagElement('foo:BAR') creates a namespaced tag
+ [x] createTagElement() sets attributes
+ [x] createTagElement() normalizes attribute names
+ [x] normalizeDocument() normalizes elements
+ [x] normalizeDocument() removes superfluous namespaces
+ [x] __toString() returns a string without an XML declaration
+ [x] __toString() returns "<t></t>" for completely empty content
+ [x] __toString() removes empty markup
+ [x] __toString() encodes SMP characters
+
+Element (s9e\TextFormatter\Tests\Utils\ParsedDOM\Element)
+ [x] normalize() removes empty s elements
+ [x] normalize() removes empty e elements
+ [x] normalize() removes empty i elements
+ [x] normalize() does not remove e/i/s elements that only contain whitespace
+ [x] normalize() does not remove empty E elements
+ [x] normalize() sorts attributes by name
+ [x] normalize() runs recursively
+ [x] setMarkupEnd('*') creates an 'e' element
+ [x] setMarkupEnd('*') replaces the 'e' element if it exists
+ [x] setMarkupEnd('') removes the 'e' element
+ [x] setMarkupStart('*') creates an 's' element
+ [x] setMarkupStart('*') replaces the 's' element if it exists
+ [x] setMarkupStart('') removes the 's' element
+ [x] unparse() does not remove any content
+ [x] unparse() does not apply recursively
+ [x] replaceTag() replaces a tag and its attributes
+ [x] replaceTag() normalizes tag names and attribute names
+
+Parsed DOM (s9e\TextFormatter\Tests\Utils\ParsedDOM)
+ [x] loadXML() returns an instance of s9e\TextFormatter\Utils\ParsedDOM\Document
 
 XPath (s9e\TextFormatter\Utils\XPath)
  [x] export('foo') returns 'foo'
