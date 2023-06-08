@@ -1,3 +1,23 @@
+2.14.0 (2023-06-08)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/bbd9e34e9c30d5daeb780f115fe69cd81dd9c352...a7367500bdf056b37926ee9751095d7d9540153f)
+
+### Added
+
+ - `5b58f4485` Added ParsedDOM API to safely manipulate XML
+
+### Changed
+
+ - `052cde47b` BBCodes: updated hljs-loader
+ - `e824143f7` MediaEmbed: updated SlideShare
+ - `84be6040c` MediaEmbed: updated SlideShare
+ - `31553ea9a` MediaEmbed: updated Telegram
+ - `422f66269` MediaEmbed: updated TikTok
+ - `0b2abb6e3` MediaEmbed: updated Tumblr
+ - `ab81d37a8` MediaEmbed: updated YouTube
+
+
 2.13.1 (2023-02-11)
 ===================
 
