@@ -1,6 +1,6 @@
 ### Getting started
 
-The ParsedDOM utility allows you to load the [parsed representation of a text](/Getting_started/How_it_works/) (XML that is usually stored in a database) into a DOM document and operate on it with regular DOM methods as well as a specialized API. Unlike native string manipulation it provides better guarantees that the resulting XML will match what the parser would normally produce. It is best suited for maintenance tasks. For lightweight, real-time operations, it is recommended to use the limited but more efficient [Utils](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Utils.html) class if possible.
+The ParsedDOM utility allows you to load the [parsed representation of a text](/Getting_started/How_it_works/) (XML that is usually stored in a database) into a DOM document and operate on it with regular DOM methods as well as a [specialized API](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Utils/ParsedDOM.html). Unlike native string manipulation it provides better guarantees that the resulting XML will match what the parser would normally produce. It is best suited for maintenance tasks. For lightweight, real-time operations, it is recommended to use the limited but more efficient [Utils](https://s9e.github.io/TextFormatter/api/s9e/TextFormatter/Utils.html) class if possible.
 
 ```php
 // Start with the parsed representation of the text
