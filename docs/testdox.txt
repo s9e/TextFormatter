@@ -3780,7 +3780,7 @@ Configurable (s9e\TextFormatter\Tests\Configurator\Traits\Configurable)
  [x] __get() throws a RuntimeException if the property does not exist
  [x] __get($k) returns null if the property is null
  [x] __set('foo', 'bar') calls setFoo('bar') if it exists
- [x] __set() can create new properties
+ [ ] __set() can create new properties
  [x] __set() can replace an instance of Foo with another instance of Foo
  [x] __set() can replace an instance of Foo with an instance of FooPlus, which extends Foo
  [x] __set() throws an exception if an instance of Foo would be replaced by an instance of Bar
@@ -7866,7 +7866,7 @@ Unformatted (s9e\TextFormatter\Tests\Renderers\Unformatted)
 XSLT (s9e\TextFormatter\Tests\Renderers\XSLT)
  [x] Is serializable
  [x] Does not serialize the XSLTProcessor instance
- [x] Preserves other properties during serialization
+ [ ] Preserves other properties during serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
  [x] Does not output </embed> end tags
  [x] Does not improperly replace single quotes inside attribute values
@@ -7970,61 +7970,5 @@ Element (s9e\TextFormatter\Tests\Utils\ParsedDOM\Element)
  [x] setMarkupStart('') removes the 's' element
  [x] unparse() does not remove any content
  [x] unparse() does not apply recursively
- [x] replaceTag() replaces a tag and its attributes
- [x] replaceTag() normalizes tag names and attribute names
-
-Parsed DOM (s9e\TextFormatter\Tests\Utils\ParsedDOM)
- [x] loadXML() returns an instance of s9e\TextFormatter\Utils\ParsedDOM\Document
-
-XPath (s9e\TextFormatter\Utils\XPath)
- [x] export('foo') returns 'foo'
- [x] export("d'oh") returns "d'oh"
- [x] export("'\"") returns concat("'",'"')
- [x] export('"\'') returns concat('"',"'")
- [x] export(123) returns 123
- [x] export(123.45) returns 123.45
- [x] export(123.45) returns 123.45 regardless of locale
- [x] export(new stdClass) throws an exception
- [x] export(false) returns 'false()'
- [x] export(true) returns 'true()'
- [x] export(INF) throws an exception
-
-Utils (s9e\TextFormatter\Tests\Utils)
- [x] encodeUnicodeSupplementaryCharacters() tests with data set #0
- [x] getAttributeValues() tests with data set #0
- [x] getAttributeValues() tests with data set #1
- [x] getAttributeValues() tests with data set #2
- [x] getAttributeValues() tests with data set #3
- [x] getAttributeValues() tests with data set #4
- [x] getAttributeValues() tests with data set #5
- [x] getAttributeValues() tests with data set #6
- [x] getAttributeValues() tests with data set #7
- [x] removeFormatting() tests with data set #0
- [x] removeFormatting() tests with data set #1
- [x] removeFormatting() tests with data set #2
- [x] removeFormatting() tests with data set #3
- [x] removeFormatting() tests with data set #4
- [x] removeFormatting() tests with data set #5
- [x] removeTag() tests with data set #0
- [x] removeTag() tests with data set #1
- [x] removeTag() tests with data set #2
- [x] removeTag() tests with data set #3
- [x] removeTag() tests with data set #4
- [x] removeTag() tests with data set #5
- [x] removeTag() tests with data set #6
- [x] removeTag() tests with data set #7
- [x] removeTag() tests with data set #8
- [x] removeTag() tests with data set #9
- [x] replaceAttributes() tests with data set #0
- [x] replaceAttributes() tests with data set #1
- [x] replaceAttributes() tests with data set #2
- [x] replaceAttributes() tests with data set #3
- [x] replaceAttributes() tests with data set #4
- [x] replaceAttributes() tests with data set #5
- [x] replaceAttributes() tests with data set #6
- [x] replaceAttributes() tests with data set #7
- [x] replaceAttributes() tests with data set #8
- [x] replaceAttributes() tests with data set #9
- [x] replaceAttributes() tests with data set #10
- [x] replaceAttributes() tests with data set #11
+ [ ] replaceTag() replaces a tag and its attributes
 

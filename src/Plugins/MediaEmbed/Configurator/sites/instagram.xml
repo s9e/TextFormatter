@@ -7,7 +7,7 @@
 
 	<host>instagram.com</host>
 	<extract>!instagram\.com/(?:p|reel|tv)/(?'id'[-\w]+)!</extract>
-	<iframe width="540" height="540" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
+	<iframe width="542" height="542" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/2/instagram.min.html#</xsl:text>
 			<xsl:value-of select="@id"/>
