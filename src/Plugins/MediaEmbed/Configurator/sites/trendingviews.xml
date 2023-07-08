@@ -1,11 +1,11 @@
-<site name="MyDailyFreedom" homepage="https://mydailyfreedom.com/">
-	<example>https://mydailyfreedom.com/tv/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html</example>
-	<example>https://trendingviews.co/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html</example>
+<site name="Trending Views" homepage="https://trendingviews.com/">
+	<example>https://trendingviews.com/videos/2267/woman-sinks-suv-trying-to-help-a-guy-out/</example>
 
 	<tags><tag>videos</tag></tags>
 
 	<host>mydailyfreedom.com</host>
 	<host>trendingviews.co</host>
-	<extract>!(?:mydailyfreedom\.com|trendingviews\.co)/(?:tv/)?(?:embed|video)/(?:[^/]+-)?(?'id'\d+)!</extract>
-	<iframe src="https://mydailyfreedom.com/tv/embed/{@id}"/>
+	<host>trendingviews.com</host>
+	<extract>!(?:mydailyfreedom\.com|trendingviews\.com?)/(?:tv/)?(?:embed|videos?)/(?:[^/]+-)?(?'id'\d+)!</extract>
+	<iframe src="https://trendingviews.com/embed/{@id}"/>
 </site>

@@ -3678,6 +3678,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://trendingviews.com/videos/2267/woman-sinks-suv-trying-to-help-a-guy-out/',
+				'<r><TRENDINGVIEWS id="2267">https://trendingviews.com/videos/2267/woman-sinks-suv-trying-to-help-a-guy-out/</TRENDINGVIEWS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('trendingviews');
+				}
+			],
+			[
 				'http://www.twitch.tv/playstation/v/3589809',
 				'<r><TWITCH channel="playstation" video_id="3589809">http://www.twitch.tv/playstation/v/3589809</TWITCH></r>',
 				[],

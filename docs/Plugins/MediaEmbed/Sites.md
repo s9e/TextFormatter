@@ -441,9 +441,9 @@
 		<td><code>traileraddict</code></td>
 		<td>https://www.traileraddict.com/the-amazing-spider-man-2/super-bowl-tv-spot</td>
 	</tr>
-	<tr title="MyDailyFreedom" id="trendingviews">
+	<tr title="Trending Views" id="trendingviews">
 		<td><code>trendingviews</code></td>
-		<td>https://mydailyfreedom.com/tv/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html<br/>https://trendingviews.co/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html</td>
+		<td>https://trendingviews.com/videos/2267/woman-sinks-suv-trying-to-help-a-guy-out/</td>
 	</tr>
 	<tr title="Tumblr" id="tumblr">
 		<td><code>tumblr</code></td>
