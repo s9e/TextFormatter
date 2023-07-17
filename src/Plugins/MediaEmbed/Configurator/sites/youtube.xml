@@ -21,22 +21,36 @@
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
 	<extract>@[#&amp;?]t=(?'t'\d[\dhms]*)@</extract>
 	<extract>![&amp;?]list=(?'list'[-\w]+)!</extract>
+	<scrape>
+		<match>@youtube\.com/clip/.@</match>
+		<extract>@/embed/(?'id'[-\w]+)\?clip=(?'clip'[-\w]+)&amp;amp;clipt=(?'clipt'[-\w]+)@</extract>
+	</scrape>
 	<iframe>
 		<src><![CDATA[
 			<xsl:text>https://www.youtube.com/embed/</xsl:text>
 			<xsl:value-of select="@id"/>
-			<xsl:if test="@list">
-				<xsl:text>?list=</xsl:text>
-				<xsl:value-of select="@list"/>
-			</xsl:if>
-			<xsl:if test="@t">
-				<xsl:choose>
-					<xsl:when test="@list">&amp;</xsl:when>
-					<xsl:otherwise>?</xsl:otherwise>
-				</xsl:choose>
-				<xsl:text>start=</xsl:text>
-				<xsl:value-of select="@t"/>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="@clip">
+					<xsl:text>?clip=</xsl:text>
+					<xsl:value-of select="@clip"/>
+					<xsl:text>&amp;clipt=</xsl:text>
+					<xsl:value-of select="@clipt"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:if test="@list">
+						<xsl:text>?list=</xsl:text>
+						<xsl:value-of select="@list"/>
+					</xsl:if>
+					<xsl:if test="@t">
+						<xsl:choose>
+							<xsl:when test="@list">&amp;</xsl:when>
+							<xsl:otherwise>?</xsl:otherwise>
+						</xsl:choose>
+						<xsl:text>start=</xsl:text>
+						<xsl:value-of select="@t"/>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
 		]]></src>
 		<style background="url(https://i.ytimg.com/vi/{@id}/hqdefault.jpg) 50% 50% / cover"/>
 	</iframe>

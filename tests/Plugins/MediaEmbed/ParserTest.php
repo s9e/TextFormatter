@@ -1305,6 +1305,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('wsj');
 				}
 			],
+			[
+				'https://www.youtube.com/clip/UgkxNVVfF_kOXFsQs_mPrM4K53fao72UV_x4',
+				'<r><YOUTUBE clip="UgkxNVVfF_kOXFsQs_mPrM4K53fao72UV_x4" clipt="EIbDsAEYha6xAQ" id="UGMkPfHDnfM">https://www.youtube.com/clip/UgkxNVVfF_kOXFsQs_mPrM4K53fao72UV_x4</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
 		];
 	}
 
@@ -1470,6 +1480,16 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('spreaker');
 //				}
 //			],
+			[
+				'https://www.youtube.com/clip/UgkxNVVfF_kOXFsQs_mPrM4K53fao72UV_x4',
+				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/UGMkPfHDnfM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/UGMkPfHDnfM?clip=UgkxNVVfF_kOXFsQs_mPrM4K53fao72UV_x4&amp;clipt=EIbDsAEYha6xAQ"></iframe></span></span>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
 		];
 	}
 
