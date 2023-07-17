@@ -425,6 +425,10 @@
 		<td><code>theonion</code></td>
 		<td>https://www.theonion.com/video/nation-successfully-completes-mothers-day-by-918-a,35998/<br/>https://www.theonion.com/video/the-onion-reviews-avengers-age-of-ultron-38524</td>
 	</tr>
+	<tr title="Threads" id="threads">
+		<td><code>threads</code></td>
+		<td>https://www.threads.net/t/CuY2OYEAbJw</td>
+	</tr>
 	<tr title="TikTok" id="tiktok">
 		<td><code>tiktok</code></td>
 		<td>https://www.tiktok.com/@lauren.feagans/video/6789430799839104261</td>

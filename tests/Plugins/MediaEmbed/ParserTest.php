@@ -3597,6 +3597,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.threads.net/t/CuY2OYEAbJw',
+				'<r><THREADS id="CuY2OYEAbJw">https://www.threads.net/t/CuY2OYEAbJw</THREADS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('threads');
+				}
+			],
+			[
+				'https://www.threads.net/@rjscaringe/post/Cuh133vIf-K',
+				'<r><THREADS id="Cuh133vIf-K">https://www.threads.net/@rjscaringe/post/Cuh133vIf-K</THREADS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('threads');
+				}
+			],
+			[
 				'https://www.tiktok.com/@lauren.feagans/video/6789430799839104261',
 				'<r><TIKTOK id="6789430799839104261">https://www.tiktok.com/@lauren.feagans/video/6789430799839104261</TIKTOK></r>',
 				[],
