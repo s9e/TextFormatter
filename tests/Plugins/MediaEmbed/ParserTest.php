@@ -4498,6 +4498,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
+			[
+				// https://xenforo.com/community/threads/youtubes-sister-domain-youtube-nocookie-com-is-not-accepted-as-media.214151/
+				'https://www.youtube-nocookie.com/embed/kQ0Eo1UccEE',
+				'<r><YOUTUBE id="kQ0Eo1UccEE">https://www.youtube-nocookie.com/embed/kQ0Eo1UccEE</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
 		];
 	}
 
