@@ -3851,6 +3851,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://x.com/X/status/1445078208190291973',
+				'<r><TWITTER id="1445078208190291973">https://x.com/X/status/1445078208190291973</TWITTER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('twitter');
+				}
+			],
+			[
 				'http://vbox7.com/play:a87a6894c5',
 				'<r><VBOX7 id="a87a6894c5">http://vbox7.com/play:a87a6894c5</VBOX7></r>',
 				[],
