@@ -7,9 +7,10 @@
 
 	<host>facebook.com</host>
 	<host>fb.watch</host>
-	<extract>@/(?!(?:apps|developers|graph)\.)[-\w.]*facebook\.com/(?:[/\w]+/permalink|(?!marketplace/|pages/|groups/).*?)(?:/|fbid=|\?v=)(?'id'\d+)(?=$|[/?&amp;#])@</extract>
-	<extract>@facebook\.com/(?'user'[.\w]+)/(?=(?:post|video)s?/)(?'type'[pv])@</extract>
+	<extract>@facebook\.com/.*?(?:fbid=|/permalink/|\?v=)(?'id'\d+)@</extract>
+	<extract>@facebook\.com/(?'user'[.\w]+)/(?'type'[pv])(?:ost|ideo)s?/(?'id'\d+)@</extract>
 	<extract>@facebook\.com/video/(?=post|video)(?'type'[pv])@</extract>
+	<extract>@facebook\.com/events/(?'id'\d+)\b(?!/permalink)@</extract>
 	<extract>@facebook\.com/watch/\?(?'type'[pv])=@</extract>
 	<extract>@facebook.com/groups/[^/]*/(?'type'p)osts/(?'id'\d+)@</extract>
 	<extract>@facebook\.com/(?'user'[.\w]+)/posts/pfbid(?'pfbid'\w+)@</extract>
