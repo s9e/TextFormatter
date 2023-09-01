@@ -2184,6 +2184,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/southamptonfc/videos/together-%EF%B8%8F/238166525313826/',
+				'<r><FACEBOOK id="238166525313826" type="v" user="southamptonfc">https://www.facebook.com/southamptonfc/videos/together-%EF%B8%8F/238166525313826/</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://www.facebook.com/marketplace/item/500023920905237/',
 				'<t>https://www.facebook.com/marketplace/item/500023920905237/</t>',
 				[],
