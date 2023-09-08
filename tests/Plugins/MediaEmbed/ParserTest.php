@@ -778,61 +778,6 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				'https://gfycat.com/LoathsomeHarmfulJenny',
-				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">https://gfycat.com/LoathsomeHarmfulJenny</GFYCAT></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gfycat');
-				}
-			],
-			[
-				'https://gfycat.com/loathsomeharmfuljenny',
-				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">https://gfycat.com/loathsomeharmfuljenny</GFYCAT></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gfycat');
-				}
-			],
-			[
-				'https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny',
-				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">https://gfycat.com/gifs/detail/LoathsomeHarmfulJenny</GFYCAT></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gfycat');
-				}
-			],
-			[
-				'https://gfycat.com/Test',
-				'<r><GFYCAT height="360" id="Test" width="640">https://gfycat.com/Test</GFYCAT></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gfycat');
-
-					// Save an empty cache file that corresponds to this URL
-					$configurator->registeredVars['cacheDir'] = self::populateCache([
-						'https://gfycat.com/ifr/Test' => ''
-					]);
-				}
-			],
-			[
-				'http://giant.gfycat.com/LoathsomeHarmfulJenny.gif',
-				'<r><GFYCAT height="534" id="LoathsomeHarmfulJenny" width="950">http://giant.gfycat.com/LoathsomeHarmfulJenny.gif</GFYCAT></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gfycat');
-				}
-			],
-			[
 				'https://j.gifs.com/Y6YZoO.gif',
 				'<r><GIFS height="200" id="Y6YZoO" width="200">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
 				[],
@@ -1385,26 +1330,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('getty');
 				},
 				'assertMatchesRegularExpression'
-			],
-			[
-				'https://gfycat.com/LoathsomeHarmfulJenny',
-				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny?hd=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gfycat');
-				}
-			],
-			[
-				'https://gfycat.com/ifr/LoathsomeHarmfulJenny',
-				'<span data-s9e-mediaembed="gfycat" style="display:inline-block;width:100%;max-width:950px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:60.8421052631579%;padding-bottom:calc(56.2105263157895% + 44px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//gfycat.com/ifr/LoathsomeHarmfulJenny?hd=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gfycat');
-				}
 			],
 			[
 				'https://giphy.com/gifs/cheezburger-sloth-yawn-FsjDdnIRcroIM',
@@ -5638,11 +5563,6 @@ class ParserTest extends Test
 				'facebook',
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
 				'<amp-facebook layout="responsive" width="640" height="360" data-href="https://www.facebook.com/FacebookDevelopers/posts/10151471074398553"></amp-facebook>'
-			],
-			[
-				'gfycat',
-				'https://gfycat.com/LoathsomeHarmfulJenny',
-				'<amp-gfycat layout="responsive" width="950" height="534" data-gfyid="LoathsomeHarmfulJenny"></amp-gfycat>'
 			],
 			[
 				'gist',

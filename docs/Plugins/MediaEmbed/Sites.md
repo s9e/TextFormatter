@@ -145,10 +145,6 @@
 		<td><code>getty</code></td>
 		<td>https://gty.im/3232182<br/>https://www.gettyimages.com/detail/3232182<br/>https://www.gettyimages.com/detail/news-photo/the-beatles-travel-by-coach-to-the-west-country-for-some-news-photo/3232182<br/>https://www.gettyimages.co.uk/detail/3232182</td>
 	</tr>
-	<tr title="Gfycat" id="gfycat">
-		<td><code>gfycat</code></td>
-		<td>https://gfycat.com/SereneIllfatedCapybara<br/>https://giant.gfycat.com/SereneIllfatedCapybara.gif</td>
-	</tr>
 	<tr title="Gifs.com" id="gifs">
 		<td><code>gifs</code></td>
 		<td>https://gifs.com/gif/zm4DLy<br/>https://j.gifs.com/Y6YZoO.gif</td>
