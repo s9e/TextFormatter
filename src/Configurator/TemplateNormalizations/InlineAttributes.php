@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 use DOMText;
 
 /**
@@ -23,12 +23,12 @@ class InlineAttributes extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[namespace-uri() != $XSL]/xsl:attribute'];
+	protected array $queries = ['//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/xsl:attribute'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		$value = '';
 		foreach ($element->childNodes as $node)
@@ -48,6 +48,6 @@ class InlineAttributes extends AbstractNormalization
 			}
 		}
 		$element->parentNode->setAttribute($element->getAttribute('name'), $value);
-		$element->parentNode->removeChild($element);
+		$element->remove();
 	}
 }

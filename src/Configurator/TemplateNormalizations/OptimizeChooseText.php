@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 use DOMText;
 
 class OptimizeChooseText extends AbstractChooseOptimization

@@ -7,34 +7,34 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 class MergeConsecutiveCopyOf extends AbstractNormalization
 {
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//xsl:copy-of'];
+	protected array $queries = ['//xsl:copy-of'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		while ($this->nextSiblingIsCopyOf($element))
 		{
 			$element->setAttribute('select', $element->getAttribute('select') . '|' . $element->nextSibling->getAttribute('select'));
-			$element->parentNode->removeChild($element->nextSibling);
+			$element->nextSibling->remove();
 		}
 	}
 
 	/**
 	* Test whether the next sibling to given element is an xsl:copy-of element
 	*
-	* @param  DOMElement $element Context node
+	* @param  Element $element Context node
 	* @return bool
 	*/
-	protected function nextSiblingIsCopyOf(DOMElement $element)
+	protected function nextSiblingIsCopyOf(Element $element)
 	{
 		return ($element->nextSibling && $this->isXsl($element->nextSibling, 'copy-of'));
 	}

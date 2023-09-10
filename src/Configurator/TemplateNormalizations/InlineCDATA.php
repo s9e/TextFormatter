@@ -14,7 +14,7 @@ class InlineCDATA extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//text()'];
+	protected array $queries = ['//text()'];
 
 	/**
 	* {@inheritdoc}
@@ -23,7 +23,7 @@ class InlineCDATA extends AbstractNormalization
 	{
 		if ($node->nodeType === XML_CDATA_SECTION_NODE)
 		{
-			$node->parentNode->replaceChild($this->createText($node->textContent), $node);
+			$node->replaceWith($this->createText($node->textContent), $node);
 		}
 	}
 }

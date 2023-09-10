@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 use DOMNode;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
 
@@ -21,7 +21,7 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//xsl:choose'];
+	protected array $queries = ['//xsl:choose'];
 
 	/**
 	* Collect consecutive xsl:when elements that share the same kind of equality tests
@@ -30,7 +30,7 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 	* variable part (e.g. the same attribute)
 	*
 	* @param  DOMNode      $node First node to inspect
-	* @return DOMElement[]
+	* @return Element[]
 	*/
 	protected function collectCompatibleBranches(DOMNode $node)
 	{
@@ -75,7 +75,7 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 	/**
 	* Merge identical xsl:when elements from a list
 	*
-	* @param  DOMElement[] $nodes
+	* @param  Element[] $nodes
 	* @return void
 	*/
 	protected function mergeBranches(array $nodes)
@@ -103,7 +103,7 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 
 				if ($i > 0)
 				{
-					$node->parentNode->removeChild($node);
+					$node->remove();
 				}
 			}
 
@@ -115,10 +115,10 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 	* Inspect the branches of an xsl:choose element and merge branches if their content is identical
 	* and their order does not matter
 	*
-	* @param  DOMElement $choose xsl:choose element
+	* @param  Element $choose xsl:choose element
 	* @return void
 	*/
-	protected function mergeCompatibleBranches(DOMElement $choose)
+	protected function mergeCompatibleBranches(Element $choose)
 	{
 		$node = $choose->firstChild;
 		while ($node)
@@ -143,10 +143,10 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 	* Inspect the branches of an xsl:choose element and merge consecutive branches if their content
 	* is identical
 	*
-	* @param  DOMElement $choose xsl:choose element
+	* @param  Element $choose xsl:choose element
 	* @return void
 	*/
-	protected function mergeConsecutiveBranches(DOMElement $choose)
+	protected function mergeConsecutiveBranches(Element $choose)
 	{
 		// Try to merge consecutive branches even if their test conditions are not compatible,
 		// e.g. "@a=1" and "@b=2"
@@ -169,7 +169,7 @@ class MergeIdenticalConditionalBranches extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		$this->mergeCompatibleBranches($element);
 		$this->mergeConsecutiveBranches($element);

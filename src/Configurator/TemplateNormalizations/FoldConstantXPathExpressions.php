@@ -53,7 +53,7 @@ class FoldConstantXPathExpressions extends AbstractConstantFolding
 	protected function evaluate($expr)
 	{
 		$useErrors = libxml_use_internal_errors(true);
-		$result    = $this->xpath->evaluate($expr);
+		$result    = $this->ownerDocument->evaluate($expr);
 		libxml_use_internal_errors($useErrors);
 
 		return $result;

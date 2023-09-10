@@ -22,7 +22,7 @@ class ConvertCurlyExpressionsInText extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[namespace-uri() != $XSL]/text()[contains(., "{@") or contains(., "{$")]'];
+	protected array $queries = ['//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/text()[contains(., "{@") or contains(., "{$")]'];
 
 	/**
 	* Insert a text node before given node
@@ -63,9 +63,7 @@ class ConvertCurlyExpressionsInText extends AbstractNormalization
 			$lastPos = $pos + strlen($m[0][0]);
 
 			// Add the xsl:value-of element
-			$parentNode
-				->insertBefore($this->createElement('xsl:value-of'), $node)
-				->setAttribute('select', $m[1][0]);
+			$parentNode->insertBefore($this->ownerDocument->createXslValueOf($m[1][0]), $node);
 		}
 
 		// Append the rest of the text
@@ -73,6 +71,6 @@ class ConvertCurlyExpressionsInText extends AbstractNormalization
 		$this->insertTextBefore($text, $node);
 
 		// Now remove the old text node
-		$parentNode->removeChild($node);
+		$node->remove();
 	}
 }

@@ -7,22 +7,22 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 class NormalizeElementNames extends AbstractNormalization
 {
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = [
-		'//*[namespace-uri() != $XSL]',
+	protected array $queries = [
+		'//*[namespace-uri() != "' . self::XMLNS_XSL . '"]',
 		'//xsl:element[not(contains(@name, "{"))]'
 	];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		if ($this->isXsl($element, 'element'))
 		{
@@ -37,10 +37,10 @@ class NormalizeElementNames extends AbstractNormalization
 	/**
 	* Normalize and replace a non-XSL element if applicable
 	*
-	* @param  DOMElement $element
+	* @param  Element $element
 	* @return void
 	*/
-	protected function replaceElement(DOMElement $element)
+	protected function replaceElement(Element $element)
 	{
 		$elName = $this->lowercase($element->localName);
 		if ($elName === $element->localName)
@@ -76,10 +76,10 @@ class NormalizeElementNames extends AbstractNormalization
 	/**
 	* Normalize the name used in a xsl:element
 	*
-	* @param  DOMElement $element
+	* @param  Element $element
 	* @return void
 	*/
-	protected function replaceXslElement(DOMElement $element)
+	protected function replaceXslElement(Element $element)
 	{
 		$elName = $this->lowercase($element->getAttribute('name'));
 		$element->setAttribute('name', $elName);

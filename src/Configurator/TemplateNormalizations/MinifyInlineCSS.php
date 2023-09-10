@@ -15,7 +15,7 @@ class MinifyInlineCSS extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[namespace-uri() != $XSL]/@style'];
+	protected array $queries = ['//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@style'];
 
 	/**
 	* {@inheritdoc}

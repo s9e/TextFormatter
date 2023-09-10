@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMAttr;
-use DOMElement;
+use s9e\SweetDOM\Element;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 
 /**
@@ -24,12 +24,12 @@ class UninlineAttributes extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[namespace-uri() != $XSL][@*]'];
+	protected array $queries = ['//*[namespace-uri() != "' . self::XMLNS_XSL . '"][@*]'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		// Using a document fragment improves performance with multiple attributes
 		$fragment = $element->ownerDocument->createDocumentFragment();
@@ -43,17 +43,14 @@ class UninlineAttributes extends AbstractNormalization
 	/**
 	* Remove an attribute from its parent element and return its content as an xsl:attribute
 	*
-	* @param  DOMAttr    $attribute Attribute node
-	* @return DOMElement            xsl:attribute element
+	* @param  DOMAttr $attribute Attribute node
+	* @return Element            xsl:attribute element
 	*/
 	protected function uninlineAttribute(DOMAttr $attribute)
 	{
 		$xslAttribute = (strpos($attribute->value, '{') === false)
 		              ? $this->uninlineStaticAttribute($attribute)
 		              : $this->uninlineDynamicAttribute($attribute);
-
-		// Set the xsl:attribute element's name
-		$xslAttribute->setAttribute('name', $attribute->nodeName);
 
 		// Remove the attribute from its parent element
 		$attribute->parentNode->removeAttributeNode($attribute);
@@ -64,20 +61,19 @@ class UninlineAttributes extends AbstractNormalization
 	/**
 	* Uninline an AVT-style attribute
 	*
-	* @param  DOMAttr    $attribute Attribute node
-	* @return DOMElement            xsl:attribute element
+	* @param  DOMAttr $attribute Attribute node
+	* @return Element            xsl:attribute element
 	*/
 	protected function uninlineDynamicAttribute(DOMAttr $attribute)
 	{
-		$xslAttribute = $this->createElement('xsl:attribute');
+		$xslAttribute = $this->ownerDocument->createXslAttribute($attribute->nodeName);
 
 		// Build the content of the xsl:attribute element
 		foreach (AVTHelper::parse($attribute->value) as list($type, $content))
 		{
 			if ($type === 'expression')
 			{
-				$childNode = $this->createElement('xsl:value-of');
-				$childNode->setAttribute('select', $content);
+				$childNode = $this->ownerDocument->createXslValueOf($content);
 			}
 			else
 			{
@@ -93,11 +89,11 @@ class UninlineAttributes extends AbstractNormalization
 	/**
 	* Uninline an attribute with a static value
 	*
-	* @param  DOMAttr    $attribute Attribute node
-	* @return DOMElement            xsl:attribute element
+	* @param  DOMAttr $attribute Attribute node
+	* @return Element            xsl:attribute element
 	*/
 	protected function uninlineStaticAttribute(DOMAttr $attribute)
 	{
-		return $this->createElement('xsl:attribute', str_replace('}}', '}', $attribute->value));
+		return $this->ownerDocument->createXslAttribute($attribute->nodeName, str_replace('}}', '}', $attribute->value));
 	}
 }

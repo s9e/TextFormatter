@@ -17,13 +17,13 @@ class RemoveComments extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//comment()'];
+	protected array $queries = ['//comment()'];
 
 	/**
 	* {@inheritdoc}
 	*/
 	protected function normalizeNode(DOMNode $node)
 	{
-		$node->parentNode->removeChild($node);
+		$node->remove();
 	}
 }

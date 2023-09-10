@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 /**
 * Add a value to a list of space-separated value
@@ -50,7 +50,7 @@ class AddAttributeValueToElements extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element): void
+	protected function normalizeElement(Element $element): void
 	{
 		$currentValues = $this->getValues($element->getAttribute($this->attrName));
 		if (!in_array($this->value, $currentValues, true))

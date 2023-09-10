@@ -17,14 +17,14 @@ class TransposeComments extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//comment()'];
+	protected array $queries = ['//comment()'];
 
 	/**
 	* {@inheritdoc}
 	*/
 	protected function normalizeNode(DOMNode $node)
 	{
-		$xslComment = $this->createElement('xsl:comment', $node->nodeValue);
-		$node->parentNode->replaceChild($xslComment, $node);
+		$xslComment = $this->ownerDocument->createXslComment($node->nodeValue);
+		$node->replaceWith($xslComment);
 	}
 }

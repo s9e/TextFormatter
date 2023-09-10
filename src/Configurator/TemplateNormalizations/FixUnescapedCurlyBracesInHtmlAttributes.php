@@ -24,7 +24,7 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[namespace-uri() != $XSL]/@*[contains(., "{")]'];
+	protected array $queries = ['//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]'];
 
 	/**
 	* {@inheritdoc}

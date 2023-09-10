@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 /**
 * Optimize conditional attributes
@@ -26,15 +26,14 @@ class OptimizeConditionalAttributes extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//xsl:if[starts-with(@test, "@")][count(descendant::node()) = 2][xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]'];
+	protected array $queries = ['//xsl:if[starts-with(@test, "@")][count(descendant::node()) = 2][xsl:attribute[@name = substring(../@test, 2)][xsl:value-of[@select = ../../@test]]]'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
-		$copyOf = $this->createElement('xsl:copy-of');
-		$copyOf->setAttribute('select', $element->getAttribute('test'));
+		$copyOf = $this->ownerDocument->createXslCopyOf($element->getAttribute('test'));
 
 		$element->parentNode->replaceChild($copyOf, $element);
 	}

@@ -16,7 +16,7 @@ class MinifyXPathExpressions extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//@*[contains(., " ") or contains(., ")")]'];
+	protected array $queries = ['//@*[contains(., " ") or contains(., ")")]'];
 
 	/**
 	* {@inheritdoc}

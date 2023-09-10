@@ -8,7 +8,7 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use DOMAttr;
-use DOMElement;
+use s9e\SweetDOM\Element;
 use DOMNode;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 use s9e\TextFormatter\Configurator\Helpers\XPathHelper;
@@ -28,12 +28,12 @@ class InlineInferredValues extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//xsl:if', '//xsl:when'];
+	protected array $queries = ['//xsl:if', '//xsl:when'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		// Test whether the map has exactly one key and one value
 		$map = XPathHelper::parseEqualityExpr($element->getAttribute('test'));
@@ -59,14 +59,14 @@ class InlineInferredValues extends AbstractNormalization
 	{
 		// Get xsl:value-of descendants that match the condition
 		$query = './/xsl:value-of[@select="' . $expr . '"]';
-		foreach ($this->xpath($query, $node) as $valueOf)
+		foreach ($node->query($query) as $valueOf)
 		{
 			$this->replaceValueOf($valueOf, $value);
 		}
 
 		// Get all attributes from non-XSL elements that *could* match the condition
-		$query = './/*[namespace-uri() != $XSL]/@*[contains(., "{' . $expr . '}")]';
-		foreach ($this->xpath($query, $node) as $attribute)
+		$query = './/*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{' . $expr . '}")]';
+		foreach ($node->query($query) as $attribute)
 		{
 			$this->replaceAttribute($attribute, $expr, $value);
 		}
@@ -101,11 +101,11 @@ class InlineInferredValues extends AbstractNormalization
 	/**
 	* Replace an xsl:value-of element with a literal value
 	*
-	* @param  DOMElement $valueOf
+	* @param  Element $valueOf
 	* @param  string     $value
 	* @return void
 	*/
-	protected function replaceValueOf(DOMElement $valueOf, $value)
+	protected function replaceValueOf(Element $valueOf, $value)
 	{
 		$valueOf->parentNode->replaceChild($this->createText($value), $valueOf);
 	}

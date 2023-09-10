@@ -17,13 +17,13 @@ class PreserveSingleSpaces extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//text()[. = " "][not(parent::xsl:text)]'];
+	protected array $queries = ['//text()[. = " "][not(parent::xsl:text)]'];
 
 	/**
 	* {@inheritdoc}
 	*/
 	protected function normalizeText(DOMText $node): void
 	{
-		$node->parentNode->replaceChild($this->createElement('xsl:text', ' '), $node);
+		$node->replaceWith($this->ownerDocument->createXslText(' '));
 	}
 }
