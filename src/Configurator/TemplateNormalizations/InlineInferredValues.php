@@ -102,7 +102,7 @@ class InlineInferredValues extends AbstractNormalization
 	* Replace an xsl:value-of element with a literal value
 	*
 	* @param  Element $valueOf
-	* @param  string     $value
+	* @param  string  $value
 	* @return void
 	*/
 	protected function replaceValueOf(Element $valueOf, $value)
