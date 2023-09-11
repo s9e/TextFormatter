@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMNode;
+use DOMText;
 
 /**
 * Remove all inter-element whitespace except for single space characters
@@ -22,7 +22,7 @@ class RemoveInterElementWhitespace extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeNode(DOMNode $node)
+	protected function normalizeText(DOMText $node): void
 	{
 		$node->parentNode->removeChild($node);
 	}

@@ -11,6 +11,7 @@ use DOMAttr;
 use DOMComment;
 use DOMElement;
 use DOMNode;
+use DOMText;
 use DOMXPath;
 
 abstract class AbstractNormalization
@@ -48,7 +49,11 @@ abstract class AbstractNormalization
 		$this->xpath->registerNamespace('xsl', self::XMLNS_XSL);
 		foreach ($this->getNodes() as $node)
 		{
-			$this->normalizeNode($node);
+			// Ignore nodes that have been removed from the document
+			if ($node->parentNode)
+			{
+				$this->normalizeNode($node);
+			}
 		}
 		$this->reset();
 	}
@@ -169,11 +174,6 @@ abstract class AbstractNormalization
 	*/
 	protected function normalizeNode(DOMNode $node)
 	{
-		if (!$node->parentNode)
-		{
-			// Ignore nodes that have been removed from the document
-			return;
-		}
 		if ($node instanceof DOMElement)
 		{
 			$this->normalizeElement($node);
@@ -182,6 +182,17 @@ abstract class AbstractNormalization
 		{
 			$this->normalizeAttribute($node);
 		}
+		elseif ($node instanceof DOMText)
+		{
+			$this->normalizeText($node);
+		}
+	}
+
+	/**
+	* Normalize given text node
+	*/
+	protected function normalizeText(DOMText $node): void
+	{
 	}
 
 	/**

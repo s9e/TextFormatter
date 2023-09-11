@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMNode;
+use DOMText;
 
 class InlineCDATA extends AbstractNormalization
 {
@@ -19,7 +19,7 @@ class InlineCDATA extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeNode(DOMNode $node)
+	protected function normalizeText(DOMText $node): void
 	{
 		if ($node->nodeType === XML_CDATA_SECTION_NODE)
 		{

@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMNode;
+use DOMText;
 
 /**
 * Convert simple expressions in curly brackets in text into xsl:value-of elements
@@ -26,12 +26,8 @@ class ConvertCurlyExpressionsInText extends AbstractNormalization
 
 	/**
 	* Insert a text node before given node
-	*
-	* @param  string  $text
-	* @param  DOMNode $node
-	* @return void
 	*/
-	protected function insertTextBefore($text, $node)
+	protected function insertTextBefore(string $text, DOMText $node): void
 	{
 		if ($text > '')
 		{
@@ -42,7 +38,7 @@ class ConvertCurlyExpressionsInText extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeNode(DOMNode $node)
+	protected function normalizeText(DOMText $node): void
 	{
 		$parentNode = $node->parentNode;
 
