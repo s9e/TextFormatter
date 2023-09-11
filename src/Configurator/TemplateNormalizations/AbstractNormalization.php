@@ -22,9 +22,9 @@ abstract class AbstractNormalization
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
-	* @var ?Document Document that holds the template being normalized
+	* @var Document Document that holds the template being normalized
 	*/
-	protected ?Document $ownerDocument = null;
+	protected Document $ownerDocument;
 
 	/**
 	* @var string[] XPath queries used to retrieve nodes of interest
@@ -162,6 +162,6 @@ abstract class AbstractNormalization
 	*/
 	protected function reset()
 	{
-		$this->ownerDocument = null;
+		unset($this->ownerDocument);
 	}
 }
