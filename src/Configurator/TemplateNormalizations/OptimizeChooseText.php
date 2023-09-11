@@ -108,10 +108,7 @@ class OptimizeChooseText extends AbstractChooseOptimization
 		if ($len)
 		{
 			$this->adjustTextNodes('firstChild', $len);
-			$this->choose->parentNode->insertBefore(
-				$this->createText(substr($strings[0], 0, $len)),
-				$this->choose
-			);
+			$this->choose->before($this->createText(substr($strings[0], 0, $len)));
 		}
 	}
 
