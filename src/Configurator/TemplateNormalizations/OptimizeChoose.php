@@ -95,7 +95,7 @@ class OptimizeChoose extends AbstractChooseOptimization
 	protected function moveFirstChildBefore()
 	{
 		$branches = $this->getBranches();
-		$this->choose->parentNode->insertBefore(array_pop($branches)->firstChild, $this->choose);
+		$this->choose->before(array_pop($branches)->firstChild);
 		foreach ($branches as $branch)
 		{
 			$branch->firstChild->remove();
