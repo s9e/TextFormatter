@@ -9,11 +9,11 @@
 	<host>link.tospotify.com</host>
 	<host>open.spotify.com</host>
 	<host>play.spotify.com</host>
-	<extract>!(?:open|play)\.spotify\.com/(?:user/[-.\w]+/)?(?'id'(?:album|artist|episode|playlist|show|track)(?:[:/][-.\w]+)+)!</extract>
+	<extract>!(?:open|play)\.spotify\.com/(?:intl-\w+/|user/[-.\w]+/)*(?'id'(?:album|artist|episode|playlist|show|track)(?:[:/][-.\w]+)+)!</extract>
 	<scrape>
 		<header>User-agent: PHP (not Mozilla)</header>
 		<match>!link\.tospotify\.com/.!</match>
-		<extract>!(?:open|play)\.spotify\.com/(?:user/[-.\w]+/)?(?'id'(?:album|artist|episode|playlist|show|track)(?:[:/][-.\w]+)+)!</extract>
+		<extract>!(?:open|play)\.spotify\.com/(?:intl-\w+/|user/[-.\w]+/)*(?'id'(?:album|artist|episode|playlist|show|track)(?:[:/][-.\w]+)+)!</extract>
 	</scrape>
 	<iframe width="100%" max-width="900" allow="encrypted-media" src="https://open.spotify.com/embed/{translate(@id,':','/')}{@path}">
 		<height><![CDATA[

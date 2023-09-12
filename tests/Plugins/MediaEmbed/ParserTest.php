@@ -3395,6 +3395,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://open.spotify.com/intl-es/track/1mMhulpbNYovMDypYrBQjQ?si=17df366df05143ee',
+				'<r><SPOTIFY id="track/1mMhulpbNYovMDypYrBQjQ">https://open.spotify.com/intl-es/track/1mMhulpbNYovMDypYrBQjQ?si=17df366df05143ee</SPOTIFY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
 				'https://spreaker.com/episode/12449095',
 				'<r><SPREAKER episode_id="12449095">https://spreaker.com/episode/12449095</SPREAKER></r>',
 				[],
