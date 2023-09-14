@@ -1,3 +1,31 @@
+2.14.1 (2023-09-14)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/48a2f3a3fb18af8d78330204732a3369441c4060...9cd4fc5143e03fe777ac2fc76bb16d30a05fe6a5)
+
+### Added
+
+ - `38e323231` MediaEmbed: added Threads
+ - `d1887fad1` MediaEmbed: added support for YouTube clips
+
+### Removed
+
+ - `d34f9d3c1` MediaEmbed: removed defunct site Gfycat
+
+### Changed
+
+ - `a35d090d2` MediaEmbed: updated Facebook
+ - `473cb5958` MediaEmbed: updated Facebook
+ - `b06918f8f` MediaEmbed: updated Instagram
+ - `9cd4fc514` MediaEmbed: updated Spotify
+ - `ae32e676d` MediaEmbed: updated Spotify
+ - `cbf872bb7` MediaEmbed: updated TrendingViews
+ - `6653f07f7` MediaEmbed: updated Twitter
+ - `1817f1b79` MediaEmbed: updated YouTube
+ - `2d73167e4` Reorganized TemplateNormations
+ - `66fcff366` Updated README
+
+
 2.14.0 (2023-06-08)
 ===================
 
