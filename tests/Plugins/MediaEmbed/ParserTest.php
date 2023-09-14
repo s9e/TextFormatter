@@ -1135,6 +1135,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://spotify.link/U1CqAwCm3Cb',
+				'<r><SPOTIFY id="track/1lb8H6M5htL5MeBpZpmZws">https://spotify.link/U1CqAwCm3Cb</SPOTIFY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('spotify');
+				}
+			],
+			[
 				'https://www.spreaker.com/show/2-up-front_1',
 				'<r><SPREAKER show_id="1374587">https://www.spreaker.com/show/2-up-front_1</SPREAKER></r>',
 				[],
