@@ -2,6 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Plugins\Litedown;
 
+use s9e\TextFormatter\Configurator\RulesGenerators\ManageParagraphs;
 use s9e\TextFormatter\Plugins\Litedown\Configurator;
 use s9e\TextFormatter\Tests\Test;
 
@@ -16,7 +17,17 @@ class ConfiguratorTest extends Test
 	public function testManageParagraphs()
 	{
 		$this->configurator->plugins->load('Litedown');
-		$this->assertTrue($this->configurator->rulesGenerator->contains('ManageParagraphs'));
+
+		$found = false;
+		foreach ($this->configurator->rulesGenerator as $rulesGenerator)
+		{
+			if ($rulesGenerator instanceof ManageParagraphs)
+			{
+				$found = true;
+				break;
+			}
+		}
+		$this->assertTrue($found);
 	}
 
 	/**
