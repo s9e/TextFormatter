@@ -17,7 +17,7 @@ foreach ($configurator->tags as $tag)
 	$tag->template .= '<xsl:if test="@url"><a href="{@url}"><xsl:value-of select="@url"/></a></xsl:if>';
 }
 
-function addMediaUrl($tag, $parser);
+function addMediaUrl($tag, $parser)
 {
 	// Get the position and length of text consumed by this tag, or pair of tags
 	$pos = $tag->getPos();
