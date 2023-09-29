@@ -1018,26 +1018,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('podbean');
 				}
 			],
-//			[
-//				'https://rumble.com/vaxo02-i-cant-climb-.html',
-//				'<r><RUMBLE id="v8bhte">https://rumble.com/vaxo02-i-cant-climb-.html</RUMBLE></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('rumble');
-//				}
-//			],
-//			[
-//				'https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/',
-//				'<r><RUTUBE id="4782775">https://rutube.ru/video/0771e73d1d10eee9c43ce31decc1dfce/</RUTUBE></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('rutube');
-//				}
-//			],
+			[
+				'https://reddit.com/r/ChatGPT/s/KucfjzzJzT',
+				'<r><REDDIT id="ChatGPT/comments/16uqvax">https://reddit.com/r/ChatGPT/s/KucfjzzJzT</REDDIT></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('reddit');
+				}
+			],
 			[
 				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
 				'<r><SLIDESHARE id="21112125" key="bP5rZdZymdBjp0">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></r>',

@@ -7,6 +7,11 @@
 
 	<host>reddit.com</host>
 	<extract>!(?'id'\w+/comments/\w+(?:/\w+/\w+)?)!</extract>
+	<scrape>
+		<header>User-agent: FreeBSD/11.0 Lynx/56</header>
+		<match>!reddit\.com/r/[^/]+/s/\w!</match>
+		<extract>!(?'id'\w+/comments/\w+(?:/\w+/\w+)?)!</extract>
+	</scrape>
 	<iframe width="800" height="165"
 		src="https://s9e.github.io/iframe/2/reddit.min.html#{@id}{@path}#theme={$MEDIAEMBED_THEME}"
 		onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])"
