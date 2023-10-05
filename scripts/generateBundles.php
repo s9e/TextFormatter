@@ -22,10 +22,7 @@ foreach (glob(__DIR__ . '/../src/Configurator/Bundles/*.php') as $filepath)
 	$rendererGenerator->filepath  = $bundleDir . '/Renderer.php';
 
 	// Replace the XPathConvertor to work under the minimum requirements
-	$rendererGenerator->serializer->convertor->features = [
-		'mbstring' => false,
-		'php80'    => false
-	];
+	$rendererGenerator->serializer->convertor->features['mbstring'] = false;
 
 	$configurator->enableJavaScript();
 	$filepath = __DIR__ . '/../vendor/node_modules/google-closure-compiler-linux/compiler';
