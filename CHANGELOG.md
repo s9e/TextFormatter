@@ -1,3 +1,16 @@
+2.14.2 (2023-10-05)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/19c0005a4c6513f73ed8d780959bcc5453b4fa37...f33cdf62245eb7f880eef6d3665a21f2c8cb5451)
+
+### Changed
+
+ - `440d40901` Enable PHP8 functions in bundled renderers
+ - `8188d7ace` MediaEmbed: updated Reddit
+ - `528665cc3` RulesGeneratorList: updated remove()
+ - `f33cdf622` Updated RTD config
+
+
 2.14.1 (2023-09-14)
 ===================
 
