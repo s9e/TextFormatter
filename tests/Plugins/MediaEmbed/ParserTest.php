@@ -2136,6 +2136,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/reel/873906321076441',
+				'<r><FACEBOOK id="873906321076441" type="r">https://www.facebook.com/reel/873906321076441</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				// https://xenforo.com/community/threads/s9e-media-sites.139274/page-94#post-1640633
 				'https://www.facebook.com/business/help/2593586717571940?id=673052479947730',
 				'<t>https://www.facebook.com/business/help/2593586717571940?id=673052479947730</t>',
