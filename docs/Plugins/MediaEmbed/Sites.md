@@ -119,7 +119,7 @@
 	</tr>
 	<tr title="Facebook" id="facebook">
 		<td><code>facebook</code></td>
-		<td>https://www.facebook.com/MetaforDevelopers/posts/451016937058647<br/>https://www.facebook.com/watch/?v=224353158889229<br/>https://fb.watch/3zYsXdnxjf/</td>
+		<td>https://www.facebook.com/MetaforDevelopers/posts/451016937058647<br/>https://www.facebook.com/watch/?v=224353158889229<br/>https://fb.watch/3zYsXdnxjf/<br/>https://www.facebook.com/reel/873906321076441</td>
 	</tr>
 	<tr title="Falstad Circuit Simulator" id="falstad">
 		<td><code>falstad</code></td>

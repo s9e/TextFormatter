@@ -2,6 +2,7 @@
 	<example>https://www.facebook.com/MetaforDevelopers/posts/451016937058647</example>
 	<example>https://www.facebook.com/watch/?v=224353158889229</example>
 	<example>https://fb.watch/3zYsXdnxjf/</example>
+	<example>https://www.facebook.com/reel/873906321076441</example>
 
 	<tags><tag>social</tag></tags>
 
@@ -40,13 +41,14 @@
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/2/facebook.min.html#</xsl:text>
 			<xsl:choose>
-				<xsl:when test="@id">
-					<xsl:value-of select="@type"/>
-					<xsl:value-of select="@id"/>
+				<xsl:when test="@pfbid">
+					<xsl:text>pfbid</xsl:text><xsl:value-of select="@pfbid"/>
+				</xsl:when>
+				<xsl:when test="@user">
+					<xsl:value-of select="@user"/>/<xsl:value-of select="@id"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:text>pfbid</xsl:text>
-					<xsl:value-of select="@pfbid"/>
+					<xsl:value-of select="@type"/><xsl:value-of select="@id"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		]]></src>

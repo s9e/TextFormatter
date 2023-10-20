@@ -2650,6 +2650,8 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins with data set #302
  [x] Tests from plugins with data set #303
  [x] Tests from plugins with data set #304
+ [x] Tests from plugins with data set #305
+ [x] Tests from plugins with data set #306
  [x] Tests from plugins (Quick renderer) with data set #0
  [x] Tests from plugins (Quick renderer) with data set #1
  [x] Tests from plugins (Quick renderer) with data set #2
@@ -2955,6 +2957,8 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins (Quick renderer) with data set #302
  [x] Tests from plugins (Quick renderer) with data set #303
  [x] Tests from plugins (Quick renderer) with data set #304
+ [x] Tests from plugins (Quick renderer) with data set #305
+ [x] Tests from plugins (Quick renderer) with data set #306
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
 
@@ -6875,6 +6879,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Legacy rendering tests with data set #14
  [x] Legacy rendering tests with data set #15
  [x] Legacy rendering tests with data set #16
+ [x] Legacy rendering tests with data set #17
+ [x] Legacy rendering tests with data set #18
  [x] AMP rendering tests with data set #0
  [x] AMP rendering tests with data set #1
  [x] AMP rendering tests with data set #2
@@ -7235,6 +7241,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #333
  [x] Parsing tests with data set #334
  [x] Parsing tests with data set #335
+ [x] Parsing tests with data set #336
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -7571,6 +7578,7 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #333
  [x] Parsing tests (JavaScript) with data set #334
  [x] Parsing tests (JavaScript) with data set #335
+ [x] Parsing tests (JavaScript) with data set #336
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
@@ -7668,6 +7676,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing+rendering tests with data set #94
  [x] Parsing+rendering tests with data set #95
  [x] Parsing+rendering tests with data set #96
+ [x] Parsing+rendering tests with data set #97
+ [x] Parsing+rendering tests with data set #98
 
 Parser Base (s9e\TextFormatter\Tests\Plugins\ParserBase)
  [x] Has a default empty setUp() method

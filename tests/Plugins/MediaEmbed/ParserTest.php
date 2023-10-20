@@ -2145,6 +2145,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/hannoverfeuerwerk/posts/634463428818848:634463428818848',
+				'<r><FACEBOOK id="634463428818848" type="p" user="hannoverfeuerwerk">https://www.facebook.com/hannoverfeuerwerk/posts/634463428818848:634463428818848</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				// https://xenforo.com/community/threads/s9e-media-sites.139274/page-94#post-1640633
 				'https://www.facebook.com/business/help/2593586717571940?id=673052479947730',
 				'<t>https://www.facebook.com/business/help/2593586717571940?id=673052479947730</t>',
@@ -4726,7 +4735,25 @@ class ParserTest extends Test
 			],
 			[
 				'https://www.facebook.com/FacebookDevelopers/posts/10151471074398553',
-				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#p10151471074398553"></iframe>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#FacebookDevelopers/10151471074398553"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'https://www.facebook.com/photo.php?v=10100658170103643&set=vb.20531316728&type=3&theater',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#10100658170103643"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'https://www.facebook.com/video/video.php?v=10150451523596807',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#v10150451523596807"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -5450,6 +5477,23 @@ class ParserTest extends Test
 			[
 				'<FACEBOOK pfbid="02XdVziPTwhmPU9XzBqkRvU5o7NPXUicAJgVy8kf1a1W51hU7EmgMmCigo9rZWxCjDl"/>',
 				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#pfbid02XdVziPTwhmPU9XzBqkRvU5o7NPXUicAJgVy8kf1a1W51hU7EmgMmCigo9rZWxCjDl"></iframe>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'<r><FACEBOOK id="891173545141933" type="p">https://www.facebook.com/groups/cardiffcityforum/posts/891173545141933/</FACEBOOK></r>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#p891173545141933"></iframe>',
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'<r><FACEBOOK id="635809298738949" pfbid="02Dzu3vA7Hf4Fg2thijo5Ybmpmudw45mSi2fB6SgzUyuG6HnEDtwY1cSu6Mt2vPjFel" type="p" user="FEUERWERK.net">https://www.facebook.com/FEUERWERK.net/posts/pfbid02Dzu3vA7Hf4Fg2thijo5Ybmpmudw45mSi2fB6SgzUyuG6HnEDtwY1cSu6Mt2vPjFel</FACEBOOK></r>',
+				// As of 20231020 this embed works with the pfbid but not its canonical ID
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#pfbid02Dzu3vA7Hf4Fg2thijo5Ybmpmudw45mSi2fB6SgzUyuG6HnEDtwY1cSu6Mt2vPjFel"></iframe>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('facebook');
