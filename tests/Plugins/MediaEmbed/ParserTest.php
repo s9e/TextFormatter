@@ -5492,8 +5492,7 @@ class ParserTest extends Test
 			],
 			[
 				'<r><FACEBOOK id="635809298738949" pfbid="02Dzu3vA7Hf4Fg2thijo5Ybmpmudw45mSi2fB6SgzUyuG6HnEDtwY1cSu6Mt2vPjFel" type="p" user="FEUERWERK.net">https://www.facebook.com/FEUERWERK.net/posts/pfbid02Dzu3vA7Hf4Fg2thijo5Ybmpmudw45mSi2fB6SgzUyuG6HnEDtwY1cSu6Mt2vPjFel</FACEBOOK></r>',
-				// As of 20231020 this embed works with the pfbid but not its canonical ID
-				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#pfbid02Dzu3vA7Hf4Fg2thijo5Ybmpmudw45mSi2fB6SgzUyuG6HnEDtwY1cSu6Mt2vPjFel"></iframe>',
+				'<iframe data-s9e-mediaembed="facebook" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:360px;max-width:640px;width:100%" src="https://s9e.github.io/iframe/2/facebook.min.html#FEUERWERK.net/635809298738949"></iframe>',
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('facebook');

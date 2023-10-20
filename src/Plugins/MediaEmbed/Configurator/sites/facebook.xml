@@ -41,14 +41,18 @@
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/2/facebook.min.html#</xsl:text>
 			<xsl:choose>
-				<xsl:when test="@pfbid">
-					<xsl:text>pfbid</xsl:text><xsl:value-of select="@pfbid"/>
-				</xsl:when>
-				<xsl:when test="@user">
-					<xsl:value-of select="@user"/>/<xsl:value-of select="@id"/>
+				<xsl:when test="@id">
+					<xsl:choose>
+						<!-- #user/123 -->
+						<xsl:when test="@user"><xsl:value-of select="@user"/>/</xsl:when>
+						<!-- #p123 -->
+						<xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
+					</xsl:choose>
+					<xsl:value-of select="@id"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="@type"/><xsl:value-of select="@id"/>
+					<!-- #pfbid12345 -->
+					<xsl:text>pfbid</xsl:text><xsl:value-of select="@pfbid"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		]]></src>
