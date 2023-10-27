@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 /**
 * De-optimize xsl:if elements so that xsl:choose dead branch elimination can apply to them
@@ -17,20 +17,18 @@ class DeoptimizeIf extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//xsl:if[@test]'];
+	protected array $queries = ['//xsl:if[@test]'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $if)
+	protected function normalizeElement(Element $element): void
 	{
-		$choose = $this->createElement('xsl:choose');
-		$when   = $choose->appendChild($this->createElement('xsl:when'));
-		$when->setAttribute('test', $if->getAttribute('test'));
-		while ($if->firstChild)
+		$choose = $element->replaceWithXslChoose();
+		$when   = $choose->appendXslWhen($element->getAttribute('test'));
+		while ($element->firstChild)
 		{
-			$when->appendChild($if->firstChild);
+			$when->appendChild($element->firstChild);
 		}
-		$if->parentNode->replaceChild($choose, $if);
 	}
 }

@@ -7,12 +7,13 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMAttr;
-use DOMComment;
-use DOMElement;
 use DOMNode;
-use DOMText;
-use DOMXPath;
+use s9e\SweetDOM\Attr;
+use s9e\SweetDOM\Comment;
+use s9e\SweetDOM\CdataSection;
+use s9e\SweetDOM\Document;
+use s9e\SweetDOM\Element;
+use s9e\SweetDOM\Text;
 
 abstract class AbstractNormalization
 {
@@ -22,31 +23,23 @@ abstract class AbstractNormalization
 	const XMLNS_XSL = 'http://www.w3.org/1999/XSL/Transform';
 
 	/**
-	* @var DOMDocument Document that holds the template being normalized
+	* @var Document Document that holds the template being normalized
 	*/
-	protected $ownerDocument;
+	protected Document $ownerDocument;
 
 	/**
 	* @var string[] XPath queries used to retrieve nodes of interest
 	*/
-	protected $queries = [];
-
-	/**
-	* @var DOMXPath
-	*/
-	protected $xpath;
+	protected array $queries = [];
 
 	/**
 	* Apply this normalization rule to given template
 	*
-	* @param  DOMElement $template <xsl:template/> node
-	* @return void
+	* @param Element $template <xsl:template/> node
 	*/
-	public function normalize(DOMElement $template)
+	public function normalize(Element $template): void
 	{
 		$this->ownerDocument = $template->ownerDocument;
-		$this->xpath         = new DOMXPath($this->ownerDocument);
-		$this->xpath->registerNamespace('xsl', self::XMLNS_XSL);
 		foreach ($this->getNodes() as $node)
 		{
 			// Ignore nodes that have been removed from the document
@@ -59,56 +52,13 @@ abstract class AbstractNormalization
 	}
 
 	/**
-	* Create an element in current template
-	*
-	* @param  string     $nodeName
-	* @param  string     $textContent
-	* @return DOMElement
-	*/
-	protected function createElement($nodeName, $textContent = '')
-	{
-		$methodName = 'createElement';
-		$args       = [$nodeName];
-
-		// Add the text content for the new element
-		if ($textContent !== '')
-		{
-			$args[] = htmlspecialchars($textContent, ENT_NOQUOTES, 'UTF-8');
-		}
-
-		// Handle namespaced elements
-		$prefix = strstr($nodeName, ':', true);
-		if ($prefix > '')
-		{
-			$methodName .= 'NS';
-			array_unshift($args, $this->ownerDocument->lookupNamespaceURI($prefix));
-		}
-
-		return call_user_func_array([$this->ownerDocument, $methodName], $args);
-	}
-
-	/**
 	* Create an xsl:text element or a text node in current template
-	*
-	* @param  string  $content
-	* @return DOMNode
 	*/
-	protected function createText($content)
+	protected function createPolymorphicText(string $textContent): Element|Text
 	{
-		return (trim($content) === '')
-		     ? $this->createElement('xsl:text', $content)
-		     : $this->ownerDocument->createTextNode($content);
-	}
-
-	/**
-	* Create a text node in current template
-	*
-	* @param  string  $content
-	* @return DOMText
-	*/
-	protected function createTextNode($content)
-	{
-		return $this->ownerDocument->createTextNode($content);
+		return (trim($textContent) === '')
+		     ? $this->ownerDocument->nodeCreator->createXslText($textContent)
+		     : $this->ownerDocument->createTextNode($textContent);
 	}
 
 	/**
@@ -116,11 +66,11 @@ abstract class AbstractNormalization
 	*
 	* @return DOMNode[]
 	*/
-	protected function getNodes()
+	protected function getNodes(): array
 	{
 		$query = implode(' | ', $this->queries);
 
-		return ($query === '') ? [] : $this->xpath($query);
+		return ($query === '') ? [] : iterator_to_array($this->ownerDocument->query($query));
 	}
 
 	/**
@@ -130,7 +80,7 @@ abstract class AbstractNormalization
 	* @param  string  $localName
 	* @return bool
 	*/
-	protected function isXsl(DOMNode $node, $localName = null)
+	protected function isXsl(DOMNode $node, $localName = null): bool
 	{
 		return ($node->namespaceURI === self::XMLNS_XSL && (!isset($localName) || $localName === $node->localName));
 	}
@@ -146,79 +96,55 @@ abstract class AbstractNormalization
 		return strtr($str, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz');
 	}
 
-	/**
-	* Normalize given attribute
-	*
-	* @param  DOMAttr $attribute
-	* @return void
-	*/
-	protected function normalizeAttribute(DOMAttr $attribute)
+	protected function normalizeAttribute(Attr $attribute): void
 	{
 	}
 
-	/**
-	* Normalize given element
-	*
-	* @param  DOMElement $element
-	* @return void
-	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeCdataSection(CdataSection $comment): void
 	{
 	}
 
-	/**
-	* Normalize given node
-	*
-	* @param  DOMNode $node
-	* @return void
-	*/
-	protected function normalizeNode(DOMNode $node)
+	protected function normalizeComment(Comment $comment): void
 	{
-		if ($node instanceof DOMElement)
+	}
+
+	protected function normalizeElement(Element $element): void
+	{
+	}
+
+	protected function normalizeNode(DOMNode $node): void
+	{
+		if ($node instanceof Element)
 		{
 			$this->normalizeElement($node);
 		}
-		elseif ($node instanceof DOMAttr)
+		elseif ($node instanceof Attr)
 		{
 			$this->normalizeAttribute($node);
 		}
-		elseif ($node instanceof DOMText)
+		elseif ($node instanceof Text)
 		{
 			$this->normalizeText($node);
 		}
+		elseif ($node instanceof Comment)
+		{
+			$this->normalizeComment($node);
+		}
+		elseif ($node instanceof CdataSection)
+		{
+			$this->normalizeCdataSection($node);
+		}
 	}
 
-	/**
-	* Normalize given text node
-	*/
-	protected function normalizeText(DOMText $node): void
+	protected function normalizeText(Text $node): void
 	{
 	}
 
 	/**
 	* Reset this instance's properties after usage
-	*
-	* @return void
 	*/
-	protected function reset()
+	protected function reset(): void
 	{
-		$this->ownerDocument = null;
-		$this->xpath         = null;
-	}
-
-	/**
-	* Evaluate given XPath expression
-	*
-	* For convenience, $XSL is replaced with the XSL namespace URI as a string
-	*
-	* @param  string    $query XPath query
-	* @param  DOMNode   $node  Context node
-	* @return DOMNode[]
-	*/
-	protected function xpath($query, DOMNode $node = null)
-	{
-		$query = str_replace('$XSL', '"' . self::XMLNS_XSL . '"', $query);
-
-		return iterator_to_array($this->xpath->query($query, $node));
+		unset($this->ownerDocument);
 	}
 }

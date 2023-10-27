@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 use s9e\TextFormatter\Configurator\Helpers\ElementInspector;
 
 /**
@@ -23,12 +23,12 @@ class EnforceHTMLOmittedEndTags extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[namespace-uri() = ""]/*[namespace-uri() = ""]'];
+	protected array $queries = ['//*[namespace-uri() = ""]/*[namespace-uri() = ""]'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		$parentNode = $element->parentNode;
 		if (ElementInspector::isVoid($parentNode) || ElementInspector::closesParent($element, $parentNode))
@@ -40,10 +40,10 @@ class EnforceHTMLOmittedEndTags extends AbstractNormalization
 	/**
 	* Move given element and its following siblings after its parent element
 	*
-	* @param  DOMElement $element First element to move
+	* @param  Element $element First element to move
 	* @return void
 	*/
-	protected function reparentElement(DOMElement $element)
+	protected function reparentElement(Element $element)
 	{
 		$parentNode = $element->parentNode;
 		do

@@ -58,7 +58,7 @@ echo $html;
 <a href="http://example.org" target="_blank" rel="noreferrer">http://example.org</a>
 ```
 
-Starting with version 2.7.0, DOM manipulation is enhanced with the [SweetDOM](https://github.com/s9e/SweetDOM#api) API. In the following example, we showcase two different ways to achieve the same result: add an attribute to `a` elements if a given parameter is set. In one case we add `target="_blank"` if `$NEWTAB` is set, and in the other we set `rel="ugc"` if `$UGC` is set.
+Starting with version 3.0.0, DOM manipulation is enhanced with the [SweetDOM 3.0](https://github.com/s9e/SweetDOM#api) API. In the following example, we showcase two different ways to achieve the same result: add an attribute to `a` elements if a given parameter is set. In one case we add `target="_blank"` if `$NEWTAB` is set, and in the other we set `rel="ugc"` if `$UGC` is set.
 
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
@@ -68,12 +68,8 @@ $configurator->BBCodes->addFromRepository('URL');
 $dom = $configurator->tags['URL']->template->asDOM();
 foreach ($dom->getElementsByTagName('a') as $a)
 {
-	$a->insertAdjacentXML(
-		'afterbegin',
-		'<xsl:if test="$NEWTAB">
-			<xsl:attribute name="target">_blank</xsl:attribute>
-		</xsl:if>'
-	);
+	$a->prependXslIf(test: '$NEWTAB')
+	  ->appendXslAttribute(name: 'target', textContent: '_blank');
 
 	$a->prependXslIf('$UGC')->appendXslAttribute('rel', 'ugc');
 }

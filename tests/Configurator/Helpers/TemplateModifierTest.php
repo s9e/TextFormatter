@@ -124,7 +124,7 @@ class TemplateModifierTest extends Test
 				{
 					return ['literal', get_class($node)];
 				},
-				'<b id="DOMAttr">DOMText</b>'
+				'<b id="s9e\\SweetDOM\\Attr">s9e\\SweetDOM\\Text</b>'
 			],
 			[
 				'<b>$1</b><i>$$</i>',

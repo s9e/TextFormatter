@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 class Custom extends AbstractNormalization
 {
@@ -29,11 +29,12 @@ class Custom extends AbstractNormalization
 	/**
 	* Call the user-supplied callback
 	*
-	* @param  DOMElement $template <xsl:template/> node
+	* @param  Element $template <xsl:template/> node
 	* @return void
 	*/
-	public function normalize(DOMElement $template)
+	public function normalize(Element $template): void
 	{
 		call_user_func($this->callback, $template);
+		$this->reset();
 	}
 }

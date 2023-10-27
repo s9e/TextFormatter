@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMAttr;
-use DOMElement;
+use s9e\SweetDOM\Attr;
+use s9e\SweetDOM\Element;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 
 class InlineXPathLiterals extends AbstractNormalization
@@ -16,9 +16,9 @@ class InlineXPathLiterals extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = [
+	protected array $queries = [
 		'//xsl:value-of',
-		'//*[namespace-uri() != $XSL]/@*[contains(., "{")]'
+		'//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]'
 	];
 
 	/**
@@ -41,7 +41,7 @@ class InlineXPathLiterals extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeAttribute(DOMAttr $attribute)
+	protected function normalizeAttribute(Attr $attribute): void
 	{
 		AVTHelper::replace(
 			$attribute,
@@ -65,12 +65,12 @@ class InlineXPathLiterals extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		$textContent = $this->getTextContent($element->getAttribute('select'));
 		if ($textContent !== false)
 		{
-			$element->parentNode->replaceChild($this->createText($textContent), $element);
+			$element->replaceWith($this->createPolymorphicText($textContent));
 		}
 	}
 }

@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMNode;
+use s9e\SweetDOM\Comment;
 
 /**
 * Convert comments into xsl:comment elements
@@ -17,14 +17,13 @@ class TransposeComments extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//comment()'];
+	protected array $queries = ['//comment()'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeNode(DOMNode $node)
+	protected function normalizeComment(Comment $comment): void
 	{
-		$xslComment = $this->createElement('xsl:comment', $node->nodeValue);
-		$node->parentNode->replaceChild($xslComment, $node);
+		$comment->replaceWithXslComment($comment->textContent);
 	}
 }

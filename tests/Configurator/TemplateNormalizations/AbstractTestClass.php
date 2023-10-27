@@ -2,9 +2,9 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 
-use DOMDocument;
 use Exception;
 use ReflectionClass;
+use s9e\SweetDOM\Document;
 use s9e\TextFormatter\Configurator\Helpers\TemplateLoader;
 use s9e\TextFormatter\Tests\Test;
 
@@ -41,7 +41,7 @@ abstract class AbstractTestClass extends Test
 		     . $template
 		     . '</xsl:template>';
 
-		$dom = new DOMDocument;
+		$dom = new Document;
 		$dom->loadXML($xml);
 
 		$this->getNormalizer($args)->normalize($dom->documentElement);

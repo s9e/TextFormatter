@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 /**
 * Optimize xsl:choose elements by integrating the content of another xsl:choose element located
@@ -23,21 +23,21 @@ class OptimizeNestedConditionals extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//xsl:choose/xsl:otherwise[count(node()) = 1]/xsl:choose'];
+	protected array $queries = ['//xsl:choose/xsl:otherwise[count(node()) = 1]/xsl:choose'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		$otherwise   = $element->parentNode;
 		$outerChoose = $otherwise->parentNode;
 
 		while ($element->firstChild)
 		{
-			$outerChoose->appendChild($element->removeChild($element->firstChild));
+			$outerChoose->appendChild($element->firstChild);
 		}
 
-		$outerChoose->removeChild($otherwise);
+		$otherwise->remove();
 	}
 }
