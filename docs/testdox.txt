@@ -3662,6 +3662,8 @@ Optimize Nested Conditionals (s9e\TextFormatter\Tests\Configurator\TemplateNorma
  [x] Works with data set #0
  [x] Works with data set #1
  [x] Works with data set #2
+ [x] Works with data set #3
+ [x] Works with data set #4
 
 Preserve Single Spaces (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\PreserveSingleSpaces)
  [x] Works with data set #0

@@ -88,6 +88,42 @@ class OptimizeNestedConditionalsTest extends AbstractTestClass
 					</xsl:choose>'
 				)
 			],
+			[
+				self::ws(
+					'<xsl:choose>
+						<xsl:when test="@a=1">a1</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="@b=1">b1</xsl:if>
+							<xsl:value-of select="@b"/>
+						</xsl:otherwise>
+					</xsl:choose>'
+				),
+				self::ws(
+					'<xsl:choose>
+						<xsl:when test="@a=1">a1</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="@b=1">b1</xsl:if>
+							<xsl:value-of select="@b"/>
+						</xsl:otherwise>
+					</xsl:choose>'
+				)
+			],
+			[
+				self::ws(
+					'<xsl:choose>
+						<xsl:when test="@a=1">a1</xsl:when>
+						<xsl:otherwise>
+							<xsl:if test="@b=1">b1</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>'
+				),
+				self::ws(
+					'<xsl:choose>
+						<xsl:when test="@a=1">a1</xsl:when>
+						<xsl:when test="@b=1">b1</xsl:when>
+					</xsl:choose>'
+				)
+			],
 		];
 	}
 }
