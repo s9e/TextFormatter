@@ -5697,7 +5697,7 @@ class ParserTest extends Test
 			[
 				'twitter',
 				'https://twitter.com/IJasonAlexander/statuses/526635414338023424',
-				'<amp-twitter layout="responsive" width="550" height="273" data-tweetid="526635414338023424"><blockquote placeholder=""><a href="https://twitter.com/user/status/526635414338023424">Twitter</a></blockquote></amp-twitter>'
+				'<amp-twitter layout="responsive" width="550" height="273" data-tweetid="526635414338023424"><blockquote placeholder=""><a href="https://twitter.com/user/status/526635414338023424">X</a></blockquote></amp-twitter>'
 			],
 			[
 				'vimeo',

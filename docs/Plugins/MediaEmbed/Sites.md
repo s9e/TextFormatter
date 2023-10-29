@@ -457,7 +457,7 @@
 		<td><code>twitch</code></td>
 		<td>https://www.twitch.tv/twitch<br/>https://www.twitch.tv/twitch/v/29415830?t=17m17s<br/>https://www.twitch.tv/videos/29415830?t=17m17s<br/>https://www.twitch.tv/chess/clip/CrepuscularOptimisticEagleOhMyDog-9jMi4oqxK5MN0F0C</td>
 	</tr>
-	<tr title="Twitter" id="twitter">
+	<tr title="X" id="twitter">
 		<td><code>twitter</code></td>
 		<td>https://twitter.com/IJasonAlexander/statuses/1718435734942556494<br/>https://mobile.twitter.com/DerekTVShow/status/463372588690202624<br/>https://twitter.com/#!/IJasonAlexander/status/526635414338023424</td>
 	</tr>
