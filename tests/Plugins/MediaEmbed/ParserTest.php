@@ -5200,7 +5200,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:273px;max-width:550px;width:100%" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744"></iframe>',
+				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:350px;max-width:550px;width:100%" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -5209,7 +5209,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://twitter.com/BarackObama/statuses/266031293945503744',
-				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:273px;max-width:550px;width:100%" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744#theme=dark"></iframe>',
+				'<iframe data-s9e-mediaembed="twitter" allow="autoplay *" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:350px;max-width:550px;width:100%" src="https://s9e.github.io/iframe/2/twitter.min.html#266031293945503744#theme=dark"></iframe>',
 				[],
 				function ($configurator)
 				{
