@@ -41,17 +41,29 @@
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/2/facebook.min.html#</xsl:text>
 			<xsl:choose>
-				<xsl:when test="@id">
+				<xsl:when test="@user">
+					<!-- username/posts/123 -->
+					<!-- username/videos/123 -->
+					<xsl:value-of select="@user"/>
+					<xsl:text>/</xsl:text>
 					<xsl:choose>
-						<!-- #user/123 -->
-						<xsl:when test="@user"><xsl:value-of select="@user"/>/</xsl:when>
-						<!-- #p123 -->
-						<xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
+						<xsl:when test="@type = 'r' or @type = 'v'">videos</xsl:when>
+						<xsl:otherwise>posts</xsl:otherwise>
 					</xsl:choose>
+					<xsl:text>/</xsl:text>
+					<xsl:choose>
+						<xsl:when test="@id"><xsl:value-of select="@id"/></xsl:when>
+						<!-- username/posts/pfbidXXX -->
+						<xsl:otherwise>pfbid<xsl:value-of select="@pfbid"/></xsl:otherwise>
+					</xsl:choose>
+				</xsl:when>
+				<xsl:when test="@id">
+					<!-- 123, p123, r123, or v123 -->
+					<xsl:value-of select="@type"/>
 					<xsl:value-of select="@id"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<!-- #pfbid12345 -->
+					<!-- pfbidXXX -->
 					<xsl:text>pfbid</xsl:text><xsl:value-of select="@pfbid"/>
 				</xsl:otherwise>
 			</xsl:choose>
