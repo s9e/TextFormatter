@@ -4406,6 +4406,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.youtube.com/watch?time_continue=149&v=dQw4w9WgXcQ',
+				'<r><YOUTUBE id="dQw4w9WgXcQ" t="149">https://www.youtube.com/watch?time_continue=149&amp;v=dQw4w9WgXcQ</YOUTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('youtube');
+				}
+			],
+			[
 				'http://www.youtube.com/watch?v=pC35x6iIPmo&list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA',
 				'<r><YOUTUBE id="pC35x6iIPmo" list="PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA">http://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</YOUTUBE></r>',
 				[],

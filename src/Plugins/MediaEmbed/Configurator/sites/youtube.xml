@@ -21,7 +21,7 @@
 	<extract>!youtube\.com/(?:watch.*?v=|(?:embed|live|shorts|v)/|attribution_link.*?v%3D)(?'id'[-\w]+)!</extract>
 	<extract>!youtube-nocookie\.com/embed/(?'id'[-\w]+)!</extract>
 	<extract>!youtu\.be/(?'id'[-\w]+)!</extract>
-	<extract>@[#&amp;?]t=(?'t'\d[\dhms]*)@</extract>
+	<extract>@[#&amp;?]t(?:ime_continue)?=(?'t'\d[\dhms]*)@</extract>
 	<extract>![&amp;?]list=(?'list'[-\w]+)!</extract>
 	<scrape>
 		<match>@youtube\.com/clip/.@</match>
