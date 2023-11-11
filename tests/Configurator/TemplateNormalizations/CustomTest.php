@@ -2,7 +2,7 @@
 
 namespace s9e\TextFormatter\Tests\Configurator\TemplateNormalizations;
 
-use DOMDocument;
+use s9e\SweetDOM\Document;
 use s9e\TextFormatter\Configurator\TemplateNormalizations\Custom;
 use s9e\TextFormatter\Tests\Test;
 
@@ -16,7 +16,7 @@ class CustomTest extends Test
 	*/
 	public function testNormalize()
 	{
-		$dom = new DOMDocument;
+		$dom = new Document;
 		$dom->loadXML('<x/>');
 
 		$mock = $this->getMockBuilder('stdClass')

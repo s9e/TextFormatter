@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMNode;
+use s9e\SweetDOM\Comment;
 
 /**
 * Remove all comments
@@ -17,13 +17,13 @@ class RemoveComments extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//comment()'];
+	protected array $queries = ['//comment()'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeNode(DOMNode $node)
+	protected function normalizeComment(Comment $comment): void
 	{
-		$node->parentNode->removeChild($node);
+		$comment->remove();
 	}
 }

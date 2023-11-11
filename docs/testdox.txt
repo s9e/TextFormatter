@@ -3784,7 +3784,7 @@ Configurable (s9e\TextFormatter\Tests\Configurator\Traits\Configurable)
  [x] __get() throws a RuntimeException if the property does not exist
  [x] __get($k) returns null if the property is null
  [x] __set('foo', 'bar') calls setFoo('bar') if it exists
- [ ] __set() can create new properties
+ [x] __set() can create new properties
  [x] __set() can replace an instance of Foo with another instance of Foo
  [x] __set() can replace an instance of Foo with an instance of FooPlus, which extends Foo
  [x] __set() throws an exception if an instance of Foo would be replaced by an instance of Bar
@@ -7892,7 +7892,7 @@ Unformatted (s9e\TextFormatter\Tests\Renderers\Unformatted)
 XSLT (s9e\TextFormatter\Tests\Renderers\XSLT)
  [x] Is serializable
  [x] Does not serialize the XSLTProcessor instance
- [ ] Preserves other properties during serialization
+ [x] Preserves other properties during serialization
  [x] setParameter() accepts values that contain both types of quotes but replaces ASCII character " with Unicode character 0xFF02 because of https://bugs.php.net/64137
  [x] Does not output </embed> end tags
  [x] Does not improperly replace single quotes inside attribute values

@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 /**
 * Add rel="noreferrer" on links that open in a new context that would allow window.opener to be
@@ -29,7 +29,7 @@ class SetRelNoreferrerOnTargetedLinks extends AddAttributeValueToElements
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element): void
+	protected function normalizeElement(Element $element): void
 	{
 		if (!preg_match('(\\bno(?:open|referr)er\\b)', $element->getAttribute('rel')))
 		{

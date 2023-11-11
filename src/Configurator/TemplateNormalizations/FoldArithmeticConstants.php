@@ -83,7 +83,7 @@ class FoldArithmeticConstants extends AbstractConstantFolding
 	*/
 	protected function foldOperation(array $m)
 	{
-		return XPath::export($this->xpath->evaluate($m[0]));
+		return XPath::export($this->ownerDocument->evaluate($m[0]));
 	}
 
 	/**

@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMAttr;
-use DOMElement;
+use s9e\SweetDOM\Attr;
+use s9e\SweetDOM\Element;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 
 abstract class AbstractConstantFolding extends AbstractNormalization
@@ -16,8 +16,8 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = [
-		'//*[namespace-uri() != $XSL]/@*[contains(.,"{")]',
+	protected array $queries = [
+		'//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(.,"{")]',
 		'//xsl:if[@test]',
 		'//xsl:value-of[@select]',
 		'//xsl:when[@test]'
@@ -49,12 +49,9 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 	}
 
 	/**
-	* Replace constant expressions in given AVT
-	*
-	* @param  DOMAttr $attribute
-	* @return void
+	* Replace constant expressions in given attribute's AVT
 	*/
-	protected function normalizeAttribute(DOMAttr $attribute)
+	protected function normalizeAttribute(Attr $attribute): void
 	{
 		AVTHelper::replace(
 			$attribute,
@@ -73,10 +70,10 @@ abstract class AbstractConstantFolding extends AbstractNormalization
 	/**
 	* Replace constant expressions in given XSL element
 	*
-	* @param  DOMElement $element
+	* @param  Element $element
 	* @return void
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		$attrName = ($element->localName === 'value-of') ? 'select' : 'test';
 		$oldExpr  = $element->getAttribute($attrName);

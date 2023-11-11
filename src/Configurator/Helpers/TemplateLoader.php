@@ -7,10 +7,10 @@
 */
 namespace s9e\TextFormatter\Configurator\Helpers;
 
-use DOMDocument;
 use DOMElement;
 use DOMXPath;
 use RuntimeException;
+use s9e\SweetDOM\Document;
 
 abstract class TemplateLoader
 {
@@ -45,9 +45,9 @@ abstract class TemplateLoader
 	* node is returned
 	*
 	* @param  string      $template
-	* @return DOMDocument
+	* @return Document
 	*/
-	public static function load($template)
+	public static function load($template): Document
 	{
 		$dom = self::loadAsXML($template) ?: self::loadAsXML(self::fixEntities($template));
 		if ($dom)
@@ -71,10 +71,10 @@ abstract class TemplateLoader
 	*
 	* NOTE: removes the root node created by load()
 	*
-	* @param  DOMDocument $dom
+	* @param  Document $dom
 	* @return string
 	*/
-	public static function save(DOMDocument $dom)
+	public static function save(Document $dom)
 	{
 		$xml = self::innerXML($dom->documentElement);
 		if (strpos($xml, 'xmlns:xsl') !== false)
@@ -103,14 +103,14 @@ abstract class TemplateLoader
 	* Load given HTML template in a DOM document
 	*
 	* @param  string      $template Original template
-	* @return DOMDocument
+	* @return Document
 	*/
-	protected static function loadAsHTML($template)
+	protected static function loadAsHTML($template): Document
 	{
 		$template = self::replaceCDATA($template);
 		$template = self::replaceEntities($template);
 
-		$dom  = new DOMDocument;
+		$dom  = new Document;
 		$html = '<?xml version="1.0" encoding="utf-8" ?><html><body><div>' . $template . '</div></body></html>';
 
 		$useErrors = libxml_use_internal_errors(true);
@@ -131,15 +131,15 @@ abstract class TemplateLoader
 	/**
 	* Load given XSL template in a DOM document
 	*
-	* @param  string           $template Original template
-	* @return bool|DOMDocument           DOMDocument on success, FALSE otherwise
+	* @param  string        $template Original template
+	* @return bool|Document           Document on success, FALSE otherwise
 	*/
-	protected static function loadAsXML($template)
+	protected static function loadAsXML($template): bool|Document
 	{
 		$xml = '<?xml version="1.0" encoding="utf-8" ?><xsl:template xmlns:xsl="' . self::XMLNS_XSL . '">' . $template . '</xsl:template>';
 
 		$useErrors = libxml_use_internal_errors(true);
-		$dom       = new DOMDocument;
+		$dom       = new Document;
 		$success   = $dom->loadXML($xml, LIBXML_NOCDATA | LIBXML_NSCLEAN);
 		self::removeInvalidAttributes($dom);
 		libxml_use_internal_errors($useErrors);
@@ -150,10 +150,10 @@ abstract class TemplateLoader
 	/**
 	* Remove attributes with an invalid name from given DOM document
 	*
-	* @param  DOMDocument $dom
+	* @param  Document $dom
 	* @return void
 	*/
-	protected static function removeInvalidAttributes(DOMDocument $dom)
+	protected static function removeInvalidAttributes(Document $dom)
 	{
 		$xpath = new DOMXPath($dom);
 		foreach ($xpath->query('//@*') as $attribute)

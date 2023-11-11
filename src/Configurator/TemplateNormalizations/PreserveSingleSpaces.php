@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMText;
+use  s9e\SweetDOM\Text;
 
 /**
 * Remove all inter-element whitespace except for single space characters
@@ -17,13 +17,13 @@ class PreserveSingleSpaces extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//text()[. = " "][not(parent::xsl:text)]'];
+	protected array $queries = ['//text()[. = " "][not(parent::xsl:text)]'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeText(DOMText $node): void
+	protected function normalizeText(Text $node): void
 	{
-		$node->parentNode->replaceChild($this->createElement('xsl:text', ' '), $node);
+		$node->replaceWithXslText(' ');
 	}
 }

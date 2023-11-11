@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
-use DOMText;
+use s9e\SweetDOM\Element;
+use s9e\SweetDOM\Text;
 
 class OptimizeChooseText extends AbstractChooseOptimization
 {
@@ -67,7 +67,7 @@ class OptimizeChooseText extends AbstractChooseOptimization
 		$strings = [];
 		foreach ($this->getBranches() as $branch)
 		{
-			if (!($branch->$childType instanceof DOMText))
+			if (!($branch->$childType instanceof Text))
 			{
 				return [];
 			}
@@ -108,10 +108,7 @@ class OptimizeChooseText extends AbstractChooseOptimization
 		if ($len)
 		{
 			$this->adjustTextNodes('firstChild', $len);
-			$this->choose->parentNode->insertBefore(
-				$this->createText(substr($strings[0], 0, $len)),
-				$this->choose
-			);
+			$this->choose->before($this->createPolymorphicText(substr($strings[0], 0, $len)));
 		}
 	}
 
@@ -133,10 +130,7 @@ class OptimizeChooseText extends AbstractChooseOptimization
 		if ($len)
 		{
 			$this->adjustTextNodes('lastChild', 0, -$len);
-			$this->choose->parentNode->insertBefore(
-				$this->createText(substr($strings[0], -$len)),
-				$this->choose->nextSibling
-			);
+			$this->choose->after($this->createPolymorphicText(substr($strings[0], -$len)));
 		}
 	}
 }

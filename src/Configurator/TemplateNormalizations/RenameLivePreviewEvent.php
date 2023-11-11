@@ -7,8 +7,8 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMAttr;
-use DOMElement;
+use s9e\SweetDOM\Attr;
+use s9e\SweetDOM\Element;
 
 /**
 * Rename deprecated data-s9e-livepreview-postprocess attributes to data-s9e-livepreview-onrender
@@ -18,7 +18,7 @@ class RenameLivePreviewEvent extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = [
+	protected array $queries = [
 		'//*[@data-s9e-livepreview-postprocess]',
 		'//xsl:attribute/@name[. = "data-s9e-livepreview-postprocess"]'
 	];
@@ -26,7 +26,7 @@ class RenameLivePreviewEvent extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeAttribute(DOMAttr $attribute)
+	protected function normalizeAttribute(Attr $attribute): void
 	{
 		$attribute->value = 'data-s9e-livepreview-onrender';
 	}
@@ -34,7 +34,7 @@ class RenameLivePreviewEvent extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		$value = $element->getAttribute('data-s9e-livepreview-postprocess');
 		$element->setAttribute('data-s9e-livepreview-onrender', $value);

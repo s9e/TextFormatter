@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMElement;
+use s9e\SweetDOM\Element;
 
 /**
 * Sort attributes by name in lexical order
@@ -19,12 +19,12 @@ class SortAttributesByName extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[@*]'];
+	protected array $queries = ['//*[@*]'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeElement(DOMElement $element)
+	protected function normalizeElement(Element $element): void
 	{
 		$attributes = [];
 		foreach ($element->attributes as $name => $attribute)

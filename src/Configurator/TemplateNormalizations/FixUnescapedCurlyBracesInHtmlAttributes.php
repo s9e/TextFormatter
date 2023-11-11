@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
-use DOMAttr;
+use s9e\SweetDOM\Attr;
 
 /**
 * Fix unescaped curly braces in HTML attributes
@@ -24,12 +24,12 @@ class FixUnescapedCurlyBracesInHtmlAttributes extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected $queries = ['//*[namespace-uri() != $XSL]/@*[contains(., "{")]'];
+	protected array $queries = ['//*[namespace-uri() != "' . self::XMLNS_XSL . '"]/@*[contains(., "{")]'];
 
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeAttribute(DOMAttr $attribute)
+	protected function normalizeAttribute(Attr $attribute): void
 	{
 		$match = [
 			'(\\b(?:do|else|(?:if|while)\\s*\\(.*?\\))\\s*\\{(?![{@]))',
