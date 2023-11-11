@@ -1,3 +1,21 @@
+2.14.3 (2023-11-11)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/036d7ffcbf59e9f9276b6bda2dd937baeece8721...6fb87d7974f830a20f40b2072139ba0bfc32610c)
+
+### Changed
+
+ - `cd53829c3` BBCodes: updated default CODE
+ - `c5891a573` MediaEmbed: updated Facebook
+ - `ee1965642` MediaEmbed: updated Facebook
+ - `b429c7b60` MediaEmbed: updated Facebook
+ - `593490f42` MediaEmbed: updated Facebook
+ - `135de3549` MediaEmbed: updated Twitter
+ - `334e96d72` MediaEmbed: updated Twitter
+ - `6fb87d797` MediaEmbed: updated YouTube
+ - `55cae0cdf` Updated README
+
+
 2.14.2 (2023-10-05)
 ===================
 
