@@ -3605,6 +3605,15 @@ Normalize Urls (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\Norm
  [x] Works with data set #6
  [x] Works with data set #7
 
+Optimize Choose Attributes (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeChooseAttributes)
+ [x] Works with data set #0
+ [x] Works with data set #1
+ [x] Works with data set #2
+ [x] Works with data set #3
+ [x] Works with data set #4
+ [x] Works with data set #5
+ [x] Works with data set #6
+
 Optimize Choose Dead Branches (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\OptimizeChooseDeadBranches)
  [x] Works with data set #0
  [x] Works with data set #1
@@ -3761,6 +3770,7 @@ Template Normalizer (s9e\TextFormatter\Tests\Configurator\TemplateNormalizer)
  [x] Default normalization rules with data set #27
  [x] Default normalization rules with data set #28
  [x] Default normalization rules with data set #29
+ [x] Default normalization rules with data set #30
 
 Collection Proxy (s9e\TextFormatter\Tests\Configurator\Traits\CollectionProxy)
  [x] $proxy->add() gets forwarded to $proxy->collection->add() with all arguments

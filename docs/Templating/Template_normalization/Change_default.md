@@ -31,15 +31,16 @@ foreach ($configurator->templateNormalizer as $i => $normalizer)
 15	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineXPathLiterals
 16	s9e\TextFormatter\Configurator\TemplateNormalizations\DeoptimizeIf
 17	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChooseDeadBranches
-18	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChooseText
-19	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChoose
-20	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
-21	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
-22	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
-23	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
-24	s9e\TextFormatter\Configurator\TemplateNormalizations\RenameLivePreviewEvent
-25	s9e\TextFormatter\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
-26	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyInlineCSS
+18	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChooseAttributes
+19	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChooseText
+20	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeChoose
+21	s9e\TextFormatter\Configurator\TemplateNormalizations\OptimizeConditionalValueOf
+22	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineAttributes
+23	s9e\TextFormatter\Configurator\TemplateNormalizations\NormalizeUrls
+24	s9e\TextFormatter\Configurator\TemplateNormalizations\InlineInferredValues
+25	s9e\TextFormatter\Configurator\TemplateNormalizations\RenameLivePreviewEvent
+26	s9e\TextFormatter\Configurator\TemplateNormalizations\SetRelNoreferrerOnTargetedLinks
+27	s9e\TextFormatter\Configurator\TemplateNormalizations\MinifyInlineCSS
 ```
 
 ### Remove a normalization

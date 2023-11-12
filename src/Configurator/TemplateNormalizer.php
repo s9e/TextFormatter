@@ -73,6 +73,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 		'InlineXPathLiterals',
 		'DeoptimizeIf',
 		'OptimizeChooseDeadBranches',
+		'OptimizeChooseAttributes',
 		'OptimizeChooseText',
 		'OptimizeChoose',
 		'OptimizeConditionalValueOf',
