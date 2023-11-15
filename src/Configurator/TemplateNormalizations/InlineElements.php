@@ -50,10 +50,7 @@ class InlineElements extends AbstractNormalization
 		// redeclare the XSL namespace
 		$element->replaceWith($newElement);
 
-		// One by one and in order, we move the nodes from the old element to the new one
-		while ($element->firstChild)
-		{
-			$newElement->appendChild($element->firstChild);
-		}
+		// Move all the nodes from the old element to the new one
+		$newElement->append(...$element->childNodes);
 	}
 }

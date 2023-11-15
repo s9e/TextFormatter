@@ -19,10 +19,7 @@ class OptimizeChoose extends AbstractChooseOptimization
 	*/
 	protected function adoptChildren(Element $branch)
 	{
-		while ($branch->firstChild->firstChild)
-		{
-			$branch->appendChild($branch->firstChild->firstChild);
-		}
+		$branch->append(...$branch->firstChild->childNodes);
 		$branch->firstChild->remove();
 	}
 
@@ -200,10 +197,7 @@ class OptimizeChoose extends AbstractChooseOptimization
 		$when->setAttribute('test', 'not(' . $when->getAttribute('test') . ')');
 
 		$otherwise = $this->choose->query('xsl:otherwise')[0];
-		while ($otherwise->firstChild)
-		{
-			$when->appendChild($otherwise->firstChild);
-		}
+		$when->append(...$otherwise->childNodes);
 	}
 
 	/**
@@ -234,10 +228,7 @@ class OptimizeChoose extends AbstractChooseOptimization
 		}
 		$when = $this->choose->firstOf('xsl:when');
 		$if   = $this->choose->replaceWithXslIf($when->getAttribute('test'));
-		while ($when->firstChild)
-		{
-			$if->appendChild($when->firstChild);
-		}
+		$if->append(...$when->childNodes);
 	}
 
 	/**

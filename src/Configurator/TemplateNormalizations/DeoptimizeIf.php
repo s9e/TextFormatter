@@ -26,9 +26,6 @@ class DeoptimizeIf extends AbstractNormalization
 	{
 		$choose = $element->replaceWithXslChoose();
 		$when   = $choose->appendXslWhen($element->getAttribute('test'));
-		while ($element->firstChild)
-		{
-			$when->appendChild($element->firstChild);
-		}
+		$when->append(...$element->childNodes);
 	}
 }

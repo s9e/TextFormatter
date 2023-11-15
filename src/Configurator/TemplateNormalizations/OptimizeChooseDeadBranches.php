@@ -48,10 +48,7 @@ class OptimizeChooseDeadBranches extends AbstractChooseOptimization
 	protected function makeOtherwise(Element $when)
 	{
 		$otherwise = $when->replaceWithXslOtherwise();
-		while ($when->firstChild)
-		{
-			$otherwise->appendChild($when->firstChild);
-		}
+		$otherwise->append(...$when->childNodes);
 	}
 
 	/**

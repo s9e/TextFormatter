@@ -32,11 +32,7 @@ class OptimizeNestedConditionals extends AbstractNormalization
 	{
 		$otherwise   = $element->parentNode;
 		$outerChoose = $otherwise->parentNode;
-
-		while ($element->firstChild)
-		{
-			$outerChoose->appendChild($element->firstChild);
-		}
+		$outerChoose->append(...$element->childNodes);
 
 		$otherwise->remove();
 	}

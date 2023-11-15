@@ -54,10 +54,7 @@ class NormalizeElementNames extends AbstractNormalization
 		            : $this->ownerDocument->createElementNS($element->namespaceURI, $elName);
 
 		// Move every child to the new element
-		while ($element->firstChild)
-		{
-			$newElement->appendChild($element->firstChild);
-		}
+		$newElement->append(...$element->childNodes);
 
 		// Copy attributes to the new node
 		foreach ($element->attributes as $attribute)
