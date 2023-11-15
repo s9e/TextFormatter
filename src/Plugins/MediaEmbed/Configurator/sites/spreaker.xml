@@ -1,6 +1,6 @@
 <site name="Spreaker" homepage="https://www.spreaker.com">
-	<example>https://www.spreaker.com/show/2-up-front_1</example>
-	<example>https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac</example>
+	<example>https://www.spreaker.com/show/a-ha-ranking-highs-and-lows</example>
+	<example>https://www.spreaker.com/user/15738288/stabbing-final_1</example>
 
 	<tags><tag>podcasts</tag></tags>
 
@@ -11,5 +11,12 @@
 		<extract>!episode_id=(?'episode_id'\d+)!</extract>
 		<extract>!show_id=(?'show_id'\d+)!</extract>
 	</scrape>
-	<iframe width="100%" height="{400 - 200 * boolean(@episode_id)}" max-width="900" src="https://widget.spreaker.com/player?episode_id={@episode_id}&amp;show_id={@show_id}&amp;theme={$MEDIAEMBED_THEME}"/>
+	<choose>
+		<when test="@episode_id">
+			<iframe width="100%" height="200" max-width="900" src="https://widget.spreaker.com/player?episode_id={@episode_id}&amp;show_id={@show_id}&amp;theme={$MEDIAEMBED_THEME}"/>
+		</when>
+		<otherwise>
+			<iframe width="100%" height="400" max-width="900" src="https://widget.spreaker.com/player?episode_id={@episode_id}&amp;show_id={@show_id}&amp;theme={$MEDIAEMBED_THEME}"/>
+		</otherwise>
+	</choose>
 </site>

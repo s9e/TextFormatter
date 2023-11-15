@@ -1135,8 +1135,18 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.spreaker.com/show/2-up-front_1',
-				'<r><SPREAKER show_id="1374587">https://www.spreaker.com/show/2-up-front_1</SPREAKER></r>',
+				'https://www.spreaker.com/show/a-ha-ranking-highs-and-lows',
+				'<r><SPREAKER show_id="5277221">https://www.spreaker.com/show/a-ha-ranking-highs-and-lows</SPREAKER></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('spreaker');
+				}
+			],
+			[
+				'https://www.spreaker.com/user/15738288/stabbing-final_1',
+				'<r><SPREAKER episode_id="53248371">https://www.spreaker.com/user/15738288/stabbing-final_1</SPREAKER></r>',
 				[],
 				function ($configurator)
 				{
@@ -1386,8 +1396,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.spreaker.com/show/2-up-front_1',
-				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=&amp;show_id=1374587&amp;theme=" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
+				'https://www.spreaker.com/show/a-ha-ranking-highs-and-lows',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=&amp;show_id=5277221&amp;theme=" style="border:0;height:400px;max-width:900px;width:100%"></iframe>',
 				[],
 				function ($configurator)
 				{
@@ -1395,16 +1405,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('spreaker');
 				}
 			],
-//			[
-//				'https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac',
-//				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=12449095&amp;show_id=&amp;theme=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('spreaker');
-//				}
-//			],
+			[
+				'https://www.spreaker.com/user/15738288/stabbing-final_1',
+				'<iframe data-s9e-mediaembed="spreaker" allowfullscreen="" loading="lazy" scrolling="no" src="https://widget.spreaker.com/player?episode_id=53248371&amp;show_id=&amp;theme=" style="border:0;height:200px;max-width:900px;width:100%"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('spreaker');
+				}
+			],
 			[
 				'https://www.youtube.com/clip/UgkxNVVfF_kOXFsQs_mPrM4K53fao72UV_x4',
 				'<span data-s9e-mediaembed="youtube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="background:url(https://i.ytimg.com/vi/UGMkPfHDnfM/hqdefault.jpg) 50% 50% / cover;border:0;height:100%;left:0;position:absolute;width:100%" src="https://www.youtube.com/embed/UGMkPfHDnfM?clip=UgkxNVVfF_kOXFsQs_mPrM4K53fao72UV_x4&amp;clipt=EIbDsAEYha6xAQ"></iframe></span></span>',

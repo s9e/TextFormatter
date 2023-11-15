@@ -375,7 +375,7 @@
 	</tr>
 	<tr title="Spreaker" id="spreaker">
 		<td><code>spreaker</code></td>
-		<td>https://www.spreaker.com/show/2-up-front_1<br/>https://www.spreaker.com/user/publichousemedia/2-up-front-119-final-show-peter-wilt-rac</td>
+		<td>https://www.spreaker.com/show/a-ha-ranking-highs-and-lows<br/>https://www.spreaker.com/user/15738288/stabbing-final_1</td>
 	</tr>
 	<tr title="Steam store" id="steamstore">
 		<td><code>steamstore</code></td>
