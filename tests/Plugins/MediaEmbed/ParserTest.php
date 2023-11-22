@@ -1145,16 +1145,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587',
-				'<r><STITCHER eid="79283587" fid="416389">https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587</STITCHER></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('stitcher');
-				}
-			],
-			[
 				'https://staff.tumblr.com/post/180624227620/',
 				'<r><TUMBLR did="781ba97d76586f567b41960375dac9606da2cc7e" id="180624227620" key="0aY0xL2Fi1OFJg4YxpmegQ" name="staff">https://staff.tumblr.com/post/180624227620/</TUMBLR></r>',
 				[],
@@ -3438,16 +3428,7 @@ class ParserTest extends Test
 				{
 					$configurator->MediaEmbed->add('steamstore');
 				}
-			],			[
-				'https://app.stitcher.com/splayer/f/12645/37808629',
-				'<r><STITCHER eid="37808629" fid="12645">https://app.stitcher.com/splayer/f/12645/37808629</STITCHER></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('stitcher');
-				}
 			],
-
 			[
 				'http://strawpoll.me/738091',
 				'<r><STRAWPOLL id="738091">http://strawpoll.me/738091</STRAWPOLL></r>',

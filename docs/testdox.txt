@@ -6863,8 +6863,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #52
  [x] Scraping tests with data set #53
  [x] Scraping tests with data set #54
- [x] Scraping tests with data set #55
- [x] Scraping tests with data set #56
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
@@ -7254,7 +7252,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #334
  [x] Parsing tests with data set #335
  [x] Parsing tests with data set #336
- [x] Parsing tests with data set #337
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -7592,7 +7589,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #334
  [x] Parsing tests (JavaScript) with data set #335
  [x] Parsing tests (JavaScript) with data set #336
- [x] Parsing tests (JavaScript) with data set #337
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2

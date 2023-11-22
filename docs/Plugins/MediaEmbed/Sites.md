@@ -377,10 +377,6 @@
 		<td><code>steamstore</code></td>
 		<td>https://store.steampowered.com/app/250520/</td>
 	</tr>
-	<tr title="Stitcher" id="stitcher">
-		<td><code>stitcher</code></td>
-		<td>https://www.stitcher.com/show/national-geographics-overheard/episode/chasing-the-worlds-largest-tornado-79283587</td>
-	</tr>
 	<tr title="Straw Poll" id="strawpoll">
 		<td><code>strawpoll</code></td>
 		<td>https://strawpoll.me/738091</td>
