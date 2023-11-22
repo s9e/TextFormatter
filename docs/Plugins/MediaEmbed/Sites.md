@@ -293,10 +293,6 @@
 		<td><code>nbcnews</code></td>
 		<td>https://www.nbcnews.com/video/bob-dylan-awarded-nobel-prize-for-literature-785193027834</td>
 	</tr>
-	<tr title="NBC Sports" id="nbcsports">
-		<td><code>nbcsports</code></td>
-		<td>https://www.nbcsports.com/video/countdown-rio-olympics-what-makes-perfect-performance</td>
-	</tr>
 	<tr title="NHL Videos and Highlights" id="nhl">
 		<td><code>nhl</code></td>
 		<td>https://www.nhl.com/video/recap-min-2-ott-1-fot/t-277753022/c-46330703</td>
