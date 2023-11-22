@@ -5,9 +5,9 @@
 	<tags><tag>movies</tag></tags>
 
 	<host>imdb.com</host>
-	<scrape url="https://www.imdb.com/video/imdb/vi{@id}/imdb/embed">
+	<scrape url="https://www.imdb.com/video/embed/vi{@id}/">
 		<match>!imdb\.com/[/\w]+?/vi(?'id'\d+)!</match>
-		<extract>!imdb\.com/[/\w]+?/vi(?'id'\d+)/[/\w]*?embed!</extract>
+		<extract>!imdb\.com/[/\w]+?/vi(?'id'\d+)!</extract>
 	</scrape>
-	<iframe src="//www.imdb.com/video/imdb/vi{@id}/imdb/embed?autoplay=false&amp;width=640"/>
+	<iframe src="https://www.imdb.com/video/embed/vi{@id}/?autoplay=false&amp;width=640"/>
 </site>
