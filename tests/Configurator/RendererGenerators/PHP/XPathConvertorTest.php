@@ -421,6 +421,13 @@ class XPathConvertorTest extends Test
 				'concat(foo/@bar, $PARAM)',
 				"\$this->xpath->evaluate('concat(foo/@bar, '.\$this->getParamAsXPath('PARAM').')',\$node)"
 			],
+			[
+				// string() is a no-op on an attribute and this is a pattern seen in Flarum and in
+				//some user-generated templates
+				// https://github.com/flarum/framework/blob/471ce0ea2ab2858fa05ba922d8968196aad5a997/extensions/mentions/src/ConfigureMentions.php#L178-L199
+				"string(@foo) != ''",
+				"\$node->getAttribute('foo')!==''"
+			],
 		];
 	}
 }

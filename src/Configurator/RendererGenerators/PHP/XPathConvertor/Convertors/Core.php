@@ -21,6 +21,7 @@ class Core extends AbstractConvertor
 			'String:LiteralString' => '("[^"]*"|\'[^\']*\')',
 			'String:LocalName'     => 'local-name \\(\\)',
 			'String:Name'          => 'name \\(\\)',
+			'String:Noop'          => 'string \\(((?&String))\\)',
 			'String:Parameter'     => '\\$(\\w+)'
 		];
 	}
@@ -87,6 +88,11 @@ class Core extends AbstractConvertor
 	public function parseName()
 	{
 		return '$node->nodeName';
+	}
+
+	public function parseNoop(string $expr): string
+	{
+		return $this->recurse($expr);
 	}
 
 	/**
