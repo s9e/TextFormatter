@@ -39,7 +39,8 @@
 		}
 	},
 	"scripts": {
-		"post-update-cmd": "php scripts/patchReadme.php"
+		"post-update-cmd": "php scripts/patchReadme.php",
+		"test":            "phpunit --exclude-group ''"
 	},
 	"extra": {
 		"version": "2.15.0-dev"
