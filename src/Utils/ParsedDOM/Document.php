@@ -51,10 +51,7 @@ class Document extends SweetDocument
 		$nodeName = $this->documentElement->firstOf('.//*[name() != "br"][name() != "p"]') ? 'r' : 't';
 
 		$root = $this->createElement($nodeName);
-		while (isset($this->documentElement->firstChild))
-		{
-			$root->appendChild($this->documentElement->firstChild);
-		}
+		$root->append(...$this->documentElement->childNodes);
 		$this->documentElement->replaceWith($root);
 	}
 

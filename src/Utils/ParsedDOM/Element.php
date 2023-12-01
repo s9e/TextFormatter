@@ -48,10 +48,7 @@ class Element extends SweetElement
 	public function replaceTag(string $tagName, array $attributes = []): static
 	{
 		$element = $this->ownerDocument->createTagElement($tagName, $attributes);
-		while (isset($this->firstChild))
-		{
-			$element->appendChild($this->firstChild);
-		}
+		$element->append(...$this->childNodes);
 		$this->replaceWith($element);
 
 		return $element;
@@ -87,12 +84,7 @@ class Element extends SweetElement
 		$this->unparseMarkupElement('s', $this->firstChild);
 		$this->unparseMarkupElement('e', $this->lastChild);
 
-		$parent = $this->parentNode;
-		while (isset($this->firstChild))
-		{
-			$parent->insertBefore($this->firstChild, $this);
-		}
-		$this->remove();
+		$this->replaceWith(...$this->childNodes);
 	}
 
 	protected function unparseMarkupElement(string $nodeName, ?DOMNode $node): void
