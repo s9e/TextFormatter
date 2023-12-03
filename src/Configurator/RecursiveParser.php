@@ -83,7 +83,6 @@ class RecursiveParser
 			}
 
 			$regexp = $matchConfig['regexp'];
-			$regexp = $this->insertCaptureNames($matchName , $regexp);
 			$regexp = str_replace(' ', '\\s*+', $regexp);
 			$regexp = '(?<' . $matchName  . '>' . $regexp . ')(*:' . $matchName  . ')';
 
@@ -111,13 +110,28 @@ class RecursiveParser
 	*/
 	protected function getArguments(array $matches, string $name): array
 	{
-		$args = [];
-		$i    = 0;
-		while (isset($matches[$name . $i]))
+		$args    = [];
+		$collect = false;
+		foreach ($matches as $k => $v)
 		{
-			$args[] = $matches[$name . $i];
-			++$i;
+			if ($k === $name)
+			{
+				// Start collecting matches once we reach the target capture
+				$collect = true;
+			}
+			elseif ($collect)
+			{
+				if (!is_int($k))
+				{
+					// Stop collecting when we reach the next capture
+					break;
+				}
+				$args[] = $v;
+			}
 		}
+
+		// Remove the first entry, which contains the whole string that was matched
+		array_shift($args);
 
 		return $args;
 	}
@@ -156,27 +170,6 @@ class RecursiveParser
 		uasort($matchersConfig, static::class . '::sortMatcherConfig');
 
 		return $matchersConfig;
-	}
-
-	/**
-	* Insert capture names into given regexp
-	*
-	* @param  string $name   Name of the regexp, used to name captures
-	* @param  string $regexp Original regexp
-	* @return string         Modified regexp
-	*/
-	protected function insertCaptureNames(string $name, string $regexp): string
-	{
-		$i = 0;
-
-		return preg_replace_callback(
-			'((?<!\\\\)\\((?!\\?))',
-			function ($m) use (&$i, $name)
-			{
-				return '(?<' . $name . $i++ . '>';
-			},
-			$regexp
-		);
 	}
 
 	/**
