@@ -1,3 +1,38 @@
+2.15.0 (2023-12-03)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/bec02b24b78e4bc292c731b334d7cd31be72c3c7...4e54aa38db96edde61ae7619915ca440b4eb4790)
+
+### Added
+
+ - `44b040c98` Added GitHub workflow
+ - `f0fbc6f84` TemplateNormalizations: added OptimizeChooseAttributes pass
+ - `3da387000` TemplateNormalizations: added support for SweetDOM
+
+### Removed
+
+ - `bb1a1d2ac` MediaEmbed: removed NBC Sports
+ - `bc785a197` MediaEmbed: removed Stitcher
+
+### Fixed
+
+ - `d5b261549` MediaEmbed: fixed TikTok oEmbed endpoint
+
+### Changed
+
+ - `4e54aa38d` ElementInspector: updated to the latest HTML specs
+ - `3601bb871` Emoji: updated to Unicode 15.1
+ - `8e6a8b119` MediaEmbed: updated IMDb
+ - `f788f1d86` MediaEmbed: updated Podbean
+ - `7574739cb` MediaEmbed: updated Spreaker
+ - `6c327465b` ParsedDOM: simplified some DOM manipulations
+ - `b6fb13a79` RecursiveParser: use unnamed captures for arguments
+ - `04f5bc417` RegexpConvertor: updated Unicode properties
+ - `c2c6c69dc` TemplateNormalizations: simplified code through argument unpacking
+ - `fddea0221` Updated dependencies
+ - `20e789066` XPathConvertor: optimize away superfluous string() calls
+
+
 2.14.3 (2023-11-11)
 ===================
 
