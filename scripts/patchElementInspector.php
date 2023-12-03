@@ -81,7 +81,7 @@ while (isset($node->nextSibling))
 
 	$text = preg_replace('#\\s+#', ' ', $node->textContent);
 
-	if (!preg_match("#^An? ([a-z0-5]+) element.*?s end tag may be omitted if the \\1 element is immediately followed by a(?:n(other)?)? #", $text, $m))
+	if (!preg_match("#^An? ([a-z0-5]+) element.*?s end tag may be omitted if the \\1 element is immediately followed by a(?:n(?:other)?)? #", $text, $m))
 	{
 		continue;
 	}
@@ -102,10 +102,15 @@ while (isset($node->nextSibling))
 	}
 	elseif (preg_match('#^([a-z]+) element or an? ([a-z]+) element$#', $text, $m)
 	     || preg_match('#^([a-z]+) or ([a-z]+) element$#', $text, $m)
-	     || preg_match('#^([a-z]+) element, or if it is immediately followed by an? ([a-z]+) element$#', $text, $m))
+	     || preg_match('#^([a-z]+) element, (?:or )?if it is immediately followed by an? ([a-z]+) element$#', $text, $m)
+	     || preg_match('#^([a-z]+) element, if it is immediately followed by an? ([a-z]+) element, (?:or )?if it is immediately followed by an? ([a-z]+) element$#', $text, $m))
 	{
 		$closeParent[$m[1]][$elName] = 0;
 		$closeParent[$m[2]][$elName] = 0;
+		if (isset($m[3]))
+		{
+			$closeParent[$m[3]][$elName] = 0;
+		}
 	}
 	elseif (preg_match('#^((?:\\w+,? )*or [a-z]+) element(?:, or if there is no more content in the parent element and the parent element is an HTML element that is not an? (?:\\w+, )*or \\w+ element, or an autonomous custom element)?$#', $text, $m))
 	{
@@ -358,15 +363,13 @@ function getContentModel($dl, $elName)
 			$model['allowChildElement']['h6']['']                         = 1;
 			$model['allowChildCategory']['script-supporting element'][''] = 1;
 		}
-		elseif ($text === 'tr and script-supporting elements')
+		elseif (preg_match('(^((?:\\w+, )+|\\w+ )and script-supporting elements$)', $text, $m))
 		{
-			$model['allowChildElement']['tr']['']                         = 1;
-			$model['allowChildCategory']['script-supporting element'][''] = 1;
-		}
-		elseif ($text === 'td, th, and script-supporting elements')
-		{
-			$model['allowChildElement']['td']['']                         = 1;
-			$model['allowChildElement']['th']['']                         = 1;
+			preg_match_all('(\\w+)', $m[1], $m);
+			foreach ($m[0] as $elName)
+			{
+				$model['allowChildElement'][$elName][''] = 1;
+			}
 			$model['allowChildCategory']['script-supporting element'][''] = 1;
 		}
 		elseif ($text === 'flow content, but with no header, footer, sectioning content, or heading content descendants')
@@ -382,11 +385,6 @@ function getContentModel($dl, $elName)
 			$model['allowChildCategory']['phrasing content'][''] = 1;
 			$model['denyDescendantCategory']['labelable element'][''] = 1;
 			$model['denyDescendantElement']['label'][''] = 1;
-		}
-		elseif ($text === 'li and script-supporting elements')
-		{
-			$model['allowChildElement']['li']['']                         = 1;
-			$model['allowChildCategory']['script-supporting element'][''] = 1;
 		}
 		elseif ($text === 'groups each consisting of dt elements followed by dd elements, script-supporting elements'
 		     || $text === 'if the element is a child of a dl element: dt elements followed by dd elements, script-supporting elements')
@@ -408,17 +406,6 @@ function getContentModel($dl, $elName)
 		{
 			$model['allowChildElement']['source']['']                     = 1;
 			$model['allowChildElement']['img']['']                        = 1;
-			$model['allowChildCategory']['script-supporting element'][''] = 1;
-		}
-		elseif ($text === 'option, optgroup, and script-supporting elements')
-		{
-			$model['allowChildElement']['option']['']                     = 1;
-			$model['allowChildElement']['optgroup']['']                   = 1;
-			$model['allowChildCategory']['script-supporting element'][''] = 1;
-		}
-		elseif ($text === 'option and script-supporting elements')
-		{
-			$model['allowChildElement']['option']['']                     = 1;
 			$model['allowChildCategory']['script-supporting element'][''] = 1;
 		}
 		elseif ($text === 'flow content followed by one figcaption element')
