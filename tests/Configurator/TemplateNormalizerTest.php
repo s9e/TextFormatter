@@ -336,20 +336,21 @@ class TemplateNormalizerTest extends Test
 			[
 				'<xsl:choose>
 					<xsl:when test="@foo">
-						<a href="foo" class="link">link text</a>
+						<a href="foo" class="link">FOO</a>
 					</xsl:when>
 					<xsl:otherwise>
-						<a href="bar" class="link">link text</a>
+						<a href="bar" class="link">BAR</a>
 					</xsl:otherwise>
 				</xsl:choose>',
 				self::ws(
 					'<a class="link">
-						<xsl:attribute name="href">
-							<xsl:choose>
-								<xsl:when test="@foo">foo</xsl:when>
-								<xsl:otherwise>bar</xsl:otherwise>
-							</xsl:choose>
-						</xsl:attribute>link text</a>'
+						<xsl:choose>
+							<xsl:when test="@foo">
+								<xsl:attribute name="href">foo</xsl:attribute>FOO</xsl:when>
+							<xsl:otherwise>
+								<xsl:attribute name="href">bar</xsl:attribute>BAR</xsl:otherwise>
+						</xsl:choose>
+					</a>'
 				)
 			],
 		];
