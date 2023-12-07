@@ -40,7 +40,7 @@ jobs:
       run: mkdir tests/.cache
 
     - name: Start local web server
-      run: php -S localhost:8000 -d "always_populate_raw_post_data=-1" -t tests 2>/dev/null &
+      run: php -S localhost -d "always_populate_raw_post_data=-1" -t tests 2>/dev/null &
 
     - name: Run test suite
       run: composer run-script test
