@@ -2,7 +2,9 @@ name: Tests
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - "main"
+      - "GitHubWorkflow"
   pull_request:
     branches: [ master ]
 
