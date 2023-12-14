@@ -43,7 +43,7 @@ abstract class AbstractNormalization
 		foreach ($this->getNodes() as $node)
 		{
 			// Ignore nodes that have been removed from the document
-			if ($node->parentNode)
+			if (isset($node->parentNode))
 			{
 				$this->normalizeNode($node);
 			}
