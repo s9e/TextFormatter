@@ -3278,9 +3278,10 @@ Disallow Unsupported XSL (s9e\TextFormatter\Tests\Configurator\TemplateChecks\Di
  [x] Allowed: <xsl:element name="x:div"/>
  [x] Disallowed: <xsl:element name="x div"/>
  [x] Disallowed: <xsl:element/>
- [x] Allowed: <b><xsl:attribute name="data-foo"/></b>
+ [x] Allowed: <b><xsl:attribute name="data-123foo"/></b>
  [x] Allowed: <b><xsl:attribute name="{@name}"/></b>
  [x] Disallowed: <b><xsl:attribute name="data foo"/></b>
+ [x] Disallowed: <b><xsl:attribute name="12foo"/></b>
  [x] Disallowed: <xsl:attribute/>
  [x] Allowed: <xsl:if test="foo and (bar or (baz mod (1 + 1)))"/>
 

@@ -311,12 +311,12 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTestClass
 	}
 
 	/**
-	* @testdox Allowed: <b><xsl:attribute name="data-foo"/></b>
+	* @testdox Allowed: <b><xsl:attribute name="data-123foo"/></b>
 	* @doesNotPerformAssertions
 	*/
 	public function testAttributeCustomName()
 	{
-		$node = $this->loadTemplate('<b><xsl:attribute name="data-foo"/></b>');
+		$node = $this->loadTemplate('<b><xsl:attribute name="data-123foo"/></b>');
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
 	}
@@ -341,6 +341,20 @@ class DisallowUnsupportedXSLTest extends AbstractTemplateCheckTestClass
 		$this->expectExceptionMessage("Unsupported xsl:attribute name 'data foo'");
 
 		$node = $this->loadTemplate('<b><xsl:attribute name="data foo"/></b>');
+
+		$check = new DisallowUnsupportedXSL;
+		$check->check($node, new Tag);
+	}
+
+	/**
+	* @testdox Disallowed: <b><xsl:attribute name="12foo"/></b>
+	*/
+	public function testAttributeUnsupportedNameStart()
+	{
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Unsupported xsl:attribute name '12foo'");
+
+		$node = $this->loadTemplate('<b><xsl:attribute name="12foo"/></b>');
 
 		$check = new DisallowUnsupportedXSL;
 		$check->check($node, new Tag);
