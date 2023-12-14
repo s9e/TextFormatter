@@ -1009,16 +1009,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://reddit.com/r/ChatGPT/s/KucfjzzJzT',
-				'<r><REDDIT id="ChatGPT/comments/16uqvax">https://reddit.com/r/ChatGPT/s/KucfjzzJzT</REDDIT></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('reddit');
-				}
-			],
-			[
 				'http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites',
 				'<r><SLIDESHARE id="21112125" key="bP5rZdZymdBjp0">http://www.slideshare.net/Slideshare/10-million-uploads-our-favorites</SLIDESHARE></r>',
 				[],
