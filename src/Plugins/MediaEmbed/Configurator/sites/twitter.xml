@@ -3,6 +3,9 @@
 	<example>https://mobile.twitter.com/DerekTVShow/status/463372588690202624</example>
 	<example>https://twitter.com/#!/IJasonAlexander/status/526635414338023424</example>
 
+	<oembed endpoint="https://publish.twitter.com/oembed"
+	          scheme="https://twitter.com/user/status/{@id}"/>
+
 	<tags><tag>social</tag></tags>
 
 	<host>twitter.com</host>
