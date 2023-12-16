@@ -26,6 +26,10 @@ class OptimizeChooseText extends AbstractChooseOptimization
 		{
 			$node            = $branch->$childType;
 			$node->nodeValue = substr($node->textContent, $pos, $len);
+			if ($node->nodeValue === '')
+			{
+				$node->remove();
+			}
 		}
 	}
 

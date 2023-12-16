@@ -102,7 +102,7 @@ class OptimizeChooseTextTest extends AbstractTestClass
 				</xsl:choose>',
 				'xxx<xsl:choose>
 					<xsl:when test="@foo"><b>...</b></xsl:when>
-					<xsl:otherwise></xsl:otherwise>
+					<xsl:otherwise/>
 				</xsl:choose>yz'
 			],
 		];
