@@ -2,18 +2,48 @@ name: Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, current/SweetDOMWorkarounds ]
   pull_request:
     branches: [ master ]
 
 jobs:
-  tests:
+  outdated:
+    runs-on: ubuntu-latest
+    container: setupphp/node@sha256:9271c0a914deb70c1717ec113410c9d43e48123d0ed398bb696f00f4f0ef15ba
+
+    strategy:
+      matrix:
+        php-version:
+          - "8.1"
+
+    steps:
+    - uses: "actions/checkout@v3"
+    - uses: "shivammathur/setup-php@v2"
+      with:
+        php-version: ${{ matrix.php-version }}
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: php-outdated
+
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Run test suite
+      run: composer run-script test
+
+  current:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         php-version:
           - "8.1"
+          - "8.2"
           - "8.3"
+          - "8.4"
 
     steps:
     - uses: "actions/checkout@v3"
@@ -29,7 +59,7 @@ jobs:
       uses: actions/cache@v3
       with:
         path: vendor
-        key: php-${{ matrix.php-version }}-${{ hashFiles('**/composer.json') }}
+        key: php-${{ matrix.php-version }}
 
     - name: Install Composer dependencies
       run: composer install --prefer-dist --no-progress
