@@ -778,16 +778,6 @@ class ParserTest extends Test
 				'assertMatchesRegularExpression'
 			],
 			[
-				'https://j.gifs.com/Y6YZoO.gif',
-				'<r><GIFS height="200" id="Y6YZoO" width="200">https://j.gifs.com/Y6YZoO.gif</GIFS></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('gifs');
-				}
-			],
-			[
 				'https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif',
 				'<r><GIPHY height="160" id="UGUqsAtHh3T1e" type="gif" width="160">https://media.giphy.com/media/UGUqsAtHh3T1e/source.gif</GIPHY></r>',
 				[],
