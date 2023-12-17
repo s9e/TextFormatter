@@ -10,7 +10,7 @@ namespace s9e\TextFormatter\Utils\ParsedDOM;
 use DOMNode;
 use const SORT_STRING;
 use function count, ksort, preg_match;
-use s9e\SweetDOM\Workarounds\Element as SweetElement;
+use s9e\SweetDOM\PatchedNodes\Element as SweetElement;
 
 class Element extends SweetElement
 {
