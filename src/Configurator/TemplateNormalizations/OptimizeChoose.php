@@ -12,18 +12,6 @@ use s9e\SweetDOM\Element;
 class OptimizeChoose extends AbstractChooseOptimization
 {
 	/**
-	* Adopt the children of given element's only child
-	*
-	* @param  Element $branch
-	* @return void
-	*/
-	protected function adoptChildren(Element $branch)
-	{
-		$branch->append(...$branch->firstChild->childNodes);
-		$branch->firstChild->remove();
-	}
-
-	/**
 	* Test whether all branches of current xsl:choose element share a common firstChild/lastChild
 	*
 	* @param  string $childType Either firstChild or lastChild
@@ -241,13 +229,13 @@ class OptimizeChoose extends AbstractChooseOptimization
 	protected function reparentChild()
 	{
 		$branches  = $this->getBranches();
-		$childNode = $branches[0]->firstChild->cloneNode();
-		$this->choose->replaceWith($childNode);
-		$childNode->appendChild($this->choose);
-
+		$outerNode = $branches[0]->firstChild->cloneNode();
 		foreach ($branches as $branch)
 		{
-			$this->adoptChildren($branch);
+			$branch->append(...$branch->firstChild->childNodes);
+			$branch->firstChild->remove();
 		}
+		$this->choose->replaceWith($outerNode);
+		$outerNode->appendChild($this->choose);
 	}
 }
