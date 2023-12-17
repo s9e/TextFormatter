@@ -181,10 +181,10 @@ class OptimizeChoose extends AbstractChooseOptimization
 		}
 
 		// test="@foo" becomes test="not(@foo)"
-		$when = $this->choose->query('xsl:when')[0];
+		$when = $this->choose->firstOf('xsl:when');
 		$when->setAttribute('test', 'not(' . $when->getAttribute('test') . ')');
 
-		$otherwise = $this->choose->query('xsl:otherwise')[0];
+		$otherwise = $this->choose->firstOf('xsl:otherwise');
 		$when->append(...$otherwise->childNodes);
 	}
 
