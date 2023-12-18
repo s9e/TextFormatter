@@ -8,7 +8,6 @@
 namespace s9e\TextFormatter\Configurator\TemplateNormalizations;
 
 use function array_reverse, str_contains, str_replace;
-use s9e\SweetDOM\Attr;
 use s9e\SweetDOM\Element;
 use s9e\TextFormatter\Configurator\Helpers\AVTHelper;
 
@@ -55,8 +54,8 @@ class UninlineAttributes extends AbstractNormalization
 	/**
 	* Uninline an AVT-style attribute
 	*
-	* @param  Attr $attribute Attribute node
-	* @return Element         xsl:attribute element
+	* @param  string $attrValue Attribute value
+	* @return array             List of strings/nodes
 	*/
 	protected function getAttributeChildren(string $attrValue): array
 	{
