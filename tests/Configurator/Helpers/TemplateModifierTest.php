@@ -122,7 +122,7 @@ class TemplateModifierTest extends Test
 				'/\\$[0-9]+/',
 				function ($m, $node)
 				{
-					return ['literal', str_replace('PatchedNodes\\', '', get_class($node))];
+					return ['literal', preg_replace('(SweetDOM\\\\\\K.*\\\\)', '', get_class($node))];
 				},
 				'<b id="s9e\\SweetDOM\\Attr">s9e\\SweetDOM\\Text</b>'
 			],
