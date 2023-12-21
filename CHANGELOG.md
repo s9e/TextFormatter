@@ -1,3 +1,27 @@
+2.15.1 (2023-12-21)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/3eccb693643b65b2ffcda4baa34bd435c3b578f0...25714e6dc8e63f62f370018fa31426ff2f7393a8)
+
+### Added
+
+ - `e1ec00821` AbstractNormalization: added workaround for weird DOM quirks
+ - `07f2468de` MediaEmbed: added Twitter oEmbed endpoint
+
+### Fixed
+
+ - `e595860bb` DisallowUnsupportedXSL: fixed the range of allowed characters in dynamic attributes
+
+### Changed
+
+ - `25714e6dc` Bumped the requirements for s9e/sweetdom
+ - `14d759679` OptimizeChoose: minor code simplification
+ - `31ae9abd5` OptimizeChoose: reorganized code
+ - `fc9795083` OptimizeChooseText: remove empty text nodes during optimization
+ - `d8e08b723` UninlineAttributes: refactored how xsl:attribute elements are created
+ - `195118a53` Updated dependencies
+
+
 2.15.0 (2023-12-03)
 ===================
 
