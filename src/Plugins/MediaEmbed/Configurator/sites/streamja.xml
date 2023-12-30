@@ -1,9 +1,0 @@
-<site name="Streamja" homepage="https://streamja.com">
-	<example>https://streamja.com/2nr</example>
-
-	<tags><tag>sports</tag></tags>
-
-	<host>streamja.com</host>
-	<extract>@streamja\.com/(?!login|signup|terms|videos)(?'id'\w+)@</extract>
-	<iframe src="https://streamja.com/embed/{@id}"/>
-</site>

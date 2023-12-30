@@ -385,10 +385,6 @@
 		<td><code>streamable</code></td>
 		<td>https://streamable.com/e4d</td>
 	</tr>
-	<tr title="Streamja" id="streamja">
-		<td><code>streamja</code></td>
-		<td>https://streamja.com/2nr</td>
-	</tr>
 	<tr title="Team Coco" id="teamcoco">
 		<td><code>teamcoco</code></td>
 		<td>https://teamcoco.com/video/serious-jibber-jabber-a-scott-berg-full-episode<br/>https://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</td>

@@ -3437,19 +3437,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://streamja.com/2nr',
-				'<r><STREAMJA id="2nr">https://streamja.com/2nr</STREAMJA></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('streamja');
-				}
-			],
-			[
-				'https://streamja.com/terms',
-				'<t>https://streamja.com/terms</t>'
-			],
-			[
 				'http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien',
 				'<r><TEAMCOCO id="73784">http://teamcoco.com/video/73784/historian-a-scott-berg-serious-jibber-jabber-with-conan-obrien</TEAMCOCO></r>',
 				[],
