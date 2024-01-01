@@ -28,7 +28,7 @@ class OptimizeChoose extends AbstractChooseOptimization
 		$childNode = $branches[0]->$childType;
 		foreach ($branches as $branch)
 		{
-			if (!isset($branch->$childType) || !$this->isEqualNode($childNode, $branch->$childType))
+			if (!$childNode->isEqualNode($branch->$childType))
 			{
 				return false;
 			}

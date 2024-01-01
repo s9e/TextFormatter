@@ -12,7 +12,7 @@
 		"lib-pcre":   ">=8.13",
 
 		"s9e/regexp-builder": "^1.4",
-		"s9e/sweetdom":       "^3.3"
+		"s9e/sweetdom":       "^3.4"
 	},
 	"require-dev": {
 		"code-lts/doctum":       "*",

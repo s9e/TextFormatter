@@ -70,21 +70,6 @@ abstract class AbstractChooseOptimization extends AbstractNormalization
 	}
 
 	/**
-	* Test whether two nodes are identical
-	*
-	* PHP < 8.3 does not support isEqualNode() from DOM Level 3 so this is a makeshift replacement.
-	* Unlike the DOM 3 function, attributes order matters
-	*
-	* @param  DOMNode $node1
-	* @param  DOMNode $node2
-	* @return bool
-	*/
-	protected function isEqualNode(DOMNode $node1, DOMNode $node2)
-	{
-		return ($node1->nodeName === $node2->nodeName && $node1->ownerDocument->saveXML($node1) === $node2->ownerDocument->saveXML($node2));
-	}
-
-	/**
 	* Test whether two elements have the same start tag
 	*
 	* @param  Element $el1

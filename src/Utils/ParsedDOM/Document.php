@@ -29,7 +29,7 @@ class Document extends SweetDocument
 		// Create an alias to whichever SweetDOM\Element subclass is used on current PHP version
 		if (!class_exists(SweetElement::class, false))
 		{
-			class_alias($this->getNodesNamespace() . '\\Element', SweetElement::class, false);
+			class_alias($this->getExtendedClassMap()['DOMElement'], SweetElement::class, false);
 		}
 		$this->registerNodeClass('DOMElement', Element::class);
 	}
