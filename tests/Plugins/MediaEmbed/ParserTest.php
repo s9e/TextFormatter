@@ -3536,8 +3536,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://www.threads.net/t/CuY2OYEAbJw',
-				'<r><THREADS id="CuY2OYEAbJw">https://www.threads.net/t/CuY2OYEAbJw</THREADS></r>',
+				'https://www.threads.net/@britain.elects/post/CwpU1kGIljY?hl=en-gb',
+				'<r><THREADS id="CwpU1kGIljY">https://www.threads.net/@britain.elects/post/CwpU1kGIljY?hl=en-gb</THREADS></r>',
 				[],
 				function ($configurator)
 				{
