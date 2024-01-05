@@ -2641,18 +2641,6 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins with data set #292
  [x] Tests from plugins with data set #293
  [x] Tests from plugins with data set #294
- [x] Tests from plugins with data set #295
- [x] Tests from plugins with data set #296
- [x] Tests from plugins with data set #297
- [x] Tests from plugins with data set #298
- [x] Tests from plugins with data set #299
- [x] Tests from plugins with data set #300
- [x] Tests from plugins with data set #301
- [x] Tests from plugins with data set #302
- [x] Tests from plugins with data set #303
- [x] Tests from plugins with data set #304
- [x] Tests from plugins with data set #305
- [x] Tests from plugins with data set #306
  [x] Tests from plugins (Quick renderer) with data set #0
  [x] Tests from plugins (Quick renderer) with data set #1
  [x] Tests from plugins (Quick renderer) with data set #2
@@ -2948,18 +2936,6 @@ PHP (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP)
  [x] Tests from plugins (Quick renderer) with data set #292
  [x] Tests from plugins (Quick renderer) with data set #293
  [x] Tests from plugins (Quick renderer) with data set #294
- [x] Tests from plugins (Quick renderer) with data set #295
- [x] Tests from plugins (Quick renderer) with data set #296
- [x] Tests from plugins (Quick renderer) with data set #297
- [x] Tests from plugins (Quick renderer) with data set #298
- [x] Tests from plugins (Quick renderer) with data set #299
- [x] Tests from plugins (Quick renderer) with data set #300
- [x] Tests from plugins (Quick renderer) with data set #301
- [x] Tests from plugins (Quick renderer) with data set #302
- [x] Tests from plugins (Quick renderer) with data set #303
- [x] Tests from plugins (Quick renderer) with data set #304
- [x] Tests from plugins (Quick renderer) with data set #305
- [x] Tests from plugins (Quick renderer) with data set #306
  [x] Creates a Quick renderer if $enableQuickRenderer is true
  [x] Does not create a Quick renderer if $enableQuickRenderer is false
 
@@ -7238,18 +7214,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #320
  [x] Parsing tests with data set #321
  [x] Parsing tests with data set #322
- [x] Parsing tests with data set #323
- [x] Parsing tests with data set #324
- [x] Parsing tests with data set #325
- [x] Parsing tests with data set #326
- [x] Parsing tests with data set #327
- [x] Parsing tests with data set #328
- [x] Parsing tests with data set #329
- [x] Parsing tests with data set #330
- [x] Parsing tests with data set #331
- [x] Parsing tests with data set #332
- [x] Parsing tests with data set #333
- [x] Parsing tests with data set #334
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -7573,18 +7537,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #320
  [x] Parsing tests (JavaScript) with data set #321
  [x] Parsing tests (JavaScript) with data set #322
- [x] Parsing tests (JavaScript) with data set #323
- [x] Parsing tests (JavaScript) with data set #324
- [x] Parsing tests (JavaScript) with data set #325
- [x] Parsing tests (JavaScript) with data set #326
- [x] Parsing tests (JavaScript) with data set #327
- [x] Parsing tests (JavaScript) with data set #328
- [x] Parsing tests (JavaScript) with data set #329
- [x] Parsing tests (JavaScript) with data set #330
- [x] Parsing tests (JavaScript) with data set #331
- [x] Parsing tests (JavaScript) with data set #332
- [x] Parsing tests (JavaScript) with data set #333
- [x] Parsing tests (JavaScript) with data set #334
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2
@@ -7672,18 +7624,6 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing+rendering tests with data set #84
  [x] Parsing+rendering tests with data set #85
  [x] Parsing+rendering tests with data set #86
- [x] Parsing+rendering tests with data set #87
- [x] Parsing+rendering tests with data set #88
- [x] Parsing+rendering tests with data set #89
- [x] Parsing+rendering tests with data set #90
- [x] Parsing+rendering tests with data set #91
- [x] Parsing+rendering tests with data set #92
- [x] Parsing+rendering tests with data set #93
- [x] Parsing+rendering tests with data set #94
- [x] Parsing+rendering tests with data set #95
- [x] Parsing+rendering tests with data set #96
- [x] Parsing+rendering tests with data set #97
- [x] Parsing+rendering tests with data set #98
 
 Parser Base (s9e\TextFormatter\Tests\Plugins\ParserBase)
  [x] Has a default empty setUp() method

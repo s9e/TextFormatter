@@ -77,7 +77,7 @@ echo count($configurator->MediaEmbed->defaultSites), " sites remaining.\n";
 ```
 Does YouTube exist? yes
 What about now? no
-131 sites remaining.
+130 sites remaining.
 0 sites remaining.
 ```
 
@@ -87,42 +87,6 @@ What about now? no
 Some default sites support some level of configuration at runtime via template parameters.
 
 <table>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG</td>
-		<td>Amazon Associate tag (.com)</td>
-	</tr>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG_CA</td>
-		<td>Amazon Associate tag (.ca)</td>
-	</tr>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG_DE</td>
-		<td>Amazon Associate tag (.de)</td>
-	</tr>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG_ES</td>
-		<td>Amazon Associate tag (.es)</td>
-	</tr>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG_FR</td>
-		<td>Amazon Associate tag (.fr)</td>
-	</tr>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG_IN</td>
-		<td>Amazon Associate tag (.in)</td>
-	</tr>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG_IT</td>
-		<td>Amazon Associate tag (.it)</td>
-	</tr>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG_JP</td>
-		<td>Amazon Associate tag (.co.jp)</td>
-	</tr>
-	<tr>
-		<td>AMAZON_ASSOCIATE_TAG_UK</td>
-		<td>Amazon Associate tag (.co.uk)</td>
-	</tr>
 	<tr>
 		<td>MEDIAEMBED_THEME</td>
 		<td>Either an empty string (default) or "dark" for dark theme</td>
