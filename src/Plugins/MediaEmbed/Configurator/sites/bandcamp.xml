@@ -7,10 +7,12 @@
 
 	<host>bandcamp.com</host>
 	<scrape>
+		<header>User-agent: PHP (not Mozilla)</header>
 		<match>!bandcamp\.com/album/.!</match>
 		<extract>!/album=(?'album_id'\d+)!</extract>
 	</scrape>
 	<scrape>
+		<header>User-agent: PHP (not Mozilla)</header>
 		<match>!bandcamp\.com/track/.!</match>
 		<extract>!"album_id":(?'album_id'\d+)!</extract>
 		<extract>!"track_num":(?'track_num'\d+)!</extract>
