@@ -11,7 +11,7 @@ See [Tag rules](Tag_rules.md) for the rules definitions.
 <dt id="allowall">AllowAll</dt>
 <dd>
 	<p><i>Purpose: convenience. Default: disabled.</i></p>
-	<p>Generates <code>allowChild</code> and <code>allowDescendant</code> rules for every combination of tags. If effectively allows any tag to be used anywhere.</p>
+	<p>Generates <code>allowChild</code> and <code>allowDescendant</code> rules for every combination of tags. It effectively allows any tag to be used anywhere.</p>
 </dd>
 
 <dt id="autocloseifvoid">AutoCloseIfVoid</dt>
