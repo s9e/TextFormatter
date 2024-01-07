@@ -44,21 +44,21 @@ abstract class Bundle
 	*
 	* @return Parser
 	*/
-	abstract public static function getParser();
+	abstract public static function getParser(): Parser;
 
 	/**
 	* Return a new instance of s9e\TextFormatter\Renderer
 	*
 	* @return Renderer
 	*/
-	abstract public static function getRenderer();
+	abstract public static function getRenderer(): Renderer;
 
 	/**
 	* Return the source of the JavaScript parser if available
 	*
 	* @return string
 	*/
-	public static function getJS()
+	public static function getJS(): string
 	{
 		return '';
 	}
@@ -69,7 +69,7 @@ abstract class Bundle
 	* @param  string $text Original text
 	* @return string       Intermediate representation
 	*/
-	public static function parse($text)
+	public static function parse($text): string
 	{
 		if (isset(static::$beforeParse))
 		{
@@ -93,7 +93,7 @@ abstract class Bundle
 	* @param  array  $params Stylesheet parameters
 	* @return string         Rendered result
 	*/
-	public static function render($xml, array $params = [])
+	public static function render($xml, array $params = []): string
 	{
 		$renderer = static::getCachedRenderer();
 
@@ -122,7 +122,7 @@ abstract class Bundle
 	*
 	* @return void
 	*/
-	public static function reset()
+	public static function reset(): void
 	{
 		static::$parser   = null;
 		static::$renderer = null;

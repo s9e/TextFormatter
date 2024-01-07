@@ -86,14 +86,14 @@ class BundleGenerator
 		$php[] = 'abstract class ' . $className . ' extends \\s9e\\TextFormatter\\Bundle';
 		$php[] = '{';
 		$php[] = '	/**';
-		$php[] = '	* @var s9e\\TextFormatter\\Parser Singleton instance used by parse()';
+		$php[] = '	* @var ?\\s9e\\TextFormatter\\Parser Singleton instance used by parse()';
 		$php[] = '	*/';
-		$php[] = '	protected static $parser;';
+		$php[] = '	protected static ?\\s9e\\TextFormatter\\Parser $parser;';
 		$php[] = '';
 		$php[] = '	/**';
-		$php[] = '	* @var s9e\\TextFormatter\\Renderer Singleton instance used by render()';
+		$php[] = '	* @var ?\\s9e\\TextFormatter\\Renderer Singleton instance used by render()';
 		$php[] = '	*/';
-		$php[] = '	protected static $renderer;';
+		$php[] = '	protected static ?\\s9e\\TextFormatter\\Renderer $renderer;';
 		$php[] = '';
 
 		// Add the event callbacks if applicable
@@ -128,7 +128,7 @@ class BundleGenerator
 			$php[] = '	/**';
 			$php[] = '	* {@inheritdoc}';
 			$php[] = '	*/';
-			$php[] = '	public static function getJS()';
+			$php[] = '	public static function getJS(): string';
 			$php[] = '	{';
 			$php[] = '		return ' . var_export($objects['js'], true) . ';';
 			$php[] = '	}';
@@ -138,7 +138,7 @@ class BundleGenerator
 		$php[] = '	/**';
 		$php[] = '	* {@inheritdoc}';
 		$php[] = '	*/';
-		$php[] = '	public static function getParser()';
+		$php[] = '	public static function getParser(): \\s9e\\TextFormatter\\Parser';
 		$php[] = '	{';
 
 		if (isset($options['parserSetup']))
@@ -158,7 +158,7 @@ class BundleGenerator
 		$php[] = '	/**';
 		$php[] = '	* {@inheritdoc}';
 		$php[] = '	*/';
-		$php[] = '	public static function getRenderer()';
+		$php[] = '	public static function getRenderer(): \\s9e\\TextFormatter\\Renderer';
 		$php[] = '	{';
 
 		// If this is a PHP renderer and we know where it's saved, automatically load it as needed
