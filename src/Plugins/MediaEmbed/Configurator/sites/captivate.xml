@@ -1,0 +1,17 @@
+<site name="Captivate" homepage="https://www.captivate.fm/">
+	<example>https://player.captivate.fm/episode/03f47eef-4a8f-4616-8922-c77cb3d1edfa</example>
+	<example>https://decoding-the-gurus.captivate.fm/episode/sam-harris</example>
+
+	<tags><tag>podcasts</tag></tags>
+
+	<host>captivate.fm</host>
+	<extract>@//player\.captivate\.fm/episode/(?'id'[-\w]+)(?:\?t=(?'t'\d+))?@</extract>
+	<scrape>
+		<match>@//(?!player\.)[-\w]+\.captivate\.fm/episode/.@</match>
+		<extract>@//player\.captivate\.fm/episode/(?'id'[-\w]+)@</extract>
+	</scrape>
+	<iframe width="100%" height="200" max-width="900" src="https://player.captivate.fm/episode/{@id}?t={@t}">
+		<!-- This is from their own style. Their background is not transparent -->
+		<style border-radius="6px"/>
+	</iframe>
+</site>

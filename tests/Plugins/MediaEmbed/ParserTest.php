@@ -593,6 +593,16 @@ class ParserTest extends Test
 //					$configurator->MediaEmbed->add('bleacherreport');
 //				}
 //			],
+			[
+				'https://decoding-the-gurus.captivate.fm/episode/sam-harris',
+				'<r><CAPTIVATE id="ec119d4f-acc4-464a-8976-1fafc3e2d23b">https://decoding-the-gurus.captivate.fm/episode/sam-harris</CAPTIVATE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('captivate');
+				}
+			],
 //			[
 //				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
 //				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
@@ -1578,6 +1588,24 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('bunny');
+				}
+			],
+			[
+				'https://player.captivate.fm/episode/ec119d4f-acc4-464a-8976-1fafc3e2d23b',
+				'<r><CAPTIVATE id="ec119d4f-acc4-464a-8976-1fafc3e2d23b">https://player.captivate.fm/episode/ec119d4f-acc4-464a-8976-1fafc3e2d23b</CAPTIVATE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('captivate');
+				}
+			],
+			[
+				'https://player.captivate.fm/episode/ec119d4f-acc4-464a-8976-1fafc3e2d23b?t=123',
+				'<r><CAPTIVATE id="ec119d4f-acc4-464a-8976-1fafc3e2d23b" t="123">https://player.captivate.fm/episode/ec119d4f-acc4-464a-8976-1fafc3e2d23b?t=123</CAPTIVATE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('captivate');
 				}
 			],
 			[

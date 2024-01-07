@@ -57,6 +57,10 @@
 		<td><code>bunny</code></td>
 		<td>https://video.bunnycdn.com/play/759/eb1c4f77-0cda-46be-b47d-1118ad7c2ffe</td>
 	</tr>
+	<tr title="Captivate" id="captivate">
+		<td><code>captivate</code></td>
+		<td>https://player.captivate.fm/episode/03f47eef-4a8f-4616-8922-c77cb3d1edfa<br/>https://decoding-the-gurus.captivate.fm/episode/sam-harris</td>
+	</tr>
 	<tr title="Castos" id="castos">
 		<td><code>castos</code></td>
 		<td>https://on-the-cuff.castos.com/podcasts/10156/episodes/frequently-asked-questions-on-mens-style</td>
