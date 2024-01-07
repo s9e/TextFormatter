@@ -1,3 +1,25 @@
+2.16.0 (2024-01-07)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/520538fc6f58d7debe7b952ab1f6bbbde2986e04...a415913234f0c4f613f310f9ebb9ecd6c4e7bbf3)
+
+### Added
+
+ - `a41591323` Bundles: added type declarations
+
+### Removed
+
+ - `b1d809a0c` MediaEmbed: removed Amazon
+ - `f9ff2282d` MediaEmbed: removed Streamja
+
+### Changed
+
+ - `d9d50711d` AbstractChooseOptimization: optimized isEqualNode() for the common case
+ - `e4eb30c89` AbstractChooseOptimization: replaced isEqualNode() implementation
+ - `f97349402` MediaEmbed: updated Bandcamp
+ - `7c95e9d51` MediaEmbed: updated Threads
+
+
 2.15.1 (2023-12-21)
 ===================
 

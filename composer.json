@@ -43,6 +43,6 @@
 		"test":            "phpunit --exclude-group ''"
 	},
 	"extra": {
-		"version": "2.15.2-dev"
+		"version": "2.16.0"
 	}
 }
