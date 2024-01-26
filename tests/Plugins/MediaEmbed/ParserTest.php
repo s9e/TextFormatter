@@ -503,16 +503,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('acast');
 				}
 			],
-//			[
-//				'https://shows.acast.com/thefightingcock/s11e09-gil',
-//				'<r><ACAST episode_id="611fda6e1e62460013acb5fb" show_id="55daacdd-0c7e-4338-bbc9-57b60dcfd638">https://shows.acast.com/thefightingcock/s11e09-gil</ACAST></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('acast');
-//				}
-//			],
 			[
 				'https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125',
 				'<r><ACAST episode_id="f38da59a-9eb9-42f7-a0bf-a633ef813202" show_id="e3178447-8d7d-556e-bece-5d8f7c4dd539" t="125">https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125</ACAST></r>',
@@ -553,46 +543,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('audius');
 				}
 			],
-//			[
-//				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-//				'<r><BANDCAMP album_id="1122163921">http://proleter.bandcamp.com/album/curses-from-past-times-ep</BANDCAMP></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('bandcamp');
-//				}
-//			],
-//			[
-//				'http://proleter.bandcamp.com/track/muhammad-ali',
-//				'<r><BANDCAMP album_id="1122163921" track_id="3496015802" track_num="7">http://proleter.bandcamp.com/track/muhammad-ali</BANDCAMP></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('bandcamp');
-//				}
-//			],
-//			[
-//				'http://therunons.bandcamp.com/track/still-feel',
-//				'<r><BANDCAMP track_id="2146686782">http://therunons.bandcamp.com/track/still-feel</BANDCAMP></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('bandcamp');
-//				}
-//			],
-//			[
-//				'http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football',
-//				'<r><BLEACHERREPORT id="dtYjVhdDr5492cyQTjVPDcM--Mg2rJj5">http://bleacherreport.com/articles/2415420-creating-a-starting-xi-of-the-most-overrated-players-in-world-football</BLEACHERREPORT></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('bleacherreport');
-//				}
-//			],
 			[
 				'https://decoding-the-gurus.captivate.fm/episode/sam-harris',
 				'<r><CAPTIVATE id="ec119d4f-acc4-464a-8976-1fafc3e2d23b">https://decoding-the-gurus.captivate.fm/episode/sam-harris</CAPTIVATE></r>',
@@ -603,16 +553,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('captivate');
 				}
 			],
-//			[
-//				'http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-//				'<r><COMEDYCENTRAL id="mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea">http://www.cc.com/video-clips/uu5qz4/key-and-peele-dueling-hats</COMEDYCENTRAL></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('comedycentral');
-//				}
-//			],
 			[
 				'https://www.cnbc.com/video/2019/06/05/carplay-android-auto-alexa-big-tech-gets-into-our-cars.html',
 				'<r><CNBC id="7000082990">https://www.cnbc.com/video/2019/06/05/carplay-android-auto-alexa-big-tech-gets-into-our-cars.html</CNBC></r>',
@@ -633,26 +573,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('dumpert');
 				}
 			],
-//			[
-//				'http://8tracks.com/lovinq/headphones-in-world-out',
-//				'<r><EIGHTTRACKS id="4982023">http://8tracks.com/lovinq/headphones-in-world-out</EIGHTTRACKS></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('eighttracks');
-//				}
-//			],
-//			[
-//				'https://fb.watch/3zYsXdnxjf/',
-//				'<r><FACEBOOK id="426049188812854" type="v" user="stvnews">https://fb.watch/3zYsXdnxjf/</FACEBOOK></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('facebook');
-//				}
-//			],
 			[
 				// https://about.fb.com/news/2022/09/deterring-scraping-by-protecting-facebook-identifiers/
 				// https://news.ycombinator.com/item?id=32117489
@@ -837,26 +757,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('giphy');
 				}
 			],
-//			[
-//				'http://www.hudl.com/v/CVmja',
-//				'<r><HUDL athlete="2122944" highlight="5721c090dfe23b2d68a2283b">http://www.hudl.com/v/CVmja</HUDL></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('hudl');
-//				}
-//			],
-//			[
-//				'http://www.hulu.com/watch/484180',
-//				'<r><HULU id="zPFCgxncn97IFkqEnZ-kRA">http://www.hulu.com/watch/484180</HULU></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('hulu');
-//				}
-//			],
 			[
 				'http://www.imdb.com/video/epk/vi387296537/',
 				'<r><IMDB id="387296537">http://www.imdb.com/video/epk/vi387296537/</IMDB></r>',
@@ -998,16 +898,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('npr');
 				}
 			],
-//			[
-//				'http://n.pr/1Qky1m5',
-//				'<r><NPR i="411271189" m="411271193">http://n.pr/1Qky1m5</NPR></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('npr');
-//				}
-//			],
 			[
 				'https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8',
 				'<r><ODYSEE id="8726b01100463c4e254a38c3108ef3e05791aeda" name="Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21" path="@ozgoals%3Aa/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8">https://odysee.com/@ozgoals:a/Deni-Juric-Goal-2-0-%C5%A0IBENIK-vs-SLAVEN-Apr21:8</ODYSEE></r>',
@@ -1042,16 +932,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('slideshare');
 				}
 			],
-//			[
-//				'https://soundcloud.com/topdawgent/i-1/s-GT9Cd',
-//				'<r><SOUNDCLOUD id="topdawgent/i-1/s-GT9Cd" secret_token="s-GT9Cd" track_id="168988860">https://soundcloud.com/topdawgent/i-1/s-GT9Cd</SOUNDCLOUD></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('soundcloud');
-//				}
-//			],
 			[
 				'https://soundcloud.com/andrewbird/three-white-horses',
 				'<r><SOUNDCLOUD id="andrewbird/three-white-horses" track_id="59509713">https://soundcloud.com/andrewbird/three-white-horses</SOUNDCLOUD></r>',
@@ -1186,40 +1066,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tumblr');
 				}
 			],
-//			[
-//				'https://247sports.com/Player/LeSean-McCoy-25234/',
-//				'<r><TWENTYFOURSEVENSPORTS player_id="149349">https://247sports.com/Player/LeSean-McCoy-25234/</TWENTYFOURSEVENSPORTS></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('twentyfoursevensports');
-//				}
-//			],
-//			[
-//				'https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/',
-//				'<r><TWENTYFOURSEVENSPORTS video_id="1378030659860">https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</TWENTYFOURSEVENSPORTS></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('twentyfoursevensports');
-//				}
-//			],
-			[
-				'https://vk.com/video121599878_165723901',
-				'<r><VK hash="e06b0878046e1d32" oid="121599878" vid="165723901">https://vk.com/video121599878_165723901</VK></r>',
-				[],
-				function ($configurator)
-				{
-					if (isset($_SERVER['TRAVIS']))
-					{
-						$this->markTestSkipped('No VK test on Travis');
-					}
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('vk');
-				}
-			],
 			[
 				'https://thoughtworks.wistia.com/medias/b6al55s35k',
 				'<r><WISTIA id="b6al55s35k">https://thoughtworks.wistia.com/medias/b6al55s35k</WISTIA></r>',
@@ -1276,46 +1122,6 @@ class ParserTest extends Test
 	public static function getScrapingRenderingTests()
 	{
 		return [
-//			[
-//				'http://proleter.bandcamp.com/album/curses-from-past-times-ep',
-//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921"></iframe></span></span>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('bandcamp');
-//				}
-//			],
-//			[
-//				'http://proleter.bandcamp.com/track/muhammad-ali',
-//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/album=1122163921/t=7"></iframe></span></span>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('bandcamp');
-//				}
-//			],
-//			[
-//				'http://therunons.bandcamp.com/track/still-feel',
-//				'<span data-s9e-mediaembed="bandcamp" style="display:inline-block;width:100%;max-width:400px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:100%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="//bandcamp.com/EmbeddedPlayer/size=large/minimal=true/track=2146686782"></iframe></span></span>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('bandcamp');
-//				}
-//			],
-//			[
-//				'http://www.comedycentral.com/video-clips/uu5qz4/key-and-peele-dueling-hats',
-//				'<span data-s9e-mediaembed="comedycentral" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//media.mtvnservices.com/embed/mgid:arc:video:comedycentral.com:bc275e2f-48e3-46d9-b095-0254381497ea" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-//					$configurator->MediaEmbed->add('comedycentral');
-//				}
-//			],
 			[
 				'https://www.gettyimages.com/detail/3232182',
 				'(<span data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:67\\.1717171717172%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\w]{22}&amp;tld=com&amp;sig=[-\w]{43}=&amp;caption=false&amp;ver=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>)',
@@ -2633,15 +2439,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('kickstarter');
 				}
 			],
-//			[
-//				'https://www.liveleak.com/view?i=Clka1_1520190526',
-//				'<r><LIVELEAK id="Clka1_1520190526">https://www.liveleak.com/view?i=Clka1_1520190526</LIVELEAK></r>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->MediaEmbed->add('liveleak');
-//				}
-//			],
 			[
 				'http://new.livestream.com/accounts/9999999999/events/9999999999',
 				'<r><LIVESTREAM account_id="9999999999" event_id="9999999999">http://new.livestream.com/accounts/9999999999/events/9999999999</LIVESTREAM></r>',
@@ -3556,15 +3353,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('tradingview');
 				}
 			],
-//			[
-//				'http://www.traileraddict.com/tags/musical',
-//				'<t>http://www.traileraddict.com/tags/musical</t>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->MediaEmbed->add('traileraddict');
-//				}
-//			],
 			[
 				'https://mydailyfreedom.com/tv/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html',
 				'<r><TRENDINGVIEWS id="8213">https://mydailyfreedom.com/tv/video/chick-fil-a-customers-sing-impromtu-lean-on-me-8213.html</TRENDINGVIEWS></r>',
@@ -4553,15 +4341,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('facebook');
 				}
 			],
-//			[
-//				'https://www.falstad.com/circuit/circuitjs.html?cct=$+1+0.000005+1.3241202019156522+43+5+50%0AR+736+368+736+304+0+0+40+3.3+0+0+0.5%0A162+736+368+736+416+2+default-led+1+0+0+0.01%0At+688+432+736+432+0+1+-0.2745603107888651+0.7370392451696097+100%0At+688+464+736+464+0+1+0.548427436901697+0.7373314588213099+100%0As+672+416+672+432+0+0+false%0As+672+448+672+464+0+0+false%0Aw+672+448+656+448+0%0Aw+672+416+656+416+0%0Aw+656+416+656+368+0%0Aw+656+368+736+368+0%0Aw+656+448+624+448+0%0Aw+624+448+624+368+0%0Aw+624+368+656+368+0%0Aw+736+480+736+528+0%0Ag+736+528+736+560+0%0Ar+688+432+672+432+0+1000%0Ar+688+464+672+464+0+1000%0Aw+736+416+800+416+0%0A162+800+416+880+416+2+default-led+1+0+0+0.01%0Ag+880+416+912+416+0%0A',
-//				'<iframe data-s9e-mediaembed="falstad" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:500px;max-height:90vh;width:100%" src="https://www.falstad.com/circuit/circuitjs.html?running=false&amp;cct=$+1+0.000005+1.3241202019156522+43+5+50%0AR+736+368+736+304+0+0+40+3.3+0+0+0.5%0A162+736+368+736+416+2+default-led+1+0+0+0.01%0At+688+432+736+432+0+1+-0.2745603107888651+0.7370392451696097+100%0At+688+464+736+464+0+1+0.548427436901697+0.7373314588213099+100%0As+672+416+672+432+0+0+false%0As+672+448+672+464+0+0+false%0Aw+672+448+656+448+0%0Aw+672+416+656+416+0%0Aw+656+416+656+368+0%0Aw+656+368+736+368+0%0Aw+656+448+624+448+0%0Aw+624+448+624+368+0%0Aw+624+368+656+368+0%0Aw+736+480+736+528+0%0Ag+736+528+736+560+0%0Ar+688+432+672+432+0+1000%0Ar+688+464+672+464+0+1000%0Aw+736+416+800+416+0%0A162+800+416+880+416+2+default-led+1+0+0+0.01%0Ag+880+416+912+416+0%0A"></iframe>',
-//				[],
-//				function ($configurator)
-//				{
-//					$configurator->MediaEmbed->add('falstad');
-//				}
-//			],
 			[
 				'https://www.falstad.com/circuit/circuitjs.html?ctz=CQAgjCAMB0l3BWK0BsCBMkAcYCcZMBmQyMAkBSCiyAKAHdxyAWLETN1qB97EL9Fk5s6jQcJCEszfiNoAnJullLwAdhRRJJBbwkd1mqmEiZd4lRbAatJs4qkyujw1sJnGL65pfpmVOgAXdiF2BB9pMKNwEABaQmgsSjVcNXQUXEhcZjBmGRhw6zAEQjUcUyxcQXA4HgNvELZ0cO4xUIaDZqNaYM6WsmUu22QUQlwUcXTBSlxcEVQsKTGwKRKliBNRVQaB9n9uACVVLhQnES19pADkBFoAc1V0NNUSfPvJSKflF1fuAA9wAhcOxyNYmsV+OBNABhMC0AGEawgwjaTToMCaGQYkDQ9DwkBJdgoYyQJDpFFYzQARThCMyYWBOSoU0h2KpeP8KLwgz46D8e2uJgA+l0hZAhUz0CLoAgxdAwGKRULhYRaJz2M8DL8-NdcCLworJdLZTBmIqpXrVZhgbsOnwGgFYPAwGxYgVrJRKGgkjkUNi4daPlibFYbI74KQ2Ak0lgUGpCJRY6NMJo4QB7JggU5Z-hZYFYRL+XAlAiYZhzMrIZ1aZRsFC0IA',
 				'<iframe data-s9e-mediaembed="falstad" allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:500px;max-height:90vh;width:100%" src="https://www.falstad.com/circuit/circuitjs.html?running=false&amp;ctz=CQAgjCAMB0l3BWK0BsCBMkAcYCcZMBmQyMAkBSCiyAKAHdxyAWLETN1qB97EL9Fk5s6jQcJCEszfiNoAnJullLwAdhRRJJBbwkd1mqmEiZd4lRbAatJs4qkyujw1sJnGL65pfpmVOgAXdiF2BB9pMKNwEABaQmgsSjVcNXQUXEhcZjBmGRhw6zAEQjUcUyxcQXA4HgNvELZ0cO4xUIaDZqNaYM6WsmUu22QUQlwUcXTBSlxcEVQsKTGwKRKliBNRVQaB9n9uACVVLhQnES19pADkBFoAc1V0NNUSfPvJSKflF1fuAA9wAhcOxyNYmsV+OBNABhMC0AGEawgwjaTToMCaGQYkDQ9DwkBJdgoYyQJDpFFYzQARThCMyYWBOSoU0h2KpeP8KLwgz46D8e2uJgA+l0hZAhUz0CLoAgxdAwGKRULhYRaJz2M8DL8-NdcCLworJdLZTBmIqpXrVZhgbsOnwGgFYPAwGxYgVrJRKGgkjkUNi4daPlibFYbI74KQ2Ak0lgUGpCJRY6NMJo4QB7JggU5Z-hZYFYRL+XAlAiYZhzMrIZ1aZRsFC0IA"></iframe>',
