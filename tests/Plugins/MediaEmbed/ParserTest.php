@@ -969,6 +969,26 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://mastodon.social/statuses/100181134752056592',
+				'<r><MASTODON host="mastodon.social" id="100181134752056592" name="HackerNewsBot">https://mastodon.social/statuses/100181134752056592</MASTODON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('mastodon');
+				}
+			],
+			[
+				'https://mastodon.social/web/statuses/100181134752056592',
+				'<r><MASTODON host="mastodon.social" id="100181134752056592" name="HackerNewsBot">https://mastodon.social/web/statuses/100181134752056592</MASTODON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('mastodon');
+				}
+			],
+			[
 				'https://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world',
 				'<r><NPR i="385396431" m="385396432">https://www.npr.org/blogs/goatsandsoda/2015/02/11/385396431/the-50-most-effective-ways-to-transform-the-developing-world</NPR></r>',
 				[],
@@ -2632,8 +2652,17 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://mastodon.social/@HackerNewsBot/100181134752056592',
-				'<r><MASTODON host="mastodon.social" id="100181134752056592" name="HackerNewsBot">https://mastodon.social/@HackerNewsBot/100181134752056592</MASTODON></r>',
+				'https://mastodon.social/web/@HackerNewsBot/100181134752056592',
+				'<r><MASTODON host="mastodon.social" id="100181134752056592" name="HackerNewsBot">https://mastodon.social/web/@HackerNewsBot/100181134752056592</MASTODON></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('mastodon');
+				}
+			],
+			[
+				'https://mastodon.social/users/HackerNewsBot/statuses/100181134752056592',
+				'<r><MASTODON host="mastodon.social" id="100181134752056592" name="HackerNewsBot">https://mastodon.social/users/HackerNewsBot/statuses/100181134752056592</MASTODON></r>',
 				[],
 				function ($configurator)
 				{

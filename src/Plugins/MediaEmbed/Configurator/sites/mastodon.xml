@@ -11,9 +11,9 @@
 	</attributes>
 
 	<host>mastodon.social</host>
-	<extract>#//(?'host'[-.\w]+)/@(?'name'\w+)/(?'id'\d+)#</extract>
+	<extract>#//(?'host'[-.\w]+)/(?:web/)?(?:@|users/)(?'name'\w+)/(?:posts/|statuses/)?(?'id'\d+)#</extract>
 	<scrape url="{@origin}/api/v1/statuses/{@id}">
-		<match>#^(?'origin'https://[^/]+)/@\w+@[-.\w]+/(?'id'\d+)#</match>
+		<match>#^(?'origin'https://[^/]+)/(?:web/)?(?:@\w+@[-.\w]+|statuses)/(?'id'\d+)#</match>
 		<extract>#"url":"https://(?'host'[-.\w]+)/@(?'name'\w+)/(?'id'\d+)"#</extract>
 	</scrape>
 	<iframe width="550" height="300" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
