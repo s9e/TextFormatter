@@ -1,6 +1,6 @@
 <site name="Kaltura" homepage="https://corp.kaltura.com/">
-	<example>https://www.kaltura.com/tiny/b5tib</example>
-	<example>https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a</example>
+	<example>https://www.kaltura.com/tiny/p8a9z</example>
+	<example>https://videos.kaltura.com/media/1_Kaltura+Video+Tips+-+Preparation/1_p59fv7ur</example>
 
 	<tags><tag>videos</tag></tags>
 
@@ -16,10 +16,11 @@
 	<extract>@/uiconf_id/(?'uiconf_id'\d+)/@</extract>
 	<extract>@\bentry_id[=/](?'entry_id'\w+)@</extract>
 	<scrape>
-		<match>@kaltura\.com/(?:media/t|tiny)/.@</match>
-		<extract>@kaltura\.com/+p/(?'partner_id'\d+)/sp/(?'sp'\d+)/\w*/uiconf_id/(?'uiconf_id'\d+)/.*?\bentry_id=(?'entry_id'\w+)@</extract>
+		<match>@kaltura\.com/(?:media|tiny)/.@</match>
+		<extract>@kaltura\.com/p/(?'partner_id'\d+)/sp/(?'sp'\d+)/\w*/uiconf_id/(?'uiconf_id'\d+)(?:/.*?\bentry_id=(?'entry_id'\w+))?@</extract>
+		<extract>@/entry_id/(?'entry_id'\w+)@</extract>
 	</scrape>
-	<iframe padding-height="36">
+	<iframe>
 		<src><![CDATA[
 			<xsl:text>https://cdnapisec.kaltura.com/p/</xsl:text>
 			<xsl:value-of select="@partner_id"/>

@@ -4460,7 +4460,7 @@ class ParserTest extends Test
 			],
 			[
 				'https://cdnapisec.kaltura.com/html5/html5lib/v2.73.2/mwEmbedFrame.php/p/1674401/uiconf_id/23435151/entry_id/1_dtmilkcn?wid=_1674401&iframeembed=true&playerId=kaltura_player&entry_id=1_dtmilkcn',
-				'<span data-s9e-mediaembed="kaltura" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:61.875%;padding-bottom:calc(56.25% + 36px)"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&amp;entry_id=1_dtmilkcn"></iframe></span></span>',
+				'<span data-s9e-mediaembed="kaltura" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&amp;entry_id=1_dtmilkcn"></iframe></span></span>',
 				[],
 				function ($configurator)
 				{

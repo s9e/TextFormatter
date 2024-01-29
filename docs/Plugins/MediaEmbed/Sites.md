@@ -223,7 +223,7 @@
 	</tr>
 	<tr title="Kaltura" id="kaltura">
 		<td><code>kaltura</code></td>
-		<td>https://www.kaltura.com/tiny/b5tib<br/>https://vcu.mediaspace.kaltura.com/media/t/1_hu0rc15a</td>
+		<td>https://www.kaltura.com/tiny/p8a9z<br/>https://videos.kaltura.com/media/1_Kaltura+Video+Tips+-+Preparation/1_p59fv7ur</td>
 	</tr>
 	<tr title="Kontinental Hockey League (КХЛ)" id="khl">
 		<td><code>khl</code></td>
