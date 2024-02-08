@@ -60,6 +60,10 @@ class FunctionProvider
 {
 	return str.replace(/[ \\n\\r\\t\\0\\x0B]+$/g, \'\');
 }',
+		'str_replace' => 'function(search, replace, subject)
+{
+	return subject.replaceAll(search, replace);
+}',
 		'str_rot13' => 'function(str)
 {
 	return str.replace(
