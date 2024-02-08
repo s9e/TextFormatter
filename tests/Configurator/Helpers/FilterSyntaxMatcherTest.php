@@ -296,6 +296,16 @@ class FilterSyntaxMatcherTest extends Test
 				'foo([$attrValue])',
 				new RuntimeException("Cannot parse 'foo([\$attrValue])'")
 			],
+			[
+				'#regexp($attrValue, /^\\d+$/)',
+				[
+					'filter' => '#regexp',
+					'params' => [
+						['Name', 'attrValue'],
+						['Value', new Regexp('/^\\d+$/', true)]
+					]
+				]
+			],
 		];
 	}
 }

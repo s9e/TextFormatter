@@ -95,6 +95,16 @@ class FilterHelperTest extends Test
 				'foo([$attrValue])',
 				new Exception('Cannot parse')
 			],
+			[
+				'#regexp($attrValue, /^\\d+$/)',
+				[
+					'filter' => '#regexp',
+					'params' => [
+						['Name', 'attrValue'],
+						['Value', new Regexp('/^\\d+$/', true)]
+					]
+				]
+			],
 		];
 	}
 }
