@@ -1,0 +1,48 @@
+<site name="XenForo">
+	<example>https://xenforo.com/community/threads/embed-your-content-anywhere.217381/</example>
+
+	<tags><tag>social</tag></tags>
+
+	<attributes>
+		<content_id      filterChain="#identifier" required="false" />
+		<post_id         filterChain="#uint"       required="false" />
+		<profile_post_id filterChain="#uint"       required="false" />
+		<resource_id     filterChain="#uint"       required="false" />
+		<thread_id       filterChain="#uint"       required="false" />
+		<url             filterChain="#url"        required="true"  />
+		<xfmg_album_id   filterChain="#uint"       required="false" />
+	</attributes>
+
+	<host>xenforo.com</host>
+	<extract>!^(?'url'https://.*?/)media/albums/(?:[-\w]+\.)?(?'xfmg_album_id'\d+)!</extract>
+	<extract>!^(?'url'https://.*?/)(?:members/[-.\w]+/#profile-post-|profile-posts/)(?'profile_post_id'\d+)!</extract>
+	<extract>!^(?'url'https://.*?/)resources/(?:[-\w]+\.)?(?'resource_id'\d+)!</extract>
+	<extract>!^(?'url'https://.*?/)threads/(?:[-\w]+\.)?(?'thread_id'\d+)/(?:page-\d+)?#?(?:post-(?'post_id'\d+))?!</extract>
+	<extract>!^(?'url'https://.*?/)embed\.php\?content=(?'content_id'[-\w]+)!</extract>
+
+	<iframe width="100%" height="300" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
+		<src><![CDATA[
+			<xsl:text>https://s9e.github.io/iframe/2/xenforo.min.html#</xsl:text>
+			<xsl:value-of select="@url"/>
+			<xsl:choose>
+				<xsl:when test="@profile_post_id">
+					<xsl:text>profile-posts/</xsl:text>
+					<xsl:value-of select="@profile_post_id"/>
+				</xsl:when>
+				<xsl:when test="@resource_id">
+					<xsl:text>resources/</xsl:text>
+					<xsl:value-of select="@resource_id"/>
+				</xsl:when>
+				<xsl:when test="@xfmg_album_id">
+					<xsl:text>media/albums/</xsl:text>
+					<xsl:value-of select="@xfmg_album_id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>threads/</xsl:text>
+					<xsl:value-of select="@thread_id"/>
+					<xsl:if test="@post_id">/post-<xsl:value-of select="@post_id"/></xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+		]]></src>
+	</iframe>
+</site>

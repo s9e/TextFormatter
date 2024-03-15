@@ -60,6 +60,10 @@ ksort($cache);
 $php = '';
 foreach ($cache as $siteId => $siteConfig)
 {
+	if ($siteId === 'xenforo')
+	{
+		$siteConfig['host'] = [];
+	}
 	$php .= "\n\t\t" . var_export($siteId, true) . '=>' . export($siteConfig) . ',';
 }
 $php = rtrim($php, ',');

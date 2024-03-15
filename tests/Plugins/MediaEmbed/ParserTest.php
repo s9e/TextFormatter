@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed;
 
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser\Tag;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\XenForoHelper;
 use s9e\TextFormatter\Plugins\MediaEmbed\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsJavaScriptRunner;
@@ -3869,6 +3870,106 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://xenforo.com/community/threads/embed-your-content-anywhere.217381/',
+				'<r><XENFORO thread_id="217381" url="https://xenforo.com/community/">https://xenforo.com/community/threads/embed-your-content-anywhere.217381/</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/threads/embed-your-content-anywhere.217381/#post-1653303',
+				'<r><XENFORO post_id="1653303" thread_id="217381" url="https://xenforo.com/community/">https://xenforo.com/community/threads/embed-your-content-anywhere.217381/#post-1653303</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/threads/embed-your-content-anywhere.217381/post-1653303',
+				'<r><XENFORO post_id="1653303" thread_id="217381" url="https://xenforo.com/community/">https://xenforo.com/community/threads/embed-your-content-anywhere.217381/post-1653303</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/threads/embed-your-content-anywhere.217381/page-2#post-1653342',
+				'<r><XENFORO post_id="1653342" thread_id="217381" url="https://xenforo.com/community/">https://xenforo.com/community/threads/embed-your-content-anywhere.217381/page-2#post-1653342</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/threads/139274/',
+				'<r><XENFORO thread_id="139274" url="https://xenforo.com/community/">https://xenforo.com/community/threads/139274/</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/profile-posts/32351/',
+				'<r><XENFORO profile_post_id="32351" url="https://xenforo.com/community/">https://xenforo.com/community/profile-posts/32351/</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/members/chris-d.11388/#profile-post-32351',
+				'<r><XENFORO profile_post_id="32351" url="https://xenforo.com/community/">https://xenforo.com/community/members/chris-d.11388/#profile-post-32351</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/media/albums/bronco.627/',
+				'<r><XENFORO url="https://xenforo.com/community/" xfmg_album_id="627">https://xenforo.com/community/media/albums/bronco.627/</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/resources/s9e-media-sites.5973/',
+				'<r><XENFORO resource_id="5973" url="https://xenforo.com/community/">https://xenforo.com/community/resources/s9e-media-sites.5973/</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/embed.php?content=resource-5973',
+				'<r><XENFORO content_id="resource-5973" url="https://xenforo.com/community/">https://xenforo.com/community/embed.php?content=resource-5973</XENFORO></r>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
 				'http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html',
 				'<r><YOUKU id="XNzQwNjcxNDM2">http://v.youku.com/v_show/id_XNzQwNjcxNDM2.html</YOUKU></r>',
 				[],
@@ -4814,6 +4915,56 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('vine');
+				}
+			],
+			[
+				'https://xenforo.com/community/threads/139274/',
+				'<iframe data-s9e-mediaembed="xenforo" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:300px;width:100%" src="https://s9e.github.io/iframe/2/xenforo.min.html#https://xenforo.com/community/threads/139274"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/threads/s9e-media-sites.139274/page-2#post-1206523',
+				'<iframe data-s9e-mediaembed="xenforo" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:300px;width:100%" src="https://s9e.github.io/iframe/2/xenforo.min.html#https://xenforo.com/community/threads/139274/post-1206523"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/profile-posts/32351/',
+				'<iframe data-s9e-mediaembed="xenforo" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:300px;width:100%" src="https://s9e.github.io/iframe/2/xenforo.min.html#https://xenforo.com/community/profile-posts/32351"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/media/albums/bronco.627/',
+				'<iframe data-s9e-mediaembed="xenforo" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:300px;width:100%" src="https://s9e.github.io/iframe/2/xenforo.min.html#https://xenforo.com/community/media/albums/627"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
+				}
+			],
+			[
+				'https://xenforo.com/community/resources/s9e-media-sites.5973/',
+				'<iframe data-s9e-mediaembed="xenforo" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+\'px\';this.contentWindow.postMessage(\'s9e:init\',\'*\',[c.port2])" scrolling="no" style="border:0;height:300px;width:100%" src="https://s9e.github.io/iframe/2/xenforo.min.html#https://xenforo.com/community/resources/5973"></iframe>',
+				[],
+				function ($configurator)
+				{
+					$xenforoHelper = new XenForoHelper($configurator);
+					$xenforoHelper->addHost('xenforo.com');
 				}
 			],
 			[

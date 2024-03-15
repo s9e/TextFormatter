@@ -7,10 +7,10 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 
-class MastodonHelper extends AbstractConfigurableHostHelper
+class XenForoHelper extends AbstractConfigurableHostHelper
 {
 	protected function getSiteId(): string
 	{
-		return 'mastodon';
+		return 'xenforo';
 	}
 }

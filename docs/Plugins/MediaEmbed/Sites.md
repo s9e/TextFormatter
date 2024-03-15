@@ -517,6 +517,10 @@
 		<td><code>xboxdvr</code></td>
 		<td>https://gamerdvr.com/gamer/LOXITANE/video/12463958</td>
 	</tr>
+	<tr title="XenForo" id="xenforo">
+		<td><code>xenforo</code></td>
+		<td>https://xenforo.com/community/threads/embed-your-content-anywhere.217381/</td>
+	</tr>
 	<tr title="Youku" id="youku">
 		<td><code>youku</code></td>
 		<td>https://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</td>
