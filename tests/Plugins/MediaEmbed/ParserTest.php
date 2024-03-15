@@ -495,8 +495,8 @@ class ParserTest extends Test
 	{
 		return [
 			[
-				'https://play.acast.com/s/the-taskmaster-podcast/ep31.leemack-s11ep.8',
-				'<r><ACAST episode_id="f38da59a-9eb9-42f7-a0bf-a633ef813202" show_id="e3178447-8d7d-556e-bece-5d8f7c4dd539">https://play.acast.com/s/the-taskmaster-podcast/ep31.leemack-s11ep.8</ACAST></r>',
+				'https://shows.acast.com/chaotic-normal/episodes/the-rising-tide',
+				'<r><ACAST episode_id="60f641a3fb28380014c4d8f0" show_id="60ef8f477fe7b1001343d9d6">https://shows.acast.com/chaotic-normal/episodes/the-rising-tide</ACAST></r>',
 				[],
 				function ($configurator)
 				{
