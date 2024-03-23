@@ -1,6 +1,6 @@
 <h2>Fatdown, a Markdown bundle that doesn't suck too bad</h2>
 
-**Fatdown** is a bundle based on the [Litedown](/Plugins/Litedown/Synopsis.md) plugin which supports most of Markdown's features, plus the MediaEmbed and FancyPants plugins for media embedding and enhanced typography.
+**Fatdown** is a bundle based on the [Litedown](../Plugins/Litedown/Synopsis.md) plugin which supports most of Markdown's features, plus the MediaEmbed and FancyPants plugins for media embedding and enhanced typography.
 
 ### Demo
 

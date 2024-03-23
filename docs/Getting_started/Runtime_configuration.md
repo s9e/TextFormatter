@@ -80,7 +80,7 @@ echo $html;
 
 ### Plug your own parser
 
-[You can register your own parser to be executed at runtime.](/Plugins/Your_own_plugin/Register_parser)
+[You can register your own parser to be executed at runtime.](../Plugins/Your_own_plugin/Register_parser.md)
 
 ## Renderer
 
