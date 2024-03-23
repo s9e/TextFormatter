@@ -19,7 +19,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	{
 		return [
 			'Array' => [
-				'groups' => ['FilterArg', 'Literal'],
+				'groups' => ['FilterArgValue', 'Literal'],
 				'regexp' => '\\[ ((?&ArrayElements))? \\]',
 			],
 			'ArrayElement' => [
@@ -29,12 +29,15 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 				'regexp' => '((?&ArrayElement))(?: , ((?&ArrayElements)))?',
 			],
 			'DoubleQuotedString' => [
-				'groups' => ['FilterArg', 'Literal', 'Scalar'],
+				'groups' => ['FilterArgValue', 'Literal', 'Scalar'],
 				'regexp' => '"((?:[^\\\\"]|\\\\.)*)"',
 			],
 			'False' => [
-				'groups' => ['FilterArg', 'Literal', 'Scalar'],
+				'groups' => ['FilterArgValue', 'Literal', 'Scalar'],
 				'regexp' => '[Ff][Aa][Ll][Ss][Ee]',
+			],
+			'FilterArg' => [
+				'regexp' => '(?:(\\w+) : )?((?&FilterArgValue))',
 			],
 			'FilterArgs' => [
 				'regexp' => '((?&FilterArg))(?: , ((?&FilterArgs)))?',
@@ -43,31 +46,31 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 				'regexp' => '([#:\\\\\\w]+)(?: \\( ((?&FilterArgs)?) \\))?',
 			],
 			'Float' => [
-				'groups' => ['FilterArg', 'Literal', 'Scalar'],
+				'groups' => ['FilterArgValue', 'Literal', 'Scalar'],
 				'regexp' => '([-+]?(?:\\.[0-9]+(?:_[0-9]+)*|[0-9]+(?:_[0-9]+)*\\.(?!_)[0-9]*(?:_[0-9]+)*|[0-9]+(?:_[0-9]+)*(?=[Ee]))(?:[Ee]-?[0-9]+(?:_[0-9]+)*)?)',
 			],
 			'Integer' => [
-				'groups' => ['FilterArg', 'Literal', 'Scalar'],
+				'groups' => ['FilterArgValue', 'Literal', 'Scalar'],
 				'regexp' => '(-?(?:0[Bb][01]+(?:_[01]+)*|0[Oo][0-7]+(?:_[0-7]+)*|0[Xx][0-9A-Fa-f]+(?:_[0-9A-Fa-f]+)*|[0-9]+(?:_[0-9]+)*))',
 			],
 			'Null' => [
-				'groups' => ['FilterArg', 'Literal', 'Scalar'],
+				'groups' => ['FilterArgValue', 'Literal', 'Scalar'],
 				'regexp' => '[Nn][Uu][Ll][Ll]',
 			],
 			'Param' => [
-				'groups' => ['FilterArg'],
+				'groups' => ['FilterArgValue'],
 				'regexp' => '\\$(\\w+(?:\\.\\w+)*)',
 			],
 			'Regexp' => [
-				'groups' => ['FilterArg', 'Literal'],
+				'groups' => ['FilterArgValue', 'Literal'],
 				'regexp' => '(/(?:[^\\\\/]|\\\\.)*/)([Sgimsu]*)',
 			],
 			'SingleQuotedString' => [
-				'groups' => ['FilterArg', 'Literal', 'Scalar'],
+				'groups' => ['FilterArgValue', 'Literal', 'Scalar'],
 				'regexp' => "'((?:[^\\\\']|\\\\.)*)'",
 			],
 			'True' => [
-				'groups' => ['FilterArg', 'Literal', 'Scalar'],
+				'groups' => ['FilterArgValue', 'Literal', 'Scalar'],
 				'regexp' => '[Tt][Rr][Uu][Ee]'
 			]
 		];
@@ -182,6 +185,19 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 		return $config;
 	}
 
+	public function parseFilterArg(string $argName = null, string $argValue = null): array
+	{
+		$arg = (str_starts_with($argValue, '$'))
+		     ? ['Name',  substr($argValue, 1)                       ]
+		     : ['Value', $this->recurse($argValue, 'FilterArgValue')];
+		if ($argName !== '')
+		{
+			$arg[] = $argName;
+		}
+
+		return $arg;
+	}
+
 	/**
 	* @param  string $firstArg
 	* @param  string $otherArgs
@@ -189,10 +205,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	*/
 	public function parseFilterArgs(string $firstArg, ?string $otherArgs = null)
 	{
-		$parsedArg = $this->parser->parse($firstArg, 'FilterArg');
-
-		$type = ($parsedArg['match'] === 'Param') ? 'Name' : 'Value';
-		$args = [[$type, $parsedArg['value']]];
+		$args = [$this->parser->parse($firstArg, 'FilterArg')['value']];
 		if (isset($otherArgs))
 		{
 			$args = array_merge($args, $this->recurse($otherArgs, 'FilterArgs'));

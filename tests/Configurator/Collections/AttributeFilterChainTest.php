@@ -114,16 +114,16 @@ class AttributeFilterChainTest extends Test
 		$this->assertEquals(['min' => 1, 'max' => 12], $filter->getVars());
 	}
 
-//	/**
-//	* @testdox Default filters accept named constructor arguments
-//	*/
-//	public function testDefaultFilterNamedConstructorArguments()
-//	{
-//		$filterChain = new AttributeFilterChain;
-//		$filter      = $filterChain->append('#range(max: 12, min: 3)');
-//
-//		$this->assertEquals(['min' => 3, 'max' => 12], $filter->getVars());
-//	}
+	/**
+	* @testdox Default filters accept named constructor arguments
+	*/
+	public function testDefaultFilterNamedConstructorArguments()
+	{
+		$filterChain = new AttributeFilterChain;
+		$filter      = $filterChain->append('#range(max: 12, min: 3)');
+
+		$this->assertEquals(['min' => 3, 'max' => 12], $filter->getVars());
+	}
 
 	/**
 	* @testdox Instances of AttributeFilter are added as-is

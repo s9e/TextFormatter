@@ -206,6 +206,7 @@ Attribute Filter Chain (s9e\TextFormatter\Tests\Configurator\Collections\Attribu
  [x] PHP array callbacks are normalized to an instance of AttributeFilter
  [x] Default filters such as "#int" are normalized to an instance of the corresponding AttributeFilter
  [x] Default filters accept positional constructor arguments
+ [x] Default filters accept named constructor arguments
  [x] Instances of AttributeFilter are added as-is
  [x] Automatically parses callback parameters
 
@@ -635,6 +636,8 @@ Filter Syntax Matcher (s9e\TextFormatter\Tests\Configurator\Helpers\FilterSyntax
  [x] parse() tests with data set #33
  [x] parse() tests with data set #34
  [x] parse() tests with data set #35
+ [x] parse() tests with data set #36
+ [x] parse() tests with data set #37
 
 Node Locator (s9e\TextFormatter\Tests\Configurator\Helpers\NodeLocator)
  [x] getObjectParamsByRegexp() tests with data set #0

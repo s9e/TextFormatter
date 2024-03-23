@@ -54,6 +54,23 @@ class FilterSyntaxMatcherTest extends Test
 				]
 			],
 			[
+				'strtolower(string: $attrValue)',
+				[
+					'filter' => 'strtolower',
+					'params' => [['Name', 'attrValue', 'string']]
+				]
+			],
+			[
+				'#range(min: 1, max: 55)',
+				[
+					'filter' => '#range',
+					'params' => [
+						['Value', 1,  'min'],
+						['Value', 55, 'max']
+					]
+				]
+			],
+			[
 				'foo\\bar($attrValue)',
 				[
 					'filter' => 'foo\\bar',
