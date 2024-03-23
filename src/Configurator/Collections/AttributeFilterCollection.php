@@ -49,7 +49,7 @@ class AttributeFilterCollection extends NormalizedCollection
 	* @param  string          $filterName Filter name, e.g. "int" or "color"
 	* @return AttributeFilter
 	*/
-	public static function getDefaultFilter($filterName)
+	public static function getDefaultFilter(string $filterName, ?array $constructorArgs = []): AttributeFilter
 	{
 		$filterName = ucfirst(strtolower($filterName));
 		$className  = 's9e\\TextFormatter\\Configurator\\Items\\AttributeFilters\\' . $filterName . 'Filter';
@@ -59,7 +59,7 @@ class AttributeFilterCollection extends NormalizedCollection
 			throw new InvalidArgumentException("Unknown attribute filter '" . $filterName . "'");
 		}
 
-		return new $className;
+		return new $className(...$constructorArgs);
 	}
 
 	/**

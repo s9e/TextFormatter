@@ -157,4 +157,40 @@ class AttributeFilterCollectionTest extends Test
 			$collection->get('#number')
 		);
 	}
+
+	/**
+	* @testdox getDefaultFilter('range') returns a filter with no range set
+	*/
+	public function testGetDefaultFilter()
+	{
+		$filter = AttributeFilterCollection::getDefaultFilter('range');
+		$this->assertEquals(
+			[],
+			$filter->getVars()
+		);
+	}
+
+	/**
+	* @testdox getDefaultFilter('range', [1, 5]) returns a filter with range 1...5
+	*/
+	public function testGetDefaultFilterConstructorPositionalArgs()
+	{
+		$filter = AttributeFilterCollection::getDefaultFilter('range', [1, 5]);
+		$this->assertEquals(
+			['min' => 1, 'max' => 5],
+			$filter->getVars()
+		);
+	}
+
+	/**
+	* @testdox getDefaultFilter('range', ['max' => 5, 'min' => 1]) returns a filter with range 1...5
+	*/
+	public function testGetDefaultFilterConstructorNamedArgs()
+	{
+		$filter = AttributeFilterCollection::getDefaultFilter('range', ['max' => 5, 'min' => 1]);
+		$this->assertEquals(
+			['min' => 1, 'max' => 5],
+			$filter->getVars()
+		);
+	}
 }

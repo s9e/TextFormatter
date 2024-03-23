@@ -220,6 +220,9 @@ Attribute Filter Collection (s9e\TextFormatter\Tests\Configurator\Collections\At
  [x] get() throws an exception if the filter name is neither callable not starts with # and is entirely composed of letters and digits
  [x] get() throws an exception on unknown filter
  [x] get() returns a clone of the filter, not the original instance
+ [x] getDefaultFilter('range') returns a filter with no range set
+ [x] getDefaultFilter('range', [1, 5]) returns a filter with range 1...5
+ [x] getDefaultFilter('range', ['max' => 5, 'min' => 1]) returns a filter with range 1...5
 
 Attribute List (s9e\TextFormatter\Tests\Configurator\Collections\AttributeList)
  [x] Attribute names are normalized for storage
