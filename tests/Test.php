@@ -65,7 +65,7 @@ abstract class Test extends TestCase
 		}
 	}
 
-	protected function assertParsing($original, $expected, $setup = null, $callback = null, array $expectedLogs = null)
+	protected function assertParsing($original, $expected, $setup = null, $callback = null, ?array $expectedLogs = null)
 	{
 		if (isset($setup))
 		{

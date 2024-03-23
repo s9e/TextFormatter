@@ -19,7 +19,7 @@ class UrlFilter
 	* @param  Logger $logger    Parser's logger
 	* @return mixed             Cleaned up URL if valid, FALSE otherwise
 	*/
-	public static function filter($attrValue, array $urlConfig, Logger $logger = null)
+	public static function filter($attrValue, array $urlConfig, ?Logger $logger = null)
 	{
 		/**
 		* Trim the URL to conform with HTML5 then parse it

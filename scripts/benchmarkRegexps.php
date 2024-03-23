@@ -64,7 +64,7 @@ $regexps = [
 ];
 benchmark($regexps, $input, '');
 
-function benchmark(array $regexps, string $input, string $replace = null)
+function benchmark(array $regexps, string $input, ?string $replace = null)
 {
 	foreach ($regexps as $regexp)
 	{

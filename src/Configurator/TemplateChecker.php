@@ -109,7 +109,7 @@ class TemplateChecker implements ArrayAccess, Iterator
 	* @param  Tag    $tag      Tag this template belongs to
 	* @return void
 	*/
-	public function checkTemplate($template, Tag $tag = null)
+	public function checkTemplate($template, ?Tag $tag = null)
 	{
 		if ($this->disabled)
 		{

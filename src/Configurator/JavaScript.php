@@ -136,7 +136,7 @@ class JavaScript
 	* @param  array  $config Config array returned by the configurator
 	* @return string         JavaScript parser
 	*/
-	public function getParser(array $config = null)
+	public function getParser(?array $config = null)
 	{
 		$this->configOptimizer->reset();
 

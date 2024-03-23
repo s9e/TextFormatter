@@ -179,7 +179,7 @@ class Optimizer extends IRProcessor
 	* @param  DOMNode $contextNode
 	* @return void
 	*/
-	protected function removeNodes($query, DOMNode $contextNode = null)
+	protected function removeNodes($query, ?DOMNode $contextNode = null)
 	{
 		foreach ($this->query($query, $contextNode) as $node)
 		{

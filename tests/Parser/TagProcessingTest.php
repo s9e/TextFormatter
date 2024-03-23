@@ -18,7 +18,7 @@ class TagProcessingTest extends Test
 	* @testdox Works
 	* @dataProvider getData
 	*/
-	public function test($original, $expected, $setup = null, $callback = null, array $expectedLogs = null)
+	public function test($original, $expected, $setup = null, $callback = null, ?array $expectedLogs = null)
 	{
 		$this->configurator->rulesGenerator->clear();
 		$this->configurator->rulesGenerator->add('AllowAll');

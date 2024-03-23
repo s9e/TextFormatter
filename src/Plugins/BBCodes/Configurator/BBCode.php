@@ -51,7 +51,7 @@ class BBCode implements ConfigProvider
 	/**
 	* @param array $options This BBCode's options
 	*/
-	public function __construct(array $options = null)
+	public function __construct(?array $options = null)
 	{
 		$this->contentAttributes = new AttributeList;
 		if (isset($options))

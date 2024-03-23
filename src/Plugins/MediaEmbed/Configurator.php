@@ -104,7 +104,7 @@ class Configurator extends ConfiguratorBase
 	* @param  array  $siteConfig Site's config
 	* @return Tag                Tag created for this site
 	*/
-	public function add($siteId, array $siteConfig = null)
+	public function add($siteId, ?array $siteConfig = null)
 	{
 		// Normalize or retrieve the site definition
 		$siteId = $this->normalizeId($siteId);

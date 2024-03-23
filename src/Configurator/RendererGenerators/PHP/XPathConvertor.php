@@ -34,7 +34,7 @@ class XPathConvertor
 	/**
 	* Constructor
 	*/
-	public function __construct(RecursiveParser $parser = null)
+	public function __construct(?RecursiveParser $parser = null)
 	{
 		$this->features = [
 			'mbstring' => extension_loaded('mbstring'),

@@ -20,7 +20,7 @@ class MapFilter extends AbstractMapFilter
 	* @param  bool  $caseSensitive Whether this map is case-sensitive
 	* @param  bool  $strict        Whether this map is strict (values with no match are invalid)
 	*/
-	public function __construct(array $map = null, $caseSensitive = false, $strict = false)
+	public function __construct(?array $map = null, $caseSensitive = false, $strict = false)
 	{
 		parent::__construct('s9e\\TextFormatter\\Parser\\AttributeFilters\\MapFilter::filter');
 

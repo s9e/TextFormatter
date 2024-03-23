@@ -71,7 +71,7 @@ class Tag implements ConfigProvider
 	*
 	* @param  array $options This tag's options
 	*/
-	public function __construct(array $options = null)
+	public function __construct(?array $options = null)
 	{
 		$this->attributes             = new AttributeCollection;
 		$this->attributePreprocessors = new AttributePreprocessorCollection;

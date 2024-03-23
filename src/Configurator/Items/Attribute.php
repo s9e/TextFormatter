@@ -44,7 +44,7 @@ class Attribute implements ConfigProvider
 	*
 	* @param array $options This attribute's options
 	*/
-	public function __construct(array $options = null)
+	public function __construct(?array $options = null)
 	{
 		$this->filterChain = new AttributeFilterChain;
 

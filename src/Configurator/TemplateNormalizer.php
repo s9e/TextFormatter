@@ -97,7 +97,7 @@ class TemplateNormalizer implements ArrayAccess, Iterator
 	*
 	* @param array $normalizations List of normalizations
 	*/
-	public function __construct(array $normalizations = null)
+	public function __construct(?array $normalizations = null)
 	{
 		if (!isset($normalizations))
 		{

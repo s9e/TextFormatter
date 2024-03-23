@@ -119,7 +119,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	* @param  string $otherElements
 	* @return array
 	*/
-	public function parseArrayElements(string $firstElement, string $otherElements = null)
+	public function parseArrayElements(string $firstElement, ?string $otherElements = null)
 	{
 		$elements = [$this->recurse($firstElement, 'ArrayElement')];
 		if (isset($otherElements))
@@ -171,7 +171,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	* @param  string $args
 	* @return array
 	*/
-	public function parseFilterCallback(string $callback, string $args = null): array
+	public function parseFilterCallback(string $callback, ?string $args = null): array
 	{
 		$config = ['filter' => $callback];
 		if (isset($args))
@@ -187,7 +187,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 	* @param  string $otherArgs
 	* @return array
 	*/
-	public function parseFilterArgs(string $firstArg, string $otherArgs = null)
+	public function parseFilterArgs(string $firstArg, ?string $otherArgs = null)
 	{
 		$parsedArg = $this->parser->parse($firstArg, 'FilterArg');
 

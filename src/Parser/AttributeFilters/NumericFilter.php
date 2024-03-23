@@ -42,7 +42,7 @@ class NumericFilter
 	* @param  Logger  $logger    Parser's Logger instance
 	* @return mixed              Filtered value, or FALSE if invalid
 	*/
-	public static function filterRange($attrValue, $min, $max, Logger $logger = null)
+	public static function filterRange($attrValue, $min, $max, ?Logger $logger = null)
 	{
 		$attrValue = filter_var($attrValue, FILTER_VALIDATE_INT);
 

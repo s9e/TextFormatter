@@ -252,7 +252,7 @@ class TemplateInspector
 	* @param  DOMElement $node Context node
 	* @return mixed
 	*/
-	public function evaluate($expr, DOMElement $node = null)
+	public function evaluate($expr, ?DOMElement $node = null)
 	{
 		return $this->xpath->evaluate($expr, $node);
 	}
