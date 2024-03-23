@@ -198,13 +198,14 @@ Attribute Collection (s9e\TextFormatter\Tests\Configurator\Collections\Attribute
  [x] Throws an exception when accessing an Attribute that does not exist
 
 Attribute Filter Chain (s9e\TextFormatter\Tests\Configurator\Collections\AttributeFilterChain)
- [x] append() throws an InvalidArgumentException on invalid callbacks
- [x] prepend() throws an InvalidArgumentException on invalid callbacks
+ [x] append() throws a RuntimeException on invalid callbacks
+ [x] prepend() throws a RuntimeException on invalid callbacks
  [x] append() throws an InvalidArgumentException on uncallable callbacks
  [x] prepend() throws an InvalidArgumentException on uncallable callbacks
  [x] PHP string callbacks are normalized to an instance of AttributeFilter
  [x] PHP array callbacks are normalized to an instance of AttributeFilter
  [x] Default filters such as "#int" are normalized to an instance of the corresponding AttributeFilter
+ [x] Default filters accept positional constructor arguments
  [x] Instances of AttributeFilter are added as-is
  [x] Automatically parses callback parameters
 
@@ -458,8 +459,8 @@ Tag Collection (s9e\TextFormatter\Tests\Configurator\Collections\TagCollection)
  [x] Throws an exception when accessing a Tag that does not exist
 
 Tag Filter Chain (s9e\TextFormatter\Tests\Configurator\Collections\TagFilterChain)
- [x] append() throws an InvalidArgumentException on invalid callbacks
- [x] prepend() throws an InvalidArgumentException on invalid callbacks
+ [x] append() throws a RuntimeException on invalid callbacks
+ [x] prepend() throws a RuntimeException on invalid callbacks
  [x] append() throws an InvalidArgumentException on uncallable callbacks
  [x] prepend() throws an InvalidArgumentException on uncallable callbacks
  [x] PHP string callbacks are normalized to an instance of TagFilter

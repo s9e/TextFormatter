@@ -17,24 +17,24 @@ class TagFilterChainTest extends Test
 	public function doNothing() {}
 
 	/**
-	* @testdox append() throws an InvalidArgumentException on invalid callbacks
+	* @testdox append() throws a RuntimeException on invalid callbacks
 	*/
 	public function testAppendInvalidCallback()
 	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage("Filter '*invalid*' is neither callable nor an instance of s9e\\TextFormatter\\Configurator\\Items\\TagFilter");
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Cannot parse '*invalid*'");
 
 		$filterChain = new TagFilterChain;
 		$filterChain->append('*invalid*');
 	}
 
 	/**
-	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks
+	* @testdox prepend() throws a RuntimeException on invalid callbacks
 	*/
 	public function testPrependInvalidCallback()
 	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage("Filter '*invalid*' is neither callable nor an instance of s9e\\TextFormatter\\Configurator\\Items\\TagFilter");
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Cannot parse '*invalid*'");
 
 		$filterChain = new TagFilterChain;
 		$filterChain->prepend('*invalid*');

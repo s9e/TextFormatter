@@ -17,24 +17,24 @@ class AttributeFilterChainTest extends Test
 	public function doNothing() {}
 
 	/**
-	* @testdox append() throws an InvalidArgumentException on invalid callbacks
+	* @testdox append() throws a RuntimeException on invalid callbacks
 	*/
 	public function testAppendInvalidCallback()
 	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage("Filter '*invalid*' is neither callable nor an instance of s9e\\TextFormatter\\Configurator\\Items\\AttributeFilter");
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Cannot parse '*invalid*'");
 
 		$filterChain = new AttributeFilterChain;
 		$filterChain->append('*invalid*');
 	}
 
 	/**
-	* @testdox prepend() throws an InvalidArgumentException on invalid callbacks
+	* @testdox prepend() throws a RuntimeException on invalid callbacks
 	*/
 	public function testPrependInvalidCallback()
 	{
-		$this->expectException('InvalidArgumentException');
-		$this->expectExceptionMessage("Filter '*invalid*' is neither callable nor an instance of s9e\\TextFormatter\\Configurator\\Items\\AttributeFilter");
+		$this->expectException('RuntimeException');
+		$this->expectExceptionMessage("Cannot parse '*invalid*'");
 
 		$filterChain = new AttributeFilterChain;
 		$filterChain->prepend('*invalid*');
@@ -102,6 +102,28 @@ class AttributeFilterChainTest extends Test
 			$filterChain->append('#int')
 		);
 	}
+
+	/**
+	* @testdox Default filters accept positional constructor arguments
+	*/
+	public function testDefaultFilterPositionalConstructorArguments()
+	{
+		$filterChain = new AttributeFilterChain;
+		$filter      = $filterChain->append('#range(1, 12)');
+
+		$this->assertEquals(['min' => 1, 'max' => 12], $filter->getVars());
+	}
+
+//	/**
+//	* @testdox Default filters accept named constructor arguments
+//	*/
+//	public function testDefaultFilterNamedConstructorArguments()
+//	{
+//		$filterChain = new AttributeFilterChain;
+//		$filter      = $filterChain->append('#range(max: 12, min: 3)');
+//
+//		$this->assertEquals(['min' => 3, 'max' => 12], $filter->getVars());
+//	}
 
 	/**
 	* @testdox Instances of AttributeFilter are added as-is

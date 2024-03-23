@@ -8,6 +8,7 @@
 namespace s9e\TextFormatter\Configurator\Collections;
 
 use InvalidArgumentException;
+use RuntimeException;
 use s9e\TextFormatter\Configurator\Helpers\FilterHelper;
 use s9e\TextFormatter\Configurator\Items\Filter;
 use s9e\TextFormatter\Configurator\Items\ProgrammableCallback;
@@ -51,23 +52,33 @@ abstract class FilterChain extends NormalizedList
 	*/
 	public function normalizeValue($value)
 	{
-		if (is_string($value) && strpos($value, '(') !== false)
-		{
-			return $this->createFilter($value);
-		}
-
 		$className = $this->getFilterClassName();
 		if ($value instanceof $className)
 		{
 			return $value;
 		}
 
-		if (!is_callable($value))
+		if (is_callable($value))
 		{
-			throw new InvalidArgumentException('Filter ' . var_export($value, true) . ' is neither callable nor an instance of ' . $className);
+			return new $className($value);
 		}
 
-		return new $className($value);
+		if (is_string($value))
+		{
+			return $this->createFilter($value);
+		}
+
+		throw new InvalidArgumentException('Filter ' . var_export($value, true) . ' is neither callable nor an instance of ' . $className);
+	}
+
+	protected function createDefaultFilter(string $filterString)
+	{
+		$config = FilterHelper::parse($filterString);
+
+		$constructorArgs = $this->getConstructorArgsFromFilterParams($config['params'] ?? []);
+		$filterName      = substr($config['filter'], 1);
+
+		return $this->getDefaultFilter($filterName, $constructorArgs);
 	}
 
 	/**
@@ -78,6 +89,11 @@ abstract class FilterChain extends NormalizedList
 	*/
 	protected function createFilter($filterString)
 	{
+		if ($filterString[0] === '#')
+		{
+			return $this->createDefaultFilter($filterString);
+		}
+
 		$config = FilterHelper::parse($filterString);
 		$filter = $this->normalizeValue($config['filter']);
 		if (isset($config['params']))
@@ -91,5 +107,39 @@ abstract class FilterChain extends NormalizedList
 		}
 
 		return $filter;
+	}
+
+	protected function getConstructorArgsFromFilterParams(array $params): array
+	{
+		$constructorArgs = [];
+		foreach ($params as $i => $param)
+		{
+			[$type, $value] = $param;
+			if ($type !== 'Value')
+			{
+				throw new RuntimeException('Cannot use default filter with named parameters');
+			}
+
+			if (isset($param[2]))
+			{
+				// Named argument
+				$constructorArgs[$param[2]] = $value;
+			}
+			else
+			{
+				// Positional argument
+				$constructorArgs[] = $value;
+			}
+		}
+
+		return $constructorArgs;
+	}
+
+	/**
+	* Get an instance of a default filter
+	*/
+	protected function getDefaultFilter(string $filterName, array $constructorArgs = []): Filter
+	{
+		throw new RuntimeException(get_class($this) . ' has no default filters');
 	}
 }
