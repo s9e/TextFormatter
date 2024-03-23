@@ -2,7 +2,10 @@
 
 Attribute filters are callbacks. During parsing, they are called with an attribute's value. Their return value becomes the attribute's new value. If they return `false` then the attribute is considered invalid. Attribute filters are used to validate, sanitize and/or transform attribute values.
 
-### Replace a default attribute filter
+
+### Replace a default attribute filter (deprecated)
+
+**⚠️ This usage is deprecated as of s9e\TextFormatter 2.17.0 and will be removed in a future version.**
 
 The default `#int` filter only allows digits to be used. In this example, we replace it with PHP's own `intval()` function which accepts a greater range of values. While the default `#int` filter would reject `4potato` as a valid value, our custom filter will happily convert it to `4`.
 
@@ -33,6 +36,8 @@ echo $html;
 ```
 
 ### Add a custom attribute filter
+
+**⚠️ This usage is deprecated as of s9e\TextFormatter 2.17.0 and will be removed in a future version.**
 
 The same way default filters can be replaced, new filters can be added. Here, we implement a filter which we call `#funnytext` that will change the capitalization of a string.
 
