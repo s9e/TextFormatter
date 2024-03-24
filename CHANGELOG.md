@@ -1,3 +1,32 @@
+2.17.0 (2024-03-24)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/a78b8f9bc169d0b6dd81ffff3c97479875bd673d...56da3f43159570c2e19c9d1975f67547f6e53fb5)
+
+### Added
+
+ - `c9f762aad` Added JavaScript support for str_replace() as an attribute filter
+ - `54546445f` Added deprecation warning to docs
+ - `a3aa58984` AttributeFilterChain: added support for constructor arguments in default filters
+ - `5a937310a` AttributeFilterCollection: added support for arguments passed to default filters
+ - `84ee03aad` FilterSyntaxMatcher: added support for named arguments
+ - `4599040f4` MediaEmbed: added Captivate
+ - `ddadd0525` MediaEmbed: added XenForo
+
+### Fixed
+
+ - `56da3f431` Fixed links in docs
+ - `9dc8b1a69` Fixed nullable types for PHP 8.4
+
+### Changed
+
+ - `894615027` MediaEmbed: updated Imgur
+ - `7372cd01f` MediaEmbed: updated Kaltura
+ - `fb4b6d957` MediaEmbed: updated Mastodon
+ - `0941fde59` Updated copyright notice
+ - `99dffbce7` Updated dependencies
+
+
 2.16.0 (2024-01-07)
 ===================
 
