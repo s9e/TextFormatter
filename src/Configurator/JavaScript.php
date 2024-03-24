@@ -378,7 +378,7 @@ class JavaScript
 		$src     = '';
 
 		// If getLogger() is not exported we use a dummy Logger that can be optimized away
-		$logger = (in_array('getLogger', $this->exports)) ? 'Logger.js' : 'NullLogger.js';
+		$logger = (in_array('getLogger', $this->exports, true)) ? 'Logger.js' : 'NullLogger.js';
 
 		// Prepare the list of files
 		$files   = glob($rootDir . '/Parser/AttributeFilters/*.js');
