@@ -690,8 +690,16 @@ class QuickTest extends Test
 				"if(\$attributes['x']==1){\$html.='x';}"
 			],
 			[
+				['X' => '<xsl:if test="@x!=1">x</xsl:if>'],
+				"if(\$attributes['x']!=1){\$html.='x';}"
+			],
+			[
 				['X' => '<xsl:if test="1=@x">x</xsl:if>'],
 				"if(1==\$attributes['x']){\$html.='x';}"
+			],
+			[
+				['X' => '<xsl:if test="1!=@x">x</xsl:if>'],
+				"if(1!=\$attributes['x']){\$html.='x';}"
 			],
 			[
 				['X' => '<hr title="{@x+200*@y}"/>'],
@@ -784,6 +792,14 @@ class QuickTest extends Test
 			[
 				['X' => '<xsl:if test="@*">Y</xsl:if>'],
 				'if($this->hasNonNullValues($attributes)){$html.=\'Y\';}'
+			],
+			[
+				['X' => '<xsl:if test="string(@foo) != \'\'">X</xsl:if>'],
+				"if(\$attributes['foo']!==''){\$html.='X';}"
+			],
+			[
+				['X' => '<xsl:if test="\'\'!=@foo">X</xsl:if>'],
+				"if(''!==\$attributes['foo']){\$html.='X';}"
 			],
 		];
 	}

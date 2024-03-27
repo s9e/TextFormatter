@@ -428,16 +428,16 @@ class Quick
 			// A comparison between an attribute and a literal string. Rather than unescape the
 			// attribute value, we escape the literal. This applies to comparisons using XPath's
 			// contains() as well (translated to PHP's strpos())
-			'(' . $getAttribute . '===(' . $string . '))s'
+			'(' . $getAttribute . '([!=]==)(' . $string . '))s'
 				=> function ($m)
 				{
-					return '$attributes[' . $m[1] . ']===' . htmlspecialchars($m[2], ENT_COMPAT);
+					return '$attributes[' . $m[1] . ']' . $m[2] . htmlspecialchars($m[3], ENT_COMPAT);
 				},
 
-			'((' . $string . ')===' . $getAttribute . ')s'
+			'((' . $string . ')([!=]==)' . $getAttribute . ')s'
 				=> function ($m)
 				{
-					return htmlspecialchars($m[1], ENT_COMPAT) . '===$attributes[' . $m[2] . ']';
+					return htmlspecialchars($m[1], ENT_COMPAT) . $m[2] . '$attributes[' . $m[3] . ']';
 				},
 
 			'(strpos\\(' . $getAttribute . ',(' . $string . ')\\)([!=]==(?:0|false)))s'
@@ -466,11 +466,11 @@ class Quick
 
 			// An attribute value used in an arithmetic comparison or operation does not need to be
 			// unescaped. The same applies to empty(), isset() and conditionals
-			'(' . $getAttribute . '(?=(?:==|[-+*])\\d+))'  => '$attributes[$1]',
-			'(\\b(\\d+(?:==|[-+*]))' . $getAttribute . ')' => '$1$attributes[$2]',
-			'(empty\\(' . $getAttribute . '\\))'           => 'empty($attributes[$1])',
-			"(\\\$node->hasAttribute\\(('[^']+')\\))"      => 'isset($attributes[$1])',
-			'if($node->attributes->length)'                => 'if($this->hasNonNullValues($attributes))',
+			'(' . $getAttribute . '(?=(?:[!=]=|[-+*])\\d+))'  => '$attributes[$1]',
+			'(\\b(\\d+(?:[!=]=|[-+*]))' . $getAttribute . ')' => '$1$attributes[$2]',
+			'(empty\\(' . $getAttribute . '\\))'              => 'empty($attributes[$1])',
+			"(\\\$node->hasAttribute\\(('[^']+')\\))"         => 'isset($attributes[$1])',
+			'if($node->attributes->length)'                   => 'if($this->hasNonNullValues($attributes))',
 
 			// In all other situations, unescape the attribute value before use
 			'(' . $getAttribute . ')' => 'htmlspecialchars_decode($attributes[$1]??\'\')'

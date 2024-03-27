@@ -1912,6 +1912,10 @@ Quick (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick)
  [x] Source with data set #22
  [x] Source with data set #23
  [x] Source with data set #24
+ [x] Source with data set #25
+ [x] Source with data set #26
+ [x] Source with data set #27
+ [x] Source with data set #28
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
