@@ -45,10 +45,6 @@
 		<td><code>bitchute</code></td>
 		<td>https://www.bitchute.com/video/y9AejeZ2vD0/</td>
 	</tr>
-	<tr title="Bleacher Report videos" id="bleacherreport">
-		<td><code>bleacherreport</code></td>
-		<td>https://bleacherreport.com/articles/2687569-how-bell-brown-have-shattered-records-on-steelers-historic-playoff-run</td>
-	</tr>
 	<tr title="Brightcove" id="brightcove">
 		<td><code>brightcove</code></td>
 		<td>https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001<br/>https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</td>
