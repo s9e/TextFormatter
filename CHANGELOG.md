@@ -1,3 +1,20 @@
+2.17.1 (2024-03-28)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/328c056e04009cd3ab5185a2eb710c4a18a86f69...ce28c14bd65bc924796df2b8543a4893c6a45290)
+
+### Fixed
+
+ - `ce28c14bd` FilterSyntaxMatcher: fixed parseFilterArg() signature
+
+### Changed
+
+ - `134bffb2b` Extended optimizations related to equality tests to inequality tests
+ - `f8c5a455f` Replaced array callbacks with first class callables where applicable
+ - `c7609e321` Updated docs
+ - `e43f99a47` Use in_array() in strict mode wherever applicable
+
+
 2.17.0 (2024-03-24)
 ===================
 
