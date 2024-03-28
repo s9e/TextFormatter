@@ -180,7 +180,7 @@ class XSLT extends Renderer
 	*/
 	protected function normalizeAttributes($html)
 	{
-		return preg_replace_callback('(<\\S++ [^>]++>)', [$this, 'normalizeElement'], $html);
+		return preg_replace_callback('(<\\S++ [^>]++>)', $this->normalizeElement(...), $html);
 	}
 
 	/**
@@ -196,6 +196,6 @@ class XSLT extends Renderer
 			return $m[0];
 		}
 
-		return preg_replace_callback('((?:"[^"]*"|\'[^\']*\'))S', [$this, 'normalizeAttribute'], $m[0]);
+		return preg_replace_callback('((?:"[^"]*"|\'[^\']*\'))S', $this->normalizeAttribute(...), $m[0]);
 	}
 }

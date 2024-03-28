@@ -217,7 +217,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function convertRegexps(array $regexps)
 	{
-		return array_map([$this, 'convertRegexp'], $regexps);
+		return array_map($this->convertRegexp(...), $regexps);
 	}
 
 	/**
@@ -242,7 +242,7 @@ class Configurator extends ConfiguratorBase
 	*/
 	protected function convertScrapes(array $scrapes)
 	{
-		return array_map([$this, 'convertScrapeConfig'], $scrapes);
+		return array_map($this->convertScrapeConfig(...), $scrapes);
 	}
 
 	/**

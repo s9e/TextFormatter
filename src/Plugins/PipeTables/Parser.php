@@ -372,13 +372,13 @@ class Parser extends ParserBase
 		// Overwrite inline code spans
 		if (strpos($this->text, '`') !== false)
 		{
-			$this->text = preg_replace_callback('/`[^`]*`/', [$this, 'overwriteInlineCodeCallback'], $this->text);
+			$this->text = preg_replace_callback('/`[^`]*`/', $this->overwriteInlineCodeCallback(...), $this->text);
 		}
 
 		// Overwrite blockquotes
 		if (strpos($this->text, '>') !== false)
 		{
-			$this->text = preg_replace_callback('/^(?:>!? ?)+/m', [$this, 'overwriteBlockquoteCallback'], $this->text);
+			$this->text = preg_replace_callback('/^(?:>!? ?)+/m', $this->overwriteBlockquoteCallback(...), $this->text);
 		}
 	}
 

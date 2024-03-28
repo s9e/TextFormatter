@@ -147,7 +147,7 @@ class PHP implements RendererGenerator
 	public function generate(Rendering $rendering)
 	{
 		// Compile the templates to PHP
-		$compiledTemplates = array_map([$this, 'compileTemplate'], $rendering->getTemplates());
+		$compiledTemplates = array_map($this->compileTemplate(...), $rendering->getTemplates());
 
 		// Start the code right after the class name, we'll prepend the header when we're done
 		$php = [];

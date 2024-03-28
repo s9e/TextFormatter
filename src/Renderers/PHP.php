@@ -198,7 +198,7 @@ abstract class PHP extends Renderer
 		$xml = $this->decodeSMP($xml);
 		$html = preg_replace_callback(
 			$this->quickRegexp,
-			[$this, 'renderQuickCallback'],
+			$this->renderQuickCallback(...),
 			substr($xml, 1 + strpos($xml, '>'), -4)
 		);
 

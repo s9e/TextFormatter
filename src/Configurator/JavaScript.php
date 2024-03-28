@@ -443,7 +443,7 @@ class JavaScript
 	protected function injectConfig($src)
 	{
 		$config = array_map(
-			[$this, 'encode'],
+			$this->encode(...),
 			$this->configOptimizer->optimize(
 				[
 					'plugins'        => $this->getPluginsConfig(),
