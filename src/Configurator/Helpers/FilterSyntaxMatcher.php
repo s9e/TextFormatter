@@ -185,7 +185,7 @@ class FilterSyntaxMatcher extends AbstractRecursiveMatcher
 		return $config;
 	}
 
-	public function parseFilterArg(string $argName = null, string $argValue = null): array
+	public function parseFilterArg(string $argName, string $argValue): array
 	{
 		$arg = (str_starts_with($argValue, '$'))
 		     ? ['Name',  substr($argValue, 1)                       ]
