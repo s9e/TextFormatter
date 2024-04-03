@@ -305,6 +305,10 @@
 		<td><code>odysee</code></td>
 		<td>https://odysee.com/@veritasium:f/the-secret-of-synchronization:2</td>
 	</tr>
+	<tr title="On3 DB" id="on3">
+		<td><code>on3</code></td>
+		<td>https://www.on3.com/db/christian-jones-150372/industry-comparison/</td>
+	</tr>
 	<tr title="Orfium" id="orfium">
 		<td><code>orfium</code></td>
 		<td>https://www.orfium.com/album/24371/everybody-loves-kanye-totom/<br/>https://www.orfium.com/live-set/614763/foof-no-lights-5-foof/<br/>https://www.orfium.com/playlist/511651/electronic-live-sessions-creamtronic/<br/>https://www.orfium.com/track/625367/the-ambience-of-the-goss-vistas/</td>

@@ -1,0 +1,23 @@
+<site name="On3 DB" homepage="https://www.on3.com/db/">
+	<example>https://www.on3.com/db/christian-jones-150372/industry-comparison/</example>
+
+	<tags><tag>sports</tag></tags>
+
+	<host>on3.com</host>
+	<extract>!/db/(?:[-\w]*-)?(?'id'[0-9]+)/industry-comparison/!</extract>
+	<!--
+		let contentWindow = this.contentWindow;
+		window.addEventListener(
+			'message',
+			(e) =>
+			{
+				if (e.source === contentWindow && e.data.height)
+				{
+					this.style.height = ((+e.data.height) + 20) + 'px';
+				}
+			}
+		);
+		contentWindow.postMessage('', '*');
+	-->
+	<iframe width="600" height="476" src="https://embed.on3.com/db/{@id}/industry-comparison/" onload="let b=this.contentWindow;window.addEventListener('message',a=&gt;{{a.source===b&amp;&amp;a.data.height&amp;&amp;(this.style.height=+a.data.height+20+'px')}});b.postMessage('','*')" data-s9e-livepreview-ignore-attrs="style"/>
+</site>

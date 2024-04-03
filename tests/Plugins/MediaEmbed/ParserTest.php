@@ -2842,6 +2842,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.on3.com/db/naeem-offord-156248/industry-comparison/',
+				'<r><ON3 id="156248">https://www.on3.com/db/naeem-offord-156248/industry-comparison/</ON3></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('on3');
+				}
+			],
+			[
+				'https://embed.on3.com/db/naeem-offord-156248/industry-comparison/',
+				'<r><ON3 id="156248">https://embed.on3.com/db/naeem-offord-156248/industry-comparison/</ON3></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('on3');
+				}
+			],
+			[
 				'https://www.orfium.com/album/24371/everybody-loves-kanye-totom/',
 				'<r><ORFIUM album_id="24371">https://www.orfium.com/album/24371/everybody-loves-kanye-totom/</ORFIUM></r>',
 				[],
