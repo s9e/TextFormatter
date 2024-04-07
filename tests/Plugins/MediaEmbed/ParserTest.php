@@ -1068,6 +1068,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://247sports.com/Player/Donovan-Clingan-46086979/',
+				'<r><TWENTYFOURSEVENSPORTS player_id="298735">https://247sports.com/Player/Donovan-Clingan-46086979/</TWENTYFOURSEVENSPORTS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('twentyfoursevensports');
+				}
+			],
+			[
 				'https://thoughtworks.wistia.com/medias/b6al55s35k',
 				'<r><WISTIA id="b6al55s35k">https://thoughtworks.wistia.com/medias/b6al55s35k</WISTIA></r>',
 				[],

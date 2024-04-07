@@ -439,7 +439,7 @@
 	</tr>
 	<tr title="247Sports" id="twentyfoursevensports">
 		<td><code>twentyfoursevensports</code></td>
-		<td>https://247sports.com/Player/LeSean-McCoy-25234/<br/>https://247sports.com/Video/FFT-Week-12-QBRB-Start-or-Sit-1122-8838631/</td>
+		<td>https://247sports.com/Player/LeSean-McCoy-25234/</td>
 	</tr>
 	<tr title="Twitch" id="twitch">
 		<td><code>twitch</code></td>
