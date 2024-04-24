@@ -447,7 +447,7 @@
 	</tr>
 	<tr title="X" id="twitter">
 		<td><code>twitter</code></td>
-		<td>https://twitter.com/IJasonAlexander/statuses/1718435734942556494<br/>https://mobile.twitter.com/DerekTVShow/status/463372588690202624<br/>https://twitter.com/#!/IJasonAlexander/status/526635414338023424</td>
+		<td>https://twitter.com/IJasonAlexander/statuses/526635414338023424<br/>https://mobile.twitter.com/DerekTVShow/status/463372588690202624<br/>https://twitter.com/#!/IJasonAlexander/status/526635414338023424</td>
 	</tr>
 	<tr title="Ustream" id="ustream">
 		<td><code>ustream</code></td>
