@@ -1098,8 +1098,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'http://on.wsj.com/1MJvx06',
-				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6">http://on.wsj.com/1MJvx06</WSJ></r>',
+				'https://on.wsj.com/1MJvx06',
+				'<r><WSJ id="9E476D54-6A60-4F3F-ABC1-411014552DE6">https://on.wsj.com/1MJvx06</WSJ></r>',
 				[],
 				function ($configurator)
 				{

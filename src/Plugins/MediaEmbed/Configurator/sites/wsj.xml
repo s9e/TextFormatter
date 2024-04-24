@@ -10,7 +10,7 @@
 	<extract>@wsj\.com/video/[^/]+/(?'id'[-0-9A-F]{36})@</extract>
 	<scrape>
 		<match>@on\.wsj\.com/\w@</match>
-		<extract>@guid=(?'id'[-0-9A-F]{36})@</extract>
+		<extract>@wsj\.com/video/[^/]+/(?'id'[-0-9A-F]{36})@</extract>
 	</scrape>
-	<iframe width="512" height="288" src="//video-api.wsj.com/api-video/player/iframe.html?guid={@id}"/>
+	<iframe src="//video-api.wsj.com/api-video/player/iframe.html?guid={@id}"/>
 </site>
