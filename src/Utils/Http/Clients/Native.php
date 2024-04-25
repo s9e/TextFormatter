@@ -53,10 +53,11 @@ class Native extends Client
 		$contextOptions = [
 			'ssl'  => ['verify_peer' => $this->sslVerifyPeer],
 			'http' => [
-				'method'  => $method,
-				'timeout' => $this->timeout,
-				'header'  => $this->generateHeaders($options, $body),
-				'content' => $body
+				'content'       => $body,
+				'header'        => $this->generateHeaders($options, $body),
+				'ignore_errors' => true,
+				'method'        => $method,
+				'timeout'       => $this->timeout
 			]
 		];
 

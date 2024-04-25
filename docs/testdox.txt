@@ -7947,7 +7947,7 @@ Cached (s9e\TextFormatter\Tests\Utils\Http\Clients\Cached)
  [x] post() sends the request body if set
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [x] get() returns the response error
  [x] get() returns headers if returnHeaders is true
 
 Curl (s9e\TextFormatter\Tests\Utils\Http\Clients\Curl)
@@ -7957,7 +7957,7 @@ Curl (s9e\TextFormatter\Tests\Utils\Http\Clients\Curl)
  [x] post() sends the request body if set
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [ ] get() returns the response error
  [x] get() returns headers if returnHeaders is true
 
 Native (s9e\TextFormatter\Tests\Utils\Http\Clients\Native)
@@ -7968,7 +7968,7 @@ Native (s9e\TextFormatter\Tests\Utils\Http\Clients\Native)
  [x] post() sends the request body if set
  [x] post() sends no request body if not set
  [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns FALSE on error
+ [x] get() returns the response error
  [x] get() returns headers if returnHeaders is true
 
 Http (s9e\TextFormatter\Tests\Utils\Http)

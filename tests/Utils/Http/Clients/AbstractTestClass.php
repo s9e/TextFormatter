@@ -105,11 +105,14 @@ abstract class AbstractTestClass extends Test
 	}
 
 	/**
-	* @testdox get() returns FALSE on error
+	* @testdox get() returns the response error
 	*/
-	public function testReturnsFalse()
+	public function testReturnsResponseOnError()
 	{
-		$this->assertFalse($this->getInstance()->get(str_replace('reflect.php', '404', $this->url)));
+		$this->assertStringContainsString(
+			'404 Not Found',
+			$this->getInstance()->get(str_replace('reflect.php', '404', $this->url))
+		);
 	}
 
 	/**
