@@ -1,3 +1,24 @@
+2.17.2 (2024-04-25)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/1dc04d8426db1988d6552a2f79ee5701ec8bae81...742e3da899aac57d0aa4b7eb7b4a0e1e5e3d85ea)
+
+### Added
+
+ - `487e3c48b` MediaEmbed: added On3 DB
+
+### Removed
+
+ - `8d91c8b3f` MediaEmbed: removed BleacherReport
+
+### Changed
+
+ - `bf99a935d` MediaEmbed: updated 247Sports
+ - `05b9223e2` MediaEmbed: updated WSJ
+ - `ac0b75ee0` MediaEmbed: updated example URLs
+ - `742e3da89` Return the response body when a HTTP error occurs during scraping
+
+
 2.17.1 (2024-03-28)
 ===================
 
