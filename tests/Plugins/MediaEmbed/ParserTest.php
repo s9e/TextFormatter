@@ -505,8 +505,8 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125',
-				'<r><ACAST episode_id="f38da59a-9eb9-42f7-a0bf-a633ef813202" show_id="e3178447-8d7d-556e-bece-5d8f7c4dd539" t="125">https://play.acast.com/s/e3178447-8d7d-556e-bece-5d8f7c4dd539/f38da59a-9eb9-42f7-a0bf-a633ef813202?seek=125</ACAST></r>',
+				'https://shows.acast.com/aacb15fc-f2a9-43e6-9d0f-521463063cef/6558c1f90418cd001283f072?seek=125',
+				'<r><ACAST episode_id="6558c1f90418cd001283f072" show_id="aacb15fc-f2a9-43e6-9d0f-521463063cef" t="125">https://shows.acast.com/aacb15fc-f2a9-43e6-9d0f-521463063cef/6558c1f90418cd001283f072?seek=125</ACAST></r>',
 				[],
 				function ($configurator)
 				{
