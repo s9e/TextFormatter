@@ -15,7 +15,8 @@
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/2/twitter.min.html#</xsl:text>
 			<xsl:value-of select="@id"/>
-			<xsl:if test="$MEDIAEMBED_THEME = 'dark'">#theme=dark</xsl:if>
+			<!-- Possible values: 'light', 'dark', or 'auto' -->
+			<xsl:if test="$MEDIAEMBED_THEME">#theme=<xsl:value-of select="$MEDIAEMBED_THEME"/></xsl:if>
 		]]></src>
 	</iframe>
 
