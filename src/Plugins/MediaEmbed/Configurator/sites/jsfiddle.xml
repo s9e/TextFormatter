@@ -5,5 +5,17 @@
 
 	<host>jsfiddle.net</host>
 	<extract>@jsfiddle.net/(?:(?'user'\w+)/)?(?!\d+\b|embedded\b|show\b)(?'id'\w+)\b(?:/(?'revision'\d+)\b)?@</extract>
-	<iframe height="400" width="100%" src="//jsfiddle.net/{@id}/{@revision}/embedded/{$MEDIAEMBED_THEME}/"/>
+	<iframe height="400" width="100%">
+		<src><![CDATA[
+			<xsl:text>//jsfiddle.net/</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:text>/</xsl:text>
+			<xsl:value-of select="@revision"/>
+			<xsl:text>/embedded/</xsl:text>
+			<xsl:if test="$MEDIAEMBED_THEME = 'light' or $MEDIAEMBED_THEME = 'dark'">
+				<xsl:value-of select="$MEDIAEMBED_THEME"/>
+				<xsl:text>/</xsl:text>
+			</xsl:if>
+		]]></src>
+	</iframe>
 </site>
