@@ -16,6 +16,8 @@
 	<extract>!giphy\.com/media/(?'id'\w+)/\w+\.(?'type'gif|webp)!</extract>
 	<extract>!i\.giphy\.com/(?'id'\w+)\.(?'type'gif|webp)!</extract>
 	<scrape url="https://giphy.com/services/oembed?url=https://media.giphy.com/media/{@id}/giphy.gif">
+		<header>Accept: */*</header>
+		<header>User-agent: PHP</header>
 		<extract>!"height"\s*:\s*(?'height'\d+)!</extract>
 		<extract>!"width"\s*:\s*(?'width'\d+)!</extract>
 	</scrape>
