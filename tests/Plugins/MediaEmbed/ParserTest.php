@@ -2571,6 +2571,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://medium.com/datapath/c%C3%B3mo-usar-read-ai-transcribe-y-mejora-tus-reuniones-virtuales-93ca8cc3ba66',
+				'<r><MEDIUM id="93ca8cc3ba66">https://medium.com/datapath/c%C3%B3mo-usar-read-ai-transcribe-y-mejora-tus-reuniones-virtuales-93ca8cc3ba66</MEDIUM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('medium');
+				}
+			],
+			[
 				'https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853',
 				'<r><MEGAPHONE id="LKN8165322853">https://cms.megaphone.fm/channel/lockedonheat?selected=LKN8165322853</MEGAPHONE></r>',
 				[],
