@@ -1,3 +1,18 @@
+2.17.3 (2024-05-26)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/97fec3f9d017c0f4a0d63ae5d355ea03120043ce...3001de2264f2e5ad68a6e4306b37ecd387360c8b)
+
+### Changed
+
+ - `3001de226` MediaEmbed: updated Giphy
+ - `7b7c14b61` MediaEmbed: updated Instagram
+ - `3a31a34c1` MediaEmbed: updated JSFiddle
+ - `34912a84e` MediaEmbed: updated Medium
+ - `4fd5739d6` MediaEmbed: updated VK
+ - `eafb249cc` MediaEmbed: updated dark theme selector in Telegram and Twitter
+
+
 2.17.2 (2024-04-25)
 ===================
 
