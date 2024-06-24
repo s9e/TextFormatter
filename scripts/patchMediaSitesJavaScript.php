@@ -10,6 +10,7 @@ if (!file_exists($compilerPath))
 $tmpFile = sys_get_temp_dir() . '/onload.js';
 
 $cmd = escapeshellcmd(realpath($compilerPath))
+     . ' --assume_function_wrapper'
      . ' --formatting SINGLE_QUOTES'
      . ' --js_output_file ' . escapeshellarg($tmpFile)
      . ' --jscomp_error "*"'
@@ -55,20 +56,25 @@ foreach (glob(__DIR__ . '/../src/Plugins/MediaEmbed/Configurator/sites/*.xml') a
 	$exec   = $cmd;
 	$iframe = file_get_contents($iframePath);
 	$jsFile = __DIR__ . '/../src/Plugins/MediaEmbed/iframe-api-v' . $apiVersion . '.js';
-	$js     = file_get_contents($jsFile);
 	foreach ($hints as $name => $regexp)
 	{
 		$exec .= ' --define ' . $name . '=' . (preg_match($regexp, $iframe) ? 'true' : 'false');
-//		$js = preg_replace('(' . $name . '\\s*=\\s*\\K[^;]++)', 'false', $js);
 	}
 	$exec .= ' --js ' . escapeshellarg($jsFile);
 
 	exec($exec, $return);
 
-	var_dump($return);
+	$js = file_get_contents($tmpFile);
+	$js = preg_replace('(^[^\\{]++\\{(.*)\\}[^\\}]++$)', '$1', $js);
 
-
-	die($exec);
+	$new = preg_replace_callback(
+		'(onload="\\K[^"]*+)',
+		function () use ($js)
+		{
+			return htmlspecialchars(strtr($js, ['{' => '{{', '}' => '}}']), ENT_COMPAT);
+		},
+		$old
+	);
 
 	if ($new !== $old)
 	{

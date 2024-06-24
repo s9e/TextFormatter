@@ -32,5 +32,5 @@
 		};
 		w.postMessage('s9e:init', '*', [c.port2]);
 	-->
-	<iframe width="100%" height="316" max-width="900" src="https://s9e.github.io/iframe/3/medium.min.html#{@id}" onload="let c=new MessageChannel,w=this.contentWindow;c.port1.onmessage=a=>{{let b=a.data;a=b.action;'resize'===a?this.style.height=b.height+'px':'forward'===a&amp;&amp;window.addEventListener('message',d=>{{d.source.parent===w&amp;&amp;c.port1.postMessage(b)}})}};w.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
+	<iframe width="100%" height="316" max-width="900" src="https://s9e.github.io/iframe/3/medium.min.html#{@id}" onload="let b=new MessageChannel,d=this.contentWindow;b.port1.onmessage=a=&gt;{{let c=a.data;a=c.method;if('resize'===a){{if(a=+c.height)this.style.height=a+'px'}}else'forward'===a&amp;&amp;window.addEventListener('message',e=&gt;{{e.source.parent===d&amp;&amp;b.port1.postMessage({{method:'message',data:c.data}})}})}};d.postMessage('s9e:init:3','*',[b.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>
