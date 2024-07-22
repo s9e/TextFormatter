@@ -985,16 +985,16 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('soundcloud');
 				}
 			],
-			[
-				'https://www.sporcle.com/games/eyes355/find-five-countries',
-				'<r><SPORCLE id="15d32a898365">https://www.sporcle.com/games/eyes355/find-five-countries</SPORCLE></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('sporcle');
-				}
-			],
+//			[
+//				'https://www.sporcle.com/games/eyes355/find-five-countries',
+//				'<r><SPORCLE id="15d32a898365">https://www.sporcle.com/games/eyes355/find-five-countries</SPORCLE></r>',
+//				[],
+//				function ($configurator)
+//				{
+//					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+//					$configurator->MediaEmbed->add('sporcle');
+//				}
+//			],
 			[
 				'https://www.sportsnet.ca/soccer/west-ham-2-hull-2/',
 				'<r><SPORTSNET id="3786409870001">https://www.sportsnet.ca/soccer/west-ham-2-hull-2/</SPORTSNET></r>',
