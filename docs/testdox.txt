@@ -5245,6 +5245,7 @@ BBCode Monkey (s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCodeMonkey
  [x] create() tests with data set #91
  [x] create() tests with data set #92
  [x] create() tests with data set #93
+ [x] create() tests with data set #94
 
 BBCode (s9e\TextFormatter\Tests\Plugins\BBCodes\Configurator\BBCode)
  [x] An array of options can be passed to the constructor

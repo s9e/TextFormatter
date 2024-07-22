@@ -1085,6 +1085,30 @@ class BBCodeMonkeyTest extends Test
 				]
 			],
 			[
+				'[foo={URL1},{URL2}]',
+				'',
+				[
+					'bbcodeName' => 'FOO',
+					'bbcode' => new BBCode([
+						'defaultAttribute'  => 'foo'
+					]),
+					'tag'    => new Tag([
+						'attributePreprocessors' => [
+							['foo', '/^(?<foo0>.+?),(?<foo1>.+?)$/D']
+						],
+						'attributes' => [
+							'foo0' => [
+								'filterChain' => [new UrlFilter]
+							],
+							'foo1' => [
+								'filterChain' => [new UrlFilter]
+							]
+						],
+						'template' => ''
+					])
+				]
+			],
+			[
 				/**
 				* @link https://www.vbulletin.com/forum/misc.php?do=bbcode#quote
 				*/
