@@ -6,8 +6,8 @@
 
 	<host>spreaker.com</host>
 	<extract>!spreaker\.com/episode/(?'episode_id'\d+)!</extract>
-	<scrape url="https://api.spreaker.com/oembed?format=json&amp;url={@url}">
-		<match>!(?'url'.+/(?:show/|user/.+/).+)!</match>
+	<scrape>
+		<match>!spreaker\.com/(?:show|user)/.!</match>
 		<extract>!episode_id=(?'episode_id'\d+)!</extract>
 		<extract>!show_id=(?'show_id'\d+)!</extract>
 	</scrape>
