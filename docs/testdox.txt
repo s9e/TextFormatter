@@ -3371,6 +3371,17 @@ Restrict Flash Script Access (s9e\TextFormatter\Tests\Configurator\TemplateCheck
  [x] 'never',true disallows <object><param name="movie" value="{@url}"/></object>
  [x] 'never',true disallows <embed><xsl:apply-templates/></embed>
 
+Abstract Normalization (s9e\TextFormatter\Tests\Configurator\AbstractNormalization)
+ [x] Nothing happens if the normalization doesn't override any method or set any query
+ [x] Nothing happens if the normalization doesn't override any method but set an element query
+ [x] Nothing happens if the normalization doesn't override any method but set an attribute query
+ [x] Calls normalizeAttribute() if an XPath query returns a DOMElement
+ [x] Calls normalizeElement() if an XPath query returns a DOMElement
+ [x] Nodes removed during normalization are not processed further
+ [x] Can create text nodes
+ [x] isXsl() differentiates between XSL elements and others
+ [x] lowercase() works
+
 Add Attribute Value To Elements (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\AddAttributeValueToElements)
  [x] Works with data set #0
  [x] Works with data set #1
@@ -7966,7 +7977,7 @@ Cached (s9e\TextFormatter\Tests\Utils\Http\Clients\Cached)
  [x] get() returns headers if returnHeaders is true
 
 Curl (s9e\TextFormatter\Tests\Utils\Http\Clients\Curl)
- [x] Uses gzip by default if ext/zlib is availble
+ [ ] Uses gzip by default if ext/zlib is availble
  [x] Sends custom headers
  [x] Resets custom headers between requests
  [x] post() sends the request body if set

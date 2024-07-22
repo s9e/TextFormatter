@@ -2,15 +2,15 @@
 
 namespace s9e\TextFormatter\Tests\Configurator;
 
-use DOMDocument;
-use DOMNode;
+use s9e\SweetDOM\Document;
+use s9e\SweetDOM\Element;
 use s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization;
 use s9e\TextFormatter\Tests\Test;
 
 /**
 * @covers s9e\TextFormatter\Configurator\TemplateNormalizations\AbstractNormalization
 */
-class AbstractNormalizationTestClass extends Test
+class AbstractNormalizationTest extends Test
 {
 	protected function getNormalization($query = null)
 	{
@@ -27,7 +27,7 @@ class AbstractNormalizationTestClass extends Test
 
 	protected function getTemplateElement()
 	{
-		$dom = new DOMDocument;
+		$dom = new Document;
 		$dom->loadXML(
 			'<xsl:template xmlns:xsl="' . AbstractNormalization::XMLNS_XSL . '">
 				<div data-bar="BAR" data-foo="FOO"/>
@@ -112,7 +112,7 @@ class AbstractNormalizationTestClass extends Test
 	}
 
 	/**
-	* @testdox Can create elements and text nodes
+	* @testdox Can create text nodes
 	*/
 	public function testCreateNodes()
 	{
@@ -121,13 +121,14 @@ class AbstractNormalizationTestClass extends Test
 		$mock = $this->getMockNormalization('//div');
 		$mock->expects($this->once())
 		     ->method('normalizeElement')
-		     ->will($this->returnCallback([$mock, 'createNodes']));
+		     ->will($this->returnCallback($mock->createNodes(...)));
 		$mock->normalize($template);
 
 		$this->assertXmlStringEqualsXmlString(
 			'<xsl:template xmlns:xsl="' . AbstractNormalization::XMLNS_XSL . '">
-				<div data-bar="BAR" data-foo="FOO"><hr/><xsl:comment/><b>...</b><xsl:text> </xsl:text><br/> <br/>Text</div>
-				<span/><span/>
+				<div data-bar="BAR" data-foo="FOO"><xsl:text> </xsl:text>Text</div>
+				<span/>
+				<span/>
 			</xsl:template>',
 			$template->ownerDocument->saveXML()
 		);
@@ -178,15 +179,9 @@ class TestNormalization extends AbstractNormalization
 		return call_user_func_array([$this, $methodName], $args);
 	}
 
-	public function createNodes(DOMNode $node)
+	public function createNodes(Element $element)
 	{
-		$node->appendChild($this->createElement('hr'));
-		$node->appendChild($this->createElement('xsl:comment'));
-		$node->appendChild($this->createElement('b', '...'));
-		$node->appendChild($this->createText(' '));
-		$node->appendChild($this->createElement('br'));
-		$node->appendChild($this->createTextNode(' '));
-		$node->appendChild($this->createElement('br'));
-		$node->appendChild($this->createText('Text'));
+		$element->appendChild($this->createPolymorphicText(' '));
+		$element->appendChild($this->createPolymorphicText('Text'));
 	}
 }
