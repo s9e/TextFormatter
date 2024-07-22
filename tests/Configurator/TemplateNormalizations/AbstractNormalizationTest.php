@@ -21,7 +21,12 @@ class AbstractNormalizationTest extends Test
 	{
 		return $this->getMockBuilder(__NAMESPACE__ . '\\TestNormalization')
 			->setConstructorArgs([$this, $query])
-			->onlyMethods(['normalizeAttribute', 'normalizeElement'])
+			->onlyMethods([
+				'normalizeAttribute',
+				'normalizeCdataSection',
+				'normalizeComment',
+				'normalizeElement'
+			])
 			->getMock();
 	}
 
@@ -69,7 +74,33 @@ class AbstractNormalizationTest extends Test
 	}
 
 	/**
-	* @testdox Calls normalizeAttribute() if an XPath query returns a DOMElement
+	* @testdox Nothing happens if the normalization doesn't override any method but selects a CData node
+	* @doesNotPerformAssertions
+	*/
+	public function testNothingHappensCDATA()
+	{
+		$template = $this->getTemplateElement();
+		$template->append($template->ownerDocument->createCDATASection('..'));
+
+		$normalization = $this->getNormalization('//text()');
+		$normalization->normalize($template);
+	}
+
+	/**
+	* @testdox Nothing happens if the normalization doesn't override any method but selects a comment node
+	* @doesNotPerformAssertions
+	*/
+	public function testNothingHappensComment()
+	{
+		$template = $this->getTemplateElement();
+		$template->appendComment('..');
+
+		$normalization = $this->getNormalization('//comment()');
+		$normalization->normalize($template);
+	}
+
+	/**
+	* @testdox Calls normalizeAttribute() if an XPath query returns an attribute
 	*/
 	public function testCallsNormalizeAttribute()
 	{
@@ -82,7 +113,36 @@ class AbstractNormalizationTest extends Test
 	}
 
 	/**
-	* @testdox Calls normalizeElement() if an XPath query returns a DOMElement
+	* @testdox Calls normalizeAttribute() if an XPath query returns a CDATA node
+	*/
+	public function testCallsNormalizeCData()
+	{
+		$template = $this->getTemplateElement();
+		$template->append($template->ownerDocument->createCDATASection('..'));
+
+		$mock = $this->getMockNormalization('//text()');
+		$mock->expects($this->once())
+		     ->method('normalizeCdataSection');
+		$mock->expects($this->never())
+		     ->method('normalizeElement');
+		$mock->normalize($template);
+	}
+
+	/**
+	* @testdox Calls normalizeComment() if an XPath query returns a comment node
+	*/
+	public function testCallsNormalizeComment()
+	{
+		$template = $this->getTemplateElement();
+		$template->appendComment('..');
+
+		$mock = $this->getMockNormalization('//comment()');
+		$mock->expects($this->once())->method('normalizeComment');
+		$mock->normalize($template);
+	}
+
+	/**
+	* @testdox Calls normalizeElement() if an XPath query returns an element
 	*/
 	public function testCallsNormalizeElement()
 	{

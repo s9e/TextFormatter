@@ -19,8 +19,8 @@ class InlineCDATA extends AbstractNormalization
 	/**
 	* {@inheritdoc}
 	*/
-	protected function normalizeCdataSection(CdataSection $node): void
+	protected function normalizeCdataSection(CdataSection $cdata): void
 	{
-		$node->replaceWith($this->createPolymorphicText($node->textContent));
+		$cdata->replaceWith($this->createPolymorphicText($cdata->textContent));
 	}
 }

@@ -3375,8 +3375,12 @@ Abstract Normalization (s9e\TextFormatter\Tests\Configurator\AbstractNormalizati
  [x] Nothing happens if the normalization doesn't override any method or set any query
  [x] Nothing happens if the normalization doesn't override any method but set an element query
  [x] Nothing happens if the normalization doesn't override any method but set an attribute query
- [x] Calls normalizeAttribute() if an XPath query returns a DOMElement
- [x] Calls normalizeElement() if an XPath query returns a DOMElement
+ [x] Nothing happens if the normalization doesn't override any method but selects a CData node
+ [x] Nothing happens if the normalization doesn't override any method but selects a comment node
+ [x] Calls normalizeAttribute() if an XPath query returns an attribute
+ [x] Calls normalizeAttribute() if an XPath query returns a CDATA node
+ [x] Calls normalizeComment() if an XPath query returns a comment node
+ [x] Calls normalizeElement() if an XPath query returns an element
  [x] Nodes removed during normalization are not processed further
  [x] Can create text nodes
  [x] isXsl() differentiates between XSL elements and others
@@ -7977,7 +7981,7 @@ Cached (s9e\TextFormatter\Tests\Utils\Http\Clients\Cached)
  [x] get() returns headers if returnHeaders is true
 
 Curl (s9e\TextFormatter\Tests\Utils\Http\Clients\Curl)
- [ ] Uses gzip by default if ext/zlib is availble
+ [x] Uses gzip by default if ext/zlib is availble
  [x] Sends custom headers
  [x] Resets custom headers between requests
  [x] post() sends the request body if set

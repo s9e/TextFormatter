@@ -100,7 +100,7 @@ abstract class AbstractNormalization
 	{
 	}
 
-	protected function normalizeCdataSection(CdataSection $comment): void
+	protected function normalizeCdataSection(CdataSection $cdata): void
 	{
 	}
 
