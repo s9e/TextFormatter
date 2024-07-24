@@ -1,3 +1,23 @@
+2.18.0 (2024-07-24)
+===================
+
+**⚠️ This release contains API changes. See [docs/Internals/API_changes.md](https://s9etextformatter.readthedocs.io/Internals/API_changes/#2180) for a description. ⚠️**
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/9adf2557f13e45c4524d0dc9886cab22822e337a...c06092c26da878c3c18e3d83d130020d81df32c7)
+
+### Added
+
+ - `613f6361c` MediaEmbed: added SiteHelpers API
+
+### Changed
+
+ - `8cf698f84` MediaEmbed: updated Spreaker
+ - `9ac3f008c` Updated AbstractNormalization
+ - `a96383c6e` Updated GitHub action
+ - `a025c6e11` Updated dependencies
+ - `c06092c26` Upgraded GitHub actions
+
+
 2.17.3 (2024-05-26)
 ===================
 
