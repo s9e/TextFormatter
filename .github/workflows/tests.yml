@@ -12,6 +12,7 @@ jobs:
     container: setupphp/node@sha256:9271c0a914deb70c1717ec113410c9d43e48123d0ed398bb696f00f4f0ef15ba
 
     strategy:
+      fail-fast: false
       matrix:
         php-version:
           - "8.1"
