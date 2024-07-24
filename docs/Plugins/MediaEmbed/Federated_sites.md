@@ -7,11 +7,8 @@ The default Mastodon media site can be customized with additional hosts. This ca
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
-// Add the Mastodon media site
-$configurator->MediaEmbed->add('mastodon');
-
-// Use MastodonHelper to add 'infosec.exchange' as a supported instance
-$mastodonHelper = new s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MastodonHelper($configurator);
+// Use the Mastodon helper to add 'infosec.exchange' as a supported instance
+$mastodonHelper = $configurator->MediaEmbed->getSiteHelper('mastodon');
 $mastodonHelper->addHost('infosec.exchange');
 
 // Get an instance of the parser and the renderer
@@ -36,11 +33,8 @@ While not technically a federated platform, XenForo 2.3+ allows embedding conten
 ```php
 $configurator = new s9e\TextFormatter\Configurator;
 
-// Add the Mastodon media site
-$configurator->MediaEmbed->add('xenforo');
-
-// Use XenForoHelper to add 'xenforo.com' as an authorized source
-$xenforoHelper = new s9e\TextFormatter\Plugins\MediaEmbed\Configurator\XenForoHelper($configurator);
+// Use the XenForo helper to add 'xenforo.com' as an authorized source
+$xenforoHelper = $configurator->MediaEmbed->getSiteHelper('xenforo');
 $xenforoHelper->addHost('xenforo.com');
 
 // Get an instance of the parser and the renderer

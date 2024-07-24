@@ -1,4 +1,4 @@
-<site name="Mastodon" homepage="https://mastodon.social/">
+<site name="Mastodon" homepage="https://mastodon.social/" helper="s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\MastodonHelper">
 	<example>https://mastodon.social/@HackerNewsBot/100181134752056592</example>
 
 	<oembed endpoint="https://mastodon.social/api/oembed"

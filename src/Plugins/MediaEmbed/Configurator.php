@@ -15,6 +15,7 @@ use s9e\TextFormatter\Configurator\Items\Tag;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
 use s9e\TextFormatter\Plugins\ConfiguratorBase;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\Collections\CachedDefinitionCollection;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\AbstractSiteHelper;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\TemplateBuilder;
 
 class Configurator extends ConfiguratorBase
@@ -134,6 +135,13 @@ class Configurator extends ConfiguratorBase
 		$this->configurator->registeredVars['MediaEmbed.sites'][$siteId] = [$siteConfig['extract'], $siteConfig['scrape']];
 
 		return $tag;
+	}
+
+	public function getSiteHelper(string $siteId): AbstractSiteHelper
+	{
+		$className = $this->defaultSites->get($siteId)['helper'];
+
+		return new $className($this->configurator);
 	}
 
 	/**

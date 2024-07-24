@@ -1,4 +1,4 @@
-<site name="XenForo">
+<site name="XenForo" helper="s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\XenForoHelper">
 	<example>https://xenforo.com/community/threads/embed-your-content-anywhere.217381/</example>
 
 	<tags><tag>social</tag></tags>

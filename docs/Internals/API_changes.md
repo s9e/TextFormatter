@@ -1,6 +1,20 @@
 See also [general changes](Changes.md).
 
 
+## 2.18.0
+
+The following classes have moved namespace and are (silently) deprecated:
+
+ - s9e\TextFormatter\Plugins\MediaEmbed\Configurator\AbstractConfigurableHostHelper
+ - s9e\TextFormatter\Plugins\MediaEmbed\Configurator\MastodonHelper
+ - s9e\TextFormatter\Plugins\MediaEmbed\Configurator\XenForoHelper
+
+The preferred way to access helpers is through the plugin's configurator. For example:
+
+ - `$configurator->MediaEmbed->getSiteHelper('mastodon')`
+ - `$configurator->MediaEmbed->getSiteHelper('xenforo')`
+
+
 ## 2.2.0
 
 The following methods are silently deprecated and will be removed in the next major release:

@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed;
 
 use Exception;
 use s9e\TextFormatter\Configurator\Items\AttributePreprocessor;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\MastodonHelper;
 use s9e\TextFormatter\Tests\Test;
 
 /**
@@ -496,5 +497,16 @@ class ConfiguratorTest extends Test
 		$config = $this->configurator->MediaEmbed->asConfig();
 
 		$this->assertSame('://', $config['quickMatch']);
+	}
+
+	/**
+	* @testdox getSiteHelper('mastodon') returns the Mastodon helper
+	*/
+	public function testGetSiteHelper()
+	{
+		$this->assertInstanceOf(
+			MastodonHelper::class,
+			$this->configurator->MediaEmbed->getSiteHelper('mastodon')
+		);
 	}
 }

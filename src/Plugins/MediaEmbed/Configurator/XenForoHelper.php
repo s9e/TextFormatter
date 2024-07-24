@@ -7,10 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 
-class XenForoHelper extends AbstractConfigurableHostHelper
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\XenForoHelper as ParentClass;
+
+class XenForoHelper extends ParentClass
 {
-	protected function getSiteId(): string
-	{
-		return 'xenforo';
-	}
 }

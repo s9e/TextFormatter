@@ -7,10 +7,8 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 
-class MastodonHelper extends AbstractConfigurableHostHelper
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\MastodonHelper as ParentClass;
+
+class MastodonHelper extends ParentClass
 {
-	protected function getSiteId(): string
-	{
-		return 'mastodon';
-	}
 }
