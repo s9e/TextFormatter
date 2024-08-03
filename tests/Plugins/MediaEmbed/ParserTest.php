@@ -545,6 +545,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://barefootheart.bandcamp.com/track/the-longing',
+				'<r><BANDCAMP album_id="1897537392" track_id="658250984" track_num="3">https://barefootheart.bandcamp.com/track/the-longing</BANDCAMP></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bandcamp');
+				}
+			],
+			[
 				'https://decoding-the-gurus.captivate.fm/episode/sam-harris',
 				'<r><CAPTIVATE id="ec119d4f-acc4-464a-8976-1fafc3e2d23b">https://decoding-the-gurus.captivate.fm/episode/sam-harris</CAPTIVATE></r>',
 				[],
