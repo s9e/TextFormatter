@@ -7,6 +7,7 @@
 /docs           export-ignore
 /mkdocs.yml     export-ignore
 /phpunit.xml    export-ignore
+/readthedocs.yml export-ignore
 /scripts        export-ignore
 /src/Configurator/JavaScript/functions     export-ignore
 /src/Plugins/Litedown/Regexps.md           export-ignore
