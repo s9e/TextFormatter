@@ -2353,6 +2353,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.instagram.com/soulful.nature.wellbeing/reel/C-h8fvjyYot/',
+				'<r><INSTAGRAM id="C-h8fvjyYot">https://www.instagram.com/soulful.nature.wellbeing/reel/C-h8fvjyYot/</INSTAGRAM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('instagram');
+				}
+			],
+			[
 				'http://www.izlesene.com/video/lily-allen-url-badman/7600704',
 				'<r><IZLESENE id="7600704">http://www.izlesene.com/video/lily-allen-url-badman/7600704</IZLESENE></r>',
 				[],
