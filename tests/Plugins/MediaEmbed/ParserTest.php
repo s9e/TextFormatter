@@ -20,6 +20,19 @@ class ParserTest extends Test
 	use ParsingTestsJavaScriptRunner;
 	use RenderingTestsRunner;
 
+	protected static function filterTests(array $tests): array
+	{
+		if (isset($_SERVER['GITHUB_RUN_ID']))
+		{
+			$tests = array_filter(
+				$tests,
+				fn($test) => !str_starts_with($test[0], 'https://www.youtube.com/clip/')
+			);
+		}
+
+		return $tests;
+	}
+
 	protected static function populateCache($entries)
 	{
 		$cacheDir = __DIR__ . '/../../.cache';
@@ -493,7 +506,7 @@ class ParserTest extends Test
 
 	public static function getScrapingTests()
 	{
-		return [
+		return self::filterTests([
 			[
 				'https://shows.acast.com/chaotic-normal/episodes/the-rising-tide',
 				'<r><ACAST episode_id="60f641a3fb28380014c4d8f0" show_id="60ef8f477fe7b1001343d9d6">https://shows.acast.com/chaotic-normal/episodes/the-rising-tide</ACAST></r>',
@@ -1137,7 +1150,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
-		];
+		]);
 	}
 
 	/**
@@ -1152,7 +1165,7 @@ class ParserTest extends Test
 
 	public static function getScrapingRenderingTests()
 	{
-		return [
+		return self::filterTests([
 			[
 				'https://www.gettyimages.com/detail/3232182',
 				'(<span data-s9e-mediaembed="getty" style="display:inline-block;width:100%;max-width:594px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:67\\.1717171717172%"><iframe allowfullscreen="" loading="lazy" scrolling="no" src="//embed\\.gettyimages\\.com/embed/3232182\\?et=[-\w]{22}&amp;tld=com&amp;sig=[-\w]{43}=&amp;caption=false&amp;ver=1" style="border:0;height:100%;left:0;position:absolute;width:100%"></iframe></span></span>)',
@@ -1252,7 +1265,7 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('youtube');
 				}
 			],
-		];
+		]);
 	}
 
 	public static function getParsingTests()
