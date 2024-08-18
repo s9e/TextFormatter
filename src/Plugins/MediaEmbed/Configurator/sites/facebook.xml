@@ -36,6 +36,11 @@
 		<extract>@facebook\.com/watch/\?(?'type'v)=(?'id'\d+)@</extract>
 		<extract>@facebook\.com/(?'user'[.\w]+)/(?'type'v)ideos/(?'id'\d+)@</extract>
 	</scrape>
+	<scrape>
+		<header>User-agent: PHP (not Mozilla)</header>
+		<match>@facebook\.com/share/[pv]/\w@</match>
+		<extract>@facebook\.com/\w+/(?'user'[.\w]+)/permalink/(?'id'\d+)(?!\w)@</extract>
+	</scrape>
 
 	<iframe onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
 		<src><![CDATA[

@@ -607,6 +607,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/share/p/EMMeAHj1cLMNWAER/',
+				'<r><FACEBOOK id="2603488166519287" user="francepermaculture">https://www.facebook.com/share/p/EMMeAHj1cLMNWAER/</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://flic.kr/p/5wBgXo',
 				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',
 				[],
