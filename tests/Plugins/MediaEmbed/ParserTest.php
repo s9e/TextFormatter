@@ -630,6 +630,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.facebook.com/share/p/E6UcoD6GPtVwzHFn/',
+				'<r><FACEBOOK id="1018663113060710" type="p" user="hcpce">https://www.facebook.com/share/p/E6UcoD6GPtVwzHFn/</FACEBOOK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
 				'https://flic.kr/p/5wBgXo',
 				'<r><FLICKR id="2971804544">https://flic.kr/p/5wBgXo</FLICKR></r>',
 				[],
@@ -1917,6 +1927,15 @@ class ParserTest extends Test
 				// https://xenforo.com/community/threads/s9e-media-sites.139274/page-94#post-1640633
 				'https://www.facebook.com/business/help/2593586717571940?id=673052479947730',
 				'<t>https://www.facebook.com/business/help/2593586717571940?id=673052479947730</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('facebook');
+				}
+			],
+			[
+				'https://m.facebook.com/hcpce/posts/cesta-evropou-za%C4%8D%C3%ADn%C3%A1me-u%C5%BE-5-z%C3%A1%C5%99%C3%AD-vyrazte-s-n%C3%A1mi-vstupenky-na-ligu-mistr%C5%AF-jsou-v-/1018663113060710/',
+				'<r><FACEBOOK id="1018663113060710" type="p" user="hcpce">https://m.facebook.com/hcpce/posts/cesta-evropou-za%C4%8D%C3%ADn%C3%A1me-u%C5%BE-5-z%C3%A1%C5%99%C3%AD-vyrazte-s-n%C3%A1mi-vstupenky-na-ligu-mistr%C5%AF-jsou-v-/1018663113060710/</FACEBOOK></r>',
 				[],
 				function ($configurator)
 				{
