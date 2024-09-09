@@ -9,7 +9,7 @@
 	<host>facebook.com</host>
 	<host>fb.watch</host>
 	<extract>@facebook\.com/.*?(?:fbid=|/permalink/|\?v=)(?'id'\d+)@</extract>
-	<extract>@facebook\.com/(?'user'[.\w]+)/(?'type'[pv])(?:ost|ideo)s?/(?:[-\w%]+/)?(?'id'\d+)\b@</extract>
+	<extract>@facebook\.com/(?'user'[.\w]+)/(?'type'[pv])(?:ost|ideo)s?/(?:[-%.\w]+/)?(?'id'\d+)\b@</extract>
 	<extract>@facebook\.com/video/(?=post|video)(?'type'[pv])@</extract>
 	<extract>@facebook\.com/events/(?'id'\d+)\b(?!/permalink)@</extract>
 	<extract>@facebook\.com/watch/\?(?'type'[pv])=@</extract>
