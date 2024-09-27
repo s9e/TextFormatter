@@ -1,0 +1,9 @@
+<site name="Nacho Video" homepage="https://nachovideo.com/">
+	<example>https://nachovideo.com/video/35/another-look-getting-outside-of-maps-in-destiny-2-pvp/</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>nachovideo.com</host>
+	<extract>!nachovideo\.com/(?:embed|video)/(?'id'\d+)\b!</extract>
+	<iframe src="https://nachovideo.com/embed/{@id}"/>
+</site>

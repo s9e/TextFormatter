@@ -7291,6 +7291,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests with data set #340
  [x] Parsing tests with data set #341
  [x] Parsing tests with data set #342
+ [x] Parsing tests with data set #343
+ [x] Parsing tests with data set #344
  [x] Parsing tests (JavaScript) with data set #0
  [x] Parsing tests (JavaScript) with data set #1
  [x] Parsing tests (JavaScript) with data set #2
@@ -7634,6 +7636,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Parsing tests (JavaScript) with data set #340
  [x] Parsing tests (JavaScript) with data set #341
  [x] Parsing tests (JavaScript) with data set #342
+ [x] Parsing tests (JavaScript) with data set #343
+ [x] Parsing tests (JavaScript) with data set #344
  [x] Parsing+rendering tests with data set #0
  [x] Parsing+rendering tests with data set #1
  [x] Parsing+rendering tests with data set #2

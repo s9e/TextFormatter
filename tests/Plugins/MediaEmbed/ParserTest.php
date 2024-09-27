@@ -2803,6 +2803,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://nachovideo.com/video/35/another-look-getting-outside-of-maps-in-destiny-2-pvp/',
+				'<r><NACHOVIDEO id="35">https://nachovideo.com/video/35/another-look-getting-outside-of-maps-in-destiny-2-pvp/</NACHOVIDEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nachovideo');
+				}
+			],
+			[
+				'https://nachovideo.com/embed/35',
+				'<r><NACHOVIDEO id="35">https://nachovideo.com/embed/35</NACHOVIDEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('nachovideo');
+				}
+			],
+			[
 				'http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/',
 				'<r><NATGEOCHANNEL id="channel/brain-games/videos/jason-silva-on-intuition">http://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/</NATGEOCHANNEL></r>',
 				[],

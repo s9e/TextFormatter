@@ -277,6 +277,10 @@
 		<td><code>msnbc</code></td>
 		<td>https://www.msnbc.com/ronan-farrow-daily/watch/thats-no-moon--300512323725<br/>https://on.msnbc.com/1qkH62o</td>
 	</tr>
+	<tr title="Nacho Video" id="nachovideo">
+		<td><code>nachovideo</code></td>
+		<td>https://nachovideo.com/video/35/another-look-getting-outside-of-maps-in-destiny-2-pvp/</td>
+	</tr>
 	<tr title="National Geographic Channel" id="natgeochannel">
 		<td><code>natgeochannel</code></td>
 		<td>https://channel.nationalgeographic.com/channel/brain-games/videos/jason-silva-on-intuition/<br/>https://channel.nationalgeographic.com/wild/urban-jungle/videos/leopard-in-the-city/</td>
