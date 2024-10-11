@@ -1327,8 +1327,9 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://podcasts.apple.com/dk/podcast/say-his-name-george-floyd-retssagen-begynder/id1429569036?i=1000514458995',
-				'<r><APPLEPODCASTS country="dk" episode_id="1000514458995" podcast_id="1429569036">https://podcasts.apple.com/dk/podcast/say-his-name-george-floyd-retssagen-begynder/id1429569036?i=1000514458995</APPLEPODCASTS></r>',
+				// https://xenforo.com/community/threads/s9e-media-sites.139274/post-1711606
+				'https://podcasts.apple.com/fr/podcast/rachel-carson-une-%C3%A9crivaine-%C3%A0-la-naissance-de-l%C3%A9cologie/id1575516483?i=1000528436445',
+				'<r><APPLEPODCASTS country="fr" episode_id="1000528436445" podcast_id="1575516483">https://podcasts.apple.com/fr/podcast/rachel-carson-une-%C3%A9crivaine-%C3%A0-la-naissance-de-l%C3%A9cologie/id1575516483?i=1000528436445</APPLEPODCASTS></r>',
 				[],
 				function ($configurator)
 				{
