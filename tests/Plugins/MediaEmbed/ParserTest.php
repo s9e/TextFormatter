@@ -1436,6 +1436,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://bsky.app/profile/jamesgunn.bsky.social/post/3l6kscjixz22q',
+				'<r><BLUESKY name="jamesgunn.bsky.social" id="3l6kscjixz22q">https://bsky.app/profile/jamesgunn.bsky.social/post/3l6kscjixz22q</BLUESKY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bluesky');
+				}
+			],
+			[
 				'https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&bctid=4815779906001',
 				'<r><BRIGHTCOVE bckey="AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm" bcpid="4773906090001" bctid="4815779906001">https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</BRIGHTCOVE></r>',
 				[],

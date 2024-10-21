@@ -1,0 +1,15 @@
+<site name="Bluesky" homepage="https://bsky.app/">
+	<example>https://bsky.app/profile/jamesgunn.bsky.social/post/3l6kscjixz22q</example>
+
+	<oembed endpoint="https://embed.bsky.app/oembed"
+	          scheme="https://bsky.app/profile/{@name}/post/{@id}"/>
+
+	<tags><tag>social</tag></tags>
+
+	<host>bsky.app</host>
+	<extract>!bsky\.app/profile/(?'name'[A-Za-z0-9.]+)/post/(?'id'\w+)!</extract>
+    <scrape url="https://public.api.bsky.app/xrpc/app.bsky.actor.getProfile?actor={@name}">
+		<extract>!"did":\s*"did:(?<did>[a-zA-Z0-9._:%-]+)"!</extract>
+	</scrape>
+	<iframe width="550" height="350" src="https://embed.bsky.app/embed/did:{@did}/app.bsky.feed.post/{@id}"/>
+</site>
