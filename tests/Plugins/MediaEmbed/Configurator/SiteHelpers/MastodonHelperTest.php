@@ -58,4 +58,18 @@ class MastodonHelperTest extends Test
 
 		$this->assertXmlStringEqualsXmlString($expected, $actual);
 	}
+
+	/**
+	* @testdox getHosts() returns a numerically-indexed array of allowed hosts
+	*/
+	public function testGetHostRegexp()
+	{
+		$mastodonHelper = new MastodonHelper($this->configurator);
+
+		$mastodonHelper->setHosts(['mastodon.social']);
+		$this->assertSame(['mastodon.social'], $mastodonHelper->getHosts());
+
+		$mastodonHelper->addHost('test.local');
+		$this->assertSame(['mastodon.social', 'test.local'], $mastodonHelper->getHosts());
+	}
 }

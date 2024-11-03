@@ -7,7 +7,7 @@
 */
 namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers;
 
-use function strtolower;
+use function array_keys, sort, strtolower;
 
 abstract class AbstractConfigurableHostHelper extends AbstractSiteHelper
 {
@@ -31,6 +31,18 @@ abstract class AbstractConfigurableHostHelper extends AbstractSiteHelper
 		}
 	}
 
+	public function getHosts(): array
+	{
+		$hosts = array_keys(
+			(array) ($this->configurator->registeredVars['MediaEmbed.hosts'] ?? []),
+			$this->getSiteId(),
+			true
+		);
+		sort($hosts, SORT_STRING);
+
+		return $hosts;
+	}
+
 	abstract protected function getSiteId(): string;
 
 	public function setHosts(array $hosts): void
@@ -42,12 +54,7 @@ abstract class AbstractConfigurableHostHelper extends AbstractSiteHelper
 		}
 
 		// Remove previously set hosts for this site
-		$unsetHosts = array_keys(
-			(array) $this->configurator->registeredVars['MediaEmbed.hosts'],
-			$siteId,
-			true
-		);
-		foreach ($unsetHosts as $host)
+		foreach ($this->getHosts() as $host)
 		{
 			unset($this->configurator->registeredVars['MediaEmbed.hosts'][$host]);
 		}

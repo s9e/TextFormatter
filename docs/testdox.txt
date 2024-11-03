@@ -6761,6 +6761,7 @@ Mastodon Helper (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteHel
  [x] addHost() normalizes the host
  [x] addHost() adds the Mastodon media site if it's not enabled yet
  [x] setHosts() resets previously allowed hosts
+ [x] getHosts() returns a numerically-indexed array of allowed hosts
 
 Xen Foro Helper (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteHelpers\XenForoHelper)
  [x] addHost() adds the XenForo media site if it's not enabled yet
