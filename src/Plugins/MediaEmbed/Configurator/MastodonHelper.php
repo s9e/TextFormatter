@@ -9,6 +9,9 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\MastodonHelper as ParentClass;
 
+/**
+* @deprecated 2.18.0 Use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\MastodonHelper instead
+*/
 class MastodonHelper extends ParentClass
 {
 }

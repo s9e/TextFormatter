@@ -9,6 +9,9 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator;
 
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\XenForoHelper as ParentClass;
 
+/**
+* @deprecated 2.18.0 Use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\XenForoHelper instead
+*/
 class XenForoHelper extends ParentClass
 {
 }
