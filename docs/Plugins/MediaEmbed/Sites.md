@@ -45,6 +45,10 @@
 		<td><code>bitchute</code></td>
 		<td>https://www.bitchute.com/video/y9AejeZ2vD0/</td>
 	</tr>
+	<tr title="Bluesky" id="bluesky">
+		<td><code>bluesky</code></td>
+		<td>https://bsky.app/profile/bsky.app/post/3kkrqzuydho2v<br/>https://bsky.app/profile/bnewbold.net/post/3kxjq2auebs2f</td>
+	</tr>
 	<tr title="Brightcove" id="brightcove">
 		<td><code>brightcove</code></td>
 		<td>https://players.brightcove.net/219646971/default_default/index.html?videoId=4815779906001<br/>https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</td>

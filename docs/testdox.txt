@@ -6757,6 +6757,11 @@ Xml File Definition Collection (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Confi
  [x] Other default attribute values are left as strings
  [x] Attributes' "required" property is cast to bool
 
+Bluesky Helper (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteHelpers\BlueskyHelper)
+ [x] addHost() normalizes the host
+ [x] addHost() adds the Bluesky media site if it's not enabled yet
+ [x] addHost() updates the embedded regexp
+
 Mastodon Helper (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Configurator\SiteHelpers\MastodonHelper)
  [x] addHost() normalizes the host
  [x] addHost() adds the Mastodon media site if it's not enabled yet
@@ -6896,6 +6901,8 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #54
  [x] Scraping tests with data set #55
  [x] Scraping tests with data set #56
+ [x] Scraping tests with data set #57
+ [x] Scraping tests with data set #58
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2

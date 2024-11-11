@@ -1,0 +1,35 @@
+<site name="Bluesky" homepage="https://bsky.app/" helper="s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\BlueskyHelper">
+	<source>https://embed.bsky.app/</source>
+	<example>https://bsky.app/profile/bsky.app/post/3kkrqzuydho2v</example>
+	<example>https://bsky.app/profile/bnewbold.net/post/3kxjq2auebs2f</example>
+	<!-- https://web.syu.is/profile/syui.syu.is/post/3krfuqkpfns27 -->
+
+	<tags><tag>social</tag></tags>
+
+	<attributes>
+		<embedder required="true">
+			<filterChain>#regexp(/^(?:[-\w]*\.)*bsky\.app$/)</filterChain>
+		</embedder>
+		<url required="true">
+			<filterChain>urldecode</filterChain>
+			<filterChain>#regexp(/^at:\/\/[.:\w]+\/[.\w]+\/\w+$/)</filterChain>
+		</url>
+	</attributes>
+
+	<!-- https://atproto.com/specs/at-uri-scheme -->
+	<host>bsky.app</host>
+	<extract>#https://(?'embedder'[.\w]+)/oembed.*?url=(?'url'[\w%.]+)#</extract>
+	<scrape>
+		<match>#/profile/[^/]+/post/.#</match>
+		<extract>#https://(?'embedder'[.\w]+)/oembed.*?url=(?'url'[\w%.]+)#</extract>
+	</scrape>
+
+	<iframe width="600" height="600" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
+		<src><![CDATA[
+			<xsl:text>https://s9e.github.io/iframe/2/bluesky.min.html#</xsl:text>
+			<xsl:value-of select="@url"/>
+			<xsl:text>#</xsl:text>
+			<xsl:value-of select="@embedder"/>
+		]]></src>
+	</iframe>
+</site>

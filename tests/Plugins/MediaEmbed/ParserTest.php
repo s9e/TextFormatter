@@ -568,6 +568,26 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://bsky.app/profile/bsky.app/post/3kkrqzuydho2v',
+				'<r><BLUESKY embedder="embed.bsky.app" url="at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3kkrqzuydho2v">https://bsky.app/profile/bsky.app/post/3kkrqzuydho2v</BLUESKY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bluesky');
+				}
+			],
+			[
+				'https://bsky.app/profile/did:plc:z72i7hdynmk6r22z27h6tvur/post/3kkrqzuydho2v',
+				'<r><BLUESKY embedder="embed.bsky.app" url="at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3kkrqzuydho2v">https://bsky.app/profile/did:plc:z72i7hdynmk6r22z27h6tvur/post/3kkrqzuydho2v</BLUESKY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('bluesky');
+				}
+			],
+			[
 				'https://decoding-the-gurus.captivate.fm/episode/sam-harris',
 				'<r><CAPTIVATE id="ec119d4f-acc4-464a-8976-1fafc3e2d23b">https://decoding-the-gurus.captivate.fm/episode/sam-harris</CAPTIVATE></r>',
 				[],
