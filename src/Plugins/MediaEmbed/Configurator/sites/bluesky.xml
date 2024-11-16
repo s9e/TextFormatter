@@ -18,7 +18,7 @@
 
 	<!-- https://atproto.com/specs/at-uri-scheme -->
 	<host>bsky.app</host>
-	<extract>#https://(?'embedder'[.\w]+)/oembed.*?url=(?'url'[\w%.]+)#</extract>
+	<extract>#^https://(?'embedder'[.\w]+)/oembed.*?url=(?'url'[\w%.]+)#</extract>
 	<scrape>
 		<match>#/profile/[^/]+/post/.#</match>
 		<extract>#https://(?'embedder'[.\w]+)/oembed.*?url=(?'url'[\w%.]+)#</extract>

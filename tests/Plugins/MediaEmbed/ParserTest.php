@@ -1446,6 +1446,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://embed.bsky.app/oembed?format=json&url=at%3A%2F%2Fdid%3Aplc%3Az72i7hdynmk6r22z27h6tvur%2Fapp.bsky.feed.post%2F3kkrqzuydho2v',
+				'<r><BLUESKY embedder="embed.bsky.app" url="at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.post/3kkrqzuydho2v">https://embed.bsky.app/oembed?format=json&amp;url=at%3A%2F%2Fdid%3Aplc%3Az72i7hdynmk6r22z27h6tvur%2Fapp.bsky.feed.post%2F3kkrqzuydho2v</BLUESKY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bluesky');
+				}
+			],
+			[
+				'http://embed.bsky.app/https://xembed.bsky.app/oembed?format=json&url=at%3A%2F%2Fdid%3Aplc%3Az72i7hdynmk6r22z27h6tvur%2Fapp.bsky.feed.post%2F3kkrqzuydho2v',
+				'<t>http://embed.bsky.app/https://xembed.bsky.app/oembed?format=json&amp;url=at%3A%2F%2Fdid%3Aplc%3Az72i7hdynmk6r22z27h6tvur%2Fapp.bsky.feed.post%2F3kkrqzuydho2v</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('bluesky');
+				}
+			],
+			[
 				'https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&bctid=4815779906001',
 				'<r><BRIGHTCOVE bckey="AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm" bcpid="4773906090001" bctid="4815779906001">https://link.brightcove.com/services/player/bcpid4773906090001?bckey=AQ~~,AAAAAA0Xi_s~,r1xMuE8k5Nyz5IyYc0Hzhl5eZ5cEEvlm&amp;bctid=4815779906001</BRIGHTCOVE></r>',
 				[],
