@@ -11,7 +11,6 @@ use RuntimeException;
 use s9e\TextFormatter\Configurator\Items\Regexp;
 use s9e\TextFormatter\Configurator\JavaScript\Code;
 use s9e\TextFormatter\Configurator\JavaScript\Dictionary;
-use s9e\TextFormatter\Configurator\JavaScript\Encoder;
 
 class Encoder
 {
