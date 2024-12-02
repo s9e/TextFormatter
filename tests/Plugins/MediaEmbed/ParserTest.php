@@ -1131,6 +1131,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://vkvideo.ru/video-169717707_456239099',
+				'<r><VK hash="9b4cfc59fccca352" oid="-169717707" vid="456239099">https://vkvideo.ru/video-169717707_456239099</VK></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('vk');
+				}
+			],
+			[
 				'https://thoughtworks.wistia.com/medias/b6al55s35k',
 				'<r><WISTIA id="b6al55s35k">https://thoughtworks.wistia.com/medias/b6al55s35k</WISTIA></r>',
 				[],

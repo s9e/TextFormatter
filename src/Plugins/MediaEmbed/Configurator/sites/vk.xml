@@ -6,10 +6,12 @@
 
 	<host>vk.com</host>
 	<host>vkontakte.ru</host>
-	<extract>!vk(?:\.com|ontakte\.ru)/(?:[\w.]+\?z=)?video(?'oid'-?\d+)_(?'vid'\d+).*?hash=(?'hash'[0-9a-f]+)!</extract>
-	<extract>!vk(?:\.com|ontakte\.ru)/video_ext\.php\?oid=(?'oid'-?\d+)&amp;id=(?'vid'\d+)&amp;hash=(?'hash'[0-9a-f]+)!</extract>
+	<host>vkvideo.ru</host>
+	<extract>!vk(?:\.com|(?:ontakte|video)\.ru)/(?:[\w.]+\?z=)?video(?'oid'-?\d+)_(?'vid'\d+).*?hash=(?'hash'[0-9a-f]+)!</extract>
+	<extract>!vk(?:\.com|(?:ontakte|video)\.ru)/video_ext\.php\?oid=(?'oid'-?\d+)&amp;id=(?'vid'\d+)&amp;hash=(?'hash'[0-9a-f]+)!</extract>
 	<scrape>
-		<header>User-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36</header>
+		<header>User-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36</header>
+		<header>Cookie: _ignoreAutoLogin=1</header>
 		<match>#^(?!.*?hash=)#</match>
 		<extract>#meta property="og:video" content=".*?oid=(?'oid'-?\d+).*?id=(?'vid'\d+).*?hash=(?'hash'[0-9a-f]+)#</extract>
 	</scrape>
