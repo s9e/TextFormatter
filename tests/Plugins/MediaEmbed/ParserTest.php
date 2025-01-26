@@ -862,6 +862,16 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://www.instagram.com/share/p/BAtwjtaqSm',
+				'<r><INSTAGRAM id="DE511VjSTD2">https://www.instagram.com/share/p/BAtwjtaqSm</INSTAGRAM></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('instagram');
+				}
+			],
+			[
 				'https://archive.org/details/BillGate99',
 				'<r><INTERNETARCHIVE height="480" id="BillGate99" width="640">https://archive.org/details/BillGate99</INTERNETARCHIVE></r>',
 				[],
@@ -871,7 +881,6 @@ class ParserTest extends Test
 					$configurator->MediaEmbed->add('internetarchive');
 				}
 			],
-
 			[
 				'https://archive.org/details/DFTS2014-05-30',
 				'<r><INTERNETARCHIVE height="50" id="DFTS2014-05-30&amp;playlist=1&amp;twitterv=01" width="300">https://archive.org/details/DFTS2014-05-30</INTERNETARCHIVE></r>',

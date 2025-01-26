@@ -6,7 +6,12 @@
 	<tags><tag>social</tag></tags>
 
 	<host>instagram.com</host>
-	<extract>!instagram\.com/(?:[.\w]+/)?(?:p|reel|tv)/(?'id'[-\w]+)!</extract>
+	<extract>#instagram\.com/(?!share/)(?:[.\w]+/)?(?:p|reel|tv)/(?'id'[-\w]+)#</extract>
+	<scrape>
+		<header>User-agent: PHP</header>
+		<match>#instagram.com/share/\w+/\w#</match>
+		<extract>#instagram\.com/(?:p|reel|tv)/(?'id'[-\w]+)#</extract>
+	</scrape>
 	<iframe width="542" height="542" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style">
 		<src><![CDATA[
 			<xsl:text>https://s9e.github.io/iframe/2/instagram.min.html#</xsl:text>
