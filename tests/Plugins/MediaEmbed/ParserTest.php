@@ -1001,10 +1001,6 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					if (isset($_SERVER['TRAVIS']))
-					{
-						$this->markTestSkipped('SoundCloud does not like requests from Travis containers');
-					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
 				}
@@ -1015,10 +1011,6 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					if (isset($_SERVER['TRAVIS']))
-					{
-						$this->markTestSkipped('SoundCloud does not like requests from Travis containers');
-					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
 				}
@@ -1029,10 +1021,6 @@ class ParserTest extends Test
 				[],
 				function ($configurator)
 				{
-					if (isset($_SERVER['TRAVIS']))
-					{
-						$this->markTestSkipped('SoundCloud does not like requests from Travis containers');
-					}
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('soundcloud');
 				}
@@ -1040,6 +1028,16 @@ class ParserTest extends Test
 			[
 				'https://soundcloud.com/subsineacademy/sets/aphelion-bora/s-ntU3imOJop1',
 				'<r><SOUNDCLOUD id="subsineacademy/sets/aphelion-bora/s-ntU3imOJop1" playlist_id="1391797690" secret_token="s-ntU3imOJop1" track_id="1211369659">https://soundcloud.com/subsineacademy/sets/aphelion-bora/s-ntU3imOJop1</SOUNDCLOUD></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('soundcloud');
+				}
+			],
+			[
+				'https://on.soundcloud.com/exjoz8LLvYVi1XKx5',
+				'<r><SOUNDCLOUD track_id="2028956680">https://on.soundcloud.com/exjoz8LLvYVi1XKx5</SOUNDCLOUD></r>',
 				[],
 				function ($configurator)
 				{

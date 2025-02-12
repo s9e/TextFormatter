@@ -14,6 +14,7 @@
 	<scrape>
 		<header>User-agent: PHP (not Mozilla)</header>
 		<match>@soundcloud\.com/(?!playlists/\d|tracks/\d)[-\w]+/[-\w]@</match>
+		<match>@on\.soundcloud\.com/.@</match>
 		<extract>@soundcloud(?::/)?:tracks:(?'track_id'\d+)@</extract>
 	</scrape>
 	<scrape>
