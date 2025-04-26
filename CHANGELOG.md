@@ -1,3 +1,34 @@
+2.19.0 (2025-04-26)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/4970711f25d94306b4835b723b9cc5010170ea37...fcd2c8af59f98b3b56a2ac24cd84aaeceb056e31)
+
+### Added
+
+ - `0ad200815` MediaEmbed: added AbstractConfigurableHostHelper::getHosts()
+ - `922ca9e50` MediaEmbed: added Bluesky
+ - `c126dec98` MediaEmbed: added Nacho Video
+ - `fcd2c8af5` MediaEmbed: added Omny
+
+### Changed
+
+ - `5eabf320b` MediaEmbed updated SoundCloud
+ - `ac657d73b` MediaEmbed: updated Apple Podcasts
+ - `c30ea7129` MediaEmbed: updated Bandcamp
+ - `acb7c7f77` MediaEmbed: updated Bluesky
+ - `22c5386c5` MediaEmbed: updated Facebook
+ - `15d62a2dc` MediaEmbed: updated Facebook
+ - `bc9958e65` MediaEmbed: updated Facebook
+ - `309108d80` MediaEmbed: updated Instagram
+ - `9e72cf786` MediaEmbed: updated Instagram
+ - `425d20910` MediaEmbed: updated VK
+ - `4a1e208b3` MediaEmbed: updated VK
+ - `4d84cce94` MediaEmbed: updated VK
+ - `9288d086f` RegexpConvertor: updated Unicode properties
+ - `e4c43adb7` Updated hljs-loader
+ - `fd428797b` refactor: Remove redundant use statement
+
+
 2.18.0 (2024-07-24)
 ===================
 
