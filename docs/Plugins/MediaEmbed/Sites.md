@@ -313,6 +313,10 @@
 		<td><code>odysee</code></td>
 		<td>https://odysee.com/@veritasium:f/the-secret-of-synchronization:2</td>
 	</tr>
+	<tr title="Omny Studio" id="omny">
+		<td><code>omny</code></td>
+		<td>https://omny.fm/shows/the-vortx-podcast/tech-n9ne</td>
+	</tr>
 	<tr title="On3 DB" id="on3">
 		<td><code>on3</code></td>
 		<td>https://www.on3.com/db/christian-jones-150372/industry-comparison/</td>

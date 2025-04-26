@@ -1,0 +1,9 @@
+<site name="Omny Studio" homepage="https://omny.fm/">
+	<example>https://omny.fm/shows/the-vortx-podcast/tech-n9ne</example>
+
+	<tags><tag>podcasts</tag></tags>
+
+	<host>omny.fm</host>
+	<extract>!omny\.fm/shows/(?'program_slug'[-\w]+)/(?'clip_slug'[-\w]+)!</extract>
+	<iframe width="100%" height="180" max-width="900" src="https://omny.fm/shows/{@program_slug}/{@clip_slug}/embed"/>
+</site>

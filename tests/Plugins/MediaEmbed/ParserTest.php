@@ -3015,6 +3015,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://omny.fm/shows/the-vortx-podcast/tech-n9ne',
+				'<r><OMNY clip_slug="tech-n9ne" program_slug="the-vortx-podcast">https://omny.fm/shows/the-vortx-podcast/tech-n9ne</OMNY></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('omny');
+				}
+			],
+			[
 				'https://www.on3.com/db/naeem-offord-156248/industry-comparison/',
 				'<r><ON3 id="156248">https://www.on3.com/db/naeem-offord-156248/industry-comparison/</ON3></r>',
 				[],
