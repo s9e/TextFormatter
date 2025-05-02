@@ -423,7 +423,7 @@
 	</tr>
 	<tr title="Threads" id="threads">
 		<td><code>threads</code></td>
-		<td>https://www.threads.net/t/CuY2OYEAbJw</td>
+		<td>https://www.threads.com/t/CuY2OYEAbJw</td>
 	</tr>
 	<tr title="TikTok" id="tiktok">
 		<td><code>tiktok</code></td>

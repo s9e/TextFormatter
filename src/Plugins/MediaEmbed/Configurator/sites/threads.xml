@@ -1,9 +1,10 @@
-<site name="Threads" homepage="https://www.threads.net/">
-	<example>https://www.threads.net/t/CuY2OYEAbJw</example>
+<site name="Threads" homepage="https://www.threads.com/">
+	<example>https://www.threads.com/t/CuY2OYEAbJw</example>
 
 	<tags><tag>social</tag></tags>
 
+	<host>threads.com</host>
 	<host>threads.net</host>
-	<extract>!threads\.net/(?:@[-\w.]+/pos)?t/(?'id'[-\w]+)!</extract>
+	<extract>!threads\.(?:com|net)/(?:@[-\w.]+/pos)?t/(?'id'[-\w]+)!</extract>
 	<iframe width="550" height="300" src="https://s9e.github.io/iframe/2/threads.min.html#{@id}" onload="let c=new MessageChannel;c.port1.onmessage=e=>this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" data-s9e-livepreview-ignore-attrs="style"/>
 </site>
