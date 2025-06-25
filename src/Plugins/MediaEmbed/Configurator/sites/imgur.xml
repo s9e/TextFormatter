@@ -11,7 +11,7 @@
 	<tags><tag>images</tag></tags>
 
 	<host>imgur.com</host>
-	<extract>@imgur\.com/(?'id'a/\w+)@</extract>
+	<extract>@imgur\.com/(?'id'(?:a|gallery)/\w+)@</extract>
 	<extract>@i\.imgur\.com/(?'id'\w{5,7})[lms]?\.@</extract>
 	<extract>@imgur\.com/(?!upload\b)(?'id'\w+)(?![\w./])@</extract>
 	<scrape url="https://api.imgur.com/oembed.xml?url=/{@path}">
