@@ -1,10 +1,12 @@
 <site name="On3 DB" homepage="https://www.on3.com/db/">
+	<example>https://www.on3.com/rivals/darion-jones-240802/</example>
 	<example>https://www.on3.com/db/christian-jones-150372/industry-comparison/</example>
 
 	<tags><tag>sports</tag></tags>
 
 	<host>on3.com</host>
 	<extract>!/db/(?:[-\w]*-)?(?'id'[0-9]+)/industry-comparison/!</extract>
+	<extract>!/rivals/(?:[-\w]*-)?(?'id'[0-9]+)/!</extract>
 	<!--
 		let contentWindow = this.contentWindow;
 		window.addEventListener(

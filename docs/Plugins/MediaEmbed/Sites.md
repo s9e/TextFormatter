@@ -319,7 +319,7 @@
 	</tr>
 	<tr title="On3 DB" id="on3">
 		<td><code>on3</code></td>
-		<td>https://www.on3.com/db/christian-jones-150372/industry-comparison/</td>
+		<td>https://www.on3.com/rivals/darion-jones-240802/<br/>https://www.on3.com/db/christian-jones-150372/industry-comparison/</td>
 	</tr>
 	<tr title="Orfium" id="orfium">
 		<td><code>orfium</code></td>
