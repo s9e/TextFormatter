@@ -347,7 +347,7 @@
 	</tr>
 	<tr title="Rumble" id="rumble">
 		<td><code>rumble</code></td>
-		<td>https://rumble.com/vaxo02-i-cant-climb-.html</td>
+		<td>https://rumble.com/vaxo02-i-cant-climb-.html<br/>https://rumble.com/embed/v8bhte/</td>
 	</tr>
 	<tr title="Rutube" id="rutube">
 		<td><code>rutube</code></td>

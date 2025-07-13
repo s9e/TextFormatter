@@ -1,5 +1,6 @@
 <site name="Rumble" homepage="https://rumble.com/">
 	<example>https://rumble.com/vaxo02-i-cant-climb-.html</example>
+	<example>https://rumble.com/embed/v8bhte/</example>
 
 	<oembed endpoint="https://rumble.com/api/Media/oembed.json"
 	          scheme="https://rumble.com/embed/{@id}/"/>
@@ -10,7 +11,7 @@
 	<extract>!rumble\.com/embed/(?'id'\w+)!</extract>
 	<scrape>
 		<match>#rumble\.com/(?!embed/).#</match>
-		<extract>!video"?:"(?'id'\w+)!</extract>
+		<extract>!(?:/|%2F)embed(?:/|%2F)(?'id'\w+)!</extract>
 	</scrape>
 	<iframe src="https://rumble.com/embed/{@id}/"/>
 </site>

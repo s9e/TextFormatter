@@ -8002,39 +8002,39 @@ Unparser (s9e\TextFormatter\Tests\Unparser)
  [x] Characters outside Unicode's BMP are decoded
 
 Cached (s9e\TextFormatter\Tests\Utils\Http\Clients\Cached)
- [x] Settings from the proxied client are copied
- [x] Settings from the caching client are copied to the proxied client
- [x] Can work without a cache dir
- [x] Works with a cache
- [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
- [x] Resets custom headers between requests
- [x] post() sends the request body if set
- [x] post() sends no request body if not set
- [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns the response error
- [x] get() returns headers if returnHeaders is true
+ [ ] Settings from the proxied client are copied
+ [ ] Settings from the caching client are copied to the proxied client
+ [ ] Can work without a cache dir
+ [ ] Works with a cache
+ [ ] Uses gzip by default if ext/zlib is availble
+ [ ] Sends custom headers
+ [ ] Resets custom headers between requests
+ [ ] post() sends the request body if set
+ [ ] post() sends no request body if not set
+ [ ] post() automatically sets Content-Length if a request body is set
+ [ ] get() returns the response error
+ [ ] get() returns headers if returnHeaders is true
 
 Curl (s9e\TextFormatter\Tests\Utils\Http\Clients\Curl)
- [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
- [x] Resets custom headers between requests
- [x] post() sends the request body if set
- [x] post() sends no request body if not set
- [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns the response error
- [x] get() returns headers if returnHeaders is true
+ [ ] Uses gzip by default if ext/zlib is availble
+ [ ] Sends custom headers
+ [ ] Resets custom headers between requests
+ [ ] post() sends the request body if set
+ [ ] post() sends no request body if not set
+ [ ] post() automatically sets Content-Length if a request body is set
+ [ ] get() returns the response error
+ [ ] get() returns headers if returnHeaders is true
 
 Native (s9e\TextFormatter\Tests\Utils\Http\Clients\Native)
- [x] Does not send "Accept-Encoding: gzip" if gzip is disabled
- [x] Uses gzip by default if ext/zlib is availble
- [x] Sends custom headers
- [x] Resets custom headers between requests
- [x] post() sends the request body if set
- [x] post() sends no request body if not set
- [x] post() automatically sets Content-Length if a request body is set
- [x] get() returns the response error
- [x] get() returns headers if returnHeaders is true
+ [ ] Does not send "Accept-Encoding: gzip" if gzip is disabled
+ [ ] Uses gzip by default if ext/zlib is availble
+ [ ] Sends custom headers
+ [ ] Resets custom headers between requests
+ [ ] post() sends the request body if set
+ [ ] post() sends no request body if not set
+ [ ] post() automatically sets Content-Length if a request body is set
+ [ ] get() returns the response error
+ [ ] get() returns headers if returnHeaders is true
 
 Http (s9e\TextFormatter\Tests\Utils\Http)
  [x] getClient() returns an instance of s9e\TextFormatter\Utils\Http\Client
