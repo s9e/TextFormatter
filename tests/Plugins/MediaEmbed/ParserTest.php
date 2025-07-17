@@ -1684,6 +1684,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://crankers.com/videos/2676/russian-boxer-lets-endangered-orangutan-hit-the-vape/',
+				'<r><CRANKERS id="2676">https://crankers.com/videos/2676/russian-boxer-lets-endangered-orangutan-hit-the-vape/</CRANKERS></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('crankers');
+				}
+			],
+			[
 				'http://www.dailymotion.com/video/x222z1',
 				'<r><DAILYMOTION id="x222z1">http://www.dailymotion.com/video/x222z1</DAILYMOTION></r>',
 				[],
