@@ -1,0 +1,9 @@
+<site name="Crankers Videos" homepage="https://crankers.com/">
+	<example>https://crankers.com/videos/2676/russian-boxer-lets-endangered-orangutan-hit-the-vape/</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>crankers.com</host>
+	<extract>@crankers\.com/(?:embed|videos)/(?'id'[0-9]+)@</extract>
+	<iframe src="//crankers.com/embed/{@id}"/>
+</site>

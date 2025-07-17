@@ -97,6 +97,10 @@
 		<td><code>coub</code></td>
 		<td>https://coub.com/view/6veusoty</td>
 	</tr>
+	<tr title="Crankers Videos" id="crankers">
+		<td><code>crankers</code></td>
+		<td>https://crankers.com/videos/2676/russian-boxer-lets-endangered-orangutan-hit-the-vape/</td>
+	</tr>
 	<tr title="Dailymotion" id="dailymotion">
 		<td><code>dailymotion</code></td>
 		<td>https://dai.ly/x5e9eog<br/>https://www.dailymotion.com/video/x5e9eog</td>
