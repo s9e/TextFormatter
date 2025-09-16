@@ -41,7 +41,8 @@
 	},
 	"scripts": {
 		"post-update-cmd": "php scripts/patchReadme.php",
-		"test":            "phpunit --exclude-group ''"
+		"test":            "phpunit --exclude-group 'needs-network'",
+		"test-all":        "phpunit --exclude-group ''"
 	},
 	"extra": {
 		"version": "2.19.1-dev"
