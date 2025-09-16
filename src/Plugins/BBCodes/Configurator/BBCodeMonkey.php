@@ -302,7 +302,7 @@ class BBCodeMonkey
 
 		// Test whether the passthrough token is used for something else, in which case we need
 		// to unset it
-		if (isset($tokens[$config['passthroughToken']]))
+		if (isset($config['passthroughToken'], $tokens[$config['passthroughToken']]))
 		{
 			$config['passthroughToken'] = null;
 		}

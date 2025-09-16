@@ -169,36 +169,29 @@ class Parser
 	*/
 	public function __construct(array $config)
 	{
+		$this->logger         = new Logger;
 		$this->pluginsConfig  = $config['plugins'];
 		$this->registeredVars = $config['registeredVars'];
 		$this->rootContext    = $config['rootContext'];
 		$this->tagsConfig     = $config['tags'];
-
-		$this->__wakeup();
 	}
 
-	/**
-	* Serializer
-	*
-	* Returns the properties that need to persist through serialization.
-	*
-	* NOTE: using __sleep() is preferable to implementing Serializable because it leaves the choice
-	* of the serializer to the user (e.g. igbinary)
-	*
-	* @return array
-	*/
-	public function __sleep()
+	public function __serialize(): array
 	{
-		return ['pluginsConfig', 'registeredVars', 'rootContext', 'tagsConfig'];
+		return [
+			'pluginsConfig'  => $this->pluginsConfig,
+			'registeredVars' => $this->registeredVars,
+			'rootContext'    => $this->rootContext,
+			'tagsConfig'     => $this->tagsConfig
+		];
 	}
 
-	/**
-	* Unserializer
-	*
-	* @return void
-	*/
-	public function __wakeup()
+	public function __unserialize(array $data): void
 	{
+		foreach ($data as $k => $v)
+		{
+			$this->$k = $v;
+		}
 		$this->logger = new Logger;
 	}
 
