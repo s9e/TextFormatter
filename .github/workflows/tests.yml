@@ -7,35 +7,6 @@ on:
     branches: [ master ]
 
 jobs:
-  outdated:
-    runs-on: ubuntu-latest
-    container: setupphp/node@sha256:9271c0a914deb70c1717ec113410c9d43e48123d0ed398bb696f00f4f0ef15ba
-
-    strategy:
-      fail-fast: false
-      matrix:
-        php-version:
-          - "8.1"
-
-    steps:
-    - uses: "actions/checkout@v4"
-    - uses: "shivammathur/setup-php@v2"
-      with:
-        php-version: ${{ matrix.php-version }}
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v4
-      with:
-        path: vendor
-        key: php-outdated
-
-    - name: Install Composer dependencies
-      run: composer install --prefer-dist --no-progress
-
-    - name: Run test suite
-      run: composer run-script test
-
   current:
     runs-on: ubuntu-latest
     strategy:
