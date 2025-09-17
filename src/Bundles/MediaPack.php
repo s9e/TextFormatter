@@ -130,6 +130,6 @@ window&&a.querySelectorAll("script").forEach(function(h){let m=document.createEl
 	*/
 	public static function getRenderer(): \s9e\TextFormatter\Renderer
 	{
-		return unserialize('O:44:"s9e\\TextFormatter\\Bundles\\MediaPack\\Renderer":2:{s:19:"enableQuickRenderer";b:1;s:9:"' . "\0" . '*' . "\0" . 'params";a:1:{s:16:"MEDIAEMBED_THEME";s:0:"";}}');
+		return unserialize('O:44:"s9e\\TextFormatter\\Bundles\\MediaPack\\Renderer":2:{s:19:"enableQuickRenderer";b:1;s:6:"params";a:1:{s:16:"MEDIAEMBED_THEME";s:0:"";}}');
 	}
 }

@@ -63,9 +63,12 @@ abstract class PHP extends Renderer
 	*/
 	abstract protected function renderNode(DOMNode $node);
 
-	public function __sleep()
+	public function __serialize(): array
 	{
-		return ['enableQuickRenderer', 'params'];
+		return [
+			'enableQuickRenderer' => $this->enableQuickRenderer,
+			'params'              => $this->params
+		];
 	}
 
 	/**

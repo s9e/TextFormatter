@@ -122,6 +122,6 @@ window&&a.querySelectorAll("script").forEach(function(g){let v=document.createEl
 	*/
 	public static function getRenderer(): \s9e\TextFormatter\Renderer
 	{
-		return unserialize('O:42:"s9e\\TextFormatter\\Bundles\\Fatdown\\Renderer":2:{s:19:"enableQuickRenderer";b:1;s:9:"' . "\0" . '*' . "\0" . 'params";a:2:{s:16:"MEDIAEMBED_THEME";s:0:"";s:18:"TASKLISTS_EDITABLE";s:0:"";}}');
+		return unserialize('O:42:"s9e\\TextFormatter\\Bundles\\Fatdown\\Renderer":2:{s:19:"enableQuickRenderer";b:1;s:6:"params";a:2:{s:16:"MEDIAEMBED_THEME";s:0:"";s:18:"TASKLISTS_EDITABLE";s:0:"";}}');
 	}
 }

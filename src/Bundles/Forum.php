@@ -364,6 +364,6 @@ m(e[k].outerHTML))})(a);d(a,"render");h(b,a);return f},registeredVars:H,setNesti
 	*/
 	public static function getRenderer(): \s9e\TextFormatter\Renderer
 	{
-		return unserialize('O:40:"s9e\\TextFormatter\\Bundles\\Forum\\Renderer":2:{s:19:"enableQuickRenderer";b:1;s:9:"' . "\0" . '*' . "\0" . 'params";a:5:{s:6:"L_HIDE";s:4:"Hide";s:6:"L_SHOW";s:4:"Show";s:9:"L_SPOILER";s:7:"Spoiler";s:7:"L_WROTE";s:6:"wrote:";s:16:"MEDIAEMBED_THEME";s:0:"";}}');
+		return unserialize('O:40:"s9e\\TextFormatter\\Bundles\\Forum\\Renderer":2:{s:19:"enableQuickRenderer";b:1;s:6:"params";a:5:{s:6:"L_HIDE";s:4:"Hide";s:6:"L_SHOW";s:4:"Show";s:9:"L_SPOILER";s:7:"Spoiler";s:7:"L_WROTE";s:6:"wrote:";s:16:"MEDIAEMBED_THEME";s:0:"";}}');
 	}
 }

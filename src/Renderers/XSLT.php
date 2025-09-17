@@ -44,12 +44,7 @@ class XSLT extends Renderer
 		}
 	}
 
-	/**
-	* Serializer
-	*
-	* @return string[] List of properties to serialize
-	*/
-	public function __sleep()
+	public function __serialize(): array
 	{
 		$props = get_object_vars($this);
 		unset($props['proc']);
@@ -59,18 +54,15 @@ class XSLT extends Renderer
 			unset($props['reloadParams']);
 		}
 
-		return array_keys($props);
+		return $props;
 	}
 
-	/**
-	* Unserialize helper
-	*
-	* Will reload parameters if they were changed between generation and serialization
-	*
-	* @return void
-	*/
-	public function __wakeup()
+	public function __unserialize(array $data): void
 	{
+		foreach ($data as $k => $v)
+		{
+			$this->$k = $v;
+		}
 		if (!empty($this->reloadParams))
 		{
 			$this->setParameters($this->params);
