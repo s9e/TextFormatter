@@ -1,4 +1,4 @@
-<site name="PeerTube" homepage="https://joinpeertube.org/">
+<site name="PeerTube" homepage="https://joinpeertube.org/" helper="s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\PeerTubeHelper">
 	<example>https://peertube.tv/w/5JHc2MW1LS4HjDExModcwo</example>
 
 	<tags><tag>videos</tag></tags>

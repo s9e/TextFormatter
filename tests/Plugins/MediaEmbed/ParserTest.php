@@ -990,7 +990,7 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 
-					$peertubeHelper = new PeerTubeHelper($configurator);
+					$peertubeHelper = $configurator->MediaEmbed->getSiteHelper('peertube');
 					$peertubeHelper->addHost('neat.tube');
 				}
 			],
@@ -3134,6 +3134,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('pastebin');
+				}
+			],
+			[
+				'https://peertube.test/w/5JHc2MW1LS4HjDExModcwo',
+				'<t>https://peertube.test/w/5JHc2MW1LS4HjDExModcwo</t>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('peertube');
 				}
 			],
 			[

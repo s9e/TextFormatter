@@ -51,6 +51,29 @@ echo $html;
 ```
 
 
+### PeerTube
+
+```php
+$configurator = new s9e\TextFormatter\Configurator;
+
+// Use the PeerTube helper to add 'neat.tube' as a supported instance
+$peertubeHelper = $configurator->MediaEmbed->getSiteHelper('peertube');
+$peertubeHelper->addHost('neat.tube');
+
+// Get an instance of the parser and the renderer
+extract($configurator->finalize());
+
+$text = 'https://neat.tube/w/3PWC7CoQnqfZ4AkupAcVGB';
+$xml  = $parser->parse($text);
+$html = $renderer->render($xml);
+
+echo $html;
+```
+```html
+<span data-s9e-mediaembed="peertube" style="display:inline-block;width:100%;max-width:640px"><span style="display:block;overflow:hidden;position:relative;padding-bottom:56.25%"><iframe allowfullscreen="" loading="lazy" scrolling="no" style="border:0;height:100%;left:0;position:absolute;width:100%" src="https://neat.tube/videos/embed/3PWC7CoQnqfZ4AkupAcVGB"></iframe></span></span>
+```
+
+
 ### XenForo 2.3+
 
 While not technically a federated platform, XenForo 2.3+ allows embedding content from one forum into another. In the following example, we use the `XenForoHelper` class to allow embedding content from `xenforo.com`.
