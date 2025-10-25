@@ -9,7 +9,7 @@ namespace s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers;
 
 use function array_keys, sort, strtolower;
 
-abstract class AbstractConfigurableHostHelper extends AbstractSiteHelper
+abstract class AbstractConfigurableHostHelper extends AbstractSiteHelper implements ConfigurableHostInterface
 {
 	public function addHost(string $host): void
 	{

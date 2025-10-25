@@ -98,3 +98,34 @@ echo $html;
 ```html
 <iframe data-s9e-mediaembed="xenforo" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" scrolling="no" style="border:0;height:300px;width:100%" src="https://s9e.github.io/iframe/2/xenforo.min.html#https://xenforo.com/community/threads/217381"></iframe>
 ```
+
+## Any other sites
+
+```php
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\ConfigurableHostInterface;
+$configurator = new s9e\TextFormatter\Configurator;
+
+// Add whichever sites you like, here we add all the default sites
+foreach ($configurator->MediaEmbed->defaultSites as $siteId => $siteConfig)
+{
+	$configurator->MediaEmbed->add($siteId);
+}
+
+foreach ($configurator->MediaEmbed->getSites() as $siteId => $siteConfig)
+{
+	if (!isset($siteConfig['helper']))
+	{
+		continue;
+	}
+	if (is_a($siteConfig['helper'], ConfigurableHostInterface::class, true))
+	{
+		echo $siteConfig['name'], " is configurable via getSiteHelper('$siteId')->setHosts()\n";
+	}
+}
+```
+```html
+Bluesky is configurable via getSiteHelper('bluesky')->setHosts()
+Mastodon is configurable via getSiteHelper('mastodon')->setHosts()
+PeerTube is configurable via getSiteHelper('peertube')->setHosts()
+XenForo is configurable via getSiteHelper('xenforo')->setHosts()
+```
