@@ -333,6 +333,10 @@
 		<td><code>pastebin</code></td>
 		<td>https://pastebin.com/9jEf44nc</td>
 	</tr>
+	<tr title="PeerTube" id="peertube">
+		<td><code>peertube</code></td>
+		<td>https://peertube.tv/w/5JHc2MW1LS4HjDExModcwo</td>
+	</tr>
 	<tr title="Pinterest" id="pinterest">
 		<td><code>pinterest</code></td>
 		<td>https://www.pinterest.com/pin/99360735500167749/<br/>https://www.pinterest.com/pinterest/official-news/</td>

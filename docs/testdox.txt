@@ -1919,7 +1919,7 @@ Quick (s9e\TextFormatter\Tests\Configurator\RendererGenerators\PHP\Quick)
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
- [x] Ignores locale
+ [ ] Ignores locale
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -3439,7 +3439,7 @@ Fix Unescaped Curly Braces In Html Attributes (s9e\TextFormatter\Tests\Configura
  [x] Works with data set #20
 
 Fold Arithmetic Constants (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldArithmeticConstants)
- [x] Ignores locale
+ [ ] Ignores locale
  [x] Works with data set #0
  [x] Works with data set #1
  [x] Works with data set #2
@@ -3475,7 +3475,7 @@ Fold Arithmetic Constants (s9e\TextFormatter\Tests\Configurator\TemplateNormaliz
  [x] Works with data set #32
 
 Fold Constant XPath Expressions (s9e\TextFormatter\Tests\Configurator\TemplateNormalizations\FoldConstantXPathExpressions)
- [x] Ignores locale
+ [ ] Ignores locale
  [x] Works with data set #0
  [x] Works with data set #1
  [x] Works with data set #2
@@ -6908,6 +6908,9 @@ Parser (s9e\TextFormatter\Tests\Plugins\MediaEmbed\Parser)
  [x] Scraping tests with data set #61
  [x] Scraping tests with data set #62
  [x] Scraping tests with data set #63
+ [x] Scraping tests with data set #64
+ [x] Scraping tests with data set #65
+ [x] Scraping tests with data set #66
  [x] Scraping+rendering tests with data set #0
  [x] Scraping+rendering tests with data set #1
  [x] Scraping+rendering tests with data set #2
@@ -7934,7 +7937,7 @@ PHP (s9e\TextFormatter\Tests\Renderers\PHP)
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
- [x] Ignores locale
+ [ ] Ignores locale
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -7974,7 +7977,7 @@ XSLT (s9e\TextFormatter\Tests\Renderers\XSLT)
  [x] Renders plain text
  [x] Renders multi-line text
  [x] Renders rich text
- [x] Ignores locale
+ [ ] Ignores locale
  [x] getParameter() returns the default value of a parameter
  [x] getParameter() returns the set value of a parameter
  [x] getParameter() returns an empty string for undefined parameters
@@ -8083,7 +8086,7 @@ XPath (s9e\TextFormatter\Utils\XPath)
  [x] export('"\'') returns concat('"',"'")
  [x] export(123) returns 123
  [x] export(123.45) returns 123.45
- [x] export(123.45) returns 123.45 regardless of locale
+ [ ] export(123.45) returns 123.45 regardless of locale
  [x] export(new stdClass) throws an exception
  [x] export(false) returns 'false()'
  [x] export(true) returns 'true()'

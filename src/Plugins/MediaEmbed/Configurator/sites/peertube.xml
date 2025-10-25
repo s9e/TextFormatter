@@ -1,0 +1,27 @@
+<site name="PeerTube" homepage="https://joinpeertube.org/">
+	<example>https://peertube.tv/w/5JHc2MW1LS4HjDExModcwo</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<attributes>
+		<host  required="true"                           />
+		<id    required="true"  filterChain="#identifier"/>
+		<start required="false" filterChain="#timestamp" />
+	</attributes>
+
+	<host>peertube.tv</host>
+	<extract>!^https://(?'host'[-.\w]+)/(?:videos/embed|w)/(?'id'[-\w]+)(?:\?start=(?'start'\d[\dhms]*))?!</extract>
+	<scrape url="https://{@host}/services/oembed?url=https%3A%2F%2F{@host}%2Fw%2F%2F{@id}">
+		<match>!^https://(?'host'[-.\w]+)/w/(?'id'\w+)!</match>
+		<extract>!https://(?'host'[-.\w]+)/videos/embed/(?'id'[-\w]+)(?:\?start=(?'start'\d[\dhms]*))?!</extract>
+	</scrape>
+	<iframe>
+		<src><![CDATA[
+			<xsl:text>https://</xsl:text>
+			<xsl:value-of select="@host"/>
+			<xsl:text>/videos/embed/</xsl:text>
+			<xsl:value-of select="@id"/>
+			<xsl:if test="@start">?start=<xsl:value-of select="@start"/></xsl:if>
+		]]></src>
+	</iframe>
+</site>

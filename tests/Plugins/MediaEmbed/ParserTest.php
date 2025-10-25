@@ -4,6 +4,7 @@ namespace s9e\TextFormatter\Tests\Plugins\MediaEmbed;
 
 use s9e\TextFormatter\Configurator;
 use s9e\TextFormatter\Parser\Tag;
+use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\PeerTubeHelper;
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\XenForoHelper;
 use s9e\TextFormatter\Plugins\MediaEmbed\Parser;
 use s9e\TextFormatter\Tests\Plugins\ParsingTestsRunner;
@@ -969,6 +970,38 @@ class ParserTest extends Test
 				{
 					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
 					$configurator->MediaEmbed->add('odysee');
+				}
+			],
+			[
+				'https://peertube.tv/w/5JHc2MW1LS4HjDExModcwo',
+				'<r><PEERTUBE host="peertube.tv" id="265b2d65-d5d4-4721-b340-0c1fa932c38e">https://peertube.tv/w/5JHc2MW1LS4HjDExModcwo</PEERTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('peertube');
+				}
+			],
+			[
+				'https://peertube.tv/w/5JHc2MW1LS4HjDExModcwo?start=5s',
+				'<r><PEERTUBE host="peertube.tv" id="265b2d65-d5d4-4721-b340-0c1fa932c38e" start="5">https://peertube.tv/w/5JHc2MW1LS4HjDExModcwo?start=5s</PEERTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+					$configurator->MediaEmbed->add('peertube');
+				}
+			],
+			[
+				'https://neat.tube/w/3PWC7CoQnqfZ4AkupAcVGB?start=4s',
+				'<r><PEERTUBE host="neat.tube" id="3PWC7CoQnqfZ4AkupAcVGB" start="4">https://neat.tube/w/3PWC7CoQnqfZ4AkupAcVGB?start=4s</PEERTUBE></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
+
+					$peertubeHelper = new PeerTubeHelper($configurator);
+					$peertubeHelper->addHost('neat.tube');
 				}
 			],
 			[
