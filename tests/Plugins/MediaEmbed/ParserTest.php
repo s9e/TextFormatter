@@ -913,16 +913,6 @@ class ParserTest extends Test
 				}
 			],
 			[
-				'https://livestream.com/internetsociety/wsis/videos/107058039',
-				'<r><LIVESTREAM account_id="686369" event_id="4588746" video_id="107058039">https://livestream.com/internetsociety/wsis/videos/107058039</LIVESTREAM></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->registeredVars['cacheDir'] = __DIR__ . '/../../.cache';
-					$configurator->MediaEmbed->add('livestream');
-				}
-			],
-			[
 				'https://mastodon.social/@SwiftOnSecurity@infosec.exchange/109579438826193099',
 				'<r><MASTODON host="infosec.exchange" id="109579438603578302" name="SwiftOnSecurity">https://mastodon.social/@SwiftOnSecurity@infosec.exchange/109579438826193099</MASTODON></r>',
 				[],
@@ -2635,15 +2625,6 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('kickstarter');
-				}
-			],
-			[
-				'http://new.livestream.com/accounts/9999999999/events/9999999999',
-				'<r><LIVESTREAM account_id="9999999999" event_id="9999999999">http://new.livestream.com/accounts/9999999999/events/9999999999</LIVESTREAM></r>',
-				[],
-				function ($configurator)
-				{
-					$configurator->MediaEmbed->add('livestream');
 				}
 			],
 			[

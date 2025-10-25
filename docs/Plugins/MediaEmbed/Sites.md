@@ -245,10 +245,6 @@
 		<td><code>liveleak</code></td>
 		<td>https://www.liveleak.com/view?t=yIcw_1520190567</td>
 	</tr>
-	<tr title="Livestream" id="livestream">
-		<td><code>livestream</code></td>
-		<td>https://new.livestream.com/jbtvlive/musicmarathon<br/>https://livestream.com/ccscsl/USChessChampionships/videos/83267610<br/>https://livestre.am/58XNV</td>
-	</tr>
 	<tr title="Mail.Ru" id="mailru">
 		<td><code>mailru</code></td>
 		<td>https://my.mail.ru/corp/auto/video/testdrive/34.html<br/>https://my.mail.ru/mail/alenka1957/video/1/7.html</td>
