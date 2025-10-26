@@ -45,6 +45,6 @@
 		"test-all":        "phpunit --exclude-group ''"
 	},
 	"extra": {
-		"version": "2.19.1"
+		"version": "2.19.2-dev"
 	}
 }
