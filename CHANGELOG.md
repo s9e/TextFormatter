@@ -1,3 +1,38 @@
+2.19.1 (2025-10-26)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/d65a4f61cbe494937afb3150dc73b6e757d400d3...c22e88f0ba8d55a45cf151de586fe88179719094)
+
+### Added
+
+ - `99e57d380` MediaEmbed: added ConfigurableHostInterface
+ - `8346e81d3` MediaEmbed: added Crankers
+ - `9e4296987` MediaEmbed: added PeerTube
+ - `f87358afa` MediaEmbed: added missing source file
+
+### Removed
+
+ - `f6bdc27a5` MediaEmbed: removed Livestream \(defunct\)
+
+### Fixed
+
+ - `479af5fd2` MediaEmbed: fixed PeerTube helper
+
+### Changed
+
+ - `b20fb7bcb` Disable network tests by default
+ - `7aef5f425` Fix deprecation warnings on PHP 8.5
+ - `5de379d6d` Fix more deprecation warnings on PHP 8.5
+ - `e0aea781e` MediaEmbed: updated Imgur
+ - `ce6eaaa14` MediaEmbed: updated On3
+ - `303959a41` MediaEmbed: updated Pastebin
+ - `cb1368cf2` MediaEmbed: updated Rumble
+ - `05febbbe9` MediaEmbed: updated Threads
+ - `5a32f548c` RegexpConvertor: updated Unicode properties
+ - `ffa2386ed` Remove unsupported PHP 8.1 from CI
+ - `c22e88f0b` Updated docs
+
+
 2.19.0 (2025-04-26)
 ===================
 
