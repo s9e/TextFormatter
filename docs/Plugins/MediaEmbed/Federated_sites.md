@@ -99,25 +99,26 @@ echo $html;
 <iframe data-s9e-mediaembed="xenforo" allowfullscreen="" loading="lazy" onload="let c=new MessageChannel;c.port1.onmessage=e=&gt;this.style.height=e.data+'px';this.contentWindow.postMessage('s9e:init','*',[c.port2])" scrolling="no" style="border:0;height:300px;width:100%" src="https://s9e.github.io/iframe/2/xenforo.min.html#https://xenforo.com/community/threads/217381"></iframe>
 ```
 
-## Any other sites
+
+## Discoverability
+
+Some of the default sites have a helper class used to configure them. In particular, federated sites offer a `ConfigurableHostInterface` interface that can be used to manipulate the list of allowed instances.
+
+In the example below, we check all of the default sites for the presence of an `helper` attribute in their config and list those whose the actual helper instance implements `ConfigurableHostInterface`. This can be used to discover federated sites in the default sites.
 
 ```php
 use s9e\TextFormatter\Plugins\MediaEmbed\Configurator\SiteHelpers\ConfigurableHostInterface;
+
 $configurator = new s9e\TextFormatter\Configurator;
-
-// Add whichever sites you like, here we add all the default sites
 foreach ($configurator->MediaEmbed->defaultSites as $siteId => $siteConfig)
-{
-	$configurator->MediaEmbed->add($siteId);
-}
-
-foreach ($configurator->MediaEmbed->getSites() as $siteId => $siteConfig)
 {
 	if (!isset($siteConfig['helper']))
 	{
 		continue;
 	}
-	if (is_a($siteConfig['helper'], ConfigurableHostInterface::class, true))
+
+	$siteHelper = $configurator->MediaEmbed->getSiteHelper($siteId);
+	if ($siteHelper instanceof ConfigurableHostInterface)
 	{
 		echo $siteConfig['name'], " is configurable via getSiteHelper('$siteId')->setHosts()\n";
 	}
