@@ -27,7 +27,7 @@
 		<match>@youtube\.com/clip/.@</match>
 		<extract>@/embed/(?'id'[-\w]+)\?clip=(?'clip'[-\w]+)&amp;amp;clipt=(?'clipt'[-\w]+)@</extract>
 	</scrape>
-	<iframe>
+	<iframe referrerpolicy="origin">
 		<src><![CDATA[
 			<xsl:text>https://www.youtube.com/embed/</xsl:text>
 			<xsl:value-of select="@id"/>
