@@ -539,7 +539,7 @@
 	</tr>
 	<tr title="Youku" id="youku">
 		<td><code>youku</code></td>
-		<td>https://v.youku.com/v_show/id_XMzY0NTMyMTgxMg==.html</td>
+		<td>https://v.youku.com/v_show/id_XNTE3ODIxMDEzNg==.html</td>
 	</tr>
 	<tr title="YouMaker" id="youmaker">
 		<td><code>youmaker</code></td>
