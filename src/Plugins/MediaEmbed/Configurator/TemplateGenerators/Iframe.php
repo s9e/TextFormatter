@@ -24,7 +24,7 @@ class Iframe extends TemplateGenerator
 	/**
 	* @var string[] List of attributes to be passed to the iframe
 	*/
-	protected $iframeAttributes = ['allow', 'data-s9e-livepreview-ignore-attrs', 'data-s9e-livepreview-onrender', 'onload', 'scrolling', 'src', 'style'];
+	protected $iframeAttributes = ['allow', 'data-s9e-livepreview-ignore-attrs', 'data-s9e-livepreview-onrender', 'onload', 'referrerpolicy', 'scrolling', 'src', 'style'];
 
 	/**
 	* {@inheritdoc}
