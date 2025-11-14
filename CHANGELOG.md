@@ -1,3 +1,14 @@
+2.19.2 (2025-11-14)
+===================
+
+[Full commit log](https://github.com/s9e/TextFormatter/compare/47c8324f370cc23e72190f00a4ffb18f50516452...1a6fd790b673e5cae2ee7bacec52746a3392b2cb)
+
+### Changed
+
+ - `85d45dcb8` MediaEmbed: updated YouTube
+ - `1a6fd790b` MediaEmbed: updated Youku
+
+
 2.19.1 (2025-10-26)
 ===================
 
