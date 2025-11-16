@@ -549,4 +549,8 @@
 		<td><code>youtube</code></td>
 		<td>https://www.youtube.com/watch?v=-cEzsCAzTak<br/>https://youtu.be/-cEzsCAzTak<br/>https://www.youtube.com/watch?feature=player_detailpage&amp;v=jofNR_WkoCE#t=40<br/>https://www.youtube.com/watch?v=pC35x6iIPmo&amp;list=PLOU2XLYxmsIIxJrlMIY5vYXAFcO5g83gA</td>
 	</tr>
+	<tr title="Kumu" id="kumu">
+		<td><code>Kumu</code></td>
+		<td>https://embed.kumu.io/e73b22f2f1d3a7844ac9d9bf071cc1d1<br/>https://kumu.io/</td>
+	</tr>
 </table>
