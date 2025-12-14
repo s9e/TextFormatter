@@ -2676,6 +2676,15 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://medal.tv/games/ark-survival-ascended/clips/lG3cmPexf3-J3ZbLX?invite=X',
+				'<r><MEDAL id="lG3cmPexf3-J3ZbLX">https://medal.tv/games/ark-survival-ascended/clips/lG3cmPexf3-J3ZbLX?invite=X</MEDAL></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('medal');
+				}
+			],
+			[
 				'https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95',
 				'<r><MEDIUM id="e7e2cf9b8a95">https://medium.com/@donnydonny/team-internet-is-about-to-win-net-neutrality-and-they-didnt-need-googles-help-e7e2cf9b8a95</MEDIUM></r>',
 				[],
