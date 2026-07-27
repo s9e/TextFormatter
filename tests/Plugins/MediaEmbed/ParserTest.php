@@ -2321,6 +2321,24 @@ class ParserTest extends Test
 				}
 			],
 			[
+				'https://gumlet.tv/watch/69c33353bf49c9eb69bc6506/',
+				'<r><GUMLET id="69c33353bf49c9eb69bc6506">https://gumlet.tv/watch/69c33353bf49c9eb69bc6506/</GUMLET></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gumlet');
+				}
+			],
+			[
+				'https://play.gumlet.io/embed/69c33353bf49c9eb69bc6506',
+				'<r><GUMLET id="69c33353bf49c9eb69bc6506">https://play.gumlet.io/embed/69c33353bf49c9eb69bc6506</GUMLET></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('gumlet');
+				}
+			],
+			[
 				'http://www.hudl.com/athlete/2067184/highlights/163744377',
 				'<r><HUDL athlete="2067184" highlight="163744377">http://www.hudl.com/athlete/2067184/highlights/163744377</HUDL></r>',
 				[],
@@ -3395,6 +3413,15 @@ class ParserTest extends Test
 				function ($configurator)
 				{
 					$configurator->MediaEmbed->add('spreaker');
+				}
+			],
+			[
+				'https://videos.sproutvideo.com/embed/8c9bd3b4111ee5cb06/ceed13c50e173bb7',
+				'<r><SPROUTVIDEO id="8c9bd3b4111ee5cb06" token="ceed13c50e173bb7">https://videos.sproutvideo.com/embed/8c9bd3b4111ee5cb06/ceed13c50e173bb7</SPROUTVIDEO></r>',
+				[],
+				function ($configurator)
+				{
+					$configurator->MediaEmbed->add('sproutvideo');
 				}
 			],
 			[

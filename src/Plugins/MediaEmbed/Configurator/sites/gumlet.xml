@@ -1,0 +1,11 @@
+<site name="Gumlet" homepage="https://gumlet.tv/">
+	<example>https://gumlet.tv/watch/69c33353bf49c9eb69bc6506/</example>
+	<example>https://play.gumlet.io/embed/69c33353bf49c9eb69bc6506</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>gumlet.tv</host>
+	<host>play.gumlet.io</host>
+	<extract>!(?:gumlet\.tv/watch|play\.gumlet\.io/embed)/(?'id'[0-9a-f]+)!</extract>
+	<iframe src="https://play.gumlet.io/embed/{@id}"/>
+</site>

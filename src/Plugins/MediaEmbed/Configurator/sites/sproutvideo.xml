@@ -1,0 +1,10 @@
+<site name="SproutVideo" homepage="https://sproutvideo.com/">
+	<example>https://videos.sproutvideo.com/embed/8c9bd3b4111ee5cb06/ceed13c50e173bb7</example>
+
+	<tags><tag>videos</tag></tags>
+
+	<host>videos.sproutvideo.com</host>
+	<host>sproutvideo.com</host>
+	<extract>!videos\.sproutvideo\.com/embed/(?'id'[0-9a-f]+)/(?'token'[0-9a-f]+)!</extract>
+	<iframe width="640" height="360" src="https://videos.sproutvideo.com/embed/{@id}/{@token}"/>
+</site>
