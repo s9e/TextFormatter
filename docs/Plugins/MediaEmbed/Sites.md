@@ -237,6 +237,10 @@
 		<td><code>kickstarter</code></td>
 		<td>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1<br/>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/card.html<br/>https://www.kickstarter.com/projects/1869987317/wish-i-was-here-1/widget/video.html</td>
 	</tr>
+	<tr title="Kumu" id="kumu">
+		<td><code>Kumu</code></td>
+		<td>https://embed.kumu.io/e73b22f2f1d3a7844ac9d9bf071cc1d1<br/>https://kumu.io/</td>
+	</tr>
 	<tr title="Libsyn" id="libsyn">
 		<td><code>libsyn</code></td>
 		<td>https://pexlives.libsyn.com/the-ark-in-space-ep4-commentary-with-el-and-jack</td>
